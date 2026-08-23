@@ -122,7 +122,7 @@ HOST_STAGE_DRIFT_IMAGE="${HOST_STAGE_DRIFT_IMAGE:-}"
 HOST_STAGE_DRIFT_CKPT="${HOST_STAGE_DRIFT_CKPT:-$PROJECT_DIR/training/hybrid_follow/hybrid_follow_best_follow_score.pth}"
 HOST_STAGE_DRIFT_ONNX="${HOST_STAGE_DRIFT_ONNX:-$PROJECT_DIR/export/hybrid_follow/hybrid_follow_dory.onnx}"
 HOST_STAGE_DRIFT_OUTPUT_DIR="${HOST_STAGE_DRIFT_OUTPUT_DIR:-}"
-COMPARE_SCRIPT="${COMPARE_SCRIPT:-$PROJECT_DIR/export/compare_gap8_final_tensor.py}"
+COMPARE_SCRIPT="${COMPARE_SCRIPT:-$PROJECT_DIR/export/archive/compare_gap8_final_tensor.py}"
 STAGE_DRIFT_SCRIPT="${STAGE_DRIFT_SCRIPT:-$PROJECT_DIR/export/compare_hybrid_follow_stages.py}"
 STAGE_DRIFT_PYTHON="${STAGE_DRIFT_PYTHON:-}"
 STAGE_DRIFT_NEMO_STAGE="${STAGE_DRIFT_NEMO_STAGE:-auto}"
@@ -376,6 +376,7 @@ docker exec "$CONTAINER_NAME" bash -lc "
 echo "[3/5] Apply out_mult alias patch where needed..."
 docker exec "$CONTAINER_NAME" bash -lc "
   set -e
+  shopt -s nullglob
   cd '$CONTAINER_APP_DIR'
   for f in src/Convolution*.c; do
     if grep -q 'out_mult_in' \"\$f\" && grep -q 'out_shift_in' \"\$f\" && grep -q 'uint16_t out_shift = out_shift_in;' \"\$f\" && ! grep -q 'uint16_t out_mult = out_mult_in;' \"\$f\"; then

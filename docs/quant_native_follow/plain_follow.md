@@ -253,6 +253,25 @@ The current known-good smoke repro is:
 - runtime layer compare: [../../logs/plain_follow_prod_smoke_appseed/runtime_trace_rerun_int64_patch_regen/runtime_layer_compare/runtime_layer_compare.json](../../logs/plain_follow_prod_smoke_appseed/runtime_trace_rerun_int64_patch_regen/runtime_layer_compare/runtime_layer_compare.json)
 - final tensor: [../../logs/plain_follow_prod_smoke_appseed/runtime_trace_rerun_int64_patch_regen/gvsoc_final_tensor.json](../../logs/plain_follow_prod_smoke_appseed/runtime_trace_rerun_int64_patch_regen/gvsoc_final_tensor.json)
 
+## Handoff Application
+
+The active, buildable generated network is now present at
+[../../application](../../application). A successful production release
+promotes its generated app there only after the final GVSOC tensor gate passes.
+
+To validate the checked-in app without rerunning calibration and export:
+
+```bash
+bash ./pytorch_ssd/run_plain_follow_app_val.sh
+```
+
+The exact production checkpoint is versioned at
+`artifacts/plain_follow_best_follow_score.pth`. The validation wrapper runs
+`tools/verify_plain_follow_handoff.py` first, checking that checkpoint and the
+generated app against `application/validation/manifest.json` before Docker is
+started. COCO, the local validation-image packs, and detailed release logs
+remain Git-ignored; reacquire those only when regenerating the app.
+
 ## When To Reach For It
 
 Use `plain_follow` when:

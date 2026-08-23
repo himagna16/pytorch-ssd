@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
+import hashlib
 import json
 import os
 import shlex
@@ -19,7 +21,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
 REPO_DIR = PROJECT_DIR.parent
 DEFAULT_WINDOWS_PYTHON = Path("/mnt/c/Python313/python.exe")
-DEFAULT_CKPT = PROJECT_DIR / "training" / "plain_follow" / "plain_follow_best_follow_score.pth"
+LOCAL_TRAINING_CKPT = PROJECT_DIR / "training" / "plain_follow" / "plain_follow_best_follow_score.pth"
+BUNDLED_HANDOFF_CKPT = PROJECT_DIR / "artifacts" / "plain_follow_best_follow_score.pth"
+DEFAULT_CKPT = BUNDLED_HANDOFF_CKPT if BUNDLED_HANDOFF_CKPT.is_file() else LOCAL_TRAINING_CKPT
 DEFAULT_OUTPUT_DIR = PROJECT_DIR / "logs" / "plain_follow_prod"
 DEFAULT_VAL_IMAGE_DIR = PROJECT_DIR / "data" / "coco" / "images" / "val2017"
 DEFAULT_ANNOTATIONS = PROJECT_DIR / "data" / "coco" / "annotations" / "instances_val2017.json"
@@ -51,8 +55,12 @@ DEFAULT_GAP8_BN_QUANT_PATCH_SCRIPT = PROJECT_DIR / "tools" / "patch_gap8_bn_quan
 DEFAULT_GVSOC_SCRIPT = PROJECT_DIR / "tools" / "run_aideck_val_impl.sh"
 DEFAULT_GVSOC_COMPARE_SCRIPT = PROJECT_DIR / "export" / "archive" / "compare_gap8_final_tensor.py"
 DEFAULT_VALIDATION_MAIN = PROJECT_DIR / "aideck_val_main_plain_follow.c"
+DEFAULT_ACTIVE_APPLICATION_DIR = PROJECT_DIR / "application"
 DEFAULT_GVSOC_PLATFORM = "gvsoc"
 DEFAULT_GVSOC_LABEL = "final"
+DEFAULT_AIDECK_IMAGE = (
+    "bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e"
+)
 DEFAULT_GVSOC_TRACE_LAYER_OUTPUT_BYTES_PER_LINE = 64
 DEFAULT_IMAGE_SIZE = (128, 128)
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp"}
@@ -159,6 +167,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gvsoc-script", default=str(DEFAULT_GVSOC_SCRIPT))
     parser.add_argument("--gvsoc-compare-script", default=str(DEFAULT_GVSOC_COMPARE_SCRIPT))
     parser.add_argument("--validation-main", default=str(DEFAULT_VALIDATION_MAIN))
+    parser.add_argument(
+        "--application-dir",
+        default=str(DEFAULT_ACTIVE_APPLICATION_DIR),
+        help=(
+            "Active generated app destination. After the GVSOC gate passes, the verified app is "
+            "staged and promoted here for local handoff use."
+        ),
+    )
+    parser.add_argument(
+        "--skip-application-promotion",
+        action="store_true",
+        help="Keep the passing generated app only under the release output directory.",
+    )
     parser.add_argument(
         "--gvsoc-trace-layer-output-bytes-per-line",
         type=int,
@@ -321,6 +342,7 @@ def resolve_context(args: argparse.Namespace) -> dict[str, Any]:
         "gvsoc_compare_script": Path(args.gvsoc_compare_script).expanduser().resolve(),
         "gvsoc_trace_layer_output_bytes_per_line": int(args.gvsoc_trace_layer_output_bytes_per_line),
         "validation_main": Path(args.validation_main).expanduser().resolve(),
+        "application_dir": Path(args.application_dir).expanduser().resolve(),
         "gvsoc_image": (Path(args.gvsoc_image).expanduser().resolve() if args.gvsoc_image else None),
         "image_size": image_size,
         "output_metadata": output_metadata,
@@ -985,6 +1007,48 @@ def generate_dory_application(
     }
 
 
+def promote_verified_application(
+    source_dir: Path,
+    destination_dir: Path,
+    expected_output_path: Path,
+    validation_manifest: dict[str, Any] | None = None,
+) -> Path:
+    source_dir = source_dir.resolve()
+    destination_dir = destination_dir.resolve()
+    expected_output_path = expected_output_path.resolve()
+    if source_dir == destination_dir:
+        return destination_dir
+
+    handoff_readme = destination_dir / "README.md"
+    handoff_readme_text = handoff_readme.read_text(encoding="utf-8") if handoff_readme.is_file() else None
+    staging_dir = destination_dir.with_name(f".{destination_dir.name}.staging")
+    if staging_dir.exists():
+        shutil.rmtree(staging_dir)
+    shutil.copytree(source_dir, staging_dir)
+    if handoff_readme_text is not None:
+        (staging_dir / "README.md").write_text(handoff_readme_text, encoding="utf-8")
+    validation_dir = staging_dir / "validation"
+    validation_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(expected_output_path, validation_dir / "output.txt")
+    if validation_manifest is not None:
+        manifest_payload = dict(validation_manifest)
+        artifact_paths = (
+            "hex/inputs.hex",
+            "src/network.c",
+            "src/pulp_nn_utils.c",
+            "validation/output.txt",
+        )
+        manifest_payload["artifacts"] = {
+            relative_path: hashlib.sha256((staging_dir / relative_path).read_bytes()).hexdigest()
+            for relative_path in artifact_paths
+        }
+        write_json(validation_dir / "manifest.json", manifest_payload)
+    if destination_dir.exists():
+        shutil.rmtree(destination_dir)
+    staging_dir.replace(destination_dir)
+    return destination_dir
+
+
 def run_gvsoc_smoke(
     *,
     context: dict[str, Any],
@@ -1068,6 +1132,7 @@ def run_gvsoc_smoke(
         "MODEL_SENTINEL": str(dory_onnx_path),
         "MODEL_MANIFEST": str(generation["config_path"]),
         "PLATFORM": DEFAULT_GVSOC_PLATFORM,
+        "AIDECK_IMAGE": DEFAULT_AIDECK_IMAGE,
     }
     run_logged(
         ["bash", str(Path(context["gvsoc_script"]))],
@@ -1294,6 +1359,7 @@ def build_release_summary_markdown(summary: dict[str, Any]) -> str:
                 f"- gvsoc_gap8_bn_quant_patch_target: `{summary['artifacts']['gvsoc_gap8_bn_quant_patch_target']}`",
                 f"- gvsoc_runtime_layer_compare_json: `{summary['artifacts']['gvsoc_runtime_layer_compare_json']}`",
                 f"- gvsoc_runtime_layer_compare_md: `{summary['artifacts']['gvsoc_runtime_layer_compare_md']}`",
+                f"- active_application_dir: `{summary['artifacts']['active_application_dir']}`",
             ]
         )
 
@@ -1547,6 +1613,7 @@ def main() -> None:
         compare_summaries[dataset_label] = read_json(dataset_output_dir / "comparison_summary.json")
 
     gvsoc_summary = None
+    promoted_application_dir = None
     if not args.skip_gvsoc:
         gvsoc_summary = run_gvsoc_smoke(
             context=context,
@@ -1557,6 +1624,48 @@ def main() -> None:
             output_dir=output_dir,
             command_dir=command_dir,
         )
+        if gvsoc_summary.get("status") != "pass":
+            raise RuntimeError("Refusing to promote a generated application that did not pass GVSOC")
+        if not args.skip_application_promotion:
+            checkpoint_sha256 = hashlib.sha256(ckpt_path.read_bytes()).hexdigest()
+            bundled_checkpoint = None
+            if BUNDLED_HANDOFF_CKPT.is_file():
+                bundled_sha256 = hashlib.sha256(BUNDLED_HANDOFF_CKPT.read_bytes()).hexdigest()
+                if bundled_sha256 == checkpoint_sha256:
+                    bundled_checkpoint = os.path.relpath(BUNDLED_HANDOFF_CKPT, PROJECT_DIR)
+            promoted_application_dir = promote_verified_application(
+                Path((gvsoc_summary.get("artifacts") or {})["application_dir"]),
+                Path(context["application_dir"]),
+                Path((gvsoc_summary.get("artifacts") or {})["expected_output"]),
+                validation_manifest={
+                    "validated_at": datetime.now().astimezone().isoformat(),
+                    "platform": DEFAULT_GVSOC_PLATFORM,
+                    "model_type": str(context["model_type"]),
+                    "follow_head_type": str(context["follow_head_type"]),
+                    "input_shape": [1, 1, int(context["image_size"][0]), int(context["image_size"][1])],
+                    "output_count": int(context["output_metadata"]["follow_output_dim"]),
+                    "source_image_name": Path(str(gvsoc_summary["image_path"])).name,
+                    "checkpoint": {
+                        "path": os.path.relpath(ckpt_path, PROJECT_DIR),
+                        "bundled_path": bundled_checkpoint,
+                        "size_bytes": ckpt_path.stat().st_size,
+                        "sha256": checkpoint_sha256,
+                    },
+                    "gvsoc": {
+                        "docker_image": DEFAULT_AIDECK_IMAGE,
+                        "layer_checks": "{}/{} exact".format(
+                            sum(
+                                1
+                                for row in (gvsoc_summary.get("runtime_layer_compare") or {}).get("layers", [])
+                                if ((row.get("compare") or {}).get("exact_match"))
+                            ),
+                            len((gvsoc_summary.get("runtime_layer_compare") or {}).get("layers", [])),
+                        ),
+                    },
+                    "expected_output": list((gvsoc_summary.get("tensor_compare") or {})["expected_values"]),
+                    "result": "exact_match",
+                },
+            )
 
     deployment_metrics = {}
     selected_row = next(row for row in threshold_sweep["rows"] if row.get("selected"))
@@ -1638,6 +1747,9 @@ def main() -> None:
                 str(output_dir / "application_export" / "runtime_layer_compare" / "runtime_layer_compare.md")
                 if gvsoc_summary
                 else None
+            ),
+            "active_application_dir": (
+                str(promoted_application_dir) if promoted_application_dir is not None else None
             ),
         },
         "metrics": {

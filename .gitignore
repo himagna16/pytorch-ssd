@@ -1,5 +1,6 @@
 data/
 *.pth
+!artifacts/plain_follow_best_follow_score.pth
 *.onnx
 __pycache__/
 *.py[cod]

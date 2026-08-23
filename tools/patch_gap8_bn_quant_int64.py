@@ -7,6 +7,11 @@ from pathlib import Path
 
 
 MARKER = "/* GAP8_INT64_REQUANT_PATCH */"
+REQUIRED_GENERATED_HELPERS = (
+    "pulp_nn_compare_and_replace_if_larger_int8",
+    "pulp_nn_avg_and_replace_int8",
+    "pulp_nn_im2col_int8",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -67,8 +72,86 @@ static inline uint8_t gap8_clip_u2_from_i64(int64_t value) {{
 """
 
 
+def find_function_span(text: str, name: str) -> tuple[int, int]:
+    header = re.compile(
+        rf"uint8_t(?:\s+__attribute__\(\(always_inline\)\))?\s+{re.escape(name)}\s*"
+        rf"\([^)]*\)\s*\{{",
+        re.S,
+    )
+    match = header.search(text)
+    if match is None:
+        raise RuntimeError(f"Could not locate function {name} in pulp_nn_utils.c")
+
+    start = match.start()
+    index = match.end() - 1
+    depth = 0
+    state = "code"
+    while index < len(text):
+        char = text[index]
+        next_char = text[index + 1] if index + 1 < len(text) else ""
+
+        if state == "line_comment":
+            if char == "\n":
+                state = "code"
+        elif state == "block_comment":
+            if char == "*" and next_char == "/":
+                state = "code"
+                index += 1
+        elif state == "string":
+            if char == "\\":
+                index += 1
+            elif char == '"':
+                state = "code"
+        elif state == "char":
+            if char == "\\":
+                index += 1
+            elif char == "'":
+                state = "code"
+        else:
+            if char == "/" and next_char == "/":
+                state = "line_comment"
+                index += 1
+            elif char == "/" and next_char == "*":
+                state = "block_comment"
+                index += 1
+            elif char == '"':
+                state = "string"
+            elif char == "'":
+                state = "char"
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    return start, index + 1
+        index += 1
+
+    raise RuntimeError(f"Could not find the closing brace for {name} in pulp_nn_utils.c")
+
+
+def validate_patched_text(text: str) -> None:
+    if MARKER not in text:
+        raise RuntimeError("GAP8 int64 requant patch marker is missing")
+    for helper in REQUIRED_GENERATED_HELPERS:
+        if helper not in text:
+            raise RuntimeError(
+                f"Generated helper {helper} is missing after the int64 requant patch; "
+                "regenerate the DORY application before retrying."
+            )
+
+    required_fragments = (
+        "int64_t integer_image_phi = ((int64_t)k * (int64_t)phi) + (int64_t)lambda;",
+        "int64_t integer_image = ((int64_t)pix1 * (int64_t)m1)",
+        "int64_t x = ((int64_t)m * (int64_t)phi) >> d;",
+    )
+    for fragment in required_fragments:
+        if fragment not in text:
+            raise RuntimeError(f"Incomplete GAP8 int64 requant patch; missing: {fragment}")
+
+
 def apply_patch_to_text(text: str) -> str:
     if MARKER in text:
+        validate_patched_text(text)
         return text
 
     start_anchor = '#define clip8(x) __builtin_pulp_clipu_r(x, 255)\n'
@@ -160,14 +243,9 @@ uint8_t __attribute__((always_inline)) pulp_nn_quant_u2(
     }
 
     for name, replacement in replacements.items():
-        pattern = re.compile(
-            rf"uint8_t(?:\s+__attribute__\(\(always_inline\)\))?\s+{re.escape(name)}\s*\([^)]*\)\s*\{{.*?\n\}}",
-            re.S,
-        )
-        new_text, count = pattern.subn(replacement.strip(), text, count=1)
-        if count != 1:
-            raise RuntimeError(f"Could not patch function {name} in pulp_nn_utils.c")
-        text = new_text
+        start, end = find_function_span(text, name)
+        text = text[:start] + replacement.strip() + text[end:]
+    validate_patched_text(text)
     return text
 
 

@@ -1,132 +1,119 @@
 # pytorch_ssd
 
-This folder is the model-development and export side of the project.
-It trains the detector, exports a quantized ONNX with NEMO, cleans the
-graph for DORY, and can emit GAP8 application artifacts that are later
-validated locally from `pytorch_ssd/application`.
+This repository contains the model-development, quantization, DORY codegen,
+and GAP8 validation path for the DroneRS person-following model.
 
-For the current `hybrid_follow` deployment path, the important recent fix is
-that the exporter no longer collapses the final `stage4.1` residual requant
-path to zeros before DORY, and the generated GAP8 app is back on the raw
-residual add path. The deployment notes for that are in
-`docs/hybrid_follow_gap8/09-export-runtime-residual-fix.md`.
+## Handoff Status
 
-## Current Model
+The active deployment model is `plain_follow`, not the older SSD or
+`hybrid_follow` experiments:
 
-- Task: person-only object detection
-- Detector family: torchvision SSD
-- Backbone: MobileNetV2
-- Width multiplier: `0.1`
-- Classes: `2` total (`background`, `person`)
-- Main training model: `SSDMobileNetV2Raw`
-- Typical deployment input: grayscale `1 x 128 x 128`
+- input: true grayscale `1 x 128 x 128`
+- model: `plain_follow`
+- head: `xbin9_size_bucket4`
+- output: 14 signed integer values
+- active generated GAP8 app: `application/`
+- canonical release command: `bash ./run_plain_follow.sh`
+- shipped-app validation command: `bash ./run_plain_follow_app_val.sh`
 
-If you are trying to redesign the model, the important point is that the
-current stack is not just "train a PyTorch model." It is a tightly coupled
-train -> quantize -> ONNX cleanup -> DORY -> GAP8 deployment pipeline.
+The active app in this handoff change includes the required int64 BN/requant runtime fix.
+On 2026-08-22 it was rebuilt in the AI-Deck Docker environment and passed
+GVSOC with an exact nonzero final tensor match:
 
-## Folder Map
+```text
+4632 13262 4633 -2422 -3479 -5390 2962 -1854 -11170 5303 -7980 3540 4466 -43
+```
 
-- `train.py`
-  Training loop. Builds `SSDMobileNetV2Raw`, loads the COCO person dataset,
-  and writes checkpoints such as `training/person_ssd_pytorch/ssd_mbv2_epoch_030.pth`.
-- `models/ssd_mobilenet_v2.py`
-  Defines the MobileNetV2 backbone and a plain SSD constructor.
-- `models/ssd_mobilenet_v2_raw.py`
-  SSD wrapper used for training and export. It supports both:
-  - normal torchvision SSD training/inference on `list[Tensor]`
-  - raw head export on a single tensor input
-- `utils/coco_person.py`
-  Person-only COCO dataset loader.
-- `utils/transforms.py`
-  Grayscale-centered transforms. Can output either 1 or 3 channels.
-- `nemo/export_nemo_quant.py`
-  Loads a checkpoint, handles compatibility remapping, runs NEMO export,
-  and writes the ONNX used by later stages.
-- `run_all.sh`
-  End-to-end export script. Runs NEMO export, onnxsim, custom ONNX cleanup,
-  DORY config generation, artifact generation, `network_generate.py`, and the
-  hybrid-follow raw-residual GAP8 patch reapply step.
-- `run_val.sh`
-  Canonical hybrid-follow validation entrypoint. Its default flow runs staged
-  AI-Deck validation first, then the checkpoint-vs-application evaluation,
-  which already performs the real-image validation internally.
-- `export/`
-  ONNX files, stripped graphs, DORY configs, manifests, weight text dumps,
-  and other export/debug artifacts.
-- `training/person_ssd_pytorch/`
-  Saved checkpoints and a small demo output image.
-- `application/`
-  The active generated GAP8 application used by the validation pipeline.
-  `run_all.sh` writes DORY output here by default, and `run_val.sh aideck`
-  validates this local app without touching another repo.
+All nine generated layers also have an exact layer-by-layer match against the
+DORY-semantic golden tensors. GVSOC validates the generated network with a
+staged image; it does not prove that the separate live-camera Crazyflie shell
+is complete.
 
-## How The Current Pipeline Works
+## Validate The Shipped Application
 
-1. `train.py` trains `SSDMobileNetV2Raw` on person-only COCO annotations.
-2. `nemo/export_nemo_quant.py` loads a checkpoint and exports a NEMO-quantized ONNX.
-3. `run_all.sh` simplifies and strips unsupported ONNX ops for DORY.
-4. `run_all.sh` generates the DORY app into `pytorch_ssd/application` by default.
-   For `hybrid_follow`, it also reapplies the raw-residual GAP8 runtime patch set.
-5. `run_val.sh` is the canonical validation entrypoint:
-   it runs staged AI-Deck validation, then runs the checkpoint-vs-application
-   evaluation report, and that evaluation step performs the real-image validation
-   plus before/after overlays on the same image set.
-6. `run_val.sh aideck`, `run_val.sh real`, and `run_val.sh overlay` still expose
-   the individual validation phases directly.
+Docker must be available. From this directory run:
 
-## Important Current Quirks
+```bash
+bash ./run_plain_follow_app_val.sh
+```
 
-- There is model-format drift across the project history.
-  Some checkpoints use `backbone.features.*` keys while the current export
-  model uses explicit `backbone.stage*` modules. `nemo/export_nemo_quant.py`
-  contains key-remapping logic to bridge that gap.
-- There is also channel-history drift.
-  Export logs show older checkpoints can carry a 3-channel first conv and are
-  adapted to 1-channel grayscale during export when needed.
-- The `hybrid_follow` exporter now has a strict optional drift harness behind
-  `--debug-quant-drift-dir`. It is meant to fail loudly on real residual
-  collapse instead of silently falling back.
-- Training and deployment shapes are not perfectly unified.
-  `train.py` defaults to `160 x 160`, while deployment/export is often run at
-  `128 x 128`.
-- `inference_demo.py` should be treated as a convenience script, not as the
-  authoritative deployment contract. It still reflects older assumptions in
-  places, including grayscale-to-3-channel replication.
-- DORY currently expects the final ONNX to be at the `ID` stage and then
-  requires several cleanup passes (`strip_affine_mul_add.py`,
-  `strip_transpose.py`, `strip_min.py`, `strip_fake_quant.py`) before codegen.
+The wrapper first verifies the bundled checkpoint, generated sources, input,
+and golden-output hashes. It then builds `application/` for `platform=gvsoc`,
+substitutes the plain-follow validation main only in the Docker copy, runs
+inference, and compares the final 14-value tensor with
+`application/validation/output.txt`. It uses the pinned AI-Deck image digest
+from the validation manifest and removes the one-shot validation container on
+exit. Set `KEEP_VALIDATION_CONTAINER=1` to retain a newly created container.
 
-## What Matters Most For A Redesign
+For an integrity-only check that does not require Docker:
 
-Decide the deployment contract first, not last:
+```bash
+python3 tools/verify_plain_follow_handoff.py
+```
 
-- input size
-- input channel count
-- output tensor layout
-- whether postprocess happens on GAP8 or off-device
-- memory budget on GAP8
+## Regenerate A Release
 
-After that, the files that usually need to move together are:
+The dedicated production flow is:
 
-- `train.py`
-- `models/`
-- `utils/transforms.py`
-- `nemo/export_nemo_quant.py`
-- `run_all.sh`
-- `export/` cleanup scripts and configs
-- `application/`
-- `run_val.sh`
+```bash
+bash ./run_plain_follow.sh \
+  --output-dir logs/plain_follow_prod \
+  --overwrite
+```
 
-## Practical Warning
+It performs calibration-set construction, float validation, NEMO export,
+DORY cleanup and semantic validation, app generation, the int64 GAP8 runtime
+patch, layer/final-tensor GVSOC checks, and release-summary generation. After
+GVSOC passes, it promotes the verified generated app to `application/`.
 
-The hardest part of changing this model is usually not PyTorch training.
-The hard parts are:
+For a faster development smoke run:
 
-- staying compatible with NEMO export
-- staying compatible with DORY graph restrictions
-- fitting GAP8 memory
-- matching the generated-app runtime assumptions in `application/`
+```bash
+bash ./run_plain_follow.sh \
+  --output-dir logs/plain_follow_prod_smoke \
+  --calib-target-count 4 \
+  --calib-max-images 32 \
+  --expanded-pack-extra-count 1 \
+  --expanded-pack-max-images 32 \
+  --overwrite
+```
 
-Optional sync back into another repo is still possible with
-`SYNC_TO_CRAZYFLIE=1`, but it is no longer part of the default pipeline.
+Use `--skip-application-promotion` if a validation run should not replace the
+active app. `--skip-gvsoc` also prevents promotion because a simulated runtime
+pass is the release gate.
+
+## Source Map
+
+- `artifacts/plain_follow_best_follow_score.pth`: bundled handoff checkpoint
+  and default checkpoint used by the release flow.
+- `training/plain_follow/plain_follow_best_follow_score.pth`: ignored local
+  training copy of the same checkpoint on the originating machine.
+- `models/quant_native_follow_net.py`: deployed model architecture.
+- `utils/follow_task.py`: output contract, loss, and decode logic.
+- `nemo/`: NEMO quantization/export implementation.
+- `export/run_plain_follow_release.py`: canonical production driver.
+- `export/dory_semantic_follow_inference.py`: deployment-semantics simulator.
+- `tools/patch_gap8_bn_quant_int64.py`: generated runtime overflow fix.
+- `tools/run_aideck_val_impl.sh`: Docker/GVSOC build and tensor gate.
+- `application/`: active generated GAP8 source and weights.
+- `docs/quant_native_follow/`: design and validation notes.
+- `docs/hybrid_follow_gap8/`: historical hybrid-follow investigation.
+- `run_all.sh` and `run_val.sh`: older/general entry points, primarily useful
+  for the historical hybrid-follow path.
+
+## Handoff Caveats
+
+Git intentionally ignores `training/`, `data/`, and `logs/`. This handoff
+explicitly includes the small production checkpoint under `artifacts/`, plus
+the generated app and its golden tensor. A clone can therefore integrity-check,
+build, and simulate the shipped application without recovering files from the
+originating machine. Full regeneration still requires COCO val2017 and the
+representative/hard-case image sets described by the release command; those
+datasets and verbose release logs are not committed. The checkpoint hash, key
+generated-app hashes, Docker image digest, and GVSOC result are recorded in
+`application/validation/manifest.json`.
+
+The sibling `crazyflie_ssd` repository is a different layer of the system. Its
+camera/runtime shell still documents incomplete postprocessing and an older
+output contract. Treat the GVSOC-validated app here as the working generated
+network artifact; live-camera/flight integration remains separate work.

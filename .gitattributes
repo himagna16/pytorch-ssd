@@ -1,0 +1,9 @@
+application/Makefile text eol=lf whitespace=-trailing-space,-blank-at-eof
+application/README.md text eol=lf
+application/hex/*.hex binary
+application/inc/*.h text eol=lf whitespace=-trailing-space,-blank-at-eof
+application/src/*.c text eol=lf whitespace=-trailing-space,-blank-at-eof
+application/validation/*.json text eol=lf
+application/validation/*.txt text eol=lf
+application/vars.mk text eol=lf
+artifacts/*.pth binary
