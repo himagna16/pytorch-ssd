@@ -1007,6 +1007,26 @@ def main():
         else:
             exported_stage = "id"
 
+    # On torch>=2.x the nemo-graph tracer fails to resolve residual-add module
+    # names ("... is not a module name"), so PACT_IntegerAdd.eps_in_list stays
+    # empty and export crashes in get_output_eps. Seed only the empty lists
+    # with the uniform input eps; correctly propagated modules are untouched.
+    patched_adds = []
+    for _name, _module in model_deploy.named_modules():
+        if hasattr(_module, "eps_in_list") and is_quant_module(_module):
+            _lst = getattr(_module, "eps_in_list")
+            if not (isinstance(_lst, list) and len(_lst) > 0):
+                _module.eps_in_list = [
+                    torch.tensor(float(args.eps_in), dtype=torch.float32, requires_grad=False),
+                    torch.tensor(float(args.eps_in), dtype=torch.float32, requires_grad=False),
+                ]
+                patched_adds.append(_name)
+    if patched_adds:
+        print(
+            "[export_nemo_quant] WARNING: seeded empty eps_in_list with uniform eps on "
+            f"{len(patched_adds)} modules (nemo-graph unresolved): {patched_adds}"
+        )
+
     model_deploy.eval()
     for param in model_deploy.parameters():
         param.requires_grad_(False)
