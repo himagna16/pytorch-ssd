@@ -77,7 +77,7 @@ macOS (the repo's pins are Linux-only `+cpu` wheels; install plain wheels):
 
 ```bash
 python3.11 -m venv ../trainenv
-../trainenv/bin/pip install torch==2.4.1 torchvision==0.19.1 numpy==1.24.4 \
+../trainenv/bin/pip install torch==2.2.2 torchvision==0.17.2 numpy==1.24.4 \
     pillow==10.4.0 pycocotools==2.0.7 tqdm==4.67.1
 ```
 
@@ -86,7 +86,7 @@ Linux/WSL:
 ```bash
 python3.11 -m venv ../trainenv
 ../trainenv/bin/pip install -r requirements_trainenv.txt || \
-../trainenv/bin/pip install torch==2.4.1 torchvision==0.19.1 numpy==1.24.4 \
+../trainenv/bin/pip install torch==2.2.2 torchvision==0.17.2 numpy==1.24.4 \
     pillow==10.4.0 pycocotools==2.0.7 tqdm==4.67.1
 ```
 
@@ -158,7 +158,7 @@ quality number.
 cd ~/drone/pytorch_ssd
 python3.11 -m venv ../nemoenv
 ../nemoenv/bin/pip install -r requirements_nemoenv.txt
-../nemoenv/bin/pip install torch==2.4.1 torchvision==0.19.1 onnxruntime==1.19.2
+../nemoenv/bin/pip install torch==2.2.2 torchvision==0.17.2 onnxruntime==1.19.2
 ```
 
 macOS only — pycocotools in this env ships a wheel built against the wrong

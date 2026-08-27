@@ -28,14 +28,14 @@ drone/                      <- workspace root; run scripts from here
 # trainenv — requirements_trainenv.txt pins "+cpu" wheels that only exist on
 # Linux; install the plain macOS wheels instead (same versions):
 python3.11 -m venv ../trainenv
-../trainenv/bin/pip install torch==2.4.1 torchvision==0.19.1 numpy==1.24.4 \
+../trainenv/bin/pip install torch==2.2.2 torchvision==0.17.2 numpy==1.24.4 \
     pillow==10.4.0 pycocotools==2.0.7 tqdm==4.67.1
 
 # nemoenv — requirements file works as-is, BUT pin torch 2.4.1 afterward to
 # match doryenv's pin (pip otherwise resolves 2.6):
 python3.11 -m venv ../nemoenv
 ../nemoenv/bin/pip install -r requirements_nemoenv.txt
-../nemoenv/bin/pip install torch==2.4.1 torchvision==0.19.1 onnxruntime==1.19.2
+../nemoenv/bin/pip install torch==2.2.2 torchvision==0.17.2 onnxruntime==1.19.2
 ```
 
 ## Dataset (COCO val2017 to start; train2017 is 19 GB, get it later)

@@ -3,6 +3,15 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-08-27** — Team PyTorch pin = **2.2.2** (+ torchvision 0.17.2) on
+  ALL machines. Reason: 2.2.2 is the newest release with Intel-Mac builds
+  (Grace's 2020 MacBook), and testing showed zero cost: a 2.4.1-trained
+  checkpoint produces bit-identical outputs under 2.2.2, and both model
+  families export through NEMO to ID identically (hybrid still needs the
+  eps-seeding patch on 2.2.2 — same tracer issue as 2.4). Rejected:
+  per-person versions (invites works-on-my-machine drift). Revisit only if
+  Grace changes hardware.
+
 - **2026-08-27** — Team home repo = the fork `himagna16/pytorch-ssd`,
   mainline `main`, Grace added as collaborator. Rejected: working directly
   on David's repo (no push access, David slow to respond) and a fresh
