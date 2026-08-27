@@ -49,7 +49,7 @@ unzip -q val2017.zip -d images/ && unzip -q annotations_trainval2017.zip
 
 ## Known macOS issues and fixes
 
-0. **doryenv cannot be built on macOS** — `requirements_doryenv.txt` pins
+1. **doryenv cannot be built on macOS** — `requirements_doryenv.txt` pins
    `nvidia-*` CUDA packages and old TensorFlow (Linux-only wheels). Run the
    pipeline with `RUN_DORY=0`; DORY codegen + GVSOC need a Linux box or Docker.
 2. **`run_all.sh` needs bash ≥ 4** (`${VAR^^}` syntax); macOS ships bash 3.2.
