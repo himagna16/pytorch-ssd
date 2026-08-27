@@ -1,7 +1,9 @@
 data/
 *.pth
 !artifacts/plain_follow_best_follow_score.pth
+!artifacts/handoff_2026_08/checkpoints/*.pth
 *.onnx
+!artifacts/handoff_2026_08/onnx/*.onnx
 __pycache__/
 *.py[cod]
 logs/

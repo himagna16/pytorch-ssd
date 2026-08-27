@@ -1,0 +1,77 @@
+\usepackage[letterpaper,margin=0.72in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{fancyvrb}
+\usepackage{framed}
+\usepackage{graphicx}
+
+\definecolor{navy}{HTML}{183153}
+\definecolor{blue}{HTML}{2366A8}
+\definecolor{teal}{HTML}{157A6E}
+\definecolor{orange}{HTML}{C66A1B}
+\definecolor{lightblue}{HTML}{EAF3FA}
+\definecolor{lightteal}{HTML}{E8F5F2}
+\definecolor{lightorange}{HTML}{FFF2E5}
+\definecolor{lightgray}{HTML}{F3F5F7}
+\definecolor{codegray}{HTML}{F6F8FA}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  pdftitle={DroneRS Team Onboarding},
+  pdfauthor={DroneRS Project}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{2em}
+\Urlmuskip=0mu plus 1mu
+\renewcommand{\arraystretch}{1.25}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textcolor{navy}{\textbf{DroneRS Onboarding}}}
+\rhead{\small\textcolor{navy}{\packetname}}
+\cfoot{\thepage}
+
+\providecommand{\packetname}{Team Packet}
+\newcommand{\doctitle}[3]{
+  \begin{center}
+    {\color{navy}\rule{\linewidth}{2pt}}\\[16pt]
+    {\Huge\bfseries\color{navy} #1}\\[8pt]
+    {\Large\color{blue} #2}\\[16pt]
+    {\large #3}\\[16pt]
+    {\color{navy}\rule{\linewidth}{2pt}}
+  \end{center}
+  \vspace{8pt}
+}
+
+\newenvironment{bluebox}
+  {\def\FrameCommand{\fcolorbox{blue}{lightblue}}\MakeFramed{\advance\hsize-2\width\FrameRestore}\vspace{3pt}}
+  {\vspace{3pt}\endMakeFramed}
+\newenvironment{greenbox}
+  {\def\FrameCommand{\fcolorbox{teal}{lightteal}}\MakeFramed{\advance\hsize-2\width\FrameRestore}\vspace{3pt}}
+  {\vspace{3pt}\endMakeFramed}
+\newenvironment{warnbox}
+  {\def\FrameCommand{\fcolorbox{orange}{lightorange}}\MakeFramed{\advance\hsize-2\width\FrameRestore}\vspace{3pt}}
+  {\vspace{3pt}\endMakeFramed}
+\newenvironment{graybox}
+  {\def\FrameCommand{\fcolorbox{navy}{lightgray}}\MakeFramed{\advance\hsize-2\width\FrameRestore}\vspace{3pt}}
+  {\vspace{3pt}\endMakeFramed}
+
+\DefineVerbatimEnvironment{Code}{Verbatim}{fontsize=\footnotesize,frame=single,rulecolor=\color{blue}}
+\newcommand{\checkbox}{\fbox{\rule{0pt}{1.1ex}\rule{1.1ex}{0pt}}\ }
+\newcommand{\good}{\textcolor{teal}{\textbf{PASS}}}
+\newcommand{\stopmark}{\textcolor{orange}{\textbf{STOP}}}
+\newcommand{\file}[1]{\texttt{#1}}
+\newcommand{\term}[1]{\textbf{#1}}
+\newcommand{\smallurl}[1]{{\small\url{#1}}}
+
+\renewcommand{\section}[1]{\vspace{8pt}\noindent{\Large\bfseries\color{navy} #1}\par\vspace{2pt}\hrule\vspace{5pt}}
+\renewcommand{\subsection}[1]{\vspace{5pt}\noindent{\large\bfseries\color{blue} #1}\par\vspace{2pt}}

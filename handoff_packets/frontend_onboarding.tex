@@ -1,0 +1,344 @@
+\documentclass[11pt]{article}
+\newcommand{\packetname}{Firmware Team}
+\input{onboarding_style.tex}
+
+\begin{document}
+
+\doctitle{DroneRS Embedded / Firmware Team}{Three-person beginner onboarding packet}{Version 1.0 --- August 25, 2026}
+
+\begin{bluebox}
+\textbf{Your mission:} connect a working person-following neural network to safe drone behavior. In this project, ``frontend'' means embedded C, camera data, messages, control decisions, and hardware integration. It does \emph{not} mean a web user interface.
+\end{bluebox}
+
+\textbf{Your first success should happen before you change code:} clone the repository, verify its files, and run the shipped GAP8 application in simulation. Your first programming project then builds a small command sandbox on a laptop. No propellers, motors, or flashing are involved.
+
+\section{1. What Already Works}
+
+The active model is \file{plain\_follow}. It accepts one grayscale image and produces information about whether a person is visible, where the person is horizontally, and approximately how large the person appears.
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.25\linewidth}X}
+Repository & \url{https://github.com/DavidLiu2/pytorch-ssd} \\
+Baseline branch & \file{unstable} \\
+Baseline commit & \file{b11e9da} \\
+Generated app & \file{application/} \\
+Input & $1 \times 128 \times 128$ grayscale, 16,384 bytes \\
+Output & 14 signed 32-bit integers, 56 bytes \\
+Validated state & GVSOC pass; all 9 layers and final tensor match exactly \\
+Not complete & Live camera path, AI-deck/Crazyflie messaging, control law, and physical flight \\
+\end{tabularx}
+
+\begin{warnbox}
+\textbf{Honest boundary:} the checked-in neural-network application works in simulation. The repository is not yet a complete person-following drone firmware. Do not describe it as flight-ready.
+\end{warnbox}
+
+\section{2. The System in One Picture}
+
+\begin{center}
+\fbox{Camera frame} $\longrightarrow$
+\fbox{128x128 grayscale} $\longrightarrow$
+\fbox{GAP8 network} $\longrightarrow$
+\fbox{14 integers}\\[6pt]
+$\longrightarrow$ \fbox{decoder} $\longrightarrow$
+\fbox{target message} $\longrightarrow$
+\fbox{safe controller} $\longrightarrow$
+\fbox{Crazyflie}
+\end{center}
+
+The backend team owns the model and the meaning/scaling of its outputs. Your team owns moving bytes through the system, decoding the agreed contract, making safe decisions, and integrating with hardware.
+
+\subsection{Vocabulary}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.20\linewidth}X}
+Crazyflie & The small research quadcopter and its main flight-control processor. \\
+AI-deck & Expansion board containing the camera, GAP8 processor, and Wi-Fi processor. \\
+GAP8 & Low-power microprocessor that runs the neural network. \\
+Firmware & Software compiled for an embedded device rather than a laptop. \\
+GVSOC & A simulator for GAP processors. It lets us test without hardware. \\
+Tensor & A numbered array. Here, the final tensor is a list of 14 integers. \\
+Checkpoint & Saved learned model parameters. \\
+\end{tabularx}
+
+\section{3. Team Responsibilities}
+
+Assign one primary owner to each area, but review one another's work.
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.15\linewidth}p{0.25\linewidth}X}
+Person F1 & Inference and decoder & Understand the generated API, parse the 14 outputs, and write decoder tests. \\
+Person F2 & Control and safety & Turn decoded targets into mock commands; own STOP/lost-target behavior and limits. \\
+Person F3 & Integration and tools & Own the command-line demo, logging, setup notes, GVSOC runs, and later hardware bring-up. \\
+\end{tabularx}
+
+Rotate code reviews. Nobody merges their own pull request without another teammate reading and running it.
+
+\section{4. Install This Tech Stack}
+
+Use one standard environment so the team sees the same behavior.
+
+\subsection{Required during week 1}
+
+\begin{enumerate}
+\item \textbf{Windows 10/11 with WSL 2 and Ubuntu.} Open PowerShell as Administrator:
+\begin{Code}
+wsl --install
+wsl --update
+wsl -l -v
+\end{Code}
+The Ubuntu entry should show WSL version 2. Official guide:
+\smallurl{https://learn.microsoft.com/en-us/windows/wsl/install}
+
+\item \textbf{Visual Studio Code for Windows} plus these extensions:
+  \begin{itemize}
+  \item WSL (Microsoft)
+  \item C/C++ (Microsoft)
+  \item Python (Microsoft)
+  \item GitHub Pull Requests (optional but helpful)
+  \end{itemize}
+Official WSL guide: \smallurl{https://code.visualstudio.com/docs/remote/wsl}
+
+\item \textbf{Docker Desktop} with the WSL 2 engine and Ubuntu integration enabled. Start Docker Desktop before running GVSOC. Official guide:
+\smallurl{https://docs.docker.com/desktop/features/wsl/}
+
+\item In the Ubuntu terminal:
+\begin{Code}
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip build-essential
+git --version
+python3 --version
+docker --version
+\end{Code}
+\end{enumerate}
+
+\subsection{Required later, when the physical drone is assigned}
+
+Install the Crazyflie client on Windows, not during an unsupervised first session. The hardware owner will also need the Crazyradio USB device and the Bitcraze firmware repositories. Use only the official guides:
+
+\begin{itemize}
+\item \href{https://www.bitcraze.io/documentation/tutorials/getting-started-with-crazyflie-2-x/}{Official Crazyflie getting-started guide}
+\item \href{https://www.bitcraze.io/documentation/tutorials/getting-started-with-aideck/}{Official AI-deck getting-started guide}
+\item \href{https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/building-and-flashing/build/}{Official building and flashing guide}
+\item \href{https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/userguides/app_layer/}{Official Crazyflie app-layer guide}
+\end{itemize}
+
+\begin{warnbox}
+Do not flash custom firmware or power motors until a mentor has identified the exact Crazyflie model, provided a recovery procedure, and approved the test. Remove propellers for every bench test that could arm motors.
+\end{warnbox}
+
+\section{5. Clone and Validate the Handoff}
+
+Use a path with no spaces. The explicit destination name \file{pytorch\_ssd} matters because some historical scripts expect it.
+
+\begin{Code}
+mkdir -p /mnt/c/DroneRS
+cd /mnt/c/DroneRS
+git clone https://github.com/DavidLiu2/pytorch-ssd.git pytorch_ssd
+cd pytorch_ssd
+git switch unstable
+git pull --ff-only
+git rev-parse --short HEAD
+\end{Code}
+
+The commit should be \file{b11e9da} or a newer handoff commit. If it is older, stop and contact David.
+
+Run the file-integrity check:
+
+\begin{Code}
+python3 tools/verify_plain_follow_handoff.py
+\end{Code}
+
+Expected result:
+
+\begin{Code}
+plain_follow handoff integrity check: PASS
+\end{Code}
+
+Then start Docker Desktop and run the application in GVSOC:
+
+\begin{Code}
+bash ./run_plain_follow_app_val.sh
+\end{Code}
+
+Near the end, look for \file{PASS: 'final' matches exactly}. Save the terminal output in your first issue or pull request.
+
+\section{6. The Generated Network Interface}
+
+Read these files in order:
+
+\begin{enumerate}
+\item \file{application/README.md}
+\item \file{application/validation/manifest.json}
+\item \file{aideck\_val\_main\_plain\_follow.c}
+\item \file{application/inc/network.h}
+\end{enumerate}
+
+The current validated harness performs this sequence:
+
+\begin{Code}
+mem_init();
+network_initialize();
+
+uint8_t *buffer = pi_l2_malloc(412000);
+/* Copy exactly 128 * 128 grayscale bytes into buffer. */
+network_run(buffer, 412000, buffer, 0, 1);
+
+/* Read 14 int32_t values from the output buffer. */
+network_terminate();
+\end{Code}
+
+The output head is \file{xbin9\_size\_bucket4}:
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.20\linewidth}p{0.20\linewidth}X}
+Indices 0--8 & 9 x-position logits & Choose the largest value; its bin center estimates horizontal position from left ($-1$) to right ($+1$). \\
+Index 9 & Visibility logit & Backend and firmware teams must agree on the deployed threshold/scaling. \\
+Indices 10--13 & 4 size logits & Choose the largest value; centers are 0.125, 0.375, 0.625, and 0.875. \\
+\end{tabularx}
+
+Do not edit files under \file{application/} by hand. They are generated artifacts. Build integrations around the public functions in \file{network.h}.
+
+\newpage
+\section{7. Initial Project: Follow Command Sandbox}
+
+\begin{greenbox}
+\textbf{Goal:} build and test the logic between the neural-network output and a future flight controller, entirely on a laptop. The sandbox reads 14 integers, decodes a target, and prints a mock command. It must never connect to hardware.
+\end{greenbox}
+
+Create this folder on a team branch:
+
+\begin{Code}
+student_projects/frontend_follow_command/
+  decoder.py
+  controller.py
+  main.py
+  test_decoder.py
+  test_controller.py
+  README.md
+\end{Code}
+
+\subsection{Decoder contract}
+
+Input: a list of exactly 14 integers. Output: a small record containing:
+
+\begin{itemize}
+\item \file{visible}: boolean
+\item \file{x\_bin}: integer from 0 through 8
+\item \file{x\_value}: bin center from approximately $-0.889$ through $+0.889$
+\item \file{size\_bucket}: integer from 0 through 3
+\item \file{size\_value}: one of 0.125, 0.375, 0.625, 0.875
+\end{itemize}
+
+For this first sandbox only, use \file{output[9] > 0} as the mock visibility rule. Label it clearly as a temporary rule that must be confirmed with the backend team before embedded integration.
+
+Start with the real validated vector:
+
+\begin{Code}
+4632 13262 4633 -2422 -3479 -5390 2962
+-1854 -11170 5303 -7980 3540 4466 -43
+\end{Code}
+
+It should decode to visible, x-bin 1 (left, about $-0.667$), and size bucket 2 (0.625).
+
+\subsection{Mock controller contract}
+
+Return exactly one command. Evaluate rules from top to bottom:
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.31\linewidth}X}
+Not visible & \file{STOP\_AND\_SEARCH} \\
+$x < -0.25$ & \file{TURN\_LEFT} \\
+$x > +0.25$ & \file{TURN\_RIGHT} \\
+Centered and size $< 0.375$ & \file{MOVE\_FORWARD} \\
+Centered and size $> 0.625$ & \file{MOVE\_BACKWARD} \\
+Otherwise & \file{HOLD} \\
+\end{tabularx}
+
+These are symbolic commands, not motor values. The validated vector should produce \file{TURN\_LEFT}.
+
+\subsection{Divide the work}
+
+\begin{itemize}
+\item F1 implements \file{decoder.py} and its tests.
+\item F2 implements \file{controller.py} and its tests.
+\item F3 implements \file{main.py}, input validation, logging, and the README.
+\item All three review and run the combined program.
+\end{itemize}
+
+\subsection{Definition of done}
+
+\begin{itemize}
+\item At least 6 tests: validated vector, invisible, far-left, far-right, too-small, too-large, and malformed input.
+\item Malformed inputs fail with a useful message, not a mysterious stack trace.
+\item The README explains the 14 fields and states that commands are simulations only.
+\item The team opens one pull request containing terminal test output and a three-minute demo.
+\item No files under \file{application/} are changed.
+\end{itemize}
+
+\section{8. Suggested Two-Week Schedule}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.18\linewidth}X}
+Day 1 & Install tools, clone, integrity check, GVSOC run. \\
+Day 2 & Read the four interface files and draw the data flow together. \\
+Days 3--4 & Implement decoder, controller, CLI, and tests in parallel. \\
+Day 5 & Integrate, review, demo, and merge the sandbox. \\
+Week 2 & Port the decoder and state machine to host-compiled C with unit tests. Do not flash yet. \\
+End of week 2 & Joint interface review with backend team: output layout, scaling, threshold, message fields, units, and update rate. \\
+\end{tabularx}
+
+\section{9. Git and Collaboration Rules}
+
+Create one branch per task:
+
+\begin{Code}
+git switch unstable
+git pull --ff-only
+git switch -c frontend/<your-name>-decoder
+\end{Code}
+
+Before asking for review:
+
+\begin{Code}
+git status
+python3 -m unittest discover -s student_projects/frontend_follow_command -v
+git diff --check
+\end{Code}
+
+Keep pull requests small. Explain what changed, how you tested it, and what is still uncertain. Never commit batteries of generated build files, private photos, passwords, radio addresses, or virtual environments.
+
+\section{10. Copy-Paste AI Starter Prompt}
+
+\begin{graybox}
+\small
+You are tutoring a team of first-year college students who are new to programming and embedded systems. We are working in the \file{pytorch-ssd} repository on branch \file{unstable}, baseline commit \file{b11e9da}. Our first project is a laptop-only Follow Command Sandbox. It must not connect to or flash drone hardware.
+
+The real model output is 14 signed integers: indices 0--8 are x-position logits, index 9 is a visibility logit, and indices 10--13 are size-bucket logits. For this sandbox only, visible means value 9 is greater than zero. Decode x and size with argmax and the centers documented in our onboarding packet. Then apply symbolic STOP/LEFT/RIGHT/FORWARD/BACKWARD/HOLD rules.
+
+Please act as a patient teacher. Explain every new term briefly, give one small step at a time, and tell us how to test each step. Reuse the repository's documented contract; do not invent a different API. Do not edit generated files under \file{application/}. Do not suggest flashing, arming, or running motors. If you need repository context, ask us to paste the relevant file instead of guessing.
+
+First response only: (1) restate the data flow in plain English, (2) propose the five-file project structure, (3) list at least six tests, and (4) give us only the first implementation step for \file{decoder.py}. Stop after that so we can try it and report the result.
+\end{graybox}
+
+\section{11. How to Ask for Help}
+
+Send all of the following:
+
+\begin{itemize}
+\item What you expected.
+\item The exact command you ran.
+\item The complete error text as copyable text.
+\item Output of \file{git status --short} and \file{git rev-parse --short HEAD}.
+\item One thing you already tried.
+\end{itemize}
+
+Stop after 30 minutes on the same error. Ask a teammate, then the project lead. Do not randomly reinstall tools or delete folders to make an error disappear.
+
+\section{12. First-Day Checklist}
+
+\checkbox I can open the repository through VS Code's WSL mode.\\
+\checkbox \file{git rev-parse --short HEAD} shows the expected baseline or newer.\\
+\checkbox The integrity checker prints \good.\\
+\checkbox The GVSOC command prints an exact final-tensor pass.\\
+\checkbox I can explain the camera-to-command data flow without notes.\\
+\checkbox I chose F1, F2, or F3 and opened my first GitHub issue.\\
+\checkbox I understand that no physical flight is part of the initial project.
+
+\vfill
+{\small\color{navy}Source of truth: repository README, \file{application/validation/manifest.json}, and reviewed code. AI output is assistance, not evidence.}
+
+\end{document}

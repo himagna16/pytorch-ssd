@@ -1,0 +1,335 @@
+\documentclass[11pt]{article}
+\newcommand{\packetname}{Model Team}
+\input{onboarding_style.tex}
+
+\begin{document}
+
+\doctitle{DroneRS Model / ML Team}{Two-person beginner onboarding packet}{Version 1.0 --- August 25, 2026}
+
+\begin{bluebox}
+\textbf{Your mission:} understand, measure, improve, quantize, and export the person-following model while keeping its embedded interface stable. In this project, ``backend'' means data, PyTorch, training, evaluation, quantization, and DORY export.
+\end{bluebox}
+
+\textbf{Do not start by training a new network.} First reproduce inference from the bundled checkpoint and create a small, understandable baseline report. Training and quantization come after you can explain what the current model sees and where it fails.
+
+\section{1. What Already Works}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.25\linewidth}X}
+Repository & \url{https://github.com/DavidLiu2/pytorch-ssd} \\
+Baseline branch & \file{unstable} \\
+Baseline commit & \file{b11e9da} \\
+Model & \file{plain\_follow} with \file{xbin9\_size\_bucket4} head \\
+Checkpoint & \file{artifacts/plain\_follow\_best\_follow\_score.pth} \\
+Input & $1 \times 128 \times 128$ grayscale image \\
+Output & 14 values: x position, visibility, and apparent size \\
+Deployment status & Generated GAP8 app passes GVSOC, all 9 layers exact \\
+Missing from Git & COCO images, local evaluation packs, full training logs \\
+\end{tabularx}
+
+\begin{warnbox}
+The production checkpoint and GAP8 app are baselines. Never overwrite them during an experiment. Write all student outputs under \file{logs/} or \file{student\_projects/} and use a new Git branch.
+\end{warnbox}
+
+\section{2. The ML-to-Drone Pipeline}
+
+\begin{center}
+\fbox{COCO / test images} $\longrightarrow$
+\fbox{PyTorch training} $\longrightarrow$
+\fbox{checkpoint}\\[6pt]
+$\longrightarrow$ \fbox{NEMO quantization} $\longrightarrow$
+\fbox{ONNX cleanup} $\longrightarrow$
+\fbox{DORY C app} $\longrightarrow$
+\fbox{GAP8 validation}
+\end{center}
+
+The firmware team consumes the final input/output contract. If your model change modifies shape, preprocessing, ordering, scale, or threshold, it is an interface change and must be reviewed with them before merging.
+
+\subsection{Vocabulary}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.20\linewidth}X}
+Model & A function with learned parameters that maps an image to numbers. \\
+Checkpoint & Saved model parameters plus metadata. \\
+Inference & Running a trained model without changing its parameters. \\
+Training & Updating parameters to reduce a loss on labeled examples. \\
+Loss & A number that tells the optimizer how wrong a prediction was. \\
+Metric & A measurement used to understand quality; it is not optimized directly. \\
+Quantization & Representing operations with small integers so they run efficiently on GAP8. \\
+ONNX & A portable graph representation used between PyTorch/NEMO and DORY. \\
+DORY & Code generator that converts the cleaned graph into a GAP8 C application. \\
+\end{tabularx}
+
+\section{3. Team Responsibilities}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.15\linewidth}p{0.26\linewidth}X}
+Person B1 & Data, training, evaluation & Own sample labels, preprocessing, metrics, training experiments, and failure analysis. \\
+Person B2 & Quantization and export & Own checkpoint metadata, NEMO/ONNX/DORY flow, numerical parity, and GVSOC release evidence. \\
+\end{tabularx}
+
+Both people must be able to run ordinary PyTorch inference. B2 should not become the only person who understands export, and B1 should not change the output head without B2 and the firmware team.
+
+\section{4. Install This Tech Stack}
+
+\subsection{Shared base tools}
+
+Use Windows 10/11 with WSL 2 Ubuntu, Visual Studio Code, Git, and Docker Desktop. This matches the validated workflow.
+
+In Administrator PowerShell:
+
+\begin{Code}
+wsl --install
+wsl --update
+wsl -l -v
+\end{Code}
+
+Install VS Code for Windows and its WSL and Python extensions. Install Docker Desktop, enable its WSL 2 engine, and enable integration for Ubuntu.
+
+Official setup references:
+
+\begin{itemize}
+\item WSL: \smallurl{https://learn.microsoft.com/en-us/windows/wsl/install}
+\item VS Code WSL: \smallurl{https://code.visualstudio.com/docs/remote/wsl}
+\item Docker WSL: \smallurl{https://docs.docker.com/desktop/features/wsl/}
+\item Python virtual environments: \smallurl{https://docs.python.org/3/tutorial/venv.html}
+\item PyTorch local setup: \smallurl{https://pytorch.org/get-started/locally/}
+\end{itemize}
+
+In Ubuntu:
+
+\begin{Code}
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip build-essential
+git --version
+python3 --version
+\end{Code}
+
+\subsection{Clone the project}
+
+Use a path without spaces and clone with the historical directory name expected by some scripts:
+
+\begin{Code}
+mkdir -p /mnt/c/DroneRS
+cd /mnt/c/DroneRS
+git clone https://github.com/DavidLiu2/pytorch-ssd.git pytorch_ssd
+cd pytorch_ssd
+git switch unstable
+git pull --ff-only
+git rev-parse --short HEAD
+\end{Code}
+
+The commit should be \file{b11e9da} or newer. If not, contact David.
+
+\subsection{Week-1 training environment}
+
+Keep virtual environments outside the repository:
+
+\begin{Code}
+python3 -m venv ~/venvs/droners-train
+source ~/venvs/droners-train/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements_trainenv.txt
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+\end{Code}
+
+CPU mode is expected and sufficient for week 1. Do not install random newer versions when a pinned requirements file exists.
+
+\subsection{Later: quantization/export environments}
+
+The repository intentionally separates environments:
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.31\linewidth}X}
+\file{requirements\_trainenv.txt} & Ordinary CPU PyTorch work. Install this first. \\
+\file{requirements\_nemoenv.txt} & NEMO quantization and ONNX export. Use a separate environment. \\
+\file{requirements\_doryenv.txt} & DORY graph/code generation and validation helpers. Heavy and version-sensitive. \\
+Docker image & Pinned Bitcraze AI-deck/GAP8 SDK used for GVSOC build and execution. \\
+\end{tabularx}
+
+Set up NEMO/DORY in a scheduled team session using Python 3.10 or 3.11 and the pinned files. Do not spend the first week independently debugging TensorFlow, ONNX, or compiler compatibility. A shared known-good environment or prebuilt development image is preferred.
+
+\section{5. Verify the Baseline}
+
+With any Python 3 interpreter, verify the packaged artifacts:
+
+\begin{Code}
+python3 tools/verify_plain_follow_handoff.py
+\end{Code}
+
+Expected: \file{plain\_follow handoff integrity check: PASS}.
+
+With the training environment active, choose a local JPG or PNG and run:
+
+\begin{Code}
+python inference_follow_demo.py \
+  --ckpt artifacts/plain_follow_best_follow_score.pth \
+  --image /absolute/path/to/your_image.jpg \
+  --vis-thresh 0.60
+\end{Code}
+
+The script center-crops, converts to grayscale, resizes to 128x128, loads the checkpoint, and prints both raw and decoded values. Use images you have permission to use. Do not commit identifiable photos.
+
+\section{6. Understand the 14-Value Output}
+
+The head is \file{xbin9\_size\_bucket4}:
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.20\linewidth}p{0.22\linewidth}X}
+Indices 0--8 & x-bin logits & Argmax selects one of nine horizontal bins. Centers run from about $-0.889$ (left) to $+0.889$ (right). \\
+Index 9 & visibility logit & Converted to visibility confidence; the checkpoint selected threshold is 0.60 for normal PyTorch evaluation. \\
+Indices 10--13 & size logits & Argmax selects centers 0.125, 0.375, 0.625, or 0.875. \\
+\end{tabularx}
+
+Read \file{utils/follow\_task.py} for the authoritative head specification and decoder. Never copy a new, slightly different decoder into a second file without a good reason.
+
+Useful metrics include visibility precision/recall/F1, no-person false-positive rate, x mean absolute error, size mean absolute error, and the combined follow score. No single number tells the whole story.
+
+\section{7. Initial Project: Baseline Behavior Report}
+
+\begin{greenbox}
+\textbf{Goal:} measure what the shipped checkpoint does on a small, understandable set of images before changing the model. Produce a repeatable script, a CSV, and a short failure-analysis report.
+\end{greenbox}
+
+Create:
+
+\begin{Code}
+student_projects/backend_baseline/
+  run_baseline.py
+  sample_labels.example.csv
+  test_run_baseline.py
+  report.md
+  README.md
+\end{Code}
+
+Keep actual photos under \file{data/onboarding\_private/}; \file{data/} is ignored by Git.
+
+\subsection{Build a 20-image learning set}
+
+Use 10 images with a person and 10 without a person. Include easy and difficult cases: left/center/right, near/far, bright/dim, partial person, clutter, and an object that might resemble a person. Use your own non-sensitive images or approved public images.
+
+For each image, record simple human labels:
+
+\begin{itemize}
+\item \file{expected\_visible}: yes/no
+\item \file{expected\_horizontal}: left/center/right when visible
+\item \file{expected\_size}: near/medium/far when visible
+\item \file{notes}: why the example may be difficult
+\end{itemize}
+
+\subsection{Write one batch-inference script}
+
+Reuse model loading and preprocessing from \file{inference\_follow\_demo.py}, and use the existing runtime decoder in \file{utils/follow\_task.py}. Load the model once, not once per image. Write \file{results.csv} with:
+
+\begin{itemize}
+\item image name and expected labels
+\item visibility confidence and predicted visible
+\item predicted x bin/value and size bucket/value
+\item whether visibility was correct
+\item a brief error note
+\end{itemize}
+
+Do not build a graphical application. A reliable command-line script and a readable CSV are the goal.
+
+\subsection{Divide the work}
+
+\begin{itemize}
+\item B1 owns the labeled set, metrics, and failure analysis.
+\item B2 owns checkpoint inspection, reusable inference code, and a comparison between PyTorch output and the checked-in deployment manifest.
+\item Both review the CSV and select the three most informative failures.
+\end{itemize}
+
+\subsection{One controlled experiment}
+
+Compare visibility thresholds 0.50 and 0.60 on the same 20 images. Do not train yet. Explain which errors change and why a lower threshold trades fewer missed people for more false positives.
+
+\subsection{Definition of done}
+
+\begin{itemize}
+\item A new clone can run the script using commands in the README.
+\item The model is loaded once and inference uses \file{torch.no\_grad()}.
+\item At least 3 automated tests cover malformed labels, empty folders, and output-column creation.
+\item The report contains a small results table, three failure examples, and one proposed next experiment.
+\item No production checkpoint, generated app, or private image is committed.
+\item The team gives a five-minute demo and opens one reviewed pull request.
+\end{itemize}
+
+\section{8. Second Project: Tiny Training Smoke Test}
+
+Do this only after the baseline report and after COCO is available. Download COCO 2017 train images, validation images, and train/validation annotations from:
+
+\href{https://cocodataset.org/}{Official COCO dataset website and downloads}
+
+Expected layout:
+
+\begin{Code}
+data/coco/images/train2017/
+data/coco/images/val2017/
+data/coco/annotations/instances_train2017.json
+data/coco/annotations/instances_val2017.json
+\end{Code}
+
+Run a deliberately small smoke test from \file{pytorch\_ssd}:
+
+\begin{Code}
+python train.py \
+  --model-type plain_follow \
+  --follow-head-type xbin9_size_bucket4 \
+  --epochs 1 --batch_size 4 --num_workers 0 \
+  --max-train-batches 10 --max-val-batches 5 \
+  --output_dir pytorch_ssd/logs/backend_onboarding_train
+\end{Code}
+
+This proves the loop works; it does not produce a good model. Do not compare a ten-batch smoke checkpoint with the production model as if they were trained equally.
+
+After that, B2 can run the documented release smoke flow in a mentor-led session. Always include \file{--skip-application-promotion} for an experiment so it cannot replace the verified app.
+
+\section{9. Suggested Two-Week Schedule}
+
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.18\linewidth}X}
+Day 1 & Install base tools, clone, verify integrity, run one image. \\
+Day 2 & Read model factory, inference demo, and output decoder together. \\
+Days 3--4 & Create labels, batch script, CSV, and automated tests. \\
+Day 5 & Compare thresholds, write failure report, demo, and merge. \\
+Week 2 & Download COCO, run tiny training smoke, learn losses/metrics. \\
+End of week 2 & Joint contract review with firmware team and plan one controlled model experiment. \\
+\end{tabularx}
+
+\section{10. Git and Experiment Rules}
+
+\begin{Code}
+git switch unstable
+git pull --ff-only
+git switch -c backend/<your-name>-baseline
+\end{Code}
+
+Every report must record the commit, checkpoint hash/name, command, data subset, and metric definitions. Change one important variable at a time. A result that cannot be reproduced is a note, not project evidence.
+
+Never commit \file{data/}, \file{logs/}, virtual environments, private images, or ad-hoc checkpoints. Do commit code, small example label templates, tests, and concise reports.
+
+\section{11. Copy-Paste AI Starter Prompt}
+
+\begin{graybox}
+\small
+You are tutoring two first-year college students who are new to Python and machine learning. We are working in the \file{pytorch-ssd} repository on branch \file{unstable}, baseline commit \file{b11e9da}. The current model is \file{plain\_follow}; its checkpoint is \file{artifacts/plain\_follow\_best\_follow\_score.pth}; input is one 128x128 grayscale image; and the head is \file{xbin9\_size\_bucket4} with 14 outputs.
+
+Our first project is a Baseline Behavior Report, not a new model. We need a batch-inference script that reuses \file{inference\_follow\_demo.py} and \file{utils/follow\_task.py}, loads the model once, evaluates 20 locally labeled images, and writes a CSV. We will compare visibility thresholds 0.50 and 0.60 and describe three failures.
+
+Act as a patient teacher. Define each ML term briefly, work in small steps, and explain why each test matters. Do not change the model architecture, generated \file{application/}, production checkpoint, or dependency versions. Do not tell us to download random packages; use \file{requirements\_trainenv.txt}. Ask us to paste a relevant file or error instead of guessing. Protect privacy: never ask us to upload private images.
+
+First response only: (1) explain inference, logits, argmax, sigmoid, threshold, and checkpoint in plain English; (2) show the proposed project file tree; (3) propose CSV columns and three automated tests; and (4) give only the first step for reading labels and discovering images. Stop so we can implement it and report back.
+\end{graybox}
+
+\section{12. How to Ask for Help}
+
+Provide the exact command, complete error text, Python version, active environment name, \file{git status --short}, \file{git rev-parse --short HEAD}, and what you tried. Stop after 30 minutes on the same dependency problem. Do not repeatedly reinstall the environment; ask for a paired setup session.
+
+\section{13. First-Day Checklist}
+
+\checkbox I can explain training versus inference.\\
+\checkbox I am working in a virtual environment, not system Python.\\
+\checkbox The handoff integrity check prints \good.\\
+\checkbox I ran the bundled checkpoint on one image.\\
+\checkbox I can identify the x, visibility, and size slices.\\
+\checkbox I chose B1 or B2 and opened my first GitHub issue.\\
+\checkbox I understand why we are measuring the baseline before training.
+
+\vfill
+{\small\color{navy}Source of truth: repository README, checkpoint metadata, \file{utils/follow\_task.py}, validation manifest, and reviewed experiment records. AI output is assistance, not evidence.}
+
+\end{document}

@@ -84,6 +84,8 @@ pass is the release gate.
 
 ## Source Map
 
+- `docs/collaborator_handoff_2026_08.md`: reproduction inventory, external
+  repository links, environment pins, and private-data bundle layout.
 - `artifacts/plain_follow_best_follow_score.pth`: bundled handoff checkpoint
   and default checkpoint used by the release flow.
 - `training/plain_follow/plain_follow_best_follow_score.pth`: ignored local
