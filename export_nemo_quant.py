@@ -13,6 +13,7 @@ import nemo  # pytorch-nemo (pulp-platform)
 from PIL import Image
 
 from models.hybrid_follow_net import HybridFollowNet
+from models.plain_follow_net import PlainFollowNet
 from models.ssd_mobilenet_v2_raw import SSDMobileNetV2Raw
 
 
@@ -25,6 +26,12 @@ def build_model(
 ):
     if model_type == "hybrid_follow":
         return HybridFollowNet(
+            input_channels=input_channels,
+            image_size=image_size,
+        )
+
+    if model_type == "plain_follow":
+        return PlainFollowNet(
             input_channels=input_channels,
             image_size=image_size,
         )
@@ -70,6 +77,28 @@ def maybe_fuse_hybrid_follow_for_export(model):
 
     fuse_modules(model, fuse_groups, inplace=True)
     print(f"[export_nemo_quant] Fused {len(fuse_groups)} Conv-BN groups for hybrid_follow export.")
+    return model
+
+
+def maybe_fuse_plain_follow_for_export(model):
+    if not isinstance(model, PlainFollowNet):
+        return model
+
+    fuse_modules = _get_fuse_modules_fn()
+    if fuse_modules is None:
+        print("[export_nemo_quant] WARNING: torch fuse_modules() unavailable; exporting unfused plain_follow model.")
+        return model
+
+    model = deepcopy(model).eval()
+
+    fuse_groups = [["stem.0", "stem.1"]]
+    for stage_name in ("stage1", "stage2", "stage3", "stage4"):
+        stage = getattr(model, stage_name)
+        for block_idx in range(len(stage)):
+            fuse_groups.append([f"{stage_name}.{block_idx}.0", f"{stage_name}.{block_idx}.1"])
+
+    fuse_modules(model, fuse_groups, inplace=True)
+    print(f"[export_nemo_quant] Fused {len(fuse_groups)} Conv-BN groups for plain_follow export.")
     return model
 
 
@@ -814,7 +843,7 @@ def main():
         "--model-type",
         type=str,
         default="hybrid_follow",
-        choices=["ssd", "hybrid_follow"],
+        choices=["ssd", "hybrid_follow", "plain_follow"],
     )
     parser.add_argument("--ckpt", type=str, default="training/person_ssd_pytorch/ssd_mbv2_raw.pth")
     parser.add_argument("--out", type=str, default="export/ssd_mbv2_nemo_id.onnx")
@@ -855,8 +884,8 @@ def main():
 
     args = parser.parse_args()
 
-    if args.model_type == "hybrid_follow" and args.input_channels != 1:
-        raise ValueError("hybrid_follow export requires --input-channels 1.")
+    if args.model_type in ("hybrid_follow", "plain_follow") and args.input_channels != 1:
+        raise ValueError(f"{args.model_type} export requires --input-channels 1.")
 
     device = (
         torch.device("cpu")
@@ -882,6 +911,7 @@ def main():
     model_fp = load_checkpoint(model_fp, args.ckpt, device)
     model_fp = maybe_fuse_hybrid_follow_for_export(model_fp)
     model_fp = maybe_convert_hybrid_follow_to_export_head(model_fp)
+    model_fp = maybe_fuse_plain_follow_for_export(model_fp)
     model_fp.to(device).eval()
 
     # NEMO expects a dummy_input for graph tracing
