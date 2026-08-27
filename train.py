@@ -9,6 +9,12 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from models.hybrid_follow_net import HybridFollowNet
+from models.plain_follow_net import (
+    PlainFollowNet,
+    size_to_bucket,
+    split_head,
+    x_offset_to_bin,
+)
 from models.ssd_mobilenet_v2_raw import SSDMobileNetV2Raw
 from utils.coco_follow_regression import COCOFollowRegressionDataset
 from utils.coco_person import COCOPersonDataset, detection_collate_fn
@@ -38,7 +44,7 @@ def parse_args():
         "--model-type",
         type=str,
         default="hybrid_follow",
-        choices=["ssd", "hybrid_follow"],
+        choices=["ssd", "hybrid_follow", "plain_follow"],
     )
     ap.add_argument("--epochs", type=int, default=30)
     ap.add_argument("--batch_size", type=int, default=8)
@@ -135,6 +141,53 @@ def compute_hybrid_follow_loss(predictions: torch.Tensor, follow_targets: torch.
     }
 
 
+def compute_plain_follow_loss(predictions: torch.Tensor, follow_targets: torch.Tensor):
+    x_target = follow_targets[:, 0]
+    size_target = follow_targets[:, 1]
+    visibility_target = follow_targets[:, 2]
+
+    x_logits, size_logits, vis_logit = split_head(predictions)
+
+    visibility_loss = F.binary_cross_entropy_with_logits(vis_logit, visibility_target)
+
+    visible_mask = visibility_target > 0.5
+    zero = predictions.new_zeros(())
+    if torch.any(visible_mask):
+        x_loss = F.cross_entropy(
+            x_logits[visible_mask],
+            x_offset_to_bin(x_target[visible_mask]),
+        )
+        size_loss = F.cross_entropy(
+            size_logits[visible_mask],
+            size_to_bucket(size_target[visible_mask]),
+        )
+    else:
+        x_loss = zero
+        size_loss = zero
+
+    total_loss = x_loss + size_loss + visibility_loss
+    return {
+        "total": total_loss,
+        "x_offset": x_loss.detach(),
+        "size_proxy": size_loss.detach(),
+        "visibility": visibility_loss.detach(),
+    }
+
+
+FOLLOW_MODEL_TYPES = ("hybrid_follow", "plain_follow")
+
+FOLLOW_LOSS_FNS = {
+    "hybrid_follow": compute_hybrid_follow_loss,
+    "plain_follow": compute_plain_follow_loss,
+}
+
+
+def follow_vis_logits(predictions: torch.Tensor, model_type: str) -> torch.Tensor:
+    if model_type == "plain_follow":
+        return split_head(predictions)[2]
+    return predictions[:, 2]
+
+
 def _safe_div(numerator: float, denominator: float) -> float:
     if denominator <= 0.0:
         return 0.0
@@ -158,9 +211,9 @@ def save_checkpoint(path: Path, model, args, epoch: int, extra_state=None) -> No
 def build_datasets(args, repo_root: Path):
     image_size = (args.height, args.width)
 
-    if args.model_type == "hybrid_follow":
+    if args.model_type in FOLLOW_MODEL_TYPES:
         if args.input_channels != 1:
-            raise ValueError("hybrid_follow requires --input-channels 1.")
+            raise ValueError(f"{args.model_type} requires --input-channels 1.")
 
         train_ds = COCOFollowRegressionDataset(
             root=str(repo_root / args.data_root),
@@ -209,7 +262,7 @@ def build_datasets(args, repo_root: Path):
 
 
 def _default_annotation_path(model_type: str, split: str) -> str:
-    if model_type == "hybrid_follow":
+    if model_type in FOLLOW_MODEL_TYPES:
         return f"pytorch_ssd/data/coco/annotations/instances_{split}2017.json"
     return f"pytorch_ssd/data/coco/annotations/{split}_person.json"
 
@@ -218,11 +271,11 @@ def resolve_annotation_paths(args):
     train_ann = args.train_ann or _default_annotation_path(args.model_type, "train")
     val_ann = args.val_ann or _default_annotation_path(args.model_type, "val")
 
-    if args.model_type == "hybrid_follow" and not args.allow_person_only_follow_ann:
+    if args.model_type in FOLLOW_MODEL_TYPES and not args.allow_person_only_follow_ann:
         for ann_path in (train_ann, val_ann):
             if Path(ann_path).name.endswith("_person.json"):
                 raise ValueError(
-                    "hybrid_follow must train on full COCO instances annotations so "
+                    f"{args.model_type} must train on full COCO instances annotations so "
                     "true no-person negatives are present. "
                     "Pass --allow-person-only-follow-ann to override."
                 )
@@ -239,6 +292,12 @@ def build_model(args):
             image_size=image_size,
         )
 
+    if args.model_type == "plain_follow":
+        return PlainFollowNet(
+            input_channels=1,
+            image_size=image_size,
+        )
+
     return SSDMobileNetV2Raw(
         num_classes=args.num_classes,
         width_mult=args.width_mult,
@@ -251,14 +310,14 @@ def resolve_output_dir(args, repo_root: Path) -> Path:
     if args.output_dir:
         return repo_root / args.output_dir
 
-    if args.model_type == "hybrid_follow":
-        return repo_root / "pytorch_ssd/training/hybrid_follow"
+    if args.model_type in FOLLOW_MODEL_TYPES:
+        return repo_root / f"pytorch_ssd/training/{args.model_type}"
     return repo_root / "pytorch_ssd/training/person_ssd_pytorch"
 
 
 def checkpoint_name(model_type: str, epoch: int) -> str:
-    if model_type == "hybrid_follow":
-        return f"hybrid_follow_epoch_{epoch:03d}.pth"
+    if model_type in FOLLOW_MODEL_TYPES:
+        return f"{model_type}_epoch_{epoch:03d}.pth"
     return f"ssd_mbv2_epoch_{epoch:03d}.pth"
 
 
@@ -291,13 +350,13 @@ def train_or_eval_epoch(
     with context:
         pbar = tqdm(loader, desc="Train" if is_train else "Val", ncols=100)
         for batch in pbar:
-            if model_type == "hybrid_follow":
+            if model_type in FOLLOW_MODEL_TYPES:
                 images, targets = batch
                 images = images.to(device)
                 follow_targets = targets["follow_target"].to(device)
 
                 predictions = model(images)
-                loss_items = compute_hybrid_follow_loss(predictions, follow_targets)
+                loss_items = FOLLOW_LOSS_FNS[model_type](predictions, follow_targets)
                 losses = loss_items["total"]
                 loss_value = float(losses.detach().cpu().item())
 
@@ -312,13 +371,14 @@ def train_or_eval_epoch(
                 running_visibility += float(loss_items["visibility"].cpu().item())
                 if track_follow_metrics:
                     visibility_target = follow_targets[:, 2]
-                    pred_visible = torch.sigmoid(predictions[:, 2]) >= vis_thresh
+                    vis_logits = follow_vis_logits(predictions, model_type)
+                    pred_visible = torch.sigmoid(vis_logits) >= vis_thresh
                     target_visible = visibility_target > 0.5
                     batch_size = int(visibility_target.shape[0])
 
                     visibility_bce_sum += float(
                         F.binary_cross_entropy_with_logits(
-                            predictions[:, 2],
+                            vis_logits,
                             visibility_target,
                             reduction="sum",
                         ).detach().cpu().item()
@@ -365,7 +425,7 @@ def train_or_eval_epoch(
     stats = {
         "loss": running_loss / num_batches,
     }
-    if model_type == "hybrid_follow":
+    if model_type in FOLLOW_MODEL_TYPES:
         stats["x_offset"] = running_x / num_batches
         stats["size_proxy"] = running_size / num_batches
         stats["visibility"] = running_visibility / num_batches
@@ -389,9 +449,9 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     args.train_ann, args.val_ann = resolve_annotation_paths(args)
 
-    if args.model_type == "hybrid_follow":
-        print(f"Hybrid-follow train annotations: {args.train_ann}")
-        print(f"Hybrid-follow val annotations: {args.val_ann}")
+    if args.model_type in FOLLOW_MODEL_TYPES:
+        print(f"Follow train annotations: {args.train_ann}")
+        print(f"Follow val annotations: {args.val_ann}")
 
     train_ds, val_ds, collate_fn = build_datasets(args, repo_root)
     train_loader = DataLoader(
@@ -437,11 +497,11 @@ def main():
             device=device,
             model_type=args.model_type,
             optimizer=None,
-            track_follow_metrics=args.model_type == "hybrid_follow",
+            track_follow_metrics=args.model_type in FOLLOW_MODEL_TYPES,
             vis_thresh=args.vis_thresh,
         )
 
-        if args.model_type == "hybrid_follow":
+        if args.model_type in FOLLOW_MODEL_TYPES:
             print(
                 "Train loss: {loss:.4f} (x={x_offset:.4f}, size={size_proxy:.4f}, vis={visibility:.4f})".format(
                     **train_stats
@@ -484,12 +544,12 @@ def main():
         )
         print(f"Saved checkpoint to {ckpt_path}")
 
-        if args.model_type == "hybrid_follow":
+        if args.model_type in FOLLOW_MODEL_TYPES:
             current_visibility_bce = val_stats["visibility_bce"]
             if current_visibility_bce < best_visibility_bce:
                 best_visibility_bce = current_visibility_bce
                 best_visibility_epoch = epoch
-                best_ckpt_path = output_dir / "hybrid_follow_best_visibility.pth"
+                best_ckpt_path = output_dir / f"{args.model_type}_best_visibility.pth"
                 save_checkpoint(
                     best_ckpt_path,
                     model,
