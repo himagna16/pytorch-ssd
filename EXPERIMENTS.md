@@ -1,5 +1,46 @@
 # Experiment Log
 
+## Aug 27, 2026 — Full-dataset retrain + definitive drift audits (Sai)
+
+Both models retrained on full COCO train2017 (118,287 images, 10 epochs,
+batch 32, MPS ~8 it/s), validated on held-out val2017 — these replace the
+Aug 26 bootstrap numbers, which were inflated by train/val leakage.
+
+| | hybrid_follow (scalar) | plain_follow (bin) |
+|---|---|---|
+| Val visibility F1 | 0.765 (best ep 9) | **0.778** (best ep 10, still improving) |
+| No-person FP rate | 0.225 | 0.222 |
+| FP->FQ warning breaches | 4/16 images | decoded x-bin 15/16 exact, 16/16 adjacent |
+| Size output under FQ | (part of breaches above) | bucket preserved 13/16 |
+| Visibility agreement | 16/16 | 16/16 |
+
+**Findings**
+
+1. **plain_follow now beats hybrid_follow on task quality with 45% of the
+   parameters** (186K vs 412K) — the "bin head trades accuracy for
+   robustness" worry did not materialize at this scale.
+2. **The bin-robustness result survives a properly trained model**: x-bin
+   predictions now span 5 different bins across the 16 audit images (COCO
+   subjects are genuinely center-biased, so bin 4 still dominates) and the
+   decoded x command survived quantization on 15/16 exactly, 16/16 within
+   one bin. The scalar model breached drift warnings on 4/16.
+3. **New observation — coarse buckets are not automatically safe**: the
+   4-bucket size output flipped on 3/16 images. Discrete outputs protect
+   decisions only when predictions sit away from bucket BOUNDARIES; with
+   only 4 wide buckets, boundary-adjacent predictions are common. Candidate
+   fixes: more size bins, or boundary-aware training (margin loss), or
+   hysteresis on the decoded size as well.
+4. Visibility agreed 16/16 for both models this round — consistent with the
+   threshold sweep: ~10% of images sit in the flip-risk band, so a 16-image
+   sample sometimes contains zero flips. Population-level exposure is the
+   right lens, not single audits.
+
+**Artifacts**: `training/{plain,hybrid}_follow_full/` best checkpoints
+(local), `export/overlays_{plain,hybrid}_full.png`,
+`export/plain_follow/plain_follow_full_quant.onnx`,
+`export/hybrid_follow/hybrid_follow_full_quant.onnx`,
+`export/plain_follow/full_model_drift_audit.txt`.
+
 ## Aug 26, 2026 — Scalar vs bin head under fake quantization (Sai)
 
 **Question**: does the thesis's core claim — bin-based follow heads preserve
