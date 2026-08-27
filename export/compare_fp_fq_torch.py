@@ -38,6 +38,11 @@ VIS_WARN = 0.10
 def build_fq(model_fp: torch.nn.Module, calib_imgs, bits: int = 8) -> torch.nn.Module:
     import nemo
 
+    # NEMO passes kwargs removed from modern torch.onnx internals; reuse the
+    # compatibility shim from the export script.
+    from export_nemo_quant import patch_model_to_graph_compat
+    patch_model_to_graph_compat()
+
     dummy_input = torch.randn(1, 1, 128, 128)
     model_q = nemo.transform.quantize_pact(deepcopy(model_fp), dummy_input=dummy_input)
     model_q.eval()
