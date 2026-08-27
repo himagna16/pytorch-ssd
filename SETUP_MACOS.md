@@ -56,9 +56,11 @@ unzip -q val2017.zip -d images/ && unzip -q annotations_trainval2017.zip
    `brew install bash`, then invoke as `bash run_all.sh ...` (not `./run_all.sh`).
 3. **pycocotools in nemoenv**: the prebuilt wheel is compiled against a
    different numpy than the env and dies with "numpy.dtype size changed".
-   Fix (also drags numpy to 2.4.x, which NEMO export tolerates fine):
-   `pip install cython && pip install --no-cache-dir --no-build-isolation \
-    --force-reinstall --no-binary pycocotools pycocotools==2.0.7`
+   Fix — IMPORTANT: pin numpy first and use `--no-deps`, otherwise the
+   rebuild upgrades numpy to 2.x, which torch 2.2.2 cannot import under:
+   `pip install cython numpy==1.26.4 && pip install --no-cache-dir \
+    --no-build-isolation --force-reinstall --no-deps --no-binary \
+    pycocotools pycocotools==2.0.7`
 4. **Standalone scripts that call `nemo.transform.quantize_pact` must first
    call `patch_model_to_graph_compat()`** (import from `export_nemo_quant`) —
    NEMO passes kwargs removed from modern torch.onnx internals.

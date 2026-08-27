@@ -165,10 +165,13 @@ macOS only — pycocotools in this env ships a wheel built against the wrong
 numpy and dies with "numpy.dtype size changed"; preempt it:
 
 ```bash
-../nemoenv/bin/pip install cython
+../nemoenv/bin/pip install cython numpy==1.26.4
 ../nemoenv/bin/pip install --no-cache-dir --no-build-isolation \
-    --force-reinstall --no-binary pycocotools pycocotools==2.0.7
+    --force-reinstall --no-deps --no-binary pycocotools pycocotools==2.0.7
 ```
+
+(`numpy==1.26.4` and `--no-deps` are load-bearing: without them the rebuild
+pulls numpy 2.x, and torch 2.2.2 fails to import under numpy 2.)
 
 **VERIFY**: quantize and export a random-weight model end to end:
 
@@ -234,6 +237,7 @@ entire quantization measurement path works.
 |---|---|
 | `pip` finds no `torch==2.4.1+cpu` | Linux-only pin on macOS → install plain `torch==2.4.1` (Stage 2 macOS block) |
 | `numpy.dtype size changed` importing pycocotools | wheel/numpy mismatch → rebuild pycocotools from source (Stage 5 macOS block) |
+| torch fails to import after pycocotools rebuild (log mentions NumPy 2) | rebuild upgraded numpy to 2.x → `pip install numpy==1.26.4`, redo the rebuild with `--no-deps` |
 | `run_all.sh` syntax error near `^^` | macOS bash 3.2 → `brew install bash`, run `bash run_all.sh` (but full run_all needs DORY — avoid for now) |
 | `ValueError: max() arg is an empty sequence` in NEMO export | you are NOT on the fork's `macos-setup` branch → re-clone per Stage 1 |
 | `stage1.0.add is not a module name` warnings then seeding message | expected on hybrid_follow exports; not an error |
