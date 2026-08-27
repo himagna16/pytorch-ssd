@@ -49,12 +49,20 @@ unzip -q val2017.zip -d images/ && unzip -q annotations_trainval2017.zip
 
 ## Known macOS issues and fixes
 
-1. **doryenv cannot be built on macOS** — `requirements_doryenv.txt` pins
+0. **doryenv cannot be built on macOS** — `requirements_doryenv.txt` pins
    `nvidia-*` CUDA packages and old TensorFlow (Linux-only wheels). Run the
    pipeline with `RUN_DORY=0`; DORY codegen + GVSOC need a Linux box or Docker.
 2. **`run_all.sh` needs bash ≥ 4** (`${VAR^^}` syntax); macOS ships bash 3.2.
    `brew install bash`, then invoke as `bash run_all.sh ...` (not `./run_all.sh`).
-3. **NEMO export crashed at `PACT_IntegerAdd` with torch 2.x**
+3. **pycocotools in nemoenv**: the prebuilt wheel is compiled against a
+   different numpy than the env and dies with "numpy.dtype size changed".
+   Fix (also drags numpy to 2.4.x, which NEMO export tolerates fine):
+   `pip install cython && pip install --no-cache-dir --no-build-isolation \
+    --force-reinstall --no-binary pycocotools pycocotools==2.0.7`
+4. **Standalone scripts that call `nemo.transform.quantize_pact` must first
+   call `patch_model_to_graph_compat()`** (import from `export_nemo_quant`) —
+   NEMO passes kwargs removed from modern torch.onnx internals.
+5. **NEMO export crashed at `PACT_IntegerAdd` with torch 2.x**
    (`ValueError: max() arg is an empty sequence`): the nemo-graph tracer fails
    to resolve the residual-add module names, so their `eps_in_list` stays
    empty. Fixed on this branch (`macos-setup`) in `export_nemo_quant.py` by
