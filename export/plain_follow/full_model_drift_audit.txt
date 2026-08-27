@@ -1,0 +1,33 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/export/compare_fp_fq_torch.py:195: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  state = torch.load(args.ckpt, map_location="cpu")
+loading annotations into memory...
+Done (t=0.18s)
+creating index...
+index created!
+[drift] building FQ model (8 bits, 32 calib images)...
+
+   idx  gt | fp xb fq xb exact  adj | fp sb fq sb exact |  fp vP  fq vP agree | xlogit MAE
+     0   P |     7     7   yes  yes |     2     2   yes |  0.983  0.970   yes |     0.1122
+     1   - |     6     6   yes  yes |     0     0   yes |  0.199  0.192   yes |     0.0215
+     2   P |     5     5   yes  yes |     1     1   yes |  0.605  0.565   yes |     0.0413
+     3   P |     5     5   yes  yes |     1     1   yes |  0.966  0.952   yes |     0.0522
+     4   - |     5     5   yes  yes |     3     3   yes |  0.462  0.390   yes |     0.0431
+     5   - |     7     7   yes  yes |     3     1    NO |  0.086  0.059   yes |     0.0710
+     6   - |     3     4    NO  yes |     0     0   yes |  0.060  0.045   yes |     0.1076
+     7   P |     4     4   yes  yes |     0     0   yes |  0.449  0.399   yes |     0.0731
+     8   - |     4     4   yes  yes |     3     1    NO |  0.373  0.353   yes |     0.0625
+     9   - |     4     4   yes  yes |     3     3   yes |  0.071  0.054   yes |     0.0791
+    10   P |     4     4   yes  yes |     0     0   yes |  0.898  0.861   yes |     0.0470
+    11   P |     4     4   yes  yes |     3     2    NO |  0.994  0.991   yes |     0.0908
+    15   P |     1     1   yes  yes |     0     0   yes |  0.495  0.465   yes |     0.1042
+    17   P |     8     8   yes  yes |     0     0   yes |  0.368  0.350   yes |     0.0697
+    18   P |     4     4   yes  yes |     1     1   yes |  0.981  0.970   yes |     0.0896
+    19   P |     4     4   yes  yes |     0     0   yes |  0.551  0.510   yes |     0.0411
+
+bin-head summary over 16 images (10 person / 6 no-person):
+  decoded x-bin preserved exactly:      15/16
+  x-bin adjacent-or-better:             16/16
+  decoded size bucket preserved:        13/16
+  visibility decision agreement:        16/16
+  mean x-logit MAE across images:       0.0691
+  mean |dvisP|:                         0.0259

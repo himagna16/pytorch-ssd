@@ -63,7 +63,7 @@ drone/                  <- workspace root
 
 ```bash
 mkdir -p ~/drone && cd ~/drone
-git clone -b macos-setup https://github.com/himagna16/pytorch-ssd pytorch_ssd
+git clone https://github.com/himagna16/pytorch-ssd pytorch_ssd   # default branch = main
 cd pytorch_ssd
 ```
 
