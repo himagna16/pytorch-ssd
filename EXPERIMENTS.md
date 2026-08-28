@@ -1,5 +1,26 @@
 # Experiment Log
 
+## Aug 28, 2026 — QAT2 continuation: no improvement; champion confirmed (Sai)
+
+The quant-aware continuation (init from QAT ep3, lr 7e-5, batch 16) was
+OOM-killed by macOS a second time, 71% into epoch 2 — NEMO QAT on MPS leaks
+memory progressively; batch size does not save it, only wall-clock (~2.25 h)
+changes. Yield: epoch 1 only, deployed-form peak F1 **0.7988** — below the
+deployed champion's 0.8008. Prediction on record was ~0.803 (70% to beat);
+wrong on direction: epoch 1's in-loop F1 (0.7990 @ 0.50) carried no
+threshold-sweep bonus this time (its peak already sat at 0.50), and the OOM
+removed any chance for epochs 2-3.
+
+Decision: **champion stands** (QAT ep3, 0.8008, deployed and validated).
+QAT2 is closed as plateau confirmation — the accuracy axis is squeezed;
+further QAT continuations are a poor trade (CPU-only ~4 h/epoch for an
+expected ~+0.1). Ops note for any future QAT round on this machine: run
+1-epoch chunks with re-init between runs (fresh process = fresh memory), or
+rent a Linux GPU box.
+
+Still in flight: the confuser-negatives fine-tune (different axis — targets
+the 24% animal false-alarm slice, not peak F1).
+
 ## Aug 28, 2026 (night) — CHAMPION DEPLOYED: full pipeline to silicon-accurate PASS (Sai)
 
 The QAT champion (deployed-form F1 0.8008) was pushed through David's entire
