@@ -245,6 +245,9 @@ def main() -> None:
 
     with config_path.open("r", encoding="utf-8") as f:
         conf = json.load(f)
+    # The template's onnx_file may carry an absolute path from another machine;
+    # DORY resolves golden activations relative to it, so pin it to --onnx.
+    conf["onnx_file"] = str(onnx_path)
 
     io_dir = (
         Path(args.io_dir).expanduser().resolve()
