@@ -1,8 +1,10 @@
 # Agent Setup Runbook — pytorch_ssd backend environment
 
-**For Grace**: paste this whole file (or its raw GitHub URL) to your coding
-agent and tell it to follow it. It sets up the same working environment Sai
-has, verified Aug 26–27, 2026. Ask Sai if anything blocks for >15 min.
+**For any team member**: paste this whole file (or its raw GitHub URL) to
+your coding agent — Claude Code, Codex, or similar — and tell it to follow
+it. It sets up the standard team working environment, verified Aug 26–28,
+2026 on macOS and mirrored for Linux/WSL. Ask Sai if anything blocks for
+more than 15 minutes.
 
 ---
 
