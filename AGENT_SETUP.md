@@ -218,6 +218,37 @@ entire quantization measurement path works.
 **Setup is complete at this point.** Report to the user: platform, device
 (cpu/mps/cuda), and the Stage 4/6 outputs.
 
+## Stage 7 — Current-work context (David's handoff, Aug 27+)
+
+David (the project's originator) published his full reproduction material on
+the upstream `unstable` branch; it is preserved on this fork as
+`david-unstable` and is where the CANONICAL model/training code now lives
+(`models/quant_native_follow_net.py`, `utils/follow_task.py`, his `train.py`).
+Mount it as a sibling worktree — several `export/*_unstable_*.py` tools
+expect it at `../pytorch_ssd_unstable`:
+
+```bash
+cd ~/drone/pytorch_ssd
+git fetch fork david-unstable 2>/dev/null || git fetch origin david-unstable
+git worktree add ../pytorch_ssd_unstable david-unstable
+ln -s ../../pytorch_ssd/data/coco ../pytorch_ssd_unstable/data/coco
+```
+
+**VERIFY**: `../trainenv/bin/python ../pytorch_ssd_unstable/tools/verify_plain_follow_handoff.py`
+run from inside `../pytorch_ssd_unstable` prints
+`plain_follow handoff integrity check: PASS`.
+
+Two facts every new member must know (details in DECISIONS.md):
+
+- The deployed 14-value output contract is x-bin logits 0-8, **visibility 9**,
+  size buckets 10-13. This repo's `models/plain_follow_net.py` is an earlier
+  independent replication with a DIFFERENT (vis-last) layout — it is a study
+  artifact, not the deploy lineage.
+- A private data ZIP (rep16 diagnostic images, `data/rep_images` calibration
+  set) is NOT in git — ask Sai for `DroneRS_private_data_handoff_2026-08-26.zip`
+  and unzip it at the worktree root. Env setup and training do NOT need it;
+  the cross-audit tools do.
+
 ## After setup — Role 2 on-ramp (do only if the user asks)
 
 1. Read `EXPERIMENTS.md` (current results) and `docs/hybrid_follow_gap8/`
