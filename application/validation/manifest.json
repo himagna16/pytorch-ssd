@@ -1,46 +1,47 @@
 {
-  "validated_at": "2026-08-22T23:43:00-05:00",
+  "validated_at": "2026-08-28T14:42:45.511758-05:00",
   "platform": "gvsoc",
   "model_type": "plain_follow",
   "follow_head_type": "xbin9_size_bucket4",
-  "input_shape": [1, 1, 128, 128],
+  "input_shape": [
+    1,
+    1,
+    128,
+    128
+  ],
   "output_count": 14,
   "source_image_name": "01_visible_000000121031.jpg",
   "checkpoint": {
-    "path": "artifacts/plain_follow_best_follow_score.pth",
-    "bundled_path": "artifacts/plain_follow_best_follow_score.pth",
-    "size_bytes": 263330,
-    "sha256": "c523048c2703c731573388a7d594d453f238437e2825e956bd92258c8704987b"
+    "path": "../training/successor_qat/plain_follow_epoch_003_eval.pth",
+    "bundled_path": null,
+    "size_bytes": 264850,
+    "sha256": "b7103593218cbace00d21380e3d6787dd2fd373ee163023e3e20c7d6e1d15800"
   },
-  "artifacts": {
-    "hex/inputs.hex": "e4546224503ae9aa6f5ef55f627ebff3496bd0d7be695f2760f792fe56e68328",
-    "src/network.c": "10cdc36719c044a35a6ed42438dd12ac76256b3efa344403019bee4b5f5bbe1f",
-    "src/pulp_nn_utils.c": "6cb903143b5023572267895f0644c54023882c64e197174495ea67a4f9c918f1",
-    "validation/output.txt": "126dba6b9a87d660763a27659a63b64c9e41dce1173a80e8bbfde1e9bb1bfb58"
-  },
-  "expected_output": [
-    4632,
-    13262,
-    4633,
-    -2422,
-    -3479,
-    -5390,
-    2962,
-    -1854,
-    -11170,
-    5303,
-    -7980,
-    3540,
-    4466,
-    -43
-  ],
   "gvsoc": {
     "docker_image": "bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e",
-    "layer_checks": "9/9 exact",
-    "cycles": 15183389,
-    "macs": 15778464,
-    "macs_per_cycle": 1.03919,
-    "cores": 1
+    "layer_checks": "9/9 exact"
   },
-  "result": "exact_match"
+  "expected_output": [
+    132345,
+    163455,
+    213690,
+    249900,
+    290955,
+    262650,
+    229755,
+    170085,
+    112455,
+    374085,
+    147135,
+    101745,
+    108375,
+    201450
+  ],
+  "result": "exact_match",
+  "artifacts": {
+    "hex/inputs.hex": "e4546224503ae9aa6f5ef55f627ebff3496bd0d7be695f2760f792fe56e68328",
+    "src/network.c": "cfe41a74f8d96c6d7bb54fbf3ccb606c73a53a76815ed44e5acddbe37cadcec3",
+    "src/pulp_nn_utils.c": "6cb903143b5023572267895f0644c54023882c64e197174495ea67a4f9c918f1",
+    "validation/output.txt": "abeef1c1b798d311ea1e81cf27b46276e740d9542423842bb8a919ee5c2a0620"
+  }
 }

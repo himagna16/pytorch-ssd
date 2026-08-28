@@ -24,15 +24,15 @@
 #include "directional_allocator.h"
 #include "mem.h"
 #include <string.h>
-#include "BNReluConvolution0.h"
-#include "ReluPooling7.h"
-#include "BNReluConvolution6.h"
-#include "BNReluConvolution4.h"
-#include "BNReluConvolution1.h"
-#include "BNReluConvolution2.h"
 #include "BNReluConvolution5.h"
+#include "ReluPooling7.h"
 #include "BNReluConvolution3.h"
+#include "BNReluConvolution4.h"
+#include "BNReluConvolution0.h"
 #include "FullyConnected8.h"
+#include "BNReluConvolution1.h"
+#include "BNReluConvolution6.h"
+#include "BNReluConvolution2.h"
 
 
 #define VERBOSE 1
@@ -118,7 +118,7 @@ struct network_run_token network_run_async(void *l2_buffer, size_t l2_buffer_siz
   // First open the cluster
   pi_cluster_conf_init(&conf);
   conf.id=0;
-  unsigned int args[5];
+  unsigned int args[4];
   args[0] = (unsigned int) l2_buffer;
   args[1] = (unsigned int) l2_buffer_size;
   args[2] = (unsigned int) l2_final_output;
