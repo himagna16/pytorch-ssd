@@ -1,5 +1,26 @@
 # Experiment Log
 
+## Aug 28, 2026 (overnight) — Successor Run 1: David's model beaten (Sai)
+
+Warm-start fine-tune of David's released checkpoint using HIS full recipe
+(worktree `successor` branch: flip aug, weighted losses vis2.0/x1.0/size0.3/
+res0.5, hard negatives from ep 4, visible-fraction 0.6) on full train2017,
+20 epochs, lr 3e-4, batch 32, MPS.
+
+**Result: new project best — peak F1 0.7958 (epoch 18, threshold 0.35) vs
+David's released 0.7910.** Robust, not a lucky epoch: every checkpoint from
+epoch 15 on beats 0.791 (ep15 .7923, ep16 .7927, ep17 .7942, ep19 .7937,
+ep20 .7935). Calibration improved across the curve too: at threshold 0.50
+the champion gives F1 0.773 @ FP rate 0.117 vs David's 0.757 @ 0.111, and at
+0.55 it's 0.760 @ 0.090 vs his 0.740 @ 0.086 — ~+1.5-2 F1 points at matched
+safety everywhere in the useful range.
+
+Champion checkpoint (local): `training/successor_warmstart/plain_follow_epoch_018.pth`.
+Note: his `follow_score` selection picked epoch 18 too — selection metrics
+agree this round. Run 2 (from-scratch, 30 ep) still training; QAT fine-tune
+of the champion is the queued follow-up, then FP->FQ drift audit + int8
+export before calling it deployable.
+
 ## Aug 27, 2026 (night) — David's handoff verified + toolchain convergence (Sai)
 
 David published the full reproduction material (`unstable` branch + private

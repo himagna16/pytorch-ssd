@@ -24,6 +24,7 @@ def main():
     ap.add_argument("--unstable-root", default="../pytorch_ssd_unstable")
     ap.add_argument("--coco-root", default="data/coco")
     ap.add_argument("--batch-size", type=int, default=32)
+    ap.add_argument("--device", default=None, help="cpu|mps (default: mps if free)")
     args = ap.parse_args()
 
     root = Path(args.unstable_root).resolve()
@@ -39,7 +40,10 @@ def main():
     print(f"[sweep] {ckpt.name} head={head} epoch={payload.get('epoch')} "
           f"{payload.get('best_metric')}={payload.get('best_metric_value')}")
 
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    device = torch.device(
+        args.device if args.device
+        else ("mps" if torch.backends.mps.is_available() else "cpu")
+    )
     model = build_follow_model_from_checkpoint(ckpt, torch.device("cpu")).eval().to(device)
 
     coco = Path(args.coco_root).resolve()
