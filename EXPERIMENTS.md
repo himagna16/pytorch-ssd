@@ -1,5 +1,25 @@
 # Experiment Log
 
+## Aug 28, 2026 (evening) — GVSOC validation reproduced: exact final-tensor PASS (Sai)
+
+Installed Docker Desktop (Apple Silicon, Rosetta emulation), pulled David's
+pinned image by digest, and ran `run_plain_follow_app_val.sh` on the
+`unstable` worktree: integrity gate → container build of the shipped
+`application/` → GVSOC simulated-GAP8 execution → tensor compare.
+
+**Result: PASS — exact final-tensor agreement.** All 14 int32 outputs match
+the golden file bit-for-bit:
+`[4632, 13262, 4633, -2422, -3479, -5390, 2962, -1854, -11170, 5303, -7980, 3540, 4466, -43]`
+Decoded per the contract (x-bins 0-8, vis 9, size 10-13): argmax x-bin = 1
+(left of center), visibility logit 5303 > 0 (visible), size bucket = 2 —
+"person visible, left of center, medium size."
+
+Meaning: every result in the thesis is now independently reproduced on team
+hardware, including the runtime endpoint. The Docker/GVSOC lane is proven on
+this machine (logs in `pytorch_ssd_unstable/logs/plain_follow_app_validation/`).
+Next frontier: push OUR champion (QAT ep3+) through export → DORY codegen →
+app regen → this same validation — the step that makes 0.8008 flight-ready.
+
 ## Aug 28, 2026 (afternoon) — Error anatomy of the champion; the confuser problem (Sai)
 
 Ran `export/error_analysis_fq.py` on the deployed champion (QAT ep3) over
