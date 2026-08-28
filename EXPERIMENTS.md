@@ -40,7 +40,17 @@ precision-leaning — consistent with `follow_score` checkpoint selection and
 his negative-visibility loss term); ours is more *sensitive* (finds more
 people, higher balanced F1). At a fixed default threshold these are different
 operating points, not different quality tiers — a fair fight needs a
-threshold sweep on both and comparison at matched FP rate. TODO next session.
+threshold sweep on both and comparison at matched FP rate — done, below.
+
+**Matched sweeps** (val2017, both models, thresholds 0.30–0.75): peak F1 is
+nearly identical — David's 0.791 (t=0.30) vs ours 0.785 (t=0.40) — but
+David's curve is better *calibrated*: at any matched no-person FP rate his F1
+is ~0.5–1 point higher, and his curve reaches FP rates (0.03–0.09) ours never
+touches in range. Verdict: his released checkpoint is the honest baseline to
+beat; our 10-epoch equal-weights run lands within ~1 point of a 28-epoch
+staged-loss run, so adopting his loss recipe + more epochs should exceed it.
+Next experiment: train with David's stack (his train.py + phases) on full
+COCO — the "successor run."
 
 **Environment ground truth (from David)**: validated deployment came from
 Python 3.8.10 + torch 1.10.2 + pytorch-nemo 0.0.8 @ 5ea3338; torch 2.x is a
