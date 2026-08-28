@@ -27,6 +27,21 @@ two independently built toolchains agree on the same artifact. The one flip
 image. `16_negative_000000006723.jpg` is a standing false positive (vis 0.56 on
 a no-person image) in both FP and FQ.
 
+**Head-to-head on val2017 visibility @ threshold 0.5** (same 5,000 images,
+each model with its own decode):
+
+| | precision | recall | F1 | no-person FP rate |
+|---|---|---|---|---|
+| David's released (ep 28, staged loss) | **0.870** | 0.669 | 0.757 | **0.111** |
+| Ours full-COCO (ep 10, equal weights) | 0.792 | **0.765** | **0.778** | 0.222 |
+
+Neither dominates: his model is the *safer* one (half the ghost-follow rate,
+precision-leaning — consistent with `follow_score` checkpoint selection and
+his negative-visibility loss term); ours is more *sensitive* (finds more
+people, higher balanced F1). At a fixed default threshold these are different
+operating points, not different quality tiers — a fair fight needs a
+threshold sweep on both and comparison at matched FP rate. TODO next session.
+
 **Environment ground truth (from David)**: validated deployment came from
 Python 3.8.10 + torch 1.10.2 + pytorch-nemo 0.0.8 @ 5ea3338; torch 2.x is a
 compatibility path — explains the residual-add tracer difference we patched.
