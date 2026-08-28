@@ -16,10 +16,37 @@ the champion gives F1 0.773 @ FP rate 0.117 vs David's 0.757 @ 0.111, and at
 safety everywhere in the useful range.
 
 Champion checkpoint (local): `training/successor_warmstart/plain_follow_epoch_018.pth`.
-Note: his `follow_score` selection picked epoch 18 too — selection metrics
-agree this round. Run 2 (from-scratch, 30 ep) still training; QAT fine-tune
-of the champion is the queued follow-up, then FP->FQ drift audit + int8
-export before calling it deployable.
+
+## Aug 28, 2026 (morning) — Campaign complete: both runs beat David; warm-start dominates
+
+Run 2 (from-scratch, 30 ep, his full recipe) finished. Full standings on
+val2017 peak F1, with the FP->FQ drift audit (rep16, his calibration set)
+as the deployment gate:
+
+| model | peak F1 | drift: x-bin / size / vis |
+|---|---|---|
+| David's released (ep 28) | 0.7910 | 15/16 / 16/16 / 16/16 |
+| Warm-start ep 18 | 0.7958 | **16/16 / 16/16 / 16/16** |
+| **From-scratch ep 28** | **0.8001** | 14/16 / 15/16 / 16/16 |
+
+Findings:
+
+1. **Warm-start ep 18 strictly dominates the released model** — higher F1
+   AND a perfect quantization audit (more FQ-robust than the model it was
+   initialized from). It is the current deployment candidate.
+2. **From-scratch ep 28 is the accuracy record (0.8001)** but pays ~1-2
+   audit images of FQ robustness. Its safety curve is the best measured:
+   matches David's F1-at-0.50 at FP 0.087 vs his 0.111, reaches FP 0.020.
+3. **F1-based checkpoint selection is worth real points**: `follow_score`
+   picked scratch ep 25 (0.7947); F1 sweep finds ep 28 (0.8001). Selection
+   metric choice alone = +0.5 F1.
+4. Next moves: QAT fine-tune (`--quant-aware-finetune`) of scratch ep 28 to
+   chase 0.80-with-perfect-audit; int8 export + GVSOC of whichever wins;
+   overlays for the meeting.
+
+Checkpoints (local): `training/successor_warmstart/plain_follow_epoch_018.pth`,
+`training/successor_scratch/plain_follow_epoch_028.pth`. Runs logged in
+`pytorch_ssd/training_successor_{warmstart,scratch}.log`.
 
 ## Aug 27, 2026 (night) — David's handoff verified + toolchain convergence (Sai)
 

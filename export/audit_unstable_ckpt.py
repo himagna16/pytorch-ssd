@@ -140,7 +140,7 @@ def main():
               f"{r['fp_vis']:>6.3f} {r['fq_vis']:>6.3f} {('y' if va else 'N'):>3}")
 
     n = len(rows)
-    print(f"\nDavid's released checkpoint, FP->FQ over {n} rep16 images:")
+    print(f"\n{Path(args.ckpt).name}, FP->FQ over {n} rep16 images:")
     print(f"  decoded x-bin preserved exactly:  {x_exact}/{n}")
     print(f"  x-bin adjacent-or-better:         {x_adj}/{n}")
     print(f"  size bucket preserved:            {sb_exact}/{n}")
