@@ -1,5 +1,45 @@
 # Experiment Log
 
+## Aug 28, 2026 (night) — CHAMPION DEPLOYED: full pipeline to silicon-accurate PASS (Sai)
+
+The QAT champion (deployed-form F1 0.8008) was pushed through David's entire
+release pipeline and is now the repo's promoted, validated GAP8 application —
+`run_plain_follow_app_val.sh` (his own entry point, cold start) reports
+integrity PASS and a bit-exact 14-value final-tensor match. Branch
+`successor-release` on the fork holds the promoted app + all fixes.
+
+The road there (7 pipeline runs, each failing one stage deeper — stage-aware
+debugging applied to the pipeline itself):
+
+1. doryenv built on macOS py3.11 with minimal pins (the Linux requirements
+   file is unnecessary); +torchvision after run 1.
+2. **torch-era ONNX incompatibility (the big one)**: DORY at add0d9c requires
+   torch-1.10-style ONNX (numeric tensor names, Cast-chain requant). Fix:
+   resurrected David's exact known-good env (py3.8.10 / torch 1.10.2 / nemo
+   0.0.8) as a linux/amd64 Docker image (`nemo-legacy-export:py38`) with the
+   workspace mounted at its identical host path, wired into the release
+   driver via its `--python` seam through `legacy_export_env/legacy_python.sh`.
+3. Driver patch: seed ORT-computed golden activations (out_layer*.txt) next
+   to the DORY ONNX after quant eval — DORY's HW parser needs them for
+   checksums; the legacy flow left them behind implicitly.
+4. Portability bug in David's checked-in DORY config: absolute path from his
+   WSL machine (`/mnt/c/Users/yxl21/...`). Fixed by pinning config onnx_file
+   to the --onnx argument in generate_dory_io_artifacts.py.
+5. pulp-nn submodule was at an empty-tree master HEAD; pinned to DORY's
+   recorded 9ada4a9.
+6. Promoted golden output.txt normalized to bare integers (the integrity
+   gate rejects NEMO-style comment headers).
+
+QAT checkpoint handling: David's own `prepare_follow_qat_eval_checkpoint.py`
+strips PACT keys; the release path re-quantizes with fresh calibration (16
+imgs) — learned alphas do not ship, QAT-shaped weights do. Release metrics
+healthy (follow_score 0.354 vs released 0.340). Champion's chip tensor on the
+golden image decodes as: visible, centered (x-bin 4), close (size bucket 3).
+
+Every step of the thesis has now been reproduced AND exceeded on team
+hardware: better model, same exactness guarantee, pipeline portable off
+David's machine for the first time.
+
 ## Aug 28, 2026 (evening) — GVSOC validation reproduced: exact final-tensor PASS (Sai)
 
 Installed Docker Desktop (Apple Silicon, Rosetta emulation), pulled David's
