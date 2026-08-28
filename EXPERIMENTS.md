@@ -1,5 +1,31 @@
 # Experiment Log
 
+## Aug 28, 2026 (afternoon) — Error anatomy of the champion; the confuser problem (Sai)
+
+Ran `export/error_analysis_fq.py` on the deployed champion (QAT ep3) over
+val2017 @ threshold 0.45: recall 0.822 overall but strongly size-dependent —
+**tiny persons 0.649, small 0.806, medium 0.919, large 0.912**. Gallery
+inspection shows the misses are mostly tiny background people, partial
+slivers, and photos-of-people — LOW operational value for a follow drone
+whose target is medium/large in frame (where recall is already 0.91+).
+Conclusion: do NOT chase tiny-person recall (would cost input resolution /
+GAP8 compute for leaderboard vanity).
+
+The actionable failure is the FALSE POSITIVES: the worst confident false
+alarms are **mannequins (P=1.00), dressed teddy bears (0.97-0.98), cats
+(0.97), a dog (0.96), cows (0.98)** — animate-shaped non-persons. For a
+person-following drone these are the ghost-chase cases (it would follow the
+family cat). New metric slice: **FP rate on val2017 confuser negatives
+(no-person images containing bird/cat/dog/.../teddy bear, n=771): 0.239 @
+0.45, 0.171 @ 0.55.**
+
+Fix queued (runs after QAT2 finishes): retrain with a confuser-skewed
+negative pool via David's `--train-sample-manifest` —
+`export/build_confuser_manifest.py` keeps all 64k person images + all 17.6k
+confuser negatives + 30% of boring negatives (negative pool now 62%
+confusers). Success = confuser-FP slice drops materially with overall peak
+F1 held. Galleries: `export/error_analysis/`.
+
 ## Aug 28, 2026 — QAT run: new deployed-form champion, 0.8008 (Sai)
 
 QAT fine-tune of the F1-record model (scratch ep28) using David's
