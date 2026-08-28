@@ -1,5 +1,37 @@
 # Experiment Log
 
+## Aug 27, 2026 (night) — David's handoff verified + toolchain convergence (Sai)
+
+David published the full reproduction material (`unstable` branch + private
+data ZIP + separate crazyflie-ssd repo). Ingested tonight; `unstable` is
+mounted as a sibling worktree (`../pytorch_ssd_unstable`) and preserved on
+our fork as branch `david-unstable`. His SHA-256 integrity gate
+(`tools/verify_plain_follow_handoff.py`): **PASS**.
+
+**Reimplementation scorecard** (our thesis-text reconstruction vs his originals):
+
+| Aspect | Ours | David's | Verdict |
+|---|---|---|---|
+| x bins | 9 uniform over [-1,1] | `linspace(-1,1,10)` | identical (centers match to fp32) |
+| size buckets | 4 uniform over [0,1] | (0,.25,.5,.75,1) | identical |
+| Output layout | x 0-8, size 9-12, vis 13 | **x 0-8, vis 9, size 10-13** | DIFFERENT — his is the deployed int32 contract |
+| Backbone | 4 stages to 80ch (185K params) | 3 stages to 48ch, stem-mode variants | different scale, same straight-through idea |
+| Loss | equal-weight sum | staged phases w/ active loss weights, x-residual + neg-vis terms | his is richer (DroNet-style weighting we'd flagged as missing) |
+
+**Toolchain convergence test** — his released `plain_follow_best_follow_score.pth`
+(epoch 28) through OUR drift audit, calibrated on HIS `data/rep_images`, on HIS
+rep16 diagnostic set: x-bin preserved **15/16**, size bucket **16/16**,
+visibility **16/16**. The thesis's own deploy-side audit reported 15/16 x-bin —
+two independently built toolchains agree on the same artifact. The one flip
+(`09_visible_000000436738.jpg`) jumps bin 4→1 (non-adjacent) — the known hard
+image. `16_negative_000000006723.jpg` is a standing false positive (vis 0.56 on
+a no-person image) in both FP and FQ.
+
+**Environment ground truth (from David)**: validated deployment came from
+Python 3.8.10 + torch 1.10.2 + pytorch-nemo 0.0.8 @ 5ea3338; torch 2.x is a
+compatibility path — explains the residual-add tracer difference we patched.
+GVSOC container pinned by digest in `application/validation/manifest.json`.
+
 ## Aug 27, 2026 — Full-dataset retrain + definitive drift audits (Sai)
 
 Both models retrained on full COCO train2017 (118,287 images, 10 epochs,

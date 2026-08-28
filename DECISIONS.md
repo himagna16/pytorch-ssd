@@ -3,6 +3,21 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-08-27 (night)** — The deployed output contract is DAVID'S layout:
+  14 values = x-bin logits 0-8, **visibility 9**, size buckets 10-13 (signed
+  int32 on device). Our reimplementation used vis-last; firmware and all
+  future decode code MUST follow David's ordering. Our `plain_follow_net.py`
+  stays as-is as an independent replication artifact — it is NOT the deploy
+  lineage.
+- **2026-08-27 (night)** — Going forward the canonical model/training stack
+  is David's quant-native code (`models/quant_native_follow_net.py`,
+  `utils/follow_task.py`, his `train.py`) from the `unstable` branch —
+  it is the validated deployment lineage, richer loss, and the released
+  checkpoint's home. PROPOSAL pending team discussion with Grace: rebase the
+  team mainline onto `unstable` (preserved on our fork as `david-unstable`);
+  our fixes/tools get re-applied on top. Do NOT flip the base until Grace's
+  setup is stable and she agrees — her environment currently follows main's
+  docs.
 - **2026-08-27** — Team PyTorch pin = **2.2.2** (+ torchvision 0.17.2) on
   ALL machines. Reason: 2.2.2 is the newest release with Intel-Mac builds
   (Grace's 2020 MacBook), and testing showed zero cost: a 2.4.1-trained
