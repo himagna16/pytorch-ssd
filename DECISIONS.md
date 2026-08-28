@@ -3,6 +3,17 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-08-27 (late night)** — Successor campaign launched to beat David's
+  released model (peak F1 0.791 on val2017 visibility). Two runs chained on
+  Sai's Mac using DAVID'S stack on the `successor` worktree branch (his
+  train.py + MPS patch, flip aug, weighted losses vis2.0/x1.0/size0.3/res0.5,
+  hard negatives from epoch 4, visible-fraction 0.6): RUN 1 = warm-start
+  fine-tune of his checkpoint (20 ep, lr 3e-4); RUN 2 = from-scratch (30 ep,
+  lr 1e-3). Per-epoch checkpoints kept for post-hoc F1 selection (his
+  selection metric was follow_score, not F1 — free gains possible).
+  Scoreboard = export/sweep_unstable_ckpt.py. QAT fine-tune (his
+  --quant-aware-finetune, discovered tonight) reserved as the deployment-
+  robustness follow-up on the winner.
 - **2026-08-27 (night)** — The deployed output contract is DAVID'S layout:
   14 values = x-bin logits 0-8, **visibility 9**, size buckets 10-13 (signed
   int32 on device). Our reimplementation used vis-last; firmware and all
