@@ -1519,6 +1519,32 @@ def main() -> None:
     if not dory_onnx_path.is_file():
         raise FileNotFoundError(f"DORY ONNX not found after quant eval: {dory_onnx_path}")
 
+    # DORY's HW parser loads out_layer*.txt golden activations from the ONNX's
+    # directory for activation checksums. The historical NEMO export left these
+    # behind implicitly; the isolated export env does not, so seed them here via
+    # the ORT-mode io helper before any DORY graph parse below.
+    io_seed_command = [
+        str(context["dory_python"]),
+        str(context["dory_io_helper"]),
+        "--onnx",
+        str(dory_onnx_path),
+        "--config",
+        str(context["dory_config_template"]),
+        "--image",
+        str(select_gvsoc_image(rep16_local_dir, None)),
+        "--model-type",
+        str(context["model_type"]),
+        "--runtime-source",
+        "onnxruntime",
+        "--io-dir",
+        str(quant_output_dir),
+        "--weights-dir",
+        str(quant_output_dir / "weights_txt"),
+        "--manifest",
+        str(quant_output_dir / "nemo_dory_artifacts.json"),
+    ]
+    run_logged(io_seed_command, log_path=command_dir / "06b_dory_io_seed.log")
+
     annotations = QuantAnnotationIndex(Path(context["annotations"]))
     deployment_views: dict[str, dict[str, Any]] = {}
     deployment_prediction_artifacts: dict[str, Path] = {}
