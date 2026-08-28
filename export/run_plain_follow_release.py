@@ -1029,7 +1029,12 @@ def promote_verified_application(
         (staging_dir / "README.md").write_text(handoff_readme_text, encoding="utf-8")
     validation_dir = staging_dir / "validation"
     validation_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(expected_output_path, validation_dir / "output.txt")
+    # The io helper emits NEMO-style dumps (comment header, comma suffixes);
+    # the handoff integrity gate requires a bare integer tensor. Normalize.
+    golden_values = parse_int_text_file(Path(expected_output_path))
+    (validation_dir / "output.txt").write_text(
+        "\n".join(str(value) for value in golden_values) + "\n", encoding="utf-8"
+    )
     if validation_manifest is not None:
         manifest_payload = dict(validation_manifest)
         artifact_paths = (
