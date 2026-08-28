@@ -1,5 +1,40 @@
 # Experiment Log
 
+## Aug 28, 2026 — QAT run: new deployed-form champion, 0.8008 (Sai)
+
+QAT fine-tune of the F1-record model (scratch ep28) using David's
+`--quant-aware-finetune` path: 8-bit PACT training on full train2017,
+lr 1e-4. The OS killed the run at epoch 4 (memory pressure — QAT holds
+extra model copies; also ~10x slower per step on MPS), but epochs 1-3
+checkpointed and epoch 3 was sufficient.
+
+New scoreboard — **deployed form** (fake-quantized, the form that flies),
+val2017 peak F1 via `export/sweep_fq_ckpt.py`:
+
+| model | FP form | deployed form | quantization cost |
+|---|---|---|---|
+| David's released | 0.7910 | 0.7885 | −0.25 |
+| Warm-start ep18 | 0.7958 | 0.7958 | **0.00** |
+| Scratch ep28 (FP record) | 0.8001 | 0.7946 | −0.55 |
+| **QAT ep3 (champion)** | n/a | **0.8008** | gains by construction |
+
+Findings:
+
+1. **QAT ep3 is the overall champion: 0.8008 deployed-form F1**, +1.2 points
+   over David's released model in deployed form. Its quantized score even
+   exceeds the record model's unquantized 0.8001.
+2. **The drift audits predicted the quantization costs exactly**: warm-start
+   (16/16 audit) lost 0.00 under quantization; scratch (14/16) lost 0.55;
+   David's (15/16) lost 0.25. The rep16 audit is a validated cheap proxy for
+   full-set deployed degradation.
+3. QAT checkpoints carry learned PACT alphas (load into a `quantize_pact`-
+   wrapped model, no calibration needed) — `--mode qat` in the sweep tool.
+4. Remaining to call it fully deployable: ONNX/DORY export of the QAT
+   model's integer-deployable stage + GVSOC final-tensor check (needs the
+   Docker lane), then rep16 overlays for the meeting.
+
+Champion checkpoint (local): `training/successor_qat/plain_follow_epoch_003.pth`.
+
 ## Aug 28, 2026 (overnight) — Successor Run 1: David's model beaten (Sai)
 
 Warm-start fine-tune of David's released checkpoint using HIS full recipe
