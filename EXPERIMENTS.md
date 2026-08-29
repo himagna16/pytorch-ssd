@@ -1,5 +1,26 @@
 # Experiment Log
 
+## Aug 28, 2026 — Stacking test: QAT-after-confuser DESTROYS the confuser win (Sai)
+
+One QAT epoch (lr 5e-5, confuser manifest, on confuser-ep8 weights) fully
+regressed the animate-false-alarm fix: confuser-slice FP 0.083 → **0.249**
+@0.45 (back to the 0.239 pre-fix baseline) while peak F1 stayed ~0.795.
+Clean negative result: the confuser resistance lives in decision-boundary
+placement that fake-quant training noise erodes within one epoch, even when
+training on the same skewed data. Ordering matters and this order is wrong.
+
+Consequences: (1) the two-model choice stands — QAT champion (0.8008,
+deployed) vs confuser ep8 (0.7947, 3x safer) — no have-it-all model exists
+yet; (2) if the team wants one, the untested recipe is a SINGLE joint run:
+QAT from scratch with the confuser manifest from epoch 1 (est. multi-hour,
+deferred); (3) note the confuser model ships through the release path with
+standard recalibration anyway, and its deployed-form numbers above already
+reflect that — so "lacking QAT" costs it nothing at release time that we
+haven't already measured.
+
+Compute campaign closed: nothing running. Checkpoint:
+training/successor_confuser_qat/plain_follow_epoch_001.pth (archived, not a candidate).
+
 ## Aug 28, 2026 — Confuser fine-tune: 3x fewer animate false alarms (Sai)
 
 The confuser-skewed fine-tune (scratch-ep28 init, 8 epochs, negative pool
