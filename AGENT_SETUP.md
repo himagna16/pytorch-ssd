@@ -264,6 +264,82 @@ Two facts every new member must know (details in DECISIONS.md):
    fake-quantized → quantized-deployable → integer-deployable). The repo's
    export goes checkpoint → NEMO ID → ONNX → onnxsim.
 
+## Stage 8 — Release pipeline environment (deployment lane; needs Docker)
+
+This stage reproduces the FULL model-to-chip release pipeline (NEMO export →
+DORY codegen → GAP8 build → GVSOC simulation). Ask the user before starting:
+it needs Docker Desktop (their password to install) and ~6 GB of images.
+The current deployed champion (F1 0.8008) was released through exactly this.
+
+8.1 Docker + the pinned GAP8 build image:
+
+```bash
+docker pull bitcraze/aideck@sha256:038197df9cb86ccf8e6649e93dd0cf23781830e136288523983768918851633e
+```
+
+8.2 DORY at the project's exact commit, with backends pinned (the pulp-nn
+pin matters — master HEAD has an empty tree):
+
+```bash
+cd ~/drone
+git clone https://github.com/pulp-platform/dory && cd dory
+git checkout add0d9c
+git config submodule."dory/Hardware_targets/PULP/Backend_Kernels/pulp-nnx".url https://github.com/pulp-platform/pulp-nnx.git
+git submodule update --init --recursive || true
+git submodule update --init dory/Hardware_targets/PULP/Backend_Kernels/pulp-nnx
+git submodule update --checkout dory/Hardware_targets/PULP/Backend_Kernels/pulp-nn dory/Hardware_targets/PULP/Backend_Kernels/pulp-nn-mixed
+```
+
+**VERIFY**: `ls dory/Hardware_targets/PULP/Backend_Kernels/pulp-nn/32bit/src`
+lists pulp_nn_*.c files.
+
+8.3 doryenv (codegen interpreter — do NOT use requirements_doryenv.txt,
+its pins are Linux-CUDA-only):
+
+```bash
+python3.11 -m venv ~/drone/doryenv
+~/drone/doryenv/bin/pip install "numpy==1.24.3" "onnx==1.17.0" "onnxruntime==1.19.2" \
+  "Mako==1.3.10" "ortools==9.12.4544" "torch==2.4.1" "torchvision==0.19.1" \
+  "pillow==10.4.0" "protobuf==5.29.5" "pandas==2.0.3"
+```
+
+8.4 The legacy export container — DORY only parses torch-1.10-style ONNX,
+so exports run in David's exact known-good env (py3.8.10/torch1.10.2/nemo
+0.0.8), containerized:
+
+```bash
+cd ~/drone/pytorch_ssd/tools/legacy_export_env
+docker build --platform linux/amd64 -t nemo-legacy-export:py38 .
+./legacy_python.sh -c "import torch, nemo; print('legacy env ok', torch.__version__)"
+```
+
+8.5 Switch the worktree to the release branch (has the promoted champion
+app + the five pipeline fixes) and reproduce the validation:
+
+```bash
+cd ~/drone/pytorch_ssd_unstable
+git fetch fork successor-release 2>/dev/null || git -C ../pytorch_ssd fetch fork successor-release
+git checkout successor-release
+PLAIN_FOLLOW_VERIFY_PYTHON=../nemoenv/bin/python3 bash run_plain_follow_app_val.sh
+```
+
+**VERIFY**: `plain_follow handoff integrity check: PASS` then
+`PASS: 'final' matches exactly.` — a second machine independently
+reproducing the deployed champion's silicon-accurate validation.
+
+A full re-release of a new checkpoint is then:
+
+```bash
+bash run_plain_follow.sh --ckpt <eval-checkpoint> \
+  --output-dir logs/<run-name> \
+  --hard-case-dir logs/hybrid_follow_val/1_real_image_validation/input_sets/representative16_20260324 \
+  --python ../pytorch_ssd/tools/legacy_export_env/legacy_python.sh --overwrite
+```
+
+(QAT checkpoints must first pass through
+`export/prepare_follow_qat_eval_checkpoint.py`. Private-data ZIP required
+for the rep16/hard-case dirs — see Stage 7.)
+
 ## Error table
 
 | Symptom | Cause → fix |
