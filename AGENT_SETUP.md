@@ -87,10 +87,19 @@ Linux/WSL:
 
 ```bash
 python3.11 -m venv ../trainenv
-../trainenv/bin/pip install -r requirements_trainenv.txt || \
 ../trainenv/bin/pip install torch==2.2.2 torchvision==0.17.2 numpy==1.24.4 \
-    pillow==10.4.0 pycocotools==2.0.7 tqdm==4.67.1
+    pillow==10.4.0 pycocotools==2.0.7 tqdm==4.67.1 \
+    --extra-index-url https://download.pytorch.org/whl/cpu
 ```
+
+(Do NOT install from requirements_trainenv.txt on Linux — it pins torch
+2.4.1+cpu, which diverges from the team's 2.2.2 pin; see DECISIONS.md.)
+
+If python3.11 is not apt-installable on your distro (e.g. Ubuntu 26.04
+ships 3.14, and torch 2.2.2 wheels stop at cp312): install it with uv —
+`uv python install 3.11` — and create the venvs from that interpreter.
+If `unzip` is missing, `python3 -m zipfile -e <zip> <dir>` is an exact
+sudo-free substitute.
 
 **VERIFY** (from inside `pytorch_ssd/`):
 
@@ -163,17 +172,21 @@ python3.11 -m venv ../nemoenv
 ../nemoenv/bin/pip install torch==2.2.2 torchvision==0.17.2 onnxruntime==1.19.2
 ```
 
-macOS only — pycocotools in this env ships a wheel built against the wrong
-numpy and dies with "numpy.dtype size changed"; preempt it:
+ALL platforms — two known traps here (credit: the Linux reproduction run):
+`requirements_nemoenv.txt` does not declare pycocotools even though Stage 6
+imports it, and the prebuilt pycocotools wheel is ABI-incompatible with the
+pinned numpy on macOS AND Linux ("numpy.dtype size changed"). Install it
+from source, pinned to the env's own numpy:
 
 ```bash
-../nemoenv/bin/pip install cython numpy==1.26.4
+../nemoenv/bin/pip install cython numpy==1.24.4
 ../nemoenv/bin/pip install --no-cache-dir --no-build-isolation \
     --force-reinstall --no-deps --no-binary pycocotools pycocotools==2.0.7
 ```
 
-(`numpy==1.26.4` and `--no-deps` are load-bearing: without them the rebuild
-pulls numpy 2.x, and torch 2.2.2 fails to import under numpy 2.)
+(the numpy pin — matching requirements_nemoenv.txt — and `--no-deps` are
+load-bearing: without them the rebuild drags numpy to 2.x, and torch 2.2.2
+fails to import under numpy 2. Build-time and runtime numpy must match.)
 
 **VERIFY**: quantize and export a random-weight model end to end:
 
@@ -206,7 +219,7 @@ This compares the normal (FP) and fake-quantized (FQ) model on real images
 ```bash
 ../nemoenv/bin/python export/compare_fp_fq_torch.py \
   --model-type plain_follow \
-  --ckpt training/smoke_test/plain_follow_best_visibility.pth \
+  --ckpt ../training/smoke_test/plain_follow_best_visibility.pth \
   --images-root data/coco/images/val2017 \
   --ann data/coco/annotations/instances_val2017.json \
   --num-person 10 --num-noperson 6 --calib-batches 32
@@ -345,7 +358,9 @@ for the rep16/hard-case dirs — see Stage 7.)
 | Symptom | Cause → fix |
 |---|---|
 | `pip` finds no `torch==2.4.1+cpu` | Linux-only pin on macOS → install plain `torch==2.4.1` (Stage 2 macOS block) |
-| `numpy.dtype size changed` importing pycocotools | wheel/numpy mismatch → rebuild pycocotools from source (Stage 5 macOS block) |
+| `numpy.dtype size changed` importing pycocotools (any OS) | wheel/numpy ABI mismatch → rebuild pycocotools from source pinned to the env's numpy (Stage 5 block) |
+| `No module named 'pycocotools'` in nemoenv | requirements_nemoenv.txt omits it → run the Stage 5 pycocotools block |
+| Stage 6 `Checkpoint not found: training/smoke_test/...` | train.py writes checkpoints at the WORKSPACE root; use `../training/smoke_test/...` from inside pytorch_ssd |
 | torch fails to import after pycocotools rebuild (log mentions NumPy 2) | rebuild upgraded numpy to 2.x → `pip install numpy==1.26.4`, redo the rebuild with `--no-deps` |
 | `run_all.sh` syntax error near `^^` | macOS bash 3.2 → `brew install bash`, run `bash run_all.sh` (but full run_all needs DORY — avoid for now) |
 | `ValueError: max() arg is an empty sequence` in NEMO export | you are NOT on the fork's `macos-setup` branch → re-clone per Stage 1 |
