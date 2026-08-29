@@ -1,5 +1,29 @@
 # Experiment Log
 
+## Aug 28, 2026 — Confuser fine-tune: 3x fewer animate false alarms (Sai)
+
+The confuser-skewed fine-tune (scratch-ep28 init, 8 epochs, negative pool
+62% animate confusers via `--train-sample-manifest`) hit its pre-registered
+target. All numbers in deployed (fake-quantized) form, epoch-8 checkpoint:
+
+| metric | champion (QAT ep3) | confuser ep8 |
+|---|---|---|
+| Confuser-slice FP @0.45 | 0.239 | **0.083** (−65%) |
+| Confuser-slice FP @0.55 | 0.171 | **0.052** (−70%) |
+| Peak F1 | 0.8008 | 0.7947 |
+| Overall no-person FP @ peak-F1 threshold | 0.241 (t=0.30) | 0.224 (t=0.30) |
+
+Verdict: 0.6 points of peak F1 bought a **threefold reduction in the
+drone-chases-the-cat rate** — for an indoor person-follower, pets and
+mannequin-shaped objects are the dominant operational hazard, so this is
+the better OPERATIONAL model even though the QAT champion keeps the
+leaderboard crown. Decision on which ships is a team call (Sep 2 agenda):
+leaderboard champion vs operational candidate, plus threshold.
+
+Follow-up in flight: 1-epoch QAT chunk on confuser ep8 (per the MPS OOM ops
+note) to test whether the quantization-robustness and confuser wins stack.
+Checkpoint: `training/successor_confuser/plain_follow_epoch_008.pth`.
+
 ## Aug 28, 2026 — QAT2 continuation: no improvement; champion confirmed (Sai)
 
 The quant-aware continuation (init from QAT ep3, lr 7e-5, batch 16) was
