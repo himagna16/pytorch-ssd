@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-08-28T14:42:45.511758-05:00",
+  "validated_at": "2026-08-29T11:48:50.668350-05:00",
   "platform": "gvsoc",
   "model_type": "plain_follow",
   "follow_head_type": "xbin9_size_bucket4",
@@ -12,7 +12,7 @@
   "output_count": 14,
   "source_image_name": "01_visible_000000121031.jpg",
   "checkpoint": {
-    "path": "../training/successor_qat/plain_follow_epoch_003_eval.pth",
+    "path": "artifacts/successor_qat_ep3_eval.pth",
     "bundled_path": null,
     "size_bytes": 264850,
     "sha256": "b7103593218cbace00d21380e3d6787dd2fd373ee163023e3e20c7d6e1d15800"
@@ -40,7 +40,7 @@
   "result": "exact_match",
   "artifacts": {
     "hex/inputs.hex": "e4546224503ae9aa6f5ef55f627ebff3496bd0d7be695f2760f792fe56e68328",
-    "src/network.c": "cfe41a74f8d96c6d7bb54fbf3ccb606c73a53a76815ed44e5acddbe37cadcec3",
+    "src/network.c": "d5e4afb7eab5c29f659a85806b60e1ebe89dd9901e6236111b4ab78d8fdb2633",
     "src/pulp_nn_utils.c": "6cb903143b5023572267895f0644c54023882c64e197174495ea67a4f9c918f1",
     "validation/output.txt": "abeef1c1b798d311ea1e81cf27b46276e740d9542423842bb8a919ee5c2a0620"
   }
