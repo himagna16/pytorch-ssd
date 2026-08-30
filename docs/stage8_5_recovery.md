@@ -1,5 +1,13 @@
 # Stage 8.5 integrity-gate failure — recovery runbook
 
+**Update Aug 30**: if a previous attempt failed with the checkpoint missing
+from the fetched tree at commit `de49ae1` — that was our bug (the repo's
+`*.pth` ignore rule silently kept the checkpoints out of the commit; caught
+by the second-machine reproduction). It is fixed upstream: the checkpoints
+are now truly in the branch. Do NOT copy a local checkpoint into artifacts/
+— just re-run the recovery below, which fetches the corrected branch. The
+`reset --hard` discards nothing of value and picks up the fixed tree.
+
 **Agent instructions.** Your user hit `plain_follow handoff integrity check
 FAILED` at Stage 8.5 of AGENT_SETUP.md. Cause (fixed upstream Aug 29): the
 validation manifest previously referenced a checkpoint OUTSIDE the repo, so
