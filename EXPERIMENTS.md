@@ -1,5 +1,16 @@
 # Experiment Log
 
+## Aug 31, 2026 — Confuser model GVSOC-validated: both contenders flight-ready (Sai)
+
+The confuser model (`artifacts/successor_confuser_ep8.pth`) was run through
+the full release pipeline WITHOUT promotion (`--skip-application-promotion`,
+output `logs/plain_follow_prod_confuser/`): **GVSOC status PASS, exact
+final-tensor agreement**
+(`[130815, 160650, 210630, 245310, 284070, 260100, 225675, 168300, 110670, 351900, 143565, 100215, 106080, 197115]`
+— decodes visible / centered / close on the golden image, consistent with
+the champion). Both Sep 2 candidates are therefore silicon-validated;
+whichever the team picks, promotion is a single command.
+
 ## Aug 31, 2026 — Independent reproduction (Grace)
 
 Grace independently reproduced the promoted QAT champion's silicon-accurate

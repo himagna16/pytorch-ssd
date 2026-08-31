@@ -53,8 +53,12 @@ quantization degradation exactly (audit 16/16 → 0.00 F1 loss; 14/16 →
 
 1. **Which model ships to the drone**: the accuracy champion (0.8008) or
    the confuser model (0.795 but 3x fewer pet/mannequin false alarms).
-   Recommendation to discuss: for indoor flying, the confuser model; the
-   champion remains the benchmark.
+   **Both are now GVSOC-validated with exact tensor agreement** — either
+   choice is flight-ready, promotion is one command. Recommendation to
+   discuss: for indoor flying, the confuser model; the champion remains
+   the benchmark. (Reproduction status: champion's number independently
+   confirmed by Grace — exact silicon PASS on an Intel Mac — and by Oaj
+   on Linux/WSL.)
 2. **Operating threshold + hysteresis**: sweep tables are in EXPERIMENTS.md;
    proposal on the table: visible >0.55 / lost <0.45 hysteresis to kill
    near-threshold flicker (~10% of frames sit in the risk band).
