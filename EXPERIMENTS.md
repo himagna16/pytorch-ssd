@@ -1,5 +1,31 @@
 # Experiment Log
 
+## Aug 31, 2026 — Independent reproduction (Grace)
+
+Grace independently reproduced the promoted QAT champion's silicon-accurate
+validation on a second machine: Intel Mac (`x86_64`), macOS 15.7.9. Environment
+versions were Python 3.11.16, torch 2.2.2, torchvision 0.17.2 in both
+`trainenv` and `nemoenv`. Command, from `pytorch_ssd_unstable` at corrected
+`successor-release` commit `59a560e`:
+
+```bash
+PLAIN_FOLLOW_VERIFY_PYTHON=../nemoenv/bin/python3 bash run_plain_follow_app_val.sh
+```
+
+Exact required results:
+
+```text
+plain_follow handoff integrity check: PASS
+PASS: 'final' matches exactly.
+```
+
+All nine GAP8 layer checks passed, and the 14-value GVSOC tensor matched the
+checked-in golden tensor exactly. The first second-machine attempt also caught
+a real handoff bug: `*.pth` ignore rules had omitted the checkpoint from commit
+`de49ae1`. After the checkpoint was truly added in `59a560e`, the clean recovery
+and exact-match validation passed without modifying the deployed
+`application/`.
+
 ## Aug 28, 2026 — Stacking test: QAT-after-confuser DESTROYS the confuser win (Sai)
 
 One QAT epoch (lr 5e-5, confuser manifest, on confuser-ep8 weights) fully
