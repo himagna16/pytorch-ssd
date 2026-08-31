@@ -1,5 +1,21 @@
 # Experiment Log
 
+## Aug 31, 2026 — Gentle-QAT retry fails the same way: stacking result is structural (Sai)
+
+Pre-registered rule: confuser-slice FP ≤ 0.10 AND peak F1 ≥ 0.795 →
+contender. Result of the lr 2e-5 QAT epoch on confuser-ep8: peak F1 0.7947
+(flat), **confuser-slice FP 0.223 @0.45** — the safety property eroded from
+0.083 most of the way back to the 0.239 baseline despite the 2.5x-gentler
+learning rate. Same failure at lr 5e-5 and 2e-5 ⇒ fake-quant training noise
+destroys the confuser decision boundaries regardless of step size; the
+effect is structural, not a hyperparameter accident.
+
+**The experimental program is closed pre-meeting.** Final state: two
+flight-ready contenders (champion 0.8008 / confuser 0.7947 + 3x safer),
+both GVSOC-validated. The only remaining path to a have-it-all model is a
+joint QAT+confuser run from scratch (team decision, needs a Linux GPU).
+Checkpoint archived: training/successor_confuser_qat_gentle/ (not a candidate).
+
 ## Aug 31, 2026 — Confuser model GVSOC-validated: both contenders flight-ready (Sai)
 
 The confuser model (`artifacts/successor_confuser_ep8.pth`) was run through
