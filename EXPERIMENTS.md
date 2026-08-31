@@ -26,7 +26,125 @@ final-tensor agreement**
 — decodes visible / centered / close on the golden image, consistent with
 the champion). Both Sep 2 candidates are therefore silicon-validated;
 whichever the team picks, promotion is a single command.
+## Aug 31, 2026 — QAT alpha preservation comparison (Grace)
 
+Research question: should the champion release preserve the PACT activation
+clipping ranges learned during QAT, instead of stripping them and calibrating a
+new fake-quantized model? Both variants used the same epoch-3 ordinary weights
+and all 5,000 COCO val2017 images. The full QAT checkpoint SHA-256 was
+`26384b31c672c0995c85be3718583f5c0269b8e2ade8dfb2294c2313ce87a968`;
+the stripped checkpoint SHA-256 was
+`b7103593218cbace00d21380e3d6787dd2fd373ee163023e3e20c7d6e1d15800`.
+
+Learned QAT alphas (`sweep_fq_ckpt.py --mode qat`):
+
+```text
+thresh |   prec recall     f1 | noP FP rate
+  0.30 |  0.695  0.891  0.781 |       0.430
+  0.35 |  0.724  0.868  0.789 |       0.362
+  0.40 |  0.754  0.847  0.798 |       0.300
+  0.45 |  0.781  0.822  0.801 |       0.250
+  0.50 |  0.803  0.791  0.797 |       0.212
+  0.55 |  0.825  0.758  0.790 |       0.176
+  0.60 |  0.847  0.731  0.784 |       0.145
+  0.65 |  0.872  0.699  0.776 |       0.113
+  0.70 |  0.891  0.665  0.761 |       0.089
+  0.75 |  0.910  0.619  0.737 |       0.069
+
+DEPLOYED-FORM peak F1 = 0.8008 at threshold 0.45
+```
+
+Stripped checkpoint, canonical sweep calibration on 32 `rep_images`
+(`sweep_fq_ckpt.py --mode calib`):
+
+```text
+thresh |   prec recall     f1 | noP FP rate
+  0.30 |  0.690  0.901  0.781 |       0.446
+  0.35 |  0.714  0.876  0.787 |       0.385
+  0.40 |  0.747  0.852  0.796 |       0.314
+  0.45 |  0.772  0.828  0.799 |       0.266
+  0.50 |  0.795  0.800  0.798 |       0.225
+  0.55 |  0.819  0.769  0.793 |       0.187
+  0.60 |  0.838  0.738  0.785 |       0.156
+  0.65 |  0.863  0.709  0.778 |       0.124
+  0.70 |  0.883  0.671  0.763 |       0.099
+  0.75 |  0.902  0.629  0.741 |       0.077
+
+DEPLOYED-FORM peak F1 = 0.7991 at threshold 0.45
+```
+
+The peak gap is `0.0017`, or **0.17 F1 percentage points**, below the
+pre-registered 0.2-point materiality threshold. At each listed threshold the
+learned-alpha variant has a lower no-person FP rate by 0.8–2.3 percentage
+points (mean 1.33 points), but it also has slightly lower recall. At threshold
+0.45, learned alphas change precision `0.772 -> 0.781`, recall
+`0.828 -> 0.822`, F1 `0.799 -> 0.801`, and no-person FP rate
+`0.266 -> 0.250`. This is a clear same-threshold confidence/operating-point
+shift, not a clear overall accuracy win; threshold retuning may recover much of
+the difference.
+
+Because the release description calls out a 16-image calibration, a sensitivity
+run used `--calib-n 16` on the same stripped checkpoint:
+
+```text
+thresh |   prec recall     f1 | noP FP rate
+  0.30 |  0.687  0.904  0.780 |       0.453
+  0.35 |  0.714  0.876  0.787 |       0.384
+  0.40 |  0.745  0.853  0.795 |       0.319
+  0.45 |  0.772  0.830  0.800 |       0.266
+  0.50 |  0.795  0.803  0.799 |       0.225
+  0.55 |  0.817  0.770  0.793 |       0.190
+  0.60 |  0.837  0.741  0.786 |       0.158
+  0.65 |  0.860  0.713  0.780 |       0.127
+  0.70 |  0.882  0.676  0.766 |       0.100
+  0.75 |  0.901  0.639  0.748 |       0.079
+
+DEPLOYED-FORM peak F1 = 0.8000 at threshold 0.45
+```
+
+This reduces the learned-alpha peak advantage to `0.0008` (0.08 points),
+while retaining the same qualitative precision/false-positive versus recall
+shift.
+
+The stripped-checkpoint FP-to-FQ audit on the exact representative-16 pack,
+calibrated on 32 `rep_images`, found: decoded x-bin exact `15/16` (the one
+change was adjacent, so `16/16` adjacent-or-better), size bucket exact `16/16`,
+and visibility decision agreement `16/16` at threshold 0.5. From the printed
+visibility probabilities, FP-to-FQ MAE was approximately `0.0224`, maximum
+absolute change `0.063`, and signed mean change `+0.0014`. Negative-image MAE
+(`0.0357`) was higher than positive-image MAE (`0.0144`). This shows modest,
+not catastrophic, recalibration drift. It does not directly compare
+learned-alpha FQ against calibrated FQ.
+
+**Verdict:** learned alphas do not currently deserve to replace recalibration
+as the default release behavior: the peak-F1 gain is below the materiality
+threshold and representative-16 decoded behavior is already stable after
+recalibration. They do deserve a reviewable opt-in experiment because their
+fixed-threshold false-positive reduction is consistent and operationally
+relevant for a follower drone. No release or deployed application was changed.
+
+Sketch only for a future `--preserve-qat-alphas` option (not implemented):
+
+1. Add the flag in `export/run_plain_follow_release.py::parse_args`, validate
+   QAT-state provenance in `resolve_context`, and pass it through the
+   `quant_command` that invokes `evaluate_quant_native_follow.py`.
+2. Add the matching flag in `evaluate_quant_native_follow.py::parse_args` and
+   branch inside `build_quantized_models`. The preserve branch should build the
+   ordinary model from checkpoint metadata, wrap it with
+   `nemo.transform.quantize_pact`, call `change_precision`, and load the full
+   QAT state into the wrapped model as `sweep_fq_ckpt.py --mode qat` does.
+3. In that branch, bypass `run_activation_calibration` (which calls
+   `reset_alpha_act`) and any weight-alpha reset. Create FQ, QD, and ID from
+   one canonical learned-alpha state so repeated model construction cannot
+   silently recalibrate one stage. Keep `prepare_quant_native_follow_qd` for
+   the delayed-stem/QD plumbing, while verifying it leaves PACT alphas intact.
+4. Do not run `prepare_follow_qat_eval_checkpoint.py::main` for the preserved
+   path: its purpose is to filter the QAT state down to ordinary float-model
+   keys. Keep stripping/recalibration as the backward-compatible default.
+5. Record `learned_qat` versus `calibrated` provenance, source checkpoint
+   SHA-256, alpha-key load counts, and calibration-skipped status in release
+   summaries and the promoted validation manifest. Require FQ-to-QD-to-ID,
+   ONNX/DORY, and GVSOC bit-exact gates before any application promotion.
 ## Aug 31, 2026 — Independent reproduction (Grace)
 
 Grace independently reproduced the promoted QAT champion's silicon-accurate
