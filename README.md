@@ -1,3 +1,5 @@
+> **WITHDRAWN (Sep 10, 2026): do not flash or fly the application on this branch.** Its integer network outputs the same tensor for every image. Run `python export/check_semantic_release_gates.py logs/<release_dir>` before any promotion; details in EXPERIMENTS.md on `main` (github.com/himagna16/pytorch-ssd).
+
 # pytorch_ssd
 
 This repository contains the model-development, quantization, DORY codegen,
