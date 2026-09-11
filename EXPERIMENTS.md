@@ -289,6 +289,8 @@ launchers, camera grabber, flight check, MinHyuk's MIT tutorial).
 
 ## Aug 31, 2026 — Gentle-QAT retry fails the same way: stacking result is structural (Sai)
 
+> **Overturned (Sep 11):** hard-negative mining was off in this run. Controls show missing mining, not QAT, erased the gains; see the Sep 10-11 entry.
+
 Pre-registered rule: confuser-slice FP ≤ 0.10 AND peak F1 ≥ 0.795 →
 contender. Result of the lr 2e-5 QAT epoch on confuser-ep8: peak F1 0.7947
 (flat), **confuser-slice FP 0.223 @0.45** — the safety property eroded from
