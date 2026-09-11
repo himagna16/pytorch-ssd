@@ -1,5 +1,44 @@
 # Experiment Log
 
+## Sep 10-11, 2026 — Final releases with the real output scale; confuser controls (Sai)
+
+**Output scale fixed.** The pipeline decoded integer outputs as raw / 32768,
+but the network's real output quantum is the output layer's `eps_out`
+(champion 2.0098e-4, confuser 2.1179e-4, both 6.6x larger). The fix is on
+`successor-release`; exported networks are byte-identical. With it, the
+integer-network numbers in release summaries finally mean something:
+
+| champion, expanded pack | before (wrong scale) | after |
+|---|---|---|
+| integer-network F1 | 0.12 | 0.837 (float 0.815) |
+| float-vs-integer visibility agreement | 0.50 | 0.92 |
+| selected deployment threshold | 0.45 (tie artifact) | 0.55 |
+
+**Final releases** (`logs/plain_follow_prod_{qat,confuser}_final`): the
+champion passes all five gates, was promoted, re-gated after promotion, and
+passes the app integrity check. It is the app on `successor-release` now.
+The confuser still misses only the float-agreement gate (88.5%, boundary
+cases only).
+
+**Confuser controls** (one epoch each from confuser ep8, lr 2e-5, confuser
+manifest; scored with `export/confuser_slice_eval.py`, which reproduces the
+old numbers exactly):
+
+| run | QAT | hard-negative mining | slice FP @0.45 | peak F1 |
+|---|---|---|---|---|
+| confuser ep8 (start) | no | yes, epochs 4-8 | 0.083 | 0.7947 |
+| Aug 31 gentle QAT | yes | off | 0.223 | - |
+| control (i) | no | off | 0.263 | 0.7949 |
+| control (ii) | yes | on from epoch 1 | 0.122 | 0.7958 |
+| baseline (no confuser training) | - | - | 0.239 | - |
+
+Conclusion: the Aug 28/31 claim "QAT erases the confuser gains" is wrong.
+Training without hard-negative mining erases them, with or without QAT.
+QAT with mining keeps most of the gain after one epoch (0.122 vs 0.083).
+Next: release control (ii) through the pipeline to see whether QAT also
+fixes the confuser's float-agreement gap; a longer QAT-with-mining run may
+close the remaining gap to 0.083.
+
 ## Sep 10, 2026 — Both models re-released with the patched DORY (Sai)
 
 Full release pipeline for both models with `tools/dory_patches/` applied,
@@ -305,7 +344,7 @@ and exact-match validation passed without modifying the deployed
 
 ## Aug 28, 2026 — Stacking test: QAT-after-confuser DESTROYS the confuser win (Sai)
 
-> **Confounded (Sep 10):** hard-negative mining was off in this run; retest planned.
+> **Overturned (Sep 11):** controls show missing hard-negative mining, not QAT, erased the gains; see the Sep 10-11 entry.
 
 One QAT epoch (lr 5e-5, confuser manifest, on confuser-ep8 weights) fully
 regressed the animate-false-alarm fix: confuser-slice FP 0.083 → **0.249**

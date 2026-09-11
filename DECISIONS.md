@@ -3,6 +3,13 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-11** — The re-validated QAT champion is the app on
+  `successor-release` (all five gates pass). Release summaries decode integer
+  outputs with the real output scale; treat any older integer-domain F1 or
+  threshold number as invalid. Future QAT fine-tunes of the confuser keep
+  hard-negative mining on from epoch 1. Rejected: the old rule "never QAT
+  after confuser training", which came from a confounded experiment.
+
 - **2026-09-10** — After the DORY fix, the QAT champion's chip app passes
   all five semantic gates and is the chip candidate again. The confuser
   model is not cleared for the chip: its integer network misses the 90%
