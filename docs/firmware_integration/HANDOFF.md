@@ -118,7 +118,7 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
     the age byte (rounded up, saturating at 255), `tracking` is forced to 0 if the wait exceeded
     `APP_PACKET_TX_MAX_WAIT_US` (100 ms), and `gap8_tx_ms` is stamped. Only app packets are
     touched (wire length, CPX route/function/version, magic `0xA5`, version 5). The math is in
-    `inc/follow_packet.h` (pure C, host-tested: `scratchpad/fw_fix5/test_follow_packet.c`).
+    `inc/follow_packet.h` (pure C, host-tested: `docs/firmware_integration/safety_sim/test_follow_packet.c` (round-6 version)).
     (b) **Packet v5 (enabler for STM32 option (a), finding 2).** 28 bytes: the v4 layout plus
     uint32 `gap8_tx_ms` at byte 24, the GAP8 ms clock (FreeRTOS ticks at 1 kHz) at that same
     moment. The STM32 estimates the clock offset as the windowed minimum of `t_rx - gap8_tx_ms`
@@ -249,7 +249,7 @@ Every control step (`t_fresh = NONE`, including before the first packet since bo
 - The age cannot saturate before 5.08 s. A compile-time `#error` in `app_config.h`
   keeps the maximum more than 1 s above the 3.0 s threshold, so saturation never
   hides the deadline. A saturated packet only lands earlier.
-- Host simulation (`scratchpad/fw_fix3/stale_sim.py`, 300 randomized runs per pattern,
+- Host simulation (an earlier simulator, superseded by `docs/firmware_integration/safety_sim/safety_sim_review6.py`, 300 randomized runs per pattern,
   0-5 ms CPX delay, 10 ms control step), time from the last valid frame to land:
 
   | pattern | v4 rule | old v3 rule |
@@ -332,7 +332,7 @@ gap > 0.5 s as a stale-hover episode, and do not let the first 2 packets after i
 
 Full text in `docs/champion_integration.md`, "Link latency".
 
-Host simulation for these fixes: `scratchpad/fw_fix4/sim/safety_sim_fix4.py`, log
+Host simulation for these fixes: an earlier simulator, superseded by `docs/firmware_integration/safety_sim/safety_sim_review6.py`, log
 `sim_out.log`. It is a copy of the independent `fw_safety_sim/safety_sim.py`, which is
 unchanged, extended with the TX admission rule, the link model and rule 4. Results are in
 section 4.
@@ -352,7 +352,7 @@ so it was not downloaded. Two fixes, pick one:
   verified build, which ran from an in-container copy** of the repo (repo mounted read-only
   at `/src`, copied to `/tmp/<variant>` inside the container, then
   `source /gap_sdk/configs/ai_deck.sh && make clean build image [flags]`; script:
-  `scratchpad/fw_integration/build_in_container.sh`). The command below builds in place
+  (local build logs, not in the repo)). The command below builds in place
   and writes `BUILD/` into your checkout; it was not itself run. That it matches what the
   upstream `make-example` wrapper does is **unverified** until the team pins
   `bitcraze/aideck-gap8-examples` at a recorded commit and diffs the wrapper:
@@ -382,11 +382,11 @@ the review-fix rebuild is summarized below the table):
 
 Both variants: L1_sram 16 B static (DORY takes a 36,700 B L1 buffer per layer at run time),
 FC_tcdm 6,600 B / 16 KB. L2 heap from the link map: `__heapl2ram_size` = 428,952 B.
-Logs: `scratchpad/fw_integration/build_out/` (build_*.log, size_*.txt, main_*.map).
+Logs: (local build logs, not in the repo) (build_*.log, size_*.txt, main_*.map).
 The first build attempt failed with `pulp.h: No such file or directory`, which is fixed by change 6 above.
 Rebuild after the review fixes (containers `aideck_fw2_fix2`/`aideck_fw2_fix3`, same digest,
 repo mounted read-only and copied inside the container; tree = commit `5b1e986`; logs in
-`scratchpad/fw_integration/build_out2/` and `build_out2_tx/`):
+(local build logs, not in the repo) and `build_out2_tx/`):
 
 | variant | make flags | result | L2 static | text / data / bss | flash image |
 |---|---|---|---|---|---|
@@ -409,7 +409,7 @@ current branch head.
 
 **Rebuild after fix round 3** (container `aideck_fw3_fix1`, same digest, repo mounted read-only
 and copied inside the container per variant; tree = commit `75872a8` code, i.e. the fix-round-3 code
-commits; logs in `scratchpad/fw_fix3/build_out3/`):
+commits; logs in (local build logs, not in the repo)):
 
 | variant | make flags | result | L2 static | text / data / bss | L2 heap | flash image |
 |---|---|---|---|---|---|---|
@@ -423,12 +423,12 @@ The make variable reaches the compiler: an `APP_CFLAGS` print in the same image 
 (`build_out3/make_cflags_check.log`). With the 79,056 B frame and a 131,072 B arena, about
 218 KB of flight L2 heap stays free (before FreeRTOS/CPX/driver allocations).
 Host checks: `src/preprocess.c` (via `tools/preprocess_host_harness.c`) is byte-identical to the
-resize study's box2 output on all 1000 frames; `scratchpad/fw_fix3/stale_sim.py` (section 3 table).
+resize study's box2 output on all 1000 frames; an earlier simulator, superseded by `docs/firmware_integration/safety_sim/safety_sim_review6.py` (section 3 table).
 
 **Rebuild after fix round 4** (container `aideck_fw4_build1`, same digest, repo mounted read-only
 and copied inside the container per variant; tree = `e8e4b61` + the fix-round-4 working tree,
-saved as `scratchpad/fw_fix4/build_out4/uncommitted_at_build.diff`, then committed unchanged as `6dbd8dc`; logs
-in `scratchpad/fw_fix4/build_out4/`):
+saved as (local build logs, not in the repo)uncommitted_at_build.diff`, then committed unchanged as `6dbd8dc`; logs
+in (local build logs, not in the repo)):
 
 | variant | make flags | result | L2 static | text / data / bss | L2 heap | flash image |
 |---|---|---|---|---|---|---|
@@ -443,7 +443,7 @@ map. With the 79,056 B frame and a 131,072 B arena, 427,968 - 79,056 - 131,072 =
 **Rebuild after fix round 5** (container `aideck_fw5_build2`, same digest, a snapshot of the
 fix-round-5 working tree mounted read-only and copied inside the container per variant; the
 snapshot's code equals the fix-round-5 commit (`uncommitted_at_build.diff`, `code_sha256.txt`);
-logs in `scratchpad/fw_fix5/build_out5b/`):
+logs in (local build logs, not in the repo)):
 
 | variant | make flags | result | L2 static | text / data / bss | L2 heap | flash image |
 |---|---|---|---|---|---|---|
@@ -456,12 +456,12 @@ grew 176 B over fix round 4 (84,004 B). `cpxTrySendPacket`, `com_try_write`, `tr
 flight + TX link map. With the 79,056 B frame and a 131,072 B arena, 427,792 - 79,056 - 131,072 =
 **217,664 B (about 218 KB)** of flight L2 heap stays free (before FreeRTOS/CPX/driver
 allocations). Host test of the age/tracking/`gap8_tx_ms` finalization:
-`scratchpad/fw_fix5/test_follow_packet.c` (3,000,000 random cases, 0 failures).
+`docs/firmware_integration/safety_sim/test_follow_packet.c` (round-6 version) (3,000,000 random cases, 0 failures).
 
 **Rebuild after fix round 6** (container `aideck_fw6_build2`, same digest, a snapshot of the
 fix-round-6 working tree mounted read-only and copied inside the container per variant; the
 snapshot's code equals the fix-round-6 commit (`uncommitted_at_build.diff`, `code_sha256.txt`);
-logs in `scratchpad/fw_fix6/build_out6/`):
+logs in (local build logs, not in the repo)):
 
 | variant | make flags | result | L2 static | text / data / bss | L2 heap | flash image |
 |---|---|---|---|---|---|---|
@@ -473,9 +473,9 @@ logs in `scratchpad/fw_fix6/build_out6/`):
 the link maps. Flight L2 heap left after the 79,056 B frame and a 131,072 B arena:
 427,648 - 79,056 - 131,072 = **217,520 B (about 218 KB)**.
 
-**Fix round 6 checks** (host). `scratchpad/fw_fix6/test_follow_packet.c`: 3,000,000 random cases,
+**Fix round 6 checks** (host). `docs/firmware_integration/safety_sim/test_follow_packet.c`: 3,000,000 random cases,
 0 failures (fix-round-5 finalize properties with every tracking-byte value, the v6 bit helpers,
-exact recovery of the frame capture time `com.c` records). `scratchpad/fw_fix6/sim/fix6_check.py`
+exact recovery of the frame capture time `com.c` records). `docs/firmware_integration/safety_sim/safety_sim_review6.py` (final independent simulator)
 (log `fix6_check.log`), a copy of the review-5 sim whose GAP8 model adds the SPI-frame
 re-confirmation check and the v6 byte (tracking byte through the fix-round-6 C finalize), and
 whose "v6" STM32 counts only bit 0 + bit 1 packets in rule 4; 200 runs per row:
@@ -487,7 +487,7 @@ whose "v6" STM32 counts only bit 0 + bit 1 packets in rule 4; 200 runs per row:
 | Monte Carlo mixes incl. NINA + ESP32 outages (500 runs each) | up to 9 P2 | - | 0; land <= 3.009 s after the last valid frame |
 | 1.5 s stall, 2.0 s NINA / ESP32 outage (liveness) | - | - | resumes 200/200 after 3 fresh frames |
 
-Fix-round-4 host simulation (`scratchpad/fw_fix4/sim/safety_sim_fix4.py`, log `sim_out.log`;
+Fix-round-4 host simulation (an earlier simulator, superseded by `docs/firmware_integration/safety_sim/safety_sim_review6.py`, log `sim_out.log`;
 200 randomized runs per row, plus 500 Monte Carlo mixes). Rows compare branch head `e8e4b61`
 under the documented v4 rules, fix round 4 under the v4 rules, and fix round 4 with STM32 rule 4.
 Column meanings:
@@ -631,7 +631,7 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
 7. **Color camera.** See 5.5. It is a hard blocker if the deck is color.
 8. **Resize vs training (fixed on the branch; confirm on real frames).** The old firmware resize was
    nearest-neighbor, while training used an antialiased bilinear resize.
-   - Study (`/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/resize_study/RESULT.md`):
+   - Study (`docs/eval_results/2026-09-11-resize/RESULT.md` (team repo)):
      1000 val2017 frames emulated as 324x244 camera frames, using the champion integer ONNX.
    - Nearest-neighbor **lowered F1 at the 0.7 enter threshold by 0.050 [0.020, 0.079]** and flipped
      **13% of visibility decisions** (at 0.5). It mostly costs recall.
