@@ -81,6 +81,9 @@ def _logit(c):
     return math.log(c / (1 - c))
 
 
+DECISIVE_LOGIT = math.log(0.7 / 0.3)  # float confidence outside [0.3, 0.7]
+
+
 def gate_agreement(rel, a):
     """Float (pre) vs deployed (post) decisions, scale-free.
 
@@ -98,6 +101,7 @@ def gate_agreement(rel, a):
                 if smp.get("raw_output"):
                     raw_by_img[os.path.basename(smp.get("image_name", ""))] = smp["raw_output"]
     rows, n_all, vis_ok, x_ok, s_ok, both, unmatched, pairs = [], 0, 0, 0, 0, 0, 0, []
+    decisive = []
     for path in sorted(glob.glob(os.path.join(rel, "compare_*", "comparison_predictions.csv"))):
         with open(path) as f:
             recs = list(csv.DictReader(f))
@@ -114,6 +118,8 @@ def gate_agreement(rel, a):
                 unmatched += 1
                 post_v = r["post_visible"] == "True"
             vis_ok += pre_v == post_v
+            if pre_v != post_v and abs(_logit(pre_c)) > DECISIVE_LOGIT:
+                decisive.append(os.path.basename(r.get("image_name", "")))
             if pre_v and post_v:
                 both += 1
                 x_ok += abs(_bin(float(r["pre_x_value"]), 9, -1.0) - _bin(float(r["post_x_value"]), 9, -1.0)) <= 1
@@ -126,7 +132,9 @@ def gate_agreement(rel, a):
            "both_visible": both,
            "x_within_1_bin": round(x_ok / both, 4) if both else None,
            "size_within_1_bucket": round(s_ok / both, 4) if both else None,
-           "estimated_output_quantum": (float(f"{eps_fit:.4g}") if eps_fit else None)}
+           "estimated_output_quantum": (float(f"{eps_fit:.4g}") if eps_fit else None),
+           # report only: disagreements where the float model was outside the follower's 0.3-0.7 band
+           "decisive_visibility_disagreements": sorted(set(decisive))}
     ok = (n_all >= a.min_images and res["visibility_agreement_at_0.5"] is not None
           and res["visibility_agreement_at_0.5"] >= a.min_vis_agreement
           and both > 0 and res["x_within_1_bin"] >= a.min_x_agreement
