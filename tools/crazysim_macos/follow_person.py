@@ -11,6 +11,8 @@ Safety rules (MinHyuk's simulator exit criteria):
     tracking drops below 0.45)
   * target lost -> hover in place
   * frames older than --stale-hover s -> hover; older than --stale-land s -> land
+  * any stale-frame hover drops the target: tracking must be re-confirmed
+    (--confirm-frames fresh frames >= --vis-enter) before steering resumes
   * speed, yaw-rate, and altitude caps; approach only when roughly centered
   * every control step logged to CSV
 
@@ -240,6 +242,9 @@ def main():
                     help="steer on the probability-weighted bearing instead of the argmax bin")
     ap.add_argument("--simulate-stale-at", type=float, default=None,
                     help="test hook: ignore camera frames after this many seconds (stale-frame safety test)")
+    ap.add_argument("--simulate-stale-for", type=float, default=None,
+                    help="test hook, with --simulate-stale-at: the freeze lasts this many seconds, then frames "
+                         "resume (default: frozen until the end)")
     ap.add_argument("--rate-hz", type=float, default=0.0,
                     help="process at most this many new frames per second, drop the rest (0 = every new frame; "
                          "the GAP8 runs the model at ~6.5 Hz)")
@@ -317,7 +322,8 @@ def main():
                 now = time.monotonic()
                 # test hook: pretend the feed froze. Frames arriving after the freeze are never
                 # processed; only the age used by the stale-frame safety is clamped.
-                frozen = a.simulate_stale_at is not None and now - t0 > a.simulate_stale_at
+                frozen = a.simulate_stale_at is not None and now - t0 > a.simulate_stale_at and (
+                    a.simulate_stale_for is None or now - t0 < a.simulate_stale_at + a.simulate_stale_for)
                 if frozen:
                     stamp = min(stamp, t0 + a.simulate_stale_at)
                 age = now - stamp  # true age of the NEWEST frame (not of the command being applied)
@@ -327,6 +333,9 @@ def main():
                 if age > a.stale_hover:
                     pending.clear()  # never apply a delayed command once the feed is stale
                     cmd = (0.0, 0.0)
+                    # the feed was lost: drop the target so steering resumes only after
+                    # --confirm-frames fresh confirming frames, never on the first fresh frame
+                    vis_state, streak = False, 0
                     if mc: mc.start_linear_motion(0.0, 0.0, 0.0, 0.0)
                     rows.append({"t": now - t0, "frame_age": age, "event": "stale-hover"})
                     return None
@@ -357,7 +366,7 @@ def main():
                 t = time.monotonic() - t0
                 fwall, torn = rx.info()
                 row = {"t": t, "t_proc": now - t0, "wall": time.time(), "frame_age": age, "event": "", "conf": conf,
-                       "tracking": int(vis_state),
+                       "tracking": int(vis_state), "streak": streak,
                        "x": p["x_value"], "x_soft": p["x_soft"], "x_bin": int(p["x_bin_index"]),
                        "size": p["size_value"], "size_bucket": int(p["size_bucket_index"]),
                        "cmd_vx": vx, "cmd_yaw": yaw,

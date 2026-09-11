@@ -1,5 +1,26 @@
 # Experiment Log
 
+## Sep 11, 2026 — Simulator follower re-confirms targets after any stale-frame hover (Sai)
+
+A safety review of the drone firmware found that a short perception stall
+left the target "confirmed", so steering could resume on the first fresh
+frame. The simulator follower had the same gap. Now, whenever the stale-hover
+rule fires (newest frame older than 0.5 s), `follow_person.py` drops the
+target and needs 3 fresh frames at p >= 0.7 before steering again. New test
+option: `--simulate-stale-for SECONDS` (a freeze that ends). Verified in
+three flights and by an independent log check:
+
+| flight | result |
+|---|---|
+| moving person, 50 s | 99.6% tracked, 2.9 deg mean / 7.6 max heading error (baseline 2.7 / 6.6) |
+| camera frozen at 20 s | hover from 0.52 s frame age, land at 3.0 s, as before |
+| camera frozen 1.5 s at 20 s | hover; first two fresh frames ignored even at confidence 1.00; steering resumes on the third |
+
+Caveat: the Mac screen was locked, so the viewer crashed and all three
+flights ran with a headless launcher (camera at about 12.9 Hz vs 14.4 Hz),
+which likely explains the extra 0.2 deg. The firmware branch got the
+matching fix (re-confirmation after 0.4 s gaps, non-blocking app packets).
+
 ## Sep 11, 2026 — 3-epoch QAT with hard-negative mining restores the confuser gain (Sai)
 
 Three epochs of QAT from confuser ep8 (lr 2e-5, cosine, confuser manifest,

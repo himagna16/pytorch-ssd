@@ -86,8 +86,12 @@ no motion unless a person is confirmed (confidence at least 0.7 on 3
 consecutive frames; tracking drops below 0.45);
 hover when the person is lost; hover if frames are older than 0.5 s and
 land after 3 s; speed capped at 0.3 m/s and yaw at 40 deg/s; approach only
-when the person is roughly centered. `--simulate-stale-at SECONDS` freezes
-the feed mid-flight to test the camera-loss rule.
+when the person is roughly centered. After any stale-frame hover the
+follower drops the target, so it steers again only after 3 fresh confirming
+frames, never on the first frame after a camera freeze.
+`--simulate-stale-at SECONDS` freezes the feed mid-flight to test the
+camera-loss rule; add `--simulate-stale-for SECONDS` to end the freeze and
+test re-confirmation (e.g. `--simulate-stale-at 20 --simulate-stale-for 1.5`).
 
 Without `--sim`, `cpx_grab.py` connects to a real AI-deck access point
 (192.168.4.1, port 5000) and also accepts JPEG frames; see
