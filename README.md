@@ -1,4 +1,4 @@
-> **WITHDRAWN (Sep 10, 2026): do not flash or fly the application on this branch.** Its integer network outputs the same tensor for every image. Run `python export/check_semantic_release_gates.py logs/<release_dir>` before any promotion; details in EXPERIMENTS.md on `main` (github.com/himagna16/pytorch-ssd).
+> **Current app (re-validated Sep 10, 2026):** the QAT champion, rebuilt after fixing a DORY bug that zeroed every negative weight on Apple Silicon (the Aug 28 app on this branch was broken and is replaced). It passes all five checks in `export/check_semantic_release_gates.py`, including GVSOC exact on 5 images that agree with ONNX Runtime. Before generating any app: apply `tools/dory_patches/` from `main` (github.com/himagna16/pytorch-ssd) and run the gates on the release. The confuser model does not pass yet.
 
 # pytorch_ssd
 
