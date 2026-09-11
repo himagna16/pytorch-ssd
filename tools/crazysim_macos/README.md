@@ -33,7 +33,7 @@ Then, in another terminal (use the venv setup created, `../../../crazysimenv`):
 ```bash
 ../../../crazysimenv/bin/python crazysim_cflib_tutorial.py 1   # connect
 ../../../crazysimenv/bin/python flight_check.py                # takeoff + supervisor trace
-../../../crazysimenv/bin/python cpx_grab.py --n 30             # camera mode: save frames
+../../../crazysimenv/bin/python cpx_grab.py --sim --n 30       # camera mode: save frames
 ```
 
 Tutorial demos 1–4 don't fly; 5–7 fly.
@@ -88,6 +88,27 @@ hover when the person is lost; hover if frames are older than 0.5 s and
 land after 3 s; speed capped at 0.3 m/s and yaw at 40 deg/s; approach only
 when the person is roughly centered. `--simulate-stale-at SECONDS` freezes
 the feed mid-flight to test the camera-loss rule.
+
+Without `--sim`, `cpx_grab.py` connects to a real AI-deck access point
+(192.168.4.1, port 5000) and also accepts JPEG frames; see
+`docs/real_frame_capture_protocol.md` for the real-camera session.
+
+**Chip-speed emulation and recording** (added Sep 10)
+
+- `--rate-hz 6.5` models the chip as a serial processor: it starts on the
+  newest frame only when the previous inference is done, and never catches
+  up on missed frames. The chip measures about 6.5 Hz on one core.
+- `--latency-ms 153` applies each command 153 ms after its frame arrived.
+  This counts from frame arrival, so it can be up to about one camera
+  interval (70 ms) more optimistic than a chip that captures only when it
+  becomes free. Fly a second run with `--latency-ms 220` to bound that.
+- `--save-frames DIR` stores every processed frame with the model's raw 14
+  outputs, the decoded values, the pose, and timestamps, as compressed npz.
+- A torn-frame guard drops any frame whose chunks arrive out of order or
+  incomplete, and counts them in the log.
+- `analyze_follow.py` marks a run valid only when the sim ran at 0.8x real
+  time or better, the achieved rate is at least 90% of `--rate-hz`, and no
+  two processing starts are closer than 95% of the chip period.
 
 **Results on this Mac (Sep 10, final settings)**
 

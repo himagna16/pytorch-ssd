@@ -83,6 +83,18 @@ else              { /* hover */ }
 
 - The historical `crazyflie-ssd` wrapper decodes the OLD 3-value head —
   its `ssd_postprocess.c` must be replaced with the logic above.
+- **Check which camera the AI-deck has before the first camera-in-the-loop
+  run (added Sep 10).** Some AI-decks carry a color Himax sensor, whose raw
+  frames are a Bayer color mosaic. Bitcraze's own viewer treats raw frames
+  that way. The wrapper's `camera_if.c` does no color conversion, and
+  `preprocess.c` samples the raw frame as if it were gray, so on a color
+  deck the network would see a checkerboard it never trained on. If the
+  deck is color, average each 2x2 cell to one gray pixel before the crop
+  and resize, the same conversion `cpx_grab.py --bayer` uses for recorded
+  frames. The capture protocol's stream check tells you which camera you
+  have.
+- `preprocess.c` resizes by nearest neighbor while training used bilinear
+  resizing. Measure the effect on recorded frames before first flight.
 - Test the controller against mocked 14-value tensors (motors off) before
   any camera-in-the-loop run — the worked example above plus hand-built
   edge cases (all-lost, boundary visibility, extreme bins) make a good
