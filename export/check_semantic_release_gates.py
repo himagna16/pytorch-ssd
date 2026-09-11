@@ -15,6 +15,8 @@ at its input:
                    (compare_*/comparison_predictions.csv): visibility,
                    x-bin within one bin, size bucket within one bucket
   4. gvsoc       - number of distinct images that passed GVSOC exact match
+                   (plus ONNX Runtime agreement for extra images)
+  5. weights     - the app's int8 weight files still contain negative values
 
 Standard library only. Exit code 0 = all gates pass, 1 = a gate failed.
 Usage: python export/check_semantic_release_gates.py logs/<release_dir> [--json out.json]
@@ -107,16 +109,47 @@ def gate_agreement(rel, a):
 
 
 def gate_gvsoc(rel, a):
+    """Distinct images with GVSOC exact match. Extra images come from
+    run_gvsoc_multi_image.py, which also checks the chip against ONNX Runtime."""
+    images, semantic_fail = set(), []
     path = os.path.join(rel, "release_summary.json")
-    images = []
     if os.path.exists(path):
         with open(path) as f:
-            summary = json.load(f)
-        smoke = summary.get("gvsoc_smoke") or {}
-        runs = smoke.get("runs") if isinstance(smoke.get("runs"), list) else [smoke]
-        images = sorted({r.get("image_path") for r in runs if r and r.get("status") == "pass" and r.get("image_path")})
-    return {"gate": "gvsoc", "pass": len(images) >= a.min_gvsoc_images, "passing_images": len(images),
-            "rule": f"GVSOC exact match on >= {a.min_gvsoc_images} different images"}
+            smoke = json.load(f).get("gvsoc_smoke") or {}
+        if smoke.get("status") == "pass" and smoke.get("image_path"):
+            images.add(os.path.basename(smoke["image_path"]))
+    multi = os.path.join(rel, "application_export", "gvsoc_multi_image.json")
+    if os.path.exists(multi):
+        with open(multi) as f:
+            for r in json.load(f).get("runs", []):
+                sem = r.get("semantic_vs_ort") or {}
+                if r.get("status") == "pass" and sem.get("agree"):
+                    images.add(os.path.basename(r["image_path"]))
+                else:
+                    semantic_fail.append(os.path.basename(r.get("image_path", "?")))
+    return {"gate": "gvsoc", "pass": len(images) >= a.min_gvsoc_images and not semantic_fail,
+            "passing_images": len(images), "failed_images": semantic_fail,
+            "rule": f"GVSOC exact match on >= {a.min_gvsoc_images} different images, and every extra "
+                    "image agrees with ONNX Runtime (run_gvsoc_multi_image.py)"}
+
+
+def gate_weights(rel, a):
+    """Signed int8 weights must contain negative values (bytes >= 128). On arm64
+    NumPy < 1.25, DORY's float->uint8 cast turned every negative weight into 0."""
+    files = sorted(glob.glob(os.path.join(rel, "application_export", "application", "**", "*weights*"), recursive=True))
+    rows = []
+    for p in files:
+        if not os.path.isfile(p):
+            continue
+        with open(p, "rb") as f:
+            data = f.read()
+        if p.endswith((".hex", ".bin")) and data:
+            rows.append({"file": os.path.basename(p), "bytes": len(data),
+                         "high_bytes": round(sum(b >= 128 for b in data) / len(data), 4),
+                         "zero_bytes": round(data.count(0) / len(data), 4)})
+    ok = bool(rows) and all(r["high_bytes"] >= a.min_negative_weight_bytes for r in rows)
+    return {"gate": "weights", "pass": ok, "layers": rows,
+            "rule": f"every weight file has >= {a.min_negative_weight_bytes:.0%} bytes >= 128 (negative int8 weights survived)"}
 
 
 def main():
@@ -131,9 +164,11 @@ def main():
     ap.add_argument("--min-x-agreement", type=float, default=0.85)
     ap.add_argument("--min-size-agreement", type=float, default=0.85)
     ap.add_argument("--min-gvsoc-images", type=int, default=3)
+    ap.add_argument("--min-negative-weight-bytes", type=float, default=0.05)
     a = ap.parse_args()
     rel = os.path.abspath(a.release_dir)
-    gates = [gate_diversity(rel, a), gate_saturation(rel, a), gate_agreement(rel, a), gate_gvsoc(rel, a)]
+    gates = [gate_diversity(rel, a), gate_saturation(rel, a), gate_agreement(rel, a), gate_gvsoc(rel, a),
+             gate_weights(rel, a)]
     report = {"release_dir": rel, "pass": all(g["pass"] for g in gates), "gates": gates}
     for g in gates:
         print(f"[{'PASS' if g['pass'] else 'FAIL'}] {g['gate']}: {g['rule']}")
