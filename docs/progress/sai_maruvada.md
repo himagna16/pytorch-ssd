@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 10, 2026
-**Last updated:** 2026-09-10
+**Period covered:** Aug 24 to Sep 11, 2026
+**Last updated:** 2026-09-11
 
 ## Summary
 
@@ -24,14 +24,16 @@ processor. In the first three weeks I:
   ignore their input, withdrew my earlier chip-validation claims, and traced
   the cause the same day to a platform bug in the DORY code generator on
   Apple Silicon. After the fix, the QAT champion's chip network passes all
-  five new release checks, including the chip simulator on five images.
+  five new release checks, including the chip simulator on five images, and
+  it is now the team's validated chip app.
 
 ## Live tracker
 
 | Item | Owner | Status | Next step |
 |---|---|---|---|
-| Fix the chip integer network, whose output is constant | Grace, Sai | Fixed Sep 10: champion passes all 5 gates | Fix the pipeline's output-scale reporting bug, then promote the champion app |
-| Confuser model on the chip | Sai | Not cleared: 88.5% float agreement, bar 90% | Train it with quantization and hard-negative mining, then re-release |
+| Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | Rebuild for 8 cores to cut latency |
+| Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
+| Confuser model on the chip | Sai | Not cleared: 88.5% float agreement, bar 90% | QAT-with-mining version released Sep 11, gates running |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
@@ -39,7 +41,7 @@ processor. In the first three weeks I:
 | Progress record for Prof. Mok | Sai | v1 done, this file | Update every session |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
 | Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
-| Retest "QAT erases confuser gains" | Sai | Control 1 done; control 2 training | Score control 2 |
+| Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 
 ## Results and their status
 
@@ -58,7 +60,8 @@ processor. In the first three weeks I:
 | Follower at the chip's speed, 6.5 Hz with 153 ms delay | Verified in simulation: 3.1 degrees mean heading error vs 2.7 at full speed, no oscillation, empty room still 0 tracking |
 | Crazyflie simulator on macOS | Verified |
 | Closed-loop person following in simulation, 5 tests | Verified against a simulator ground-truth log. Uses the full-precision model on a laptop, not the chip network |
-| "QAT erases the confuser gains" | **Overturned by control 1:** one epoch without hard-negative mining, and without QAT, already raises pet and mannequin false alarms from 8.3% to 26.3%. Mining, not QAT, was the missing piece. Control 2 (QAT with mining) is training |
+| "QAT erases the confuser gains" | **Overturned.** One epoch without hard-negative mining, and without QAT, raises pet and mannequin false alarms from 8.3% to 26.3%. QAT with mining keeps them at 12.2% (baseline 23.9%). Mining, not QAT, was the missing piece |
+| Integer-network accuracy in release reports | Now correct: the pipeline had decoded chip outputs 6.6x too small. Champion integer F1 0.837 vs 0.815 for the float model |
 
 ## My contributions
 
@@ -120,6 +123,14 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (after midnight).** Fixed a second pipeline bug: release reports
+  decoded chip outputs with a hard-coded scale 6.6x too small, which made
+  integer accuracy read 0.12 instead of 0.84. Re-released both models with
+  both fixes; promoted the champion's chip app after it passed every check
+  twice and the app's integrity check. Two control runs overturned the old
+  "QAT erases the confuser gains" result: missing hard-negative mining was
+  the cause. Audited every chip app built on this Mac: only the two old,
+  already-withdrawn releases were corrupted.
 - **2026-09-10 (evening).** Corrected the records: withdrawal notes in the
   experiment log, meeting reports, and decision log, and a reworded resume
   bullet. Ran a four-way investigation of the chip network. Root cause: the
