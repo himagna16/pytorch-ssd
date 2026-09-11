@@ -23,13 +23,15 @@ processor. In the first three weeks I:
 - found, on Sep 10, that the integer networks we released for the chip
   ignore their input, withdrew my earlier chip-validation claims, and traced
   the cause the same day to a platform bug in the DORY code generator on
-  Apple Silicon. The fix is being tested; re-releasing both models is next.
+  Apple Silicon. After the fix, the QAT champion's chip network passes all
+  five new release checks, including the chip simulator on five images.
 
 ## Live tracker
 
 | Item | Owner | Status | Next step |
 |---|---|---|---|
-| Fix the chip integer network, whose output is constant | Grace, Sai | Root cause found Sep 10; fix under test | Apply the DORY patch, re-release both models, pass the new gates |
+| Fix the chip integer network, whose output is constant | Grace, Sai | Fixed Sep 10: champion passes all 5 gates | Fix the pipeline's output-scale reporting bug, then promote the champion app |
+| Confuser model on the chip | Sai | Not cleared: 88.5% float agreement, bar 90% | Train it with quantization and hard-negative mining, then re-release |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
@@ -37,7 +39,7 @@ processor. In the first three weeks I:
 | Progress record for Prof. Mok | Sai | v1 done, this file | Update every session |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
 | Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
-| Retest "QAT erases confuser gains" | Sai | Planned | Two one-epoch runs with hard-negative mining controlled |
+| Retest "QAT erases confuser gains" | Sai | Control 1 done; control 2 training | Score control 2 |
 
 ## Results and their status
 
@@ -46,7 +48,9 @@ processor. In the first three weeks I:
 | QAT champion beats David's released model, 0.8008 vs 0.789 peak F1 | Verified in simulated quantized (fake-quant) evaluation; reproduced by Grace. Not verified on the chip |
 | Confuser model: animal and mannequin false alarms 24% to 8% | Verified in fake-quant evaluation |
 | Reproduced David's GVSOC chip validation of his own app | Verified |
-| Our champion and confuser chip apps | **Broken; cause found.** The integer network gives one output for all 96 test images. The DORY code generator turned every negative weight into 0 on Apple Silicon, and the earlier "bit-exact" pass compared the chip against a reference built from the same corrupted weights |
+| Our Aug 28 and Aug 31 chip apps | **Were broken.** The integer network gave one output for all 96 test images: the DORY code generator turned every negative weight into 0 on Apple Silicon, and the old check compared the chip against a reference built from the same corrupted weights |
+| Champion chip app after the fix | **Verified:** distinct output for all 96 images; exact on the chip simulator for 5 images, agreeing with an independent runtime; 94.8% visibility agreement with the float model |
+| Confuser chip app after the fix | Runs correctly, but agrees with its float model on only 88.5% of visibility calls (bar 90%), all near the decision boundary |
 | Quantized export of our models | Verified healthy: every exported stage gives distinct outputs under an independent runtime |
 | Release pipeline runs off David's machine, 5 fixes | Runs; needs the DORY patch on Apple Silicon before it produces valid chip apps |
 | Semantic release gates | Verified: both old releases fail all five checks, David's app passes the weights check, and a synthetic healthy release passes all five |
@@ -54,7 +58,7 @@ processor. In the first three weeks I:
 | Follower at the chip's speed, 6.5 Hz with 153 ms delay | Verified in simulation: 3.1 degrees mean heading error vs 2.7 at full speed, no oscillation, empty room still 0 tracking |
 | Crazyflie simulator on macOS | Verified |
 | Closed-loop person following in simulation, 5 tests | Verified against a simulator ground-truth log. Uses the full-precision model on a laptop, not the chip network |
-| "QAT erases the confuser gains" | Confounded: hard-negative mining was off in those runs. Retest planned |
+| "QAT erases the confuser gains" | **Overturned by control 1:** one epoch without hard-negative mining, and without QAT, already raises pet and mannequin false alarms from 8.3% to 26.3%. Mining, not QAT, was the missing piece. Control 2 (QAT with mining) is training |
 
 ## My contributions
 
@@ -102,9 +106,11 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   files.
 - **MinHyuk Park:** Crazyflie simulator, drone hardware, AI-deck camera
   firmware.
-- **Grace Hao:** quantization lane; independently reproduced the chip
-  validation on an Intel Mac; caught a missing-checkpoint bug; running the
-  learned-quantization-parameter study; requested drone access.
+- **Grace Hao:** quantization lane; reproduced the Aug 28 chip-simulator
+  result on an Intel Mac (it used the checked-in app files, so it could not
+  catch the DORY bug); caught a missing-checkpoint bug; measured that keeping
+  the learned quantization ranges gains only 0.17 F1 points, below her
+  materiality bar; requested drone access.
 - **Oaj Saini:** reproduced the setup on Linux and reported three setup
   bugs, which I fixed.
 - **Jade Chen, Koa, Calvin Ngu:** flight-control and firmware lane, starting
@@ -120,7 +126,10 @@ Newest first. One entry per working session.
   DORY code generator casts weights in a way that zeroes negative values
   on Apple Silicon; David's app was built on x86, where it works. Wrote the
   patch, five permanent release gates, a multi-image chip-simulator check,
-  and a tested C decoder for the firmware team. Added the chip's speed and
+  and a tested C decoder for the firmware team. Re-released both models: the
+  champion passes every gate; the confuser misses the float-agreement bar.
+  A control run showed the old "QAT erases the confuser gains" conclusion
+  was wrong: training without hard-negative mining erases them. Added the chip's speed and
   delay to the simulated follower; tracking still works. Wrote the
   real-camera capture protocol and scoring tool.
 - **2026-09-10.** Ported the simulator to macOS. Built the closed-loop
