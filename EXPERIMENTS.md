@@ -26,9 +26,31 @@ but on in epochs 4–8 of the confuser run. The chip's preprocessing
 uses bilinear. The Sep 10 simulator results are unaffected: they used the
 float model.
 
-Status: root-cause investigation in progress; permanent semantic release
-gates to follow (output diversity, per-layer saturation bound, integer-vs-float
-decision agreement on 500+ images, GVSOC on several images).
+**Root cause (found Sep 10, same day).** The quantized export is healthy:
+every exported ONNX stage gives distinct, unsaturated outputs under ONNX
+Runtime, for both our models and for David's checkpoint run through our
+pipeline. The bug is in DORY's weight serialization. `HW_node.py`
+(`add_checksum_w_integer`) casts float32 weights straight to uint8. On Apple
+Silicon with NumPy 1.24 (our `doryenv`), that cast saturates every negative
+value to 0 instead of wrapping. So every negative weight became 0 in the
+DORY-graph simulator, the goldens, and the GAP8 app alike. The final tensor
+is exactly 255 times the sum of the positive output weights plus the bias,
+which is why every value is a multiple of 15. Evidence:
+
+| check | result |
+|---|---|
+| NumPy float32 to uint8, 1000 values of -39 | doryenv: 0; x86 container: 217 (correct) |
+| negative bytes in app weight files | ours 0-1.8%; David's (built on x86) 47-53% |
+| David's checkpoint through our DORY on this Mac | collapses the same way |
+| our ONNX with the cast fixed, in the DORY simulator | distinct outputs, matches ONNX Runtime |
+
+Every release log since Aug 28 carried the only symptom:
+`RuntimeWarning: invalid value encountered in cast`. Fix: a wrap-safe cast
+(`tools/dory_patches/`), then re-release both models. New permanent gates on
+`successor-release` (`export/check_semantic_release_gates.py`): output
+diversity, hidden-layer saturation, float-vs-deployed decision agreement,
+GVSOC on 3+ images with ONNX Runtime agreement, and negative weights present.
+Both old releases fail all five; David's app passes the weights gate.
 
 ## Sep 10, 2026 — Autonomous person following in the simulator (Sai)
 
