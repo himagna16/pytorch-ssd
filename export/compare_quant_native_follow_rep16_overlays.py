@@ -23,7 +23,11 @@ if str(EXPORTER_DIR) not in sys.path:
     sys.path.insert(0, str(EXPORTER_DIR))
 
 from models.follow_model_factory import build_follow_model_from_checkpoint, load_checkpoint_payload  # noqa: E402
-from export_nemo_quant_core import semantic_output  # noqa: E402
+from export_nemo_quant_core import (  # noqa: E402
+    get_id_output_eps_with_source,
+    semantic_output,
+    set_id_output_eps,
+)
 from utils.coco_follow_regression import compute_follow_target  # noqa: E402
 from utils.follow_task import (  # noqa: E402
     compute_follow_metrics,
@@ -100,6 +104,16 @@ def parse_args() -> argparse.Namespace:
         help="Label used in summary metadata and markdown headings for the compared image set.",
     )
     parser.add_argument("--vis-thresh", type=float, default=0.5)
+    parser.add_argument(
+        "--id-output-eps",
+        type=float,
+        default=None,
+        help=(
+            "Quantum of the integer network's final output (output_head eps_out from the quant "
+            "eval summary). Overrides $PLAIN_FOLLOW_ID_OUTPUT_EPS; if neither is set the legacy "
+            "1/32768 decode is used."
+        ),
+    )
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -431,6 +445,8 @@ def build_summary_markdown(summary: dict[str, Any]) -> str:
             "",
             "## Post-Quant",
             f"- source: `{post_source}`",
+            f"- id_output_eps: `{(summary.get('id_output_eps') or {}).get('value')}` "
+            f"(`{(summary.get('id_output_eps') or {}).get('source')}`)",
             f"- follow_score: `{post.get('follow_score')}`",
             f"- x_mae: `{post.get('x_mae')}`",
             f"- size_mae: `{post.get('size_mae')}`",
@@ -453,6 +469,17 @@ def build_summary_markdown(summary: dict[str, Any]) -> str:
 
 def main() -> None:
     args = parse_args()
+    if args.id_output_eps is not None:
+        set_id_output_eps(float(args.id_output_eps))
+    id_output_eps_value, id_output_eps_source = get_id_output_eps_with_source()
+    if id_output_eps_value is None:
+        print(
+            "[compare_quant_native_follow] WARNING: no --id-output-eps / $PLAIN_FOLLOW_ID_OUTPUT_EPS; "
+            "decoding post-quant outputs with the legacy 1/32768 quantum.",
+            file=sys.stderr,
+        )
+    if args.id_output_eps is not None:
+        id_output_eps_source = "cli:--id-output-eps"
     ckpt_path = Path(args.ckpt).expanduser().resolve()
     onnx_path = Path(args.onnx).expanduser().resolve()
     post_predictions_path = (
@@ -646,6 +673,10 @@ def main() -> None:
         "images_dir": str(images_dir),
         "annotations": str(annotations_path),
         "image_count": len(rows),
+        "id_output_eps": {
+            "value": id_output_eps_value if id_output_eps_value is not None else 1.0 / 32768.0,
+            "source": id_output_eps_source,
+        },
         "comparison_overlay_dir": str(overlay_dir),
         "contact_sheet": str(contact_sheet_path),
         "predictions_csv": str(csv_path),

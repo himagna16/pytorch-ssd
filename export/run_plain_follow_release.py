@@ -82,7 +82,11 @@ from evaluate_quant_native_follow import (  # noqa: E402
     stage_metrics_for_subset,
     tensor_rows,
 )
-from export_nemo_quant_core import semantic_output  # noqa: E402
+from export_nemo_quant_core import (  # noqa: E402
+    ID_OUTPUT_EPS_ENV,
+    semantic_output,
+    set_id_output_eps,
+)
 from hybrid_follow_image_artifacts import stage_image_artifacts  # noqa: E402
 from utils.follow_task import follow_output_metadata, follow_runtime_decode_summary  # noqa: E402
 
@@ -457,6 +461,39 @@ def build_expanded_pack(
     }
     write_json(output_root / "expanded_eval_pack_summary.json", summary)
     return summary
+
+
+def resolve_id_output_eps_from_quant_summary(quant_summary: dict[str, Any], summary_path: Path) -> dict[str, Any]:
+    """Return the integer network's output quantum recorded by stage 06.
+
+    Prefers the explicit top-level ``id_output_eps`` key; falls back to the
+    output_head row of the qd->id operator report (older summaries). Raises if
+    neither yields a model-derived value: decoding plain_follow DORY outputs with
+    the legacy 1/32768 compresses logits ~6.5x and corrupts visibility decisions.
+    """
+    explicit = quant_summary.get("id_output_eps") or {}
+    value = explicit.get("value")
+    source = str(explicit.get("source") or "")
+    if value not in (None, 0, 0.0) and source.startswith("output_head."):
+        return {"value": float(value), "source": source, "summary_key": "id_output_eps", "quant_summary": str(summary_path)}
+    rows = ((quant_summary.get("quant_fidelity") or {}).get("qd_to_id_operator_report") or {}).get("rows") or []
+    for row in rows:
+        if row.get("module_name") != "output_head":
+            continue
+        row_value = row.get("eps_out")
+        row_source = str(row.get("eps_out_source") or "")
+        if row_value not in (None, 0, 0.0) and row_source and row_source != "final_output_fallback":
+            return {
+                "value": float(row_value),
+                "source": f"output_head.{row_source}",
+                "summary_key": "quant_fidelity.qd_to_id_operator_report.rows[output_head].eps_out",
+                "quant_summary": str(summary_path),
+            }
+    raise RuntimeError(
+        "Could not find a model-derived ID output quantum (output_head eps_out) in "
+        f"{summary_path} (id_output_eps={explicit!r}). Refusing to decode plain_follow integer "
+        "outputs with the legacy 1/32768 scale."
+    )
 
 
 def threshold_selection_score(metrics: dict[str, Any]) -> float:
@@ -1237,6 +1274,8 @@ def build_release_summary_markdown(summary: dict[str, Any]) -> str:
         f"- checkpoint_vis_thresh: `{summary['checkpoint_vis_thresh']}`",
         f"- quant_eval_vis_thresh: `{summary['quant_eval_vis_thresh']}`",
         f"- deployment_vis_thresh: `{deployment_thresh}`",
+        f"- id_output_eps: `{(summary.get('id_output_eps') or {}).get('value')}` "
+        f"(`{(summary.get('id_output_eps') or {}).get('source')}`)",
         f"- deployment_onnx: `{summary['artifacts']['dory_onnx']}`",
         f"- deployment_validation_source: `{summary['artifacts']['deployment_validation_source']}`",
         "",
@@ -1512,6 +1551,19 @@ def main() -> None:
     run_logged(quant_command, log_path=command_dir / "06_quant_eval.log")
     quant_summary = read_json(quant_output_dir / "summary.json")
 
+    # Publish the real integer output quantum for every later decode: in-process
+    # (threshold sweep, DORY semantic views, GVSOC decode) and for subprocesses.
+    # The compare step runs through the docker wrapper, which does not forward
+    # host env vars, so it also gets an explicit --id-output-eps flag below.
+    id_output_eps_info = resolve_id_output_eps_from_quant_summary(quant_summary, quant_output_dir / "summary.json")
+    id_output_eps = float(id_output_eps_info["value"])
+    set_id_output_eps(id_output_eps)
+    os.environ[ID_OUTPUT_EPS_ENV] = repr(id_output_eps)
+    print(
+        f"[run_plain_follow_release] id_output_eps={id_output_eps!r} source={id_output_eps_info['source']}",
+        flush=True,
+    )
+
     quant_onnx_path = Path(
         (quant_summary.get("artifacts") or {}).get("onnx") or (quant_output_dir / "model_id.onnx")
     )
@@ -1638,6 +1690,8 @@ def main() -> None:
             dataset_label,
             "--vis-thresh",
             str(deployment_vis_thresh),
+            "--id-output-eps",
+            repr(id_output_eps),
             "--overwrite",
         ]
         run_logged(command, log_path=command_dir / log_name)
@@ -1710,6 +1764,7 @@ def main() -> None:
         "checkpoint_vis_thresh": checkpoint_vis_thresh,
         "quant_eval_vis_thresh": quant_eval_vis_thresh,
         "deployment_vis_thresh": deployment_vis_thresh,
+        "id_output_eps": id_output_eps_info,
         "expanded_dataset_label": expanded_dataset_label,
         "hard_case_dataset_label": hard_case_dataset_label,
         "threshold_selection": {

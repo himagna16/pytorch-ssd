@@ -67,6 +67,9 @@ from export_nemo_quant_core import (  # noqa: E402
     report_dory_weight_initializer_ranges,
     run_activation_calibration,
     semantic_output,
+    set_id_output_eps,
+    get_id_output_eps_with_source,
+    LEGACY_ID_OUTPUT_EPS,
 )
 from utils.coco_follow_regression import compute_follow_target  # noqa: E402
 from utils.follow_task import (  # noqa: E402
@@ -857,6 +860,65 @@ def id_operator_output_semantic(raw_output: np.ndarray, ctx: dict[str, Any]) -> 
     return arr
 
 
+def resolve_plain_follow_id_output_eps(model_id: torch.nn.Module, *, input_eps: float) -> dict[str, Any]:
+    """Resolve the integer network's final output quantum (output_head eps_out).
+
+    Uses the same eps propagation as the qd->id operator report, so the value is
+    identical to quant_fidelity.qd_to_id_operator_report rows[output_head].eps_out.
+    """
+    report: dict[str, Any] = {
+        "value": None,
+        "source": None,
+        "module_name": "output_head",
+        "eps_in": None,
+        "legacy_default": LEGACY_ID_OUTPUT_EPS,
+        "ratio_vs_legacy": None,
+    }
+    try:
+        context = plain_follow_operator_context(model_id, input_eps=float(input_eps))
+    except Exception as exc:  # pragma: no cover - defensive, non-plain topologies
+        report["source"] = f"unresolved:{exc.__class__.__name__}"
+        return report
+    ctx = context.get("output_head")
+    if ctx is None:
+        report["source"] = "unresolved:no_output_head"
+        return report
+    report["eps_in"] = ctx.get("eps_in")
+    eps_out = ctx.get("eps_out")
+    source = str(ctx.get("eps_out_source") or "")
+    if eps_out in (None, 0.0) or source == "final_output_fallback":
+        report["source"] = "unresolved:final_output_fallback"
+        return report
+    report["value"] = float(eps_out)
+    report["source"] = f"output_head.{source}"
+    report["ratio_vs_legacy"] = float(eps_out) / LEGACY_ID_OUTPUT_EPS
+    return report
+
+
+def qd_to_id_semantic_caveat(qd_to_id_semantic: dict[str, Any], id_output_eps: Any) -> dict[str, Any]:
+    """Caveat attached to every published qd->id semantic comparison.
+
+    semantic_output(..., "qd") passes the qd output_head through raw (unscaled),
+    while id/onnx are decoded with the real output quantum (id_output_eps).  The
+    qd graph also disagrees with id on scale-free argmax metrics (x-bin), so no
+    single qd quantum would make the two comparable.  Before id_output_eps was
+    applied, both decodes were compressed toward 0.5 and visibility agreement
+    looked high by coincidence; the drop is not a quantization regression.
+    """
+    return {
+        "meaningful": False,
+        "qd_output_head_decode": "raw_unscaled",
+        "id_output_head_decode": "raw_times_id_output_eps",
+        "id_output_eps": id_output_eps,
+        "scale_free_x_bin_exact_match_rate": qd_to_id_semantic.get("x_bin_exact_match_rate"),
+        "note": (
+            "qd output_head is decoded unscaled (known issue) and the qd graph already disagrees "
+            "with id on scale-free x-bin argmax, so qd->id visibility_gate_agreement / value MAE are "
+            "not a meaningful quantization-fidelity signal; compare fp->onnx and id->onnx instead."
+        ),
+    }
+
+
 def build_qd_id_operator_report(
     model_qd: torch.nn.Module,
     model_id: torch.nn.Module,
@@ -1258,7 +1320,11 @@ def early_activation_semantic_output(
 ) -> np.ndarray:
     arr = np.asarray(raw_output, dtype=np.float64)
     if module_name == "output_head":
-        semantic_stage = "id" if stage_name in {"qd", "id", "onnx"} else stage_name
+        if stage_name == "qd":
+            # Unchanged legacy diagnostic decode for the qd stage (its output head
+            # is not in integer output quanta); only id/onnx use the real quantum.
+            return arr * LEGACY_ID_OUTPUT_EPS
+        semantic_stage = "id" if stage_name in {"id", "onnx"} else stage_name
         return np.asarray(semantic_output(arr, semantic_stage), dtype=np.float64)
     if stage_name in {"fp", "fq"}:
         return arr
@@ -1553,6 +1619,9 @@ def build_summary_markdown(summary: dict[str, Any]) -> str:
     lines = [
         f"# {summary['candidate_name']}",
         "",
+        f"- id_output_eps: `{(summary.get('id_output_eps') or {}).get('value')}` "
+        f"(source `{(summary.get('id_output_eps') or {}).get('source')}`)",
+        "",
         "## Float Validation",
         f"- follow_score: `{float_metrics.get('follow_score')}`",
         f"- x_mae: `{float_metrics.get('x_mae')}`",
@@ -1573,6 +1642,7 @@ def build_summary_markdown(summary: dict[str, Any]) -> str:
         "## Quant Fidelity",
         f"- earliest bad boundary: `{(earliest or {}).get('boundary_name')}`",
         f"- earliest bad op: `{((earliest or {}).get('first_bad') or {}).get('module_name')}`",
+        f"- qd->id semantic caveat: {((summary['quant_fidelity'].get('qd_to_id_semantic_caveat') or {}).get('note') or 'n/a')}",
         f"- first-bad local drift: `{(((earliest or {}).get('first_bad') or {}).get('drift') or {})}`",
         f"- qd->id first bad operator: `{qd_id_operator.get('module_name')}`",
         f"- qd->id scale control module: `{qd_id_operator.get('scale_control_module')}`",
@@ -1751,6 +1821,36 @@ def main() -> None:
     model_fp, model_fq, model_qd, model_id, quant_build_context = build_quantized_models(ckpt_path, args, metadata)
     parameter_count = int(sum(param.numel() for param in model_fp.parameters()))
 
+    # Every "id"/"onnx" decode below (stage metrics, boundary reports, operator and
+    # activation reports) must use the real output quantum, so publish it before
+    # the first decode.
+    env_id_output_eps, env_id_output_eps_source = get_id_output_eps_with_source()
+    id_output_eps_report = resolve_plain_follow_id_output_eps(model_id, input_eps=float(args.eps_in))
+    if id_output_eps_report["value"] is not None:
+        set_id_output_eps(float(id_output_eps_report["value"]))
+        if env_id_output_eps is not None and not math.isclose(
+            env_id_output_eps, float(id_output_eps_report["value"]), rel_tol=1e-6
+        ):
+            print(
+                "[evaluate_quant_native_follow] WARNING: ignoring {} ({}) in favor of the model's "
+                "output_head eps_out {}".format(
+                    env_id_output_eps_source, env_id_output_eps, id_output_eps_report["value"]
+                )
+            )
+    else:
+        fallback_value, fallback_source = get_id_output_eps_with_source()
+        id_output_eps_report["value"] = fallback_value if fallback_value is not None else LEGACY_ID_OUTPUT_EPS
+        id_output_eps_report["source"] = "{} -> {}".format(id_output_eps_report["source"], fallback_source)
+        print(
+            "[evaluate_quant_native_follow] WARNING: could not resolve output_head eps_out; "
+            "decoding id outputs with {} ({})".format(id_output_eps_report["value"], fallback_source)
+        )
+    print(
+        "[evaluate_quant_native_follow] id_output_eps={} source={}".format(
+            id_output_eps_report["value"], id_output_eps_report["source"]
+        )
+    )
+
     id_onnx_path = output_dir / "model_id.onnx"
     export_id_onnx(model_id, id_onnx_path, int(args.opset_version))
     dory_onnx_path, dory_cleanup_report = run_cleanup_pipeline(id_onnx_path, output_dir)
@@ -1909,6 +2009,11 @@ def main() -> None:
         input_eps=float(args.eps_in),
     )
 
+    qd_semantic_caveat = qd_to_id_semantic_caveat(
+        boundary_reports["qd_to_id"]["semantic"], id_output_eps_report.get("value")
+    )
+    boundary_reports["qd_to_id"]["semantic_caveat"] = qd_semantic_caveat
+
     earliest_bad = None
     for boundary_name in ("fp_to_fq", "qd_to_id", "id_to_onnx"):
         report = boundary_reports[boundary_name]
@@ -1919,6 +2024,8 @@ def main() -> None:
                 "first_bad": report["local"].get("first_bad"),
                 "worst": report["local"].get("worst"),
             }
+            if boundary_name == "qd_to_id":
+                earliest_bad["semantic_caveat"] = qd_semantic_caveat
             break
 
     float_validation = dict(metadata.get("val_stats") or {})
@@ -1931,11 +2038,13 @@ def main() -> None:
         "secondary_dataset_label": secondary_dataset_label,
         "output_metadata": follow_output_metadata(model_type=model_type, head_type=follow_head_type),
         "parameter_count": parameter_count,
+        "id_output_eps": id_output_eps_report,
         "float_validation": float_validation,
         "datasets": dataset_views,
         "quant_fidelity": {
             "boundaries": boundary_reports,
             "earliest_bad_boundary": earliest_bad,
+            "qd_to_id_semantic_caveat": qd_semantic_caveat,
             "qd_to_id_operator_report": qd_id_operator_report,
             "float_to_onnx_bin_preservation": summarize_follow_bin_preservation(
                 stage_tensors["fp"],

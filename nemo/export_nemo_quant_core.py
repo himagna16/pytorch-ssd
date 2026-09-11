@@ -3286,10 +3286,57 @@ def compare_decoded_hybrid_follow_outputs(
     }
 
 
+# Quantum of the integer-deployable ("id") network's final output tensor.
+# Historically every "id" decode assumed 2^-15. That is only a legacy default:
+# for plain_follow the real quantum is the output head's eps_out
+# (PACT_Linear.get_output_eps(eps_in)), which is ~6.5x larger. Callers that
+# know the real quantum publish it here via set_id_output_eps() or the
+# PLAIN_FOLLOW_ID_OUTPUT_EPS environment variable (read lazily at call time);
+# when neither is set, semantic_output() keeps the legacy 1/32768 behavior so
+# hybrid_follow and other legacy callers are unchanged.
+LEGACY_ID_OUTPUT_EPS = 1.0 / 32768.0
+ID_OUTPUT_EPS_ENV = "PLAIN_FOLLOW_ID_OUTPUT_EPS"
+_ID_OUTPUT_EPS_OVERRIDE: Optional[float] = None
+
+
+def _validate_id_output_eps(value: Any, source: str) -> float:
+    try:
+        eps = float(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"Invalid ID output eps from {source}: {value!r}")
+    if not math.isfinite(eps) or eps <= 0.0:
+        raise ValueError(f"ID output eps from {source} must be finite and > 0, got {value!r}")
+    return eps
+
+
+def set_id_output_eps(eps: Optional[float]) -> Optional[float]:
+    """Set (or clear with None) the process-wide ID output quantum override."""
+    global _ID_OUTPUT_EPS_OVERRIDE
+    _ID_OUTPUT_EPS_OVERRIDE = None if eps is None else _validate_id_output_eps(eps, "set_id_output_eps")
+    return _ID_OUTPUT_EPS_OVERRIDE
+
+
+def get_id_output_eps_with_source() -> Tuple[Optional[float], str]:
+    """Return (eps, source); eps is None when only the legacy default applies."""
+    if _ID_OUTPUT_EPS_OVERRIDE is not None:
+        return _ID_OUTPUT_EPS_OVERRIDE, "set_id_output_eps"
+    raw = os.environ.get(ID_OUTPUT_EPS_ENV)
+    if raw is not None and raw.strip():
+        return _validate_id_output_eps(raw.strip(), f"${ID_OUTPUT_EPS_ENV}"), f"env:{ID_OUTPUT_EPS_ENV}"
+    return None, "legacy_default_2^-15"
+
+
+def get_id_output_eps() -> Optional[float]:
+    return get_id_output_eps_with_source()[0]
+
+
 def semantic_output(output, stage: str):
     arr = np.asarray(output, dtype=np.float64).reshape(-1)
     if stage == "id":
-        return arr / 32768.0
+        eps = get_id_output_eps()
+        if eps is None:
+            return arr / 32768.0
+        return arr * eps
     return arr
 
 
