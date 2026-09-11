@@ -8,4 +8,5 @@ exec docker run --rm -i --platform linux/amd64 \
   -v "${DRONE_ROOT}:${DRONE_ROOT}" \
   -w "$PWD" \
   -e PYTHONUNBUFFERED=1 \
+  -e PYTHONDONTWRITEBYTECODE=1 \
   nemo-legacy-export:py38 python3 "$@"
