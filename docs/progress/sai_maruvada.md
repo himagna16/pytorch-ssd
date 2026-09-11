@@ -35,7 +35,7 @@ processor. In the first three weeks I:
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference | Apply DORY fixes 0002/0003, rebuild the app |
 | Put the champion network into the drone firmware | Sai, then frontend trio | Found the firmware still holds an older network; local dry run in progress | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Confuser model on the chip | Sai | Cleared on 1,000 random images (93-95% agreement); the 96-image miss was noise | Team picks champion vs confuser; 3-epoch QAT run training |
+| Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser; 3-epoch QAT run training |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |

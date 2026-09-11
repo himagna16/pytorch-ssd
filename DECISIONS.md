@@ -3,6 +3,13 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-11** — All three chip candidates (QAT champion, confuser,
+  confuser QAT+mining) pass the semantic gates on a 576-image pack and on an
+  unbiased 1,000-image check. The confuser is cleared for the chip. OPEN for
+  the team: ship the champion (more recall) or a confuser model (about 3x
+  fewer false alarms on pets and mannequins). Release decisions use packs of
+  500+ images from now on.
+
 - **2026-09-11** — The re-validated QAT champion is the app on
   `successor-release` (all five gates pass). Release summaries decode integer
   outputs with the real output scale; treat any older integer-domain F1 or

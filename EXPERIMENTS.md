@@ -1,5 +1,22 @@
 # Experiment Log
 
+## Sep 11, 2026 — All three candidates pass the gates on a 576-image pack (Sai)
+
+Each candidate was re-released with a 576-image evaluation pack (rep16 plus
+560 COCO val images; 140 without a visible person) and gated:
+
+| model | visibility agreement, 608 rows | confident disagreements | gates |
+|---|---|---|---|
+| QAT champion | 95.7% | 1 | 5 / 5 |
+| confuser | 92.3% | 3 | 5 / 5 |
+| confuser, QAT + mining (1 epoch) | 91.1% | 4 | 5 / 5 |
+
+This agrees with the unbiased 1,000-image check (95.9 / 93.0 / 94.9%). The
+confuser's earlier 88.5% came from a 96-image pack and was noise. All three
+chip networks are cleared; which one ships is a team decision between the
+champion's recall and the confuser models' 3x lower pet/mannequin false
+alarms. Releases: `logs/plain_follow_eval576_*` on `successor-release`.
+
 ## Sep 11, 2026 — Unbiased float-vs-chip check on 1,000 random images (Sai)
 
 The 96-image release pack was too small to decide the confuser (one image
