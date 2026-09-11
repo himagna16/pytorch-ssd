@@ -35,9 +35,15 @@ old numbers exactly):
 Conclusion: the Aug 28/31 claim "QAT erases the confuser gains" is wrong.
 Training without hard-negative mining erases them, with or without QAT.
 QAT with mining keeps most of the gain after one epoch (0.122 vs 0.083).
-Next: release control (ii) through the pipeline to see whether QAT also
-fixes the confuser's float-agreement gap; a longer QAT-with-mining run may
-close the remaining gap to 0.083.
+Released control (ii) through the pipeline
+(`logs/plain_follow_confuser_qathn_final`): it passes four of five gates and
+misses float agreement by one image, 89.6% (86 of 96) against the 90% bar
+(calibrated-only confuser: 88.5%). None of the disagreements is confident.
+x-bin within one 96%, size within one 98%, integer F1 0.874 on the expanded
+pack. With only 96 images (6 without a person), one image moves agreement
+about 1 point, so the next step is the planned 500+ image evaluation pack,
+not a lower bar. A longer QAT-with-mining run may also close the remaining
+gap to 0.083 on the confuser slice.
 
 ## Sep 10, 2026 — Both models re-released with the patched DORY (Sai)
 

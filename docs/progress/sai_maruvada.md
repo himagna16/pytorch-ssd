@@ -33,7 +33,7 @@ processor. In the first three weeks I:
 |---|---|---|---|
 | Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | Rebuild for 8 cores to cut latency |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Confuser model on the chip | Sai | Not cleared: 88.5% float agreement, bar 90% | QAT-with-mining version released Sep 11, gates running |
+| Confuser model on the chip | Sai | Not cleared: QAT-with-mining version reaches 89.6% float agreement, bar 90% | Build a 500+ image evaluation pack; longer QAT-with-mining run |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
