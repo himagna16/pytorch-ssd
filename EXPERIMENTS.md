@@ -1,5 +1,28 @@
 # Experiment Log
 
+## Sep 11, 2026 — The firmware's image resize costs recall; a 2x2 average fixes it (Sai)
+
+The drone firmware (`crazyflie_ssd/src/preprocess.c`) shrinks the 244x244
+camera crop to 128x128 by picking one pixel (nearest neighbor), while
+training used a smoothed resize. On 1,000 random val2017 images rendered as
+324x244 camera frames (verified independently; the real C file was compiled
+and matched the study's port byte for byte):
+
+| champion integer network, F1 at the 0.7 enter threshold | value | vs training resize (95% CI) |
+|---|---|---|
+| training resize | 0.750 | - |
+| firmware nearest neighbor | 0.700 | -0.050 (-0.079 to -0.020) |
+| proposed 2x2 block average | 0.753 | +0.004 (-0.016 to +0.024) |
+
+Nearest neighbor flips about 13% of visibility decisions and mostly misses
+people at the 0.7 threshold; the float champion and the confuser show the
+same pattern. Averaging each 2x2 camera block at the same source position
+(about 10 lines of C) brings decisions to the noise level of a one-pixel
+camera shift. Caveat: the frames are clean downscaled photos, not real
+HM01B0 frames; a short real capture should confirm. Files:
+`docs/eval_results/2026-09-11-resize/`. Being applied on the local firmware
+integration branch.
+
 ## Sep 11, 2026 — All three candidates pass the gates on a 576-image pack (Sai)
 
 Each candidate was re-released with a 576-image evaluation pack (rep16 plus

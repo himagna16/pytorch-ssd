@@ -1,0 +1,2 @@
+c/out_nearest.u8 (1000, 128, 128) identical
+c/out_box2.u8 (1000, 128, 128) identical
