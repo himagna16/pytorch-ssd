@@ -44,9 +44,24 @@ Argmax is scale-invariant, so 1 and 2 need no calibration constants.
 ## Visibility threshold + hysteresis (required)
 
 The raw values are `logit / eps_out` where `eps_out` is the network's
-output quantization step — recorded per release in the generated app's
-artifacts (`nemo_dory_artifacts.json` / `gap8_layer_manifest.json` in the
-release output). A probability threshold p maps to:
+output quantization step. Each release records it in
+`quant_eval/summary.json`, at `quant_fidelity.qd_to_id_operator_report.rows`,
+in the row whose `module_name` is `output_head` (field `eps_out`, source
+`get_output_eps(eps_in)`). It is **not** 1/32768: the export pipeline assumed
+that value for decoding, which is wrong for our networks by about 6.5x
+(found Sep 10). Values from our export stage, which the fixed re-release
+reproduces byte for byte:
+
+| model | eps_out | thresholds {enter, exit, confirm} |
+|---|---|---|
+| QAT champion | 2.00982e-4 | {4216, -998, 3} |
+| confuser model | 2.11792e-4 | {4001, -947, 3} |
+
+Use these only with an app from a release that passes
+`export/check_semantic_release_gates.py`. Regenerate them with
+`tools/firmware_decode/raw_thresholds.py --eps-out <eps>` for any new model.
+
+A probability threshold p maps to:
 
 `RAW_THRESH(p) = ceil( ln(p / (1-p)) / eps_out )`
 
@@ -57,7 +72,8 @@ Use `ceil`, not `round`: then `v >= RAW_THRESH(p)` is exactly
 flicker. Use the follower's confirmation rule: declare VISIBLE only after
 `v[9] >= RAW_THRESH(0.7)` on 3 consecutive frames; declare LOST when
 `v[9] < RAW_THRESH(0.45)`. `RAW_THRESH` needs the final layer's `eps_out`
-from a release that passes the semantic gates; the current releases do not.
+from a release that passes the semantic gates. The Aug 28 and Aug 31
+releases fail them; the fixed re-release is being validated.
 
 ## Reference decode (C, dependency-free, tested)
 
