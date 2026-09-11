@@ -48,7 +48,10 @@ output quantization step — recorded per release in the generated app's
 artifacts (`nemo_dory_artifacts.json` / `gap8_layer_manifest.json` in the
 release output). A probability threshold p maps to:
 
-`RAW_THRESH(p) = round( ln(p / (1-p)) / eps_out )`
+`RAW_THRESH(p) = ceil( ln(p / (1-p)) / eps_out )`
+
+Use `ceil`, not `round`: then `v >= RAW_THRESH(p)` is exactly
+`sigmoid(v * eps_out) >= p` for integer `v`.
 
 ~10% of frames sit near the decision boundary, so a single threshold will
 flicker. Use the follower's confirmation rule: declare VISIBLE only after
@@ -56,33 +59,24 @@ flicker. Use the follower's confirmation rule: declare VISIBLE only after
 `v[9] < RAW_THRESH(0.45)`. `RAW_THRESH` needs the final layer's `eps_out`
 from a release that passes the semantic gates; the current releases do not.
 
-## Reference decode (C, dependency-free)
+## Reference decode (C, dependency-free, tested)
+
+The tested implementation lives in `tools/firmware_decode/`
+(`follow_decode.h`, `follow_decode.c`). Its tests check it against the
+project's Python decode on 2,000 random and boundary vectors and 200
+visibility sequences, and against the simulator follower's confirmation
+rule. Run `tools/firmware_decode/run_tests.sh`. Use it rather than copying
+code from this page. The core looks like this:
 
 ```c
-typedef struct { int x_bin; float x_center; int size_bucket;
-                 float size_center; int visible; } follow_cmd_t;
+/* thresholds from tools/firmware_decode/raw_thresholds.py --eps-out <eps> */
+static const follow_vis_cfg_t FOLLOW_VIS_CFG = { ENTER_RAW, EXIT_RAW, 3 };
+static follow_vis_state_t vis_state;   /* follow_vis_reset() at boot */
 
-/* Set from the release artifacts for the shipped network: */
-static const int32_t VIS_ENTER_RAW = /* RAW_THRESH(0.55) */;
-static const int32_t VIS_EXIT_RAW  = /* RAW_THRESH(0.45) */;
-
-static int argmax_i32(const int32_t *v, int n) {
-    int best = 0;
-    for (int i = 1; i < n; i++) if (v[i] > v[best]) best = i;
-    return best;
-}
-
-void decode_follow(const int32_t out[14], follow_cmd_t *cmd,
-                   int *vis_state /* persistent across frames */) {
-    cmd->x_bin       = argmax_i32(out, 9);
-    cmd->x_center    = -1.0f + (2.0f * cmd->x_bin + 1.0f) / 9.0f;
-    cmd->size_bucket = argmax_i32(out + 10, 4);
-    cmd->size_center = (cmd->size_bucket + 0.5f) / 4.0f;
-    if (out[9] >= VIS_ENTER_RAW)      *vis_state = 1;
-    else if (out[9] < VIS_EXIT_RAW)   *vis_state = 0;
-    /* between thresholds: hold previous state */
-    cmd->visible = *vis_state;
-}
+follow_cmd_t cmd;
+follow_decode(out /* 14 int32 */, &FOLLOW_VIS_CFG, &vis_state, &cmd);
+if (cmd.tracking) { /* steer on cmd.x_center, approach on cmd.size_center */ }
+else              { /* hover */ }
 ```
 
 ## Integration notes
