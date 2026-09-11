@@ -1,6 +1,6 @@
 # Team Meeting — Sep 2, 2026 · Backend Report & Agenda
 
-> **Correction (Sep 10):** the chip-validation claims below are withdrawn. The integer networks we released ignore their input; see the Sep 10 correction in EXPERIMENTS.md. Fake-quant accuracy results and simulator results still stand.
+> **Correction (Sep 10):** the chip-validation claims below were wrong when written: the Aug 28 and Aug 31 integer networks ignored their input because of a DORY bug on Apple Silicon. After the fix, the QAT champion was re-released the same day and passes all five new chip checks; the confuser model does not yet. See the Sep 10 entries in EXPERIMENTS.md. Fake-quant accuracy results and simulator results still stand.
 
 Prepared by Sai (backend / Role 1). Full experimental record: EXPERIMENTS.md.
 Repo: github.com/himagna16/pytorch-ssd (`main` = docs/tools/results,

@@ -1,5 +1,40 @@
 # Experiment Log
 
+## Sep 10, 2026 — Both models re-released with the patched DORY (Sai)
+
+Full release pipeline for both models with `tools/dory_patches/` applied,
+into new folders (`logs/plain_follow_prod_qat_fixed`,
+`logs/plain_follow_prod_confuser_fixed` on `successor-release`; not promoted
+yet). No "invalid value encountered in cast" warning in any step. Gates from
+`export/check_semantic_release_gates.py`, with GVSOC run on 5 different
+images per model by `export/run_gvsoc_multi_image.py`:
+
+| gate | QAT champion | confuser model |
+|---|---|---|
+| distinct outputs, 96 samples | 96 / 96 (old: 1) | 96 / 96 |
+| hidden layers at 255 | at most 0.07% (old: 100%) | pass |
+| visibility agreement with float model, p = 0.5 | **94.8%** | **88.5% (fail, bar 90%)** |
+| x-bin within one / size within one | 97.0% / 100% | 93.2% / 97.7% |
+| GVSOC exact, all agreeing with ONNX Runtime | 5 images | 5 images |
+| negative weight bytes | 43-53% (old: 0-1.8%) | pass |
+| **overall** | **PASS** | **FAIL** |
+
+GVSOC on the champion: 15,184,257 cycles, checksum OK, 9 of 9 layer checks
+exact, final tensor `[5247, 5523, 2781, -659, -948, -2089, 3694, -1952, -8464,
+-2869, 959, 5626, 1227, -7277]` (signed and different for every image).
+
+The confuser's 7 disagreeing images are all near the boundary: the float
+model gives them 0.32 to 0.51, and none is a confident disagreement. The
+confuser was calibrated after training rather than trained with
+quantization, so it drifts more than the QAT champion. It stays off the
+chip until a QAT version with hard-negative mining passes the gates.
+
+Also: the pipeline decodes integer outputs with a hard-coded 1/32768 scale
+(real value about 2.0e-4), so the float-vs-integer F1 and threshold numbers
+inside these release summaries are distorted. The gates above do not depend
+on that scale. A fix is being tested; the releases will be re-run with it
+before promotion.
+
 ## Sep 10, 2026 — DORY fix verified end to end in scratch (Sai)
 
 The one-line DORY cast fix (`tools/dory_patches/`) was tested on patched and

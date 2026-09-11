@@ -3,6 +3,13 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-10** — After the DORY fix, the QAT champion's chip app passes
+  all five semantic gates and is the chip candidate again. The confuser
+  model is not cleared for the chip: its integer network misses the 90%
+  float-agreement bar (88.5%, boundary cases only). Next confuser attempt:
+  QAT with hard-negative mining on. Promotion of the champion app waits for
+  the output-scale fix so its release summary reports correct numbers.
+
 - **2026-09-10** — DORY must be patched before any code generation
   (`tools/dory_patches/apply.sh`). Root cause of the constant-output chip
   releases: DORY's float-to-uint8 weight cast zeroes negative weights on
