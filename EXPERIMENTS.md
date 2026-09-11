@@ -80,6 +80,16 @@ old numbers exactly):
 Conclusion: the Aug 28/31 claim "QAT erases the confuser gains" is wrong.
 Training without hard-negative mining erases them, with or without QAT.
 QAT with mining keeps most of the gain after one epoch (0.122 vs 0.083).
+
+**Repeat-run caveat (Sep 11).** A second run of the same recipe (epoch 1 of
+a 3-epoch run; cosine schedule, so the same 2e-5 learning rate in epoch 1)
+gave slice FP 0.174 at 0.45 and peak F1 0.7954. That gap is far larger than
+sampling noise on 771 images (about +/-0.012), and `train.py` sets no random
+seed anywhere (data order, sampler, hard-negative picks, QAT calibration all
+vary). Both mining runs stay well below the no-mining runs (0.22-0.26), so
+the direction holds, but the size of the effect is uncertain. Before any
+training result goes in a report: add a `--seed` option and run at least 3
+repeats.
 Released control (ii) through the pipeline
 (`logs/plain_follow_confuser_qathn_final`): it passes four of five gates and
 misses float agreement by one image, 89.6% (86 of 96) against the 90% bar
