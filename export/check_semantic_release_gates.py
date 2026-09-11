@@ -25,6 +25,7 @@ import argparse
 import csv
 import glob
 import json
+import math
 import os
 import re
 import sys
@@ -75,34 +76,65 @@ def _bin(v, n, lo):
     return max(0, min(n - 1, int((v - lo) * n / (1.0 - lo))))
 
 
+def _logit(c):
+    c = min(max(c, 1e-6), 1 - 1e-6)
+    return math.log(c / (1 - c))
+
+
 def gate_agreement(rel, a):
-    rows, n_all, vis_ok, x_ok, s_ok, both = [], 0, 0, 0, 0, 0
+    """Float (pre) vs deployed (post) decisions, scale-free.
+
+    x-bin and size bucket are argmax decisions, so any output scale gives the
+    same answer. Visibility is compared at p = 0.5, i.e. the sign of the float
+    logit against the sign of the raw integer visibility output from the
+    DORY-graph simulator. This avoids the pipeline's hard-coded 1/32768 output
+    scale, which is wrong for our networks (about 2e-4). The real output
+    quantum is estimated by least squares and reported for the firmware team.
+    """
+    raw_by_img = {}
+    for path in glob.glob(os.path.join(rel, "dory_semantic_*", "predictions.json")):
+        with open(path) as f:
+            for smp in json.load(f).get("samples", []):
+                if smp.get("raw_output"):
+                    raw_by_img[os.path.basename(smp.get("image_name", ""))] = smp["raw_output"]
+    rows, n_all, vis_ok, x_ok, s_ok, both, unmatched, pairs = [], 0, 0, 0, 0, 0, 0, []
     for path in sorted(glob.glob(os.path.join(rel, "compare_*", "comparison_predictions.csv"))):
         with open(path) as f:
             recs = list(csv.DictReader(f))
-        n_set = len(recs)
         for r in recs:
             n_all += 1
-            pre_v, post_v = r["pre_visible"] == "True", r["post_visible"] == "True"
+            raw = raw_by_img.get(os.path.basename(r.get("image_name", "")))
+            pre_c = float(r["pre_visibility_confidence"])
+            pre_v = pre_c >= 0.5
+            if raw is not None and len(raw) > 9:
+                post_v = raw[9] > 0
+                if abs(_logit(pre_c)) < 4:
+                    pairs.append((_logit(pre_c), float(raw[9])))
+            else:
+                unmatched += 1
+                post_v = r["post_visible"] == "True"
             vis_ok += pre_v == post_v
             if pre_v and post_v:
                 both += 1
                 x_ok += abs(_bin(float(r["pre_x_value"]), 9, -1.0) - _bin(float(r["post_x_value"]), 9, -1.0)) <= 1
                 s_ok += abs(_bin(float(r["pre_size_value"]), 4, 0.0) - _bin(float(r["post_size_value"]), 4, 0.0)) <= 1
-        rows.append({"set": os.path.basename(os.path.dirname(path)), "images": n_set})
-    res = {"gate": "agreement", "images": n_all, "sets": rows,
-           "visibility_agreement": round(vis_ok / n_all, 4) if n_all else None,
+        rows.append({"set": os.path.basename(os.path.dirname(path)), "images": len(recs)})
+    den = sum(v * v for _, v in pairs)
+    eps_fit = (sum(l * v for l, v in pairs) / den) if den > 0 else None
+    res = {"gate": "agreement", "images": n_all, "sets": rows, "unmatched_raw": unmatched,
+           "visibility_agreement_at_0.5": round(vis_ok / n_all, 4) if n_all else None,
            "both_visible": both,
            "x_within_1_bin": round(x_ok / both, 4) if both else None,
-           "size_within_1_bucket": round(s_ok / both, 4) if both else None}
-    ok = (n_all >= a.min_images and res["visibility_agreement"] is not None
-          and res["visibility_agreement"] >= a.min_vis_agreement
+           "size_within_1_bucket": round(s_ok / both, 4) if both else None,
+           "estimated_output_quantum": (float(f"{eps_fit:.4g}") if eps_fit else None)}
+    ok = (n_all >= a.min_images and res["visibility_agreement_at_0.5"] is not None
+          and res["visibility_agreement_at_0.5"] >= a.min_vis_agreement
           and both > 0 and res["x_within_1_bin"] >= a.min_x_agreement
           and res["size_within_1_bucket"] >= a.min_size_agreement)
     res["pass"] = ok
-    res["rule"] = (f">= {a.min_images} images; visibility agreement >= {a.min_vis_agreement:.0%}; "
-                   f"x within one bin >= {a.min_x_agreement:.0%} and size within one bucket >= "
-                   f"{a.min_size_agreement:.0%} where both say visible")
+    res["rule"] = (f">= {a.min_images} images; visibility agreement at p=0.5 >= {a.min_vis_agreement:.0%} "
+                   f"(sign of raw output, scale-free); x within one bin >= {a.min_x_agreement:.0%} and size "
+                   f"within one bucket >= {a.min_size_agreement:.0%} where both say visible")
     if n_all < 500:
         res["warning"] = f"only {n_all} images; the team target is 500+ for release decisions"
     return res
