@@ -1,5 +1,39 @@
 # Experiment Log
 
+## Sep 10, 2026 — DORY fix verified end to end in scratch (Sai)
+
+The one-line DORY cast fix (`tools/dory_patches/`) was tested on patched and
+unpatched copies of DORY with the release's own unmodified scripts, for our
+champion and for David's checkpoint as a control. The unpatched copy
+reproduces the broken release exactly. The patched copy gives:
+
+| check (64 unique test images) | champion | David's checkpoint |
+|---|---|---|
+| distinct outputs, fixed DORY simulator | 64 / 64 (old: 1) | 64 / 64 |
+| most-saturated layer, share at 255 | 1.4% (old: 100%) | 0.9% |
+| weight bytes >= 128 vs ONNX negative weights | equal on 8/8 tensors (old: 0) | equal on 8/8 |
+| decisions vs ONNX Runtime (x-bin / size / visibility) | 98.4 / 100 / 100% | 100 / 100 / 100% |
+| decisions vs fake-quant model | 90.6 / 85.9 / 95.3% | 89.1 / 71.9 / 87.5% |
+
+On the labeled images, the fixed integer champion scores F1 0.833 at the 0.7
+gate against 0.843 for fake-quant, and its no-person false-alarm rate drops
+from 1.0 to the fake-quant level. Only 6 of the 64 images have no person, so
+that rate moves in steps of 1/6. GVSOC on the fixed apps is part of the
+re-release now running.
+
+Side findings, not causes of the collapse:
+- Release summaries report integer F1 around 0.12 because
+  `semantic_output('id')` divides by a fixed 32768; the real output quantum
+  is about 2.0e-4. With the right scale, 0.7-gate agreement is 95.3%.
+- The release driver copies DORY-made goldens over the ONNX Runtime goldens
+  (`run_plain_follow_release.py`, `sync_dory_io_seed_into_model_dir`), so the
+  "independent" reference was never independent. To fix.
+- `clamp_dory_weight_initializers_to_int8` clips 9 champion weights (14 in
+  David's) that NEMO leaves outside int8. That clamp explains all of the
+  ID-to-DORY gap and costs David's model size-bucket agreement (86% to 70%).
+- The output layer's bias stays float and is effectively dropped, and one
+  batch-norm constant uses 84% of the int32 range. Worth a later look.
+
 ## Sep 10, 2026 — Follower at the chip's speed and delay (Sai)
 
 The simulated follower now emulates the GAP8 chip: one inference at a time
