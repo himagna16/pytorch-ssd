@@ -118,9 +118,14 @@ Without `--sim`, `cpx_grab.py` connects to a real AI-deck access point
 | Empty room | never tracked, never moved |
 | Camera frozen mid-flight | hovered, then landed |
 | Person swaying ±1.2 m | tracked 99.7% of frames; true heading error 2.7° average, 7.7° worst |
+| Person swaying, at chip speed (6.5 Hz, 153 ms) | tracked 99.2%; 3.1° average, 7.9° worst; no oscillation |
+| Same, with 220 ms delay | tracked 99.2%; 3.2° average, 8.0° worst |
+| Person 3.5 m out, at chip speed | tracked 98.7%; settles 4.8° off, inside the center bin |
+| Empty room, at chip speed | never tracked, never moved; peak confidence 0.64 |
 
 Full details: the Sep 10 entry in `EXPERIMENTS.md`. Raw logs, true-position
-logs, and charts: `docs/sim_results/2026-09-10/`.
+logs, and charts: `docs/sim_results/2026-09-10/` and, for the chip-speed
+flights, `docs/sim_results/2026-09-10-chip/`.
 
 **Reproduce or extend**
 

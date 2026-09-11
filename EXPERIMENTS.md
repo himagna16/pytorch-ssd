@@ -1,5 +1,28 @@
 # Experiment Log
 
+## Sep 10, 2026 — Follower at the chip's speed and delay (Sai)
+
+The simulated follower now emulates the GAP8 chip: one inference at a time
+at 6.5 Hz, commands applied 153 ms after their frame. A code review caught
+that the first version let the emulated chip catch up on missed frames, so
+those runs were discarded and re-flown with a serial limiter and a stricter
+validity check. All four re-flights are valid:
+
+| Scene | Tracked | True heading error mean / max |
+|---|---|---|
+| person swaying ±1.2 m | 99.2% | 3.1° / 7.9° (full speed: 2.7° / 6.6°) |
+| same, 220 ms delay | 99.2% | 3.2° / 8.0° |
+| person 3.5 m out, 1 m right | 98.7% | 4.8° steady, inside the center bin |
+| empty room | 0% | never moved |
+
+No oscillation: the drone's yaw rate changes sign 3.5 times a minute at
+chip speed, against 17 at full speed. Replaying the saved empty-room frames
+offline gives bit-identical outputs, so the earlier live-versus-offline
+difference came from comparing different frames. The empty-room margin is
+thin: confidence averages 0.57 and peaks at 0.64, against the 0.7 needed to
+start tracking. Evidence: `docs/sim_results/2026-09-10-chip/`. These runs
+use the float model; the chip network itself is still being re-released.
+
 ## Sep 10, 2026 — CORRECTION: our released chip networks ignore their input (Sai)
 
 Verified Sep 10. For both releases (QAT champion and confuser), the Python

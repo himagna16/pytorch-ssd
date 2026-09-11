@@ -1,0 +1,38 @@
+{
+  "end_reason": "duration",
+  "control_steps": 241,
+  "loop_hz": 6.4,
+  "processed_hz": 6.43,
+  "tracking_fraction": 0.992,
+  "mean_abs_x_while_tracking": 0.093,
+  "centered_fraction_while_tracking": 0.983,
+  "z_max": 0.84,
+  "yaw_range_deg": [
+    -26.2,
+    30.0
+  ],
+  "final_pose": {
+    "px": 0.53,
+    "py": -0.13,
+    "pz": 0.8,
+    "yaw": -21.12
+  },
+  "stale_events": 0,
+  "z_after_landing": 0.02,
+  "rate_hz_requested": 6.5,
+  "latency_ms_requested": 153.0,
+  "frames_processed": 241,
+  "frames_dropped": 317,
+  "torn_frames": 0,
+  "step_gap_ms": {
+    "min": 153.9,
+    "median": 155.0,
+    "max": 174.7
+  },
+  "applied_latency_ms": {
+    "mean": 154.5,
+    "p90": 156.2,
+    "max": 162.3
+  },
+  "sim_wall_ratio": 0.978
+}
