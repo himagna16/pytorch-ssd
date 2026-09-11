@@ -1,5 +1,69 @@
 # Experiment Log
 
+## Sep 10, 2026 — Autonomous person following in the simulator (Sai)
+
+Grace's gate before telling Prof. Mok or picking up hardware: the drone must
+follow a person in simulation with the safety rules working. Everything below
+ran on Sai's Mac via `tools/crazysim_macos/` (MuJoCo CrazySim, native viewer,
+firmware in the arm64 container).
+
+**Setup.** A real COCO val2017 person (img 19432), masked and composited onto
+the wall color, on a 1.7 m panel. Chosen by scoring 38 full-body candidates
+from the drone's-eye view: champion confidence 1.00 at every distance
+1.5–3.5 m, size bucket stepping 3→2→2→1→1 with distance. Scenes: person
+static at (3.5, −1.0); person swaying ±1.2 m on a 20 s undamped spring;
+empty (person behind the drone). Follower `follow_person.py`: simulated
+AI-deck frames (UDP) → champion model (float, CPU) → decoded bearing and size
+→ yaw rate + forward velocity through cflib `MotionCommander` at 0.8 m,
+~15 Hz control loop.
+
+**Safety rules** (MinHyuk's simulator exit criteria): track only after
+confidence ≥0.7 on 3 consecutive frames, drop below 0.45; hover when the
+person is lost; hover on frames older than 0.5 s and land after 3 s; caps
+0.3 m/s and 40°/s; approach only when |x| < 0.5.
+
+| Test (final settings) | Result |
+|---|---|
+| Person 3.5 m out, 1 m right | tracked 99.4% of frames, centered 97.9%; true bearing error mean 1.1° (max 1.9°); closed from 3.64 to 2.28 m; landed at 0.02 m |
+| Empty room | tracking 0%, horizontal drift 0.00 m: no motion without a target |
+| Camera frozen at t = 20 s | hovered through 108 stale steps, then landed at 0.02 m |
+| Person swaying ±1.2 m, 20 s period | tracked 99.7% of frames; true heading error 2.7° average, 5.0° 90th percentile, 7.7° worst (ground-truth log); landed at 0.02 m. Smooth probability-weighted steering (`--soft-x`) was no better (2.9° average, 8.2° worst), so the default stays on the winning bin |
+
+**Bugs and findings on the way**
+
+- macOS caps UDP datagrams at 9216 bytes; the simulator's 60 KB camera
+  chunks were dropped silently (it ignores send errors). `patch_crazysim.py`
+  sets 8 KB chunks; `setup.sh` applies it.
+- cflib 0.1.27's UDP driver calls `sendto()` on a connected socket, which
+  macOS rejects (EISCONN). trainenv now carries cflib 0.1.33, installed
+  `--no-deps` so numpy stays 1.24.4 for torch 2.2.2.
+- Yaw sign: a positive `rate_yaw` setpoint turns LEFT in this SITL; cflib
+  negates yaw rate for legacy-protocol firmware. The follower uses −1. This
+  must be re-verified on the real drone's firmware.
+- MuJoCo renders transparent texture pixels black, so the person is
+  composited onto the wall color instead of alpha-cut.
+- The scene's air model (density/viscosity) damped the swaying panel from
+  ±1.2 m to ±0.3 m within 60 s because its inertia implied a large box. Panel
+  inertia is now tiny.
+- Empty-room false positives with the original single-frame 0.55 threshold:
+  7.8% of frames, and the drone yawed 22°. They were brief (longest streak 4
+  frames ≥0.55; one frame ever ≥0.7) while a real person scores ~0.96–1.0
+  every frame, so the 3-frame confirmation rule removed them (0% in the final
+  run). Offline renders of the same room score ≤0.20 at every heading; the
+  live-vs-offline gap is unexplained.
+- Scoring a moving target by replaying the scene offline and lining it up on
+  the firmware clock gave bogus ~31° errors (time misalignment), while the
+  camera showed the person centered. `patch_crazysim.py` now makes the
+  simulator log the person's true position on the same clock as the
+  follower (`CRAZYSIM_TRUTH_LOG`). Validated on the static case: constant
+  truth, 1.5° error, matching the fixed-position score.
+- The firmware locks after every landing, so each flight needs a fresh sim;
+  `run_follow_demo.sh` handles it.
+
+**Caveat.** Simulated frames are clean renders of a photo on a panel. This
+validates the control loop and safety logic, not real-camera accuracy, which
+still needs real AI-deck frames.
+
 ## Sep 10, 2026 — CrazySim runs on macOS: no NVIDIA, no Ubuntu (Sai)
 
 MinHyuk's simulator setup requires Ubuntu/WSL2 + NVIDIA, but that

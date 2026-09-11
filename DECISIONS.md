@@ -3,6 +3,18 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-10** — Simulator follow gate PASSED on Sai's Mac (Grace's
+  requirement before telling Prof. Mok or picking up drones). The deployed
+  champion model flies the simulated Crazyflie autonomously: an offset person
+  is acquired and held (true heading error 1.1–1.5°), a person swaying ±1.2 m
+  is tracked (2.7° average, 7.7° worst, scored against a logged ground truth),
+  an empty room is never tracked and the drone never moves, and a frozen
+  camera makes it hover then land. Adopted follower settings: track only after
+  confidence ≥0.7 on 3 consecutive frames, drop below 0.45; caps 0.3 m/s and
+  40°/s; yaw sign −1 (simulator firmware; re-verify on the real drone).
+  Rejected: the single-frame 0.55 threshold, which false-tracked 7.8% of an
+  empty room and turned the drone 22°.
+
 - **2026-09-10** — Simulator runs on team Macs: CrazySim's MuJoCo backend
   works on Apple Silicon with the firmware in a small arm64 container
   (`tools/crazysim_macos/`). Every teammate can simulate locally; Oaj's

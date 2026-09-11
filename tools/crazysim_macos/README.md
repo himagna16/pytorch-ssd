@@ -49,6 +49,69 @@ Tutorial demos 1–4 don't fly; 5–7 fly.
 | Camera | 324x244 grayscale at ~13 fps (target 20) |
 | Our deployed model on sim frames | runs; empty room → person confidence 0.047 |
 
+## Person following (closed loop)
+
+Our deployed model flies the simulated drone: simulated AI-deck frames go
+into the model, and its decoded output steers the drone through `cflib`.
+
+**1. Build test scenes.** A real COCO person (masked, composited onto the
+wall color) stands on a panel; the swaying variant moves on an undamped
+spring, so no simulator code changes. Needs COCO val2017 and the
+`pytorch_ssd_unstable` worktree.
+
+```bash
+../../../trainenv/bin/python build_person_scene.py --img-id 19432 --ann-id 428692 --person-x 3.5 --person-y -1.0 --out scenes/static_offset --preview --distances 3.5
+```
+
+```bash
+../../../trainenv/bin/python build_person_scene.py --img-id 19432 --ann-id 428692 --person-x 3.0 --sway-amp 1.2 --sway-period 20 --out scenes/moving
+```
+
+```bash
+../../../trainenv/bin/python build_person_scene.py --img-id 19432 --ann-id 428692 --person-x -2.5 --out scenes/empty
+```
+
+`--preview` renders the drone's view at each distance and prints what the
+model sees. Person 19432 was picked by scoring 38 full-body COCO people:
+confidence 1.00 at every distance from 1.5 to 3.5 m.
+
+**2. Fly.** One command per flight (fresh sim each time):
+
+```bash
+./run_follow_demo.sh scenes/static_offset --duration 35
+```
+
+**Safety rules in the follower**, from MinHyuk's simulator exit criteria:
+no motion unless a person is confirmed (confidence at least 0.7 on 3
+consecutive frames; tracking drops below 0.45);
+hover when the person is lost; hover if frames are older than 0.5 s and
+land after 3 s; speed capped at 0.3 m/s and yaw at 40 deg/s; approach only
+when the person is roughly centered. `--simulate-stale-at SECONDS` freezes
+the feed mid-flight to test the camera-loss rule.
+
+**Results on this Mac (Sep 10, final settings)**
+
+| Test | Result |
+|---|---|
+| Person 3.5 m out, 1 m right | tracked 99.4% of frames; true bearing error 1.1° average; closed to 2.3 m; clean landing |
+| Empty room | never tracked, never moved |
+| Camera frozen mid-flight | hovered, then landed |
+| Person swaying ±1.2 m | tracked 99.7% of frames; true heading error 2.7° average, 7.7° worst |
+
+Full details: the Sep 10 entry in `EXPERIMENTS.md`.
+
+**Gotchas found getting this working**
+
+- macOS limits one UDP message to 9 KB; the simulator's 60 KB camera chunks
+  were silently dropped. `setup.sh` shrinks them to 8 KB.
+- MuJoCo renders transparent texture pixels black, so the person is
+  composited onto the wall color instead of using an alpha cutout.
+- Yaw sign: in this simulator a positive yaw-rate command turns left, so
+  the follower uses sign −1. `cflib` flips the sign for older firmware, so
+  re-check it on the real drone.
+- The follower runs from `trainenv` and needs `cflib` 0.1.33 there; 0.1.27
+  fails on macOS. `setup.sh` installs it.
+
 ## Gotchas
 
 - **The firmware locks after every landing** (`SUP: Locked, reboot required`).
