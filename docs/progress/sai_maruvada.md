@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Local branch compiles with the champion, 8 cores, tested decoder, 2x2 resize; third safety review round in progress | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser |
-| Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 keeps pet/mannequin false alarms at 8.4% (same as the original confuser) with QAT | Chip release and gates running |
+| Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |

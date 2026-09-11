@@ -1,5 +1,23 @@
 # Experiment Log
 
+## Sep 11, 2026 — The epoch-2 QAT confuser passes the chip gates but gains nothing on the chip (Sai)
+
+Released on the 576-image pack (`logs/plain_follow_eval576_confuser_qathn3_ep2`):
+all five gates pass (91.1% agreement, 6 confident disagreements). On the
+1,000 random images (`docs/eval_results/2026-09-11-unbiased/`), its chip
+network scores F1 0.740, recall at 0.7 of 0.500, empty-scene false alarms
+3.7% at 0.7 and pet/mannequin false alarms 10.6%. That is about the same as
+the plain confuser (0.757, 0.511, 2.8%, 11.0%), and it overturns confident
+float calls more often (7 of 874 vs 1 of 875).
+
+Why: the release strips the activation ranges learned in QAT and
+recalibrates them. In fake-quant form with its learned ranges, epoch 2 has
+a slice rate of 8.4%; on the chip it is 10.6%. The QAT benefit does not
+ship. Next step for a model with both strengths: implement Grace's
+`--preserve-qat-alphas` release option (sketched in her Aug 31 entry on
+`grace/qat-alpha-preserve`) and re-release. Until then the team's choice is
+the champion or the plain confuser.
+
 ## Sep 11, 2026 — Simulator follower re-confirms targets after any stale-frame hover (Sai)
 
 A safety review of the drone firmware found that a short perception stall
