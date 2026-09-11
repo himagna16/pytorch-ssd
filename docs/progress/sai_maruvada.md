@@ -21,19 +21,22 @@ processor. In the first three weeks I:
   closed-loop person follower that passes all five safety and tracking
   tests in simulation;
 - found, on Sep 10, that the integer networks we released for the chip
-  ignore their input. That withdraws my earlier chip-validation claims, and
-  fixing it is now the top priority.
+  ignore their input, withdrew my earlier chip-validation claims, and traced
+  the cause the same day to a platform bug in the DORY code generator on
+  Apple Silicon. The fix is being tested; re-releasing both models is next.
 
 ## Live tracker
 
 | Item | Owner | Status | Next step |
 |---|---|---|---|
-| Fix the chip integer network, whose output is constant | Grace, Sai | Open, top priority | Test each saved ONNX export stage on a laptop and compare with David's working release |
-| Withdraw chip-validation claims in docs and resume | Sai | Open | Correct EXPERIMENTS.md, SEP2_MEETING.md, WEEK1_REPORT.md, and resume bullet |
+| Fix the chip integer network, whose output is constant | Grace, Sai | Root cause found Sep 10; fix under test | Apply the DORY patch, re-release both models, pass the new gates |
+| Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
+| Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
+| Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
 | Simulator demo for Prof. Mok | Sai | To schedule | He offered Tuesday or Thursday after 3:30 pm |
 | Progress record for Prof. Mok | Sai | v1 done, this file | Update every session |
-| First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Planned | Write capture protocol, run session |
-| Simulator: chip latency and saved frames | Sai | Planned | Add latency injection and frame saving to the follower |
+| First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
+| Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
 | Retest "QAT erases confuser gains" | Sai | Planned | Two one-epoch runs with hard-negative mining controlled |
 
 ## Results and their status
@@ -43,8 +46,12 @@ processor. In the first three weeks I:
 | QAT champion beats David's released model, 0.8008 vs 0.789 peak F1 | Verified in simulated quantized (fake-quant) evaluation; reproduced by Grace. Not verified on the chip |
 | Confuser model: animal and mannequin false alarms 24% to 8% | Verified in fake-quant evaluation |
 | Reproduced David's GVSOC chip validation of his own app | Verified |
-| Our champion and confuser chip apps | **Broken.** The integer network gives one output for all 96 test images; layers 2 to 7 saturate. The earlier "bit-exact" pass compared one image against a reference from the same broken network |
-| Release pipeline runs off David's machine, 5 fixes | Runs, but produced the broken networks; root cause under investigation |
+| Our champion and confuser chip apps | **Broken; cause found.** The integer network gives one output for all 96 test images. The DORY code generator turned every negative weight into 0 on Apple Silicon, and the earlier "bit-exact" pass compared the chip against a reference built from the same corrupted weights |
+| Quantized export of our models | Verified healthy: every exported stage gives distinct outputs under an independent runtime |
+| Release pipeline runs off David's machine, 5 fixes | Runs; needs the DORY patch on Apple Silicon before it produces valid chip apps |
+| Semantic release gates | Verified: both old releases fail all five checks, David's app passes the weights check, and a synthetic healthy release passes all five |
+| C decoder for the firmware team | Verified against the Python decode on 14,579 checks; catches all 7 deliberate bugs in a mutation test |
+| Follower at the chip's speed, 6.5 Hz with 153 ms delay | Verified in simulation: 3.1 degrees mean heading error vs 2.7 at full speed, no oscillation, empty room still 0 tracking |
 | Crazyflie simulator on macOS | Verified |
 | Closed-loop person following in simulation, 5 tests | Verified against a simulator ground-truth log. Uses the full-precision model on a laptop, not the chip network |
 | "QAT erases the confuser gains" | Confounded: hard-negative mining was off in those runs. Retest planned |
@@ -76,9 +83,14 @@ Team context.
   follower with safety rules, ground-truth logging, and a one-command
   acceptance suite. Fixed five issues found in testing, including macOS
   network limits and a steering sign flip.
+- **Debugging the chip network.** Found that our chip networks ignored
+  their input, withdrew the affected claims, and traced the cause to a
+  platform-specific cast in the DORY code generator. Wrote the patch and
+  five permanent release gates that would have caught it.
 - **Team infrastructure.** Team fork and workflow, decision log, setup
   runbooks that let Grace and Oaj reproduce results on three operating
-  systems, a firmware decode contract, and meeting reports.
+  systems, a firmware decode contract with a tested C decoder, and meeting
+  reports.
 
 **Methods note.** I developed this work with AI coding assistance, Claude
 Code, as the project lead encouraged. I directed the experiments, ran and
@@ -102,6 +114,15 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-10 (evening).** Corrected the records: withdrawal notes in the
+  experiment log, meeting reports, and decision log, and a reworded resume
+  bullet. Ran a four-way investigation of the chip network. Root cause: the
+  DORY code generator casts weights in a way that zeroes negative values
+  on Apple Silicon; David's app was built on x86, where it works. Wrote the
+  patch, five permanent release gates, a multi-image chip-simulator check,
+  and a tested C decoder for the firmware team. Added the chip's speed and
+  delay to the simulated follower; tracking still works. Wrote the
+  real-camera capture protocol and scoring tool.
 - **2026-09-10.** Ported the simulator to macOS. Built the closed-loop
   person follower and passed all five tests in simulation. Emailed Prof. Mok
   the results; he asked for a demo, Tuesday or Thursday after 3:30 pm, and
