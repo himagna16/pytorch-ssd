@@ -3,6 +3,14 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-10** — DORY must be patched before any code generation
+  (`tools/dory_patches/apply.sh`). Root cause of the constant-output chip
+  releases: DORY's float-to-uint8 weight cast zeroes negative weights on
+  Apple Silicon with NumPy 1.24. Every release must pass
+  `export/check_semantic_release_gates.py` before promotion. Rejected:
+  moving DORY into an x86 container instead (slower, and it hides the
+  undefined cast rather than fixing it).
+
 - **2026-09-10** — Chip releases WITHDRAWN. Both our releases (champion,
   confuser) produce input-independent outputs. Do not flash or fly the
   current `successor-release` app; all chip-validation claims are retracted

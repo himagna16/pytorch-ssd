@@ -306,6 +306,19 @@ git submodule update --checkout dory/Hardware_targets/PULP/Backend_Kernels/pulp-
 **VERIFY**: `ls dory/Hardware_targets/PULP/Backend_Kernels/pulp-nn/32bit/src`
 lists pulp_nn_*.c files.
 
+Then apply the team's DORY patches (required, added Sep 10). Without them,
+DORY on Apple Silicon with the NumPy pinned below writes every negative
+weight as 0, and the generated app outputs the same tensor for every image:
+
+```bash
+~/drone/pytorch_ssd/tools/dory_patches/apply.sh ~/drone/dory
+```
+
+**VERIFY**: the command prints `applied:` or `already applied:` for
+`0001-wrap-safe-weight-casts.patch`. Details: `tools/dory_patches/README.md`.
+After any release, run `export/check_semantic_release_gates.py` (on
+`successor-release`) and do not use an app that fails it.
+
 8.3 doryenv (codegen interpreter — do NOT use requirements_doryenv.txt,
 its pins are Linux-CUDA-only):
 

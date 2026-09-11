@@ -1,0 +1,24 @@
+diff --git a/dory/Parsers/HW_node.py b/dory/Parsers/HW_node.py
+--- a/dory/Parsers/HW_node.py
++++ b/dory/Parsers/HW_node.py
+@@ -150,7 +150,7 @@
+             else:
+                 self.__dict__[weight_name]["value"] = self.__dict__[weight_name]["value"].flatten()
+             # self.__dict__[weight_name+"_raw"] = self.__dict__[weight_name]
+-            self.__dict__[weight_name]["value"] = self.__dict__[weight_name]["value"].astype(np.uint8)
++            self.__dict__[weight_name]["value"] = np.rint(np.asarray(self.__dict__[weight_name]["value"])).astype(np.int64).astype(np.uint8)
+             if self.weight_bits != 8:
+                 self.__dict__[weight_name]["value"] = self._compress(self.__dict__[weight_name]["value"], self.weight_bits)
+             self.check_sum_w += sum(self.__dict__[weight_name]["value"])
+diff --git a/dory/Parsers/Parser_HW_to_C.py b/dory/Parsers/Parser_HW_to_C.py
+--- a/dory/Parsers/Parser_HW_to_C.py
++++ b/dory/Parsers/Parser_HW_to_C.py
+@@ -127,7 +127,7 @@
+             if weights.shape[0] != 0:
+                 string_layer = node.prefixed_name + "_weights.hex"
+                 save_s = os.path.join(self.hex_dir, string_layer)
+-                weights.astype('uint8').tofile(save_s)
++                weights.astype(np.int64).astype(np.uint8).tofile(save_s)
+ 
+     def create_hex_input(self):
+         print("\nGenerating .hex input file.")
