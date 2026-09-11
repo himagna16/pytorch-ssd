@@ -31,9 +31,11 @@ processor. In the first three weeks I:
 
 | Item | Owner | Status | Next step |
 |---|---|---|---|
-| Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | Rebuild for 8 cores to cut latency |
+| Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | None |
+| 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference | Apply DORY fixes 0002/0003, rebuild the app |
+| Put the champion network into the drone firmware | Sai, then frontend trio | Found the firmware still holds an older network; local dry run in progress | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Confuser model on the chip | Sai | Not cleared: QAT-with-mining version reaches 89.6% float agreement, bar 90% | Build a 500+ image evaluation pack; longer QAT-with-mining run |
+| Confuser model on the chip | Sai | Cleared on 1,000 random images (93-95% agreement); the 96-image miss was noise | Team picks champion vs confuser; 3-epoch QAT run training |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
@@ -62,6 +64,8 @@ processor. In the first three weeks I:
 | Closed-loop person following in simulation, 5 tests | Verified against a simulator ground-truth log. Uses the full-precision model on a laptop, not the chip network |
 | "QAT erases the confuser gains" | **Overturned.** One epoch without hard-negative mining, and without QAT, raises pet and mannequin false alarms from 8.3% to 26.3%. QAT with mining keeps them at 12.2% (baseline 23.9%). Mining, not QAT, was the missing piece |
 | Integer-network accuracy in release reports | Now correct: the pipeline had decoded chip outputs 6.6x too small. Champion integer F1 0.837 vs 0.815 for the float model |
+| Chip networks vs float models, 1,000 random images | **Verified:** 93-96% visibility agreement for all three candidates, about 1 confident contradiction per 1,000 images, no measurable F1 loss. Champion detects more people; confuser models false-alarm about 3x less on pets |
+| 8-core chip build | **Verified on the chip simulator:** identical outputs on 5 images; 154 ms to 23 ms per inference with debug output off |
 
 ## My contributions
 
@@ -123,6 +127,13 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (early morning).** Checked chip-vs-float agreement on 1,000
+  random images: every candidate passes, so the confuser decision is a
+  trade-off, not a quantization failure. Verified an 8-core chip build
+  (bit-exact, 6.6x faster) and found two more DORY template bugs: an
+  out-of-bounds array write and a debug switch that costs 38 ms per
+  inference. Found that the drone firmware still carries an older network
+  and started a local integration dry run. Started a 3-epoch QAT confuser run.
 - **2026-09-11 (after midnight).** Fixed a second pipeline bug: release reports
   decoded chip outputs with a hard-coded scale 6.6x too small, which made
   integer accuracy read 0.12 instead of 0.84. Re-released both models with
