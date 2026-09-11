@@ -207,6 +207,16 @@ def parse_args():
         action="store_true",
         help="Disable the default two-phase dronet_lite_follow loss schedule.",
     )
+    ap.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help=(
+            "Seed the Python, NumPy and PyTorch random generators (data order, weighted sampler, "
+            "augmentation, QAT calibration batches). Default: unseeded, as before. GPU kernels "
+            "may still differ slightly between runs."
+        ),
+    )
     args = ap.parse_args()
     if args.qat_train_activation_modules:
         args.qat_train_activation_modules = tuple(
@@ -1266,6 +1276,17 @@ def train_or_eval_epoch(
 
 def main():
     args = parse_args()
+    if args.seed is not None:
+        import random
+
+        import numpy as np
+
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)  # also seeds the CUDA and MPS default generators
+        print(f"Seeded random generators with --seed {args.seed}")
+    else:
+        print("Random generators unseeded (pass --seed N for repeatable runs)")
     repo_root = Path(__file__).resolve().parents[1]
     if torch.cuda.is_available():
         device = torch.device("cuda")
