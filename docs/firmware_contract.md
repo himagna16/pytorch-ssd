@@ -1,5 +1,7 @@
 # Firmware contract — the 14-value follow output
 
+> **Status (Sep 10):** write tests against synthetic vectors and David's known-good tensor until our releases pass the new semantic gates.
+
 For the frontend/firmware team (Jade, Koa, Calvin). This specifies exactly
 what the GAP8 network hands you and how to decode it into flight commands.
 Source of truth for decode semantics: `utils/follow_task.py` on the
@@ -17,11 +19,13 @@ in the quantized output domain):
 | 9 | visibility logit |
 | 10–13 | size bucket logits — 4 uniform buckets over [0, 1] (small/far → large/near) |
 
-Worked example (real validated GVSOC output):
-`[132345, 163455, 213690, 249900, 290955, 262650, 229755, 170085, 112455, 374085, 147135, 101745, 108375, 201450]`
-→ x argmax = index 4 (center bin), visibility = 374085 (≥ threshold →
-visible), size argmax = bucket 3 (close). Decoded command: "person visible,
-centered, close."
+Worked example, from David's validated app (the known-good reference; our own
+Aug 28 golden tensor came from a network that ignores its input and must not be
+used in tests):
+`[4632, 13262, 4633, -2422, -3479, -5390, 2962, -1854, -11170, 5303, -7980, 3540, 4466, -43]`
+x argmax = index 1 (left of center), visibility = 5303 (positive logit, so
+visible), size argmax = index 12, bucket 2. Decoded command: "person visible,
+left of center, mid distance."
 
 ## Decode rules
 
@@ -47,12 +51,10 @@ release output). A probability threshold p maps to:
 `RAW_THRESH(p) = round( ln(p / (1-p)) / eps_out )`
 
 ~10% of frames sit near the decision boundary, so a single threshold will
-flicker. Use hysteresis: declare VISIBLE when `v[9] >= RAW_THRESH(0.55)`,
-declare LOST when `v[9] < RAW_THRESH(0.45)`, hold previous state in
-between. Also require N consecutive LOST frames (suggest N=3 at ~10 Hz)
-before triggering loss-of-target behavior (hover/stop per your safety
-design — PULP-DroNet used low-pass filtering with alpha=0.7 for the same
-reason).
+flicker. Use the follower's confirmation rule: declare VISIBLE only after
+`v[9] >= RAW_THRESH(0.7)` on 3 consecutive frames; declare LOST when
+`v[9] < RAW_THRESH(0.45)`. `RAW_THRESH` needs the final layer's `eps_out`
+from a release that passes the semantic gates; the current releases do not.
 
 ## Reference decode (C, dependency-free)
 

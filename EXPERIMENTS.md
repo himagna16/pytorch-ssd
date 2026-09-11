@@ -1,5 +1,35 @@
 # Experiment Log
 
+## Sep 10, 2026 — CORRECTION: our released chip networks ignore their input (Sai)
+
+Verified Sep 10. For both releases (QAT champion and confuser), the Python
+DORY-graph simulator gives **one** distinct 14-value output across all 96
+test images (rep16, hard-case, expanded-eval). The release's own golden
+activations (ONNX Runtime on `model_id_dory.onnx`) saturate: layer 1 is 94%
+at 255, layers 2–7 are 100% at 255 (a single value), and the final outputs
+are all positive multiples of 15. The release summaries show a deployment
+no-person false-positive rate of 1.0 at every threshold while reporting
+"final tensor exact match: True". David's shipped app is a working control:
+its output is signed and varies.
+
+What this withdraws: the Aug 28 "CHAMPION DEPLOYED" and Aug 31 "both
+contenders flight-ready" claims. The GVSOC exact-match gate compared one
+image against a golden produced by the same collapsed network, so it could
+not catch this. **0.8008 stands only as a fake-quant (FQ) result**, not an
+integer or chip result. The current promoted app on `successor-release` must
+not be flashed or flown.
+
+Also found: the "QAT erases the confuser gains" conclusion (Aug 28, Aug 31)
+is confounded, because hard-negative mining was off in the one-epoch QAT runs
+but on in epochs 4–8 of the confuser run. The chip's preprocessing
+(`crazyflie_ssd/src/preprocess.c`) resizes by nearest neighbor while training
+uses bilinear. The Sep 10 simulator results are unaffected: they used the
+float model.
+
+Status: root-cause investigation in progress; permanent semantic release
+gates to follow (output diversity, per-layer saturation bound, integer-vs-float
+decision agreement on 500+ images, GVSOC on several images).
+
 ## Sep 10, 2026 — Autonomous person following in the simulator (Sai)
 
 Grace's gate before telling Prof. Mok or picking up hardware: the drone must
@@ -122,6 +152,8 @@ Checkpoint archived: training/successor_confuser_qat_gentle/ (not a candidate).
 
 ## Aug 31, 2026 — Confuser model GVSOC-validated: both contenders flight-ready (Sai)
 
+> **Superseded Sep 10:** this release shares the constant-output problem; see the Sep 10 correction.
+
 The confuser model (`artifacts/successor_confuser_ep8.pth`) was run through
 the full release pipeline WITHOUT promotion (`--skip-application-promotion`,
 output `logs/plain_follow_prod_confuser/`): **GVSOC status PASS, exact
@@ -158,6 +190,8 @@ and exact-match validation passed without modifying the deployed
 `application/`.
 
 ## Aug 28, 2026 — Stacking test: QAT-after-confuser DESTROYS the confuser win (Sai)
+
+> **Confounded (Sep 10):** hard-negative mining was off in this run; retest planned.
 
 One QAT epoch (lr 5e-5, confuser manifest, on confuser-ep8 weights) fully
 regressed the animate-false-alarm fix: confuser-slice FP 0.083 → **0.249**
@@ -224,6 +258,8 @@ Still in flight: the confuser-negatives fine-tune (different axis — targets
 the 24% animal false-alarm slice, not peak F1).
 
 ## Aug 28, 2026 (night) — CHAMPION DEPLOYED: full pipeline to silicon-accurate PASS (Sai)
+
+> **Superseded Sep 10:** the promoted integer network ignores its input; see the Sep 10 correction.
 
 The QAT champion (deployed-form F1 0.8008) was pushed through David's entire
 release pipeline and is now the repo's promoted, validated GAP8 application —
@@ -310,6 +346,8 @@ confusers). Success = confuser-FP slice drops materially with overall peak
 F1 held. Galleries: `export/error_analysis/`.
 
 ## Aug 28, 2026 — QAT run: new deployed-form champion, 0.8008 (Sai)
+
+> **Note Sep 10:** "deployed form" here means fake-quant PyTorch, not the integer chip network.
 
 QAT fine-tune of the F1-record model (scratch ep28) using David's
 `--quant-aware-finetune` path: 8-bit PACT training on full train2017,

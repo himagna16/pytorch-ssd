@@ -3,6 +3,15 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-10** — Chip releases WITHDRAWN. Both our releases (champion,
+  confuser) produce input-independent outputs. Do not flash or fly the
+  current `successor-release` app; all chip-validation claims are retracted
+  until a release passes semantic gates: distinct outputs across images, no
+  layer mostly pinned at its clip limits, integer-vs-float decision agreement
+  on 500+ images, and GVSOC exact on several different images. Rejected:
+  continuing hardware bring-up on the current app; single-image golden
+  checks as proof of correctness.
+
 - **2026-09-10** — Simulator follow gate PASSED on Sai's Mac (Grace's
   requirement before telling Prof. Mok or picking up drones). The deployed
   champion model flies the simulated Crazyflie autonomously: an offset person

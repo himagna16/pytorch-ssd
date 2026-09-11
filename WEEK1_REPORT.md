@@ -1,5 +1,7 @@
 # Drone Backend — Week 1 Report (Aug 26 → Sep 2)
 
+> **Correction (Sep 10):** the chip-validation claims below are withdrawn. The integer networks we released ignore their input; see the Sep 10 correction in EXPERIMENTS.md. Fake-quant accuracy results and simulator results still stand.
+
 *From Sai — I can't make the meeting, so here's everything the backend did
 this week, in plain language. Details and receipts: EXPERIMENTS.md in the
 repo (github.com/himagna16/pytorch-ssd).*
