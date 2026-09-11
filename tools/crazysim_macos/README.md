@@ -98,7 +98,16 @@ the feed mid-flight to test the camera-loss rule.
 | Camera frozen mid-flight | hovered, then landed |
 | Person swaying ±1.2 m | tracked 99.7% of frames; true heading error 2.7° average, 7.7° worst |
 
-Full details: the Sep 10 entry in `EXPERIMENTS.md`.
+Full details: the Sep 10 entry in `EXPERIMENTS.md`. Raw logs, true-position
+logs, and charts: `docs/sim_results/2026-09-10/`.
+
+**Reproduce or extend**
+
+- `./run_acceptance.sh` re-flies all five tests on fresh sims with the
+  person's true position logged, scores each, and draws the chart.
+- `analyze_follow.py` scores one run; `plot_follow.py` charts heading
+  against the true direction to the person.
+- `scan_people.py` re-scores COCO people to pick a different test subject.
 
 **Gotchas found getting this working**
 

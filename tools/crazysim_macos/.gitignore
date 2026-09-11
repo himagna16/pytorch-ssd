@@ -4,3 +4,4 @@ trajectory.csv
 *.log
 scenes/
 follow_runs/
+scan_out/

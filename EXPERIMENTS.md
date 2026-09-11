@@ -64,6 +64,10 @@ person is lost; hover on frames older than 0.5 s and land after 3 s; caps
 validates the control loop and safety logic, not real-camera accuracy, which
 still needs real AI-deck frames.
 
+**Evidence:** `docs/sim_results/2026-09-10/` holds every final run's log,
+the simulator's true-position logs, and the charts. Re-fly the whole suite
+with `tools/crazysim_macos/run_acceptance.sh`.
+
 ## Sep 10, 2026 — CrazySim runs on macOS: no NVIDIA, no Ubuntu (Sai)
 
 MinHyuk's simulator setup requires Ubuntu/WSL2 + NVIDIA, but that

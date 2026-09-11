@@ -1,0 +1,21 @@
+{
+  "end_reason": "duration",
+  "control_steps": 575,
+  "loop_hz": 15.0,
+  "tracking_fraction": 0.997,
+  "mean_abs_x_while_tracking": 0.087,
+  "centered_fraction_while_tracking": 0.986,
+  "z_max": 0.84,
+  "yaw_range_deg": [
+    -25.6,
+    26.6
+  ],
+  "final_pose": {
+    "px": 0.66,
+    "py": -0.05,
+    "pz": 0.8,
+    "yaw": -25.62
+  },
+  "stale_events": 0,
+  "z_after_landing": 0.02
+}

@@ -1,0 +1,21 @@
+{
+  "end_reason": "stale-land",
+  "control_steps": 125,
+  "loop_hz": 15.2,
+  "tracking_fraction": 0.984,
+  "mean_abs_x_while_tracking": 0.045,
+  "centered_fraction_while_tracking": 0.951,
+  "z_max": 0.84,
+  "yaw_range_deg": [
+    -18.3,
+    0.0
+  ],
+  "final_pose": {
+    "px": 0.56,
+    "py": -0.14,
+    "pz": 0.81,
+    "yaw": -17.94
+  },
+  "stale_events": 108,
+  "z_after_landing": 0.02
+}
