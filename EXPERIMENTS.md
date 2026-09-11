@@ -1,5 +1,28 @@
 # Experiment Log
 
+## Sep 11, 2026 — Champion network integrated into the drone firmware (local branch, simulator-verified) (Sai)
+
+The drone firmware (`crazyflie-ssd`) still carried an older Aug 27 network.
+A local branch now carries the validated champion with 8 cores, the tested
+decoder, a 2x2 camera resize, and a v6 flight-controller packet. It compiles
+and links (18.4% of L2). Six fix rounds, each re-checked by an independent
+reviewer with a timing simulator, closed these safety gaps:
+
+| gap | fix |
+|---|---|
+| failed inference decoded as a fresh frame | output poisoned before each run, failures rejected |
+| camera or pipeline failure kept tracking on | tracking reset plus a no-target packet |
+| frame age capped below the 3 s land rule | 20 ms units (up to 5.08 s), flight controller tracks last fresh time |
+| brief stall let steering resume on one frame | re-confirmation after 0.4 s gaps, measured at the radio transfer |
+| delayed packets looked fresh | age finalized at the SPI transfer, send timestamp for the flight controller |
+
+With the documented flight-controller rules, the simulator shows landing
+about 3.0 s after the last good frame, no steering on frames older than
+0.5 s, and fresh re-confirmation after every stale hover, across every
+named failure timeline and 500-run random mixes. Not run on hardware; the
+flight-controller handler is still to be written. Delivered as a git
+bundle with a hand-off: `docs/firmware_integration/`.
+
 ## Sep 11, 2026 — The epoch-2 QAT confuser passes the chip gates but gains nothing on the chip (Sai)
 
 Released on the 576-image pack (`logs/plain_follow_eval576_confuser_qathn3_ep2`):

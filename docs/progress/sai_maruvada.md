@@ -33,7 +33,7 @@ processor. In the first three weeks I:
 |---|---|---|---|
 | Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | None |
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
-| Put the champion network into the drone firmware | Sai, then frontend trio | Local branch compiles with the champion, 8 cores, tested decoder, 2x2 resize. Five independent safety reviews: the drone now lands 3 s after the last good frame and never steers on a frame older than 0.5 s in every simulated failure; a final re-confirmation race is being closed | Hand-off plan for Jade, Koa, Calvin |
+| Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser |
 | Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
@@ -129,6 +129,13 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (late morning).** Finished the firmware integration: six
+  rounds of fixes, each checked by an independent reviewer with a timing
+  simulator, until no failure the chip controls could make the drone steer
+  on stale frames or fail to land. Delivered the branch as a git bundle with
+  a hand-off for the frontend team. Tested the epoch-2 QAT confuser on the
+  chip: it passes every check but gains nothing, because the release
+  discards the ranges learned in QAT.
 - **2026-09-11 (morning).** Put the champion network into a local branch of
   the drone firmware and ran three rounds of independent safety review: it
   now rejects failed inferences, resets tracking on camera or pipeline
