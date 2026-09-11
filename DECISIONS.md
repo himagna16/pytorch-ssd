@@ -3,6 +3,13 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-10** — Simulator runs on team Macs: CrazySim's MuJoCo backend
+  works on Apple Silicon with the firmware in a small arm64 container
+  (`tools/crazysim_macos/`). Every teammate can simulate locally; Oaj's
+  WSL2/NVIDIA machine remains the option for the Gazebo backend and GPU
+  speed. Rejected: routing all sim work through one teammate's machine.
+  Rule: restart the sim between flight scripts (firmware locks on landing).
+
 - **2026-08-27 (late night)** — Successor campaign launched to beat David's
   released model (peak F1 0.791 on val2017 visibility). Two runs chained on
   Sai's Mac using DAVID'S stack on the `successor` worktree branch (his

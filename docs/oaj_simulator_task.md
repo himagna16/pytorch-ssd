@@ -1,8 +1,16 @@
-# Oaj — stand up the Crazyflie simulator (CrazySim) on the team's only capable machine
+# Oaj — stand up the Crazyflie simulator (CrazySim) on the team's WSL2/NVIDIA machine
+
+> **Update Sep 10:** the simulator's MuJoCo backend now also runs on the
+> team's Macs (`tools/crazysim_macos/`), so this machine is no longer the
+> only sim host. This runbook stays valid and is the path for the Gazebo
+> backend and GPU-accelerated runs. Heads-up from the Mac testing: the
+> firmware locks after every landing ("SUP: Locked, reboot required"), so
+> restart the sim between flight demos 5, 6, 7 or later ones won't fly.
 
 **Agent instructions.** Your user is Oaj. His Windows 11 / WSL2 machine with an
-NVIDIA GPU is the **only team machine that can run MinHyuk Park's Crazyflie
-simulator** (it requires Ubuntu/WSL2 + NVIDIA; the team's Macs cannot). Prof.
+NVIDIA GPU can run MinHyuk Park's full Crazyflie simulator setup,
+including the Gazebo backend that the team's Macs cannot run (Macs run the
+MuJoCo backend via `tools/crazysim_macos/`; see the update above). Prof.
 Mok requires simulator validation before any physical flight, so this task
 gates the whole hardware phase. Source of truth for the simulator is
 MinHyuk's repository and the meeting notes it came from — when in doubt,

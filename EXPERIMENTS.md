@@ -1,5 +1,41 @@
 # Experiment Log
 
+## Sep 10, 2026 — CrazySim runs on macOS: no NVIDIA, no Ubuntu (Sai)
+
+MinHyuk's simulator setup requires Ubuntu/WSL2 + NVIDIA, but that
+requirement belongs to its Gazebo backend and WSL-specific Docker Compose
+mounts. The MuJoCo backend is two processes over UDP: `cf2` (firmware SITL,
+C) and `crazysim.py` (MuJoCo, Python). Findings on Sai's Apple Silicon Mac:
+
+- MuJoCo physics, offscreen rendering, the 3D viewer (`mjpython`), and
+  `cflib` with its UDP driver all run natively on macOS.
+- `cf2` cannot build natively: it links with a GNU linker script
+  (`log_param_linker.ld`, `INSERT AFTER .text`) that Apple's ld rejects.
+  It builds and runs in a minimal arm64 Ubuntu 22.04 container (0.9 GB;
+  no ROS/Gazebo/GPU). Two build fixes: install `pkg-config` +
+  `python-is-python3`, and build target `cf2` only (`make all` also builds
+  the Gazebo plugin).
+- `crazysim.py` binds 127.0.0.1 by default; containerized runs need
+  `--host 0.0.0.0` for Docker port publishing.
+
+| Check | Result |
+|---|---|
+| Tutorial demos 1–3 (connect, params, telemetry) from macOS cflib | pass |
+| Takeoff on fresh sim | 0.55 m; supervisor 14 → 30 (armed → flying) |
+| Demo 7 fly-and-log | x 0 → 0.66 m, z 0.02 → 0.55 m |
+| Speed | ~0.9x real time, headless and native-viewer modes |
+| Simulated AI-deck camera over CPX | 324x244 gray, ~13 fps (OSMesa CPU render) |
+| Champion model on sim frames | runs; empty scene → person conf 0.047 (correct) |
+
+**Firmware lock after landing:** every landing drives the supervisor to
+`Locked` (info 68 = autoArm + isLocked; console "SUP: Locked, reboot
+required"), so back-to-back flight scripts fail silently unless the sim
+restarts between flights. Not Mac-specific: MinHyuk's back-to-back demo
+flow would hit it on Ubuntu too — worth telling him.
+
+Packaged as `tools/crazysim_macos/` (setup.sh, viewer/headless/camera
+launchers, camera grabber, flight check, MinHyuk's MIT tutorial).
+
 ## Aug 31, 2026 — Gentle-QAT retry fails the same way: stacking result is structural (Sai)
 
 Pre-registered rule: confuser-slice FP ≤ 0.10 AND peak F1 ≥ 0.795 →
