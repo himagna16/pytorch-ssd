@@ -34,3 +34,19 @@ with `git apply` (as `apply.sh` does), not by hand-editing.
 **Check.** `export/check_semantic_release_gates.py` (on
 `successor-release`) now fails any app whose weight files contain no
 negative bytes, among other semantic checks.
+
+## 0002: argument array size in the generated network
+
+DORY's shared template `dory/Hardware_targets/PULP/Common/Templates/network.c.t`
+(the GAP8 `network_c_template.c` is a symlink to it) declares
+`unsigned int args[4]` but writes five entries, one past the end of a stack
+array. The GVSOC harness patched the generated file inside its container,
+so validation passed while the repo's app kept the bug. The patch sizes the
+array 5 (6 without L3).
+
+## 0003: build switch for DORY's debug output
+
+The template hard-codes `#define VERBOSE 1`, which makes every inference run
+per-layer checksums on one core plus `printf`: about 38 ms on GAP8, more than
+the 8-core network itself (about 23 ms). The patch keeps the default but lets
+a flight build add `-DDORY_NO_VERBOSE` to turn it off.

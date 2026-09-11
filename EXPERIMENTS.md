@@ -1,5 +1,33 @@
 # Experiment Log
 
+## Sep 11, 2026 — Unbiased float-vs-chip check on 1,000 random images (Sai)
+
+The 96-image release pack was too small to decide the confuser (one image
+is about 1 point). On 1,000 uniformly random val2017 images (details and
+files: `docs/eval_results/2026-09-11-unbiased/`), all three candidates follow
+their float versions closely:
+
+| | champion | confuser | confuser, QAT + mining |
+|---|---|---|---|
+| visibility agreement, p = 0.5 | 95.9% | 93.0% | 94.9% |
+| chip overturns a confident float call | 1 / 821 | 1 / 875 | 1 / 849 |
+| chip false alarms, pets and mannequins | 30.2% | 11.0% | 12.8% |
+| chip false alarms, empty scenes at 0.7 | 10.7% | 2.8% | 6.3% |
+| chip recall at 0.7 | 0.683 | 0.511 | 0.557 |
+
+Quantization costs no measurable F1 for any model. So the confuser's 88.5%
+on the small pack was sampling noise, and the model choice is a trade-off:
+the champion detects more people; the confuser models false-alarm about 3x
+less on pets. The re-released champion with a 576-image pack also passes all
+five gates (95.7% agreement over 608 rows).
+
+The 8-core chip build is bit-exact on 5 images (also at 2 and 4 cores) and
+cuts a full inference from 154 ms to 23 ms at 100 MHz, when DORY's debug
+output is off; with it on (the current default) 8 cores give 62 ms. Two
+DORY template fixes are in `tools/dory_patches/` (0002 array size, 0003
+debug switch). Also found: the drone firmware repo still holds an older
+network, not the champion; a local integration dry run is in progress.
+
 ## Sep 10-11, 2026 — Final releases with the real output scale; confuser controls (Sai)
 
 **Output scale fixed.** The pipeline decoded integer outputs as raw / 32768,

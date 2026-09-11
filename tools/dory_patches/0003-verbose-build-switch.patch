@@ -1,0 +1,16 @@
+diff --git a/dory/Hardware_targets/PULP/Common/Templates/network.c.t b/dory/Hardware_targets/PULP/Common/Templates/network.c.t
+index 759ec5d..327c4cd 100644
+--- a/dory/Hardware_targets/PULP/Common/Templates/network.c.t
++++ b/dory/Hardware_targets/PULP/Common/Templates/network.c.t
+@@ -40,7 +40,11 @@ l3_supported = DORY_HW_graph[0].HW_description['memory']['levels'] > 2
+ % endif
+ 
+ % if verbose:
++// Team patch 0003: build with -DDORY_NO_VERBOSE for flight. VERBOSE adds per-layer
++// checksums on core 0 and printf, about 38 ms per inference on GAP8.
++#ifndef DORY_NO_VERBOSE
+ #define VERBOSE 1
++#endif
+ % endif
+ 
+ % if l3_supported:
