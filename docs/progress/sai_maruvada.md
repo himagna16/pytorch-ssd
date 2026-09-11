@@ -33,9 +33,11 @@ processor. In the first three weeks I:
 |---|---|---|---|
 | Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | None |
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
-| Put the champion network into the drone firmware | Sai, then frontend trio | Found the firmware still holds an older network; local dry run in progress | Hand-off plan for Jade, Koa, Calvin |
+| Put the champion network into the drone firmware | Sai, then frontend trio | Local branch compiles with the champion, 8 cores, tested decoder, 2x2 resize; third safety review round in progress | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser; 3-epoch QAT run training |
+| Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser |
+| Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 keeps pet/mannequin false alarms at 8.4% (same as the original confuser) with QAT | Chip release and gates running |
+| Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
@@ -127,6 +129,15 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (morning).** Put the champion network into a local branch of
+  the drone firmware and ran three rounds of independent safety review: it
+  now rejects failed inferences, resets tracking on camera or pipeline
+  failures, and makes the drone land 3 s after the last good frame in every
+  simulated failure pattern. Found that the firmware's image resize costs
+  recall and replaced it with a 2x2 average that matches training. A 3-epoch
+  QAT run with hard-negative mining brought the confuser's false alarms back
+  to 8.4% while keeping QAT. Added a tested --seed option after finding large
+  run-to-run variance.
 - **2026-09-11 (early morning).** Checked chip-vs-float agreement on 1,000
   random images: every candidate passes, so the confuser decision is a
   trade-off, not a quantization failure. Verified an 8-core chip build
