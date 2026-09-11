@@ -32,7 +32,7 @@ processor. In the first three weeks I:
 | Item | Owner | Status | Next step |
 |---|---|---|---|
 | Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | None |
-| 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference | Apply DORY fixes 0002/0003, rebuild the app |
+| 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
 | Put the champion network into the drone firmware | Sai, then frontend trio | Found the firmware still holds an older network; local dry run in progress | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser; 3-epoch QAT run training |

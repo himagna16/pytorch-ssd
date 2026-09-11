@@ -45,6 +45,12 @@ DORY template fixes are in `tools/dory_patches/` (0002 array size, 0003
 debug switch). Also found: the drone firmware repo still holds an older
 network, not the champion; a local integration dry run is in progress.
 
+Update: both template patches are applied and the champion app was rebuilt
+and re-promoted (`logs/plain_follow_prod_qat_v3`). The generated
+`network.c` now declares `args[5]` at the source, all five gates pass before
+and after promotion, the app integrity check passes, and the final tensor
+is unchanged.
+
 ## Sep 10-11, 2026 — Final releases with the real output scale; confuser controls (Sai)
 
 **Output scale fixed.** The pipeline decoded integer outputs as raw / 32768,
