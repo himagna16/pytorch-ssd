@@ -33,7 +33,7 @@ processor. In the first three weeks I:
 |---|---|---|---|
 | Fix the chip integer network, whose output is constant | Grace, Sai | Done Sep 11: champion app promoted, all 5 gates pass | None |
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
-| Put the champion network into the drone firmware | Sai, then frontend trio | Local branch compiles with the champion, 8 cores, tested decoder, 2x2 resize; third safety review round in progress | Hand-off plan for Jade, Koa, Calvin |
+| Put the champion network into the drone firmware | Sai, then frontend trio | Local branch compiles with the champion, 8 cores, tested decoder, 2x2 resize. Five independent safety reviews: the drone now lands 3 s after the last good frame and never steers on a frame older than 0.5 s in every simulated failure; a final re-confirmation race is being closed | Hand-off plan for Jade, Koa, Calvin |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser |
 | Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
