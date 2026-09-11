@@ -41,8 +41,9 @@ processor. In the first three weeks I:
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
-| Simulator demo for Prof. Mok | Sai | To schedule | He offered Tuesday or Thursday after 3:30 pm |
-| Progress record for Prof. Mok | Sai | v1 done, this file | Update every session |
+| Simulator demo for Prof. Mok | Sai | Availability sent: Tuesday or Thursday after 5 pm | Confirm the day he picks; rehearse the simulator run |
+| Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
+| Progress report email for Prof. Mok | Sai | Drafted Sep 11 (progress, contributions, AI-tools note, link to this record) | Send, with Grace shown her line first |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
 | Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
@@ -121,7 +122,7 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   the learned quantization ranges gains only 0.17 F1 points, below her
   materiality bar; requested drone access.
 - **Oaj Saini:** reproduced the setup on Linux and reported three setup
-  bugs, which I fixed.
+  bugs, which I fixed. No longer active on the project as of Sep 11.
 - **Jade Chen, Koa, Calvin Ngu:** flight-control and firmware lane, starting
   with the decode contract.
 
@@ -129,6 +130,10 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (midday).** Wrote the progress report email Prof. Mok asked
+  for: the project's results, a contributions list, a note that my part was
+  built with AI coding tools under my direction, and a link to this record.
+  Offered Tuesday or Thursday after 5 pm for the simulator demo.
 - **2026-09-11 (late morning).** Finished the firmware integration: six
   rounds of fixes, each checked by an independent reviewer with a timing
   simulator, until no failure the chip controls could make the drone steer
