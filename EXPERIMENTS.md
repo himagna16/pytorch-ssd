@@ -1,5 +1,28 @@
 # Experiment Log
 
+## Sep 11, 2026 — 3-epoch QAT with hard-negative mining restores the confuser gain (Sai)
+
+Three epochs of QAT from confuser ep8 (lr 2e-5, cosine, confuser manifest,
+hard-negative mining from epoch 1), scored in fake-quant form with learned
+alphas (`export/confuser_slice_eval.py`, `export/sweep_fq_ckpt.py --mode qat`):
+
+| checkpoint | slice FP @0.45 / @0.55 | peak F1 (threshold) |
+|---|---|---|
+| confuser ep8 (start, no QAT) | 0.083 / 0.052 | 0.7947 |
+| epoch 1 | 0.174 / 0.117 | 0.7954 (0.40) |
+| **epoch 2** | **0.084 / 0.047** | **0.7913 (0.30)** |
+| epoch 3 | 0.086 / 0.052 | 0.7885 (0.30) |
+| QAT champion (reference) | 0.239 / 0.171 | 0.8008 (0.45) |
+
+Epoch 2 matches the original confuser's false-alarm rate while carrying
+QAT, at about one F1 point below the champion. The best threshold moved to
+0.30, so the model became more conservative. Caveat: one unseeded run.
+Epoch 2 is being released on the 576-image pack.
+
+`train.py` now has `--seed` (on `successor-release`): two 40-batch runs
+with `--seed 0` gave identical losses and validation numbers; unseeded runs
+differ. Use it with 3+ repeats before reporting training results.
+
 ## Sep 11, 2026 — The firmware's image resize costs recall; a 2x2 average fixes it (Sai)
 
 The drone firmware (`crazyflie_ssd/src/preprocess.c`) shrinks the 244x244
