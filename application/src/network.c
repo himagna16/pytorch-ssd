@@ -24,18 +24,22 @@
 #include "directional_allocator.h"
 #include "mem.h"
 #include <string.h>
-#include "ReluPooling7.h"
-#include "BNReluConvolution2.h"
 #include "BNReluConvolution1.h"
-#include "BNReluConvolution6.h"
+#include "ReluPooling7.h"
 #include "FullyConnected8.h"
-#include "BNReluConvolution0.h"
+#include "BNReluConvolution2.h"
 #include "BNReluConvolution3.h"
+#include "BNReluConvolution6.h"
 #include "BNReluConvolution5.h"
+#include "BNReluConvolution0.h"
 #include "BNReluConvolution4.h"
 
 
+// Team patch 0003: build with -DDORY_NO_VERBOSE for flight. VERBOSE adds per-layer
+// checksums on core 0 and printf, about 38 ms per inference on GAP8.
+#ifndef DORY_NO_VERBOSE
 #define VERBOSE 1
+#endif
 
 #define L3_WEIGHTS_SIZE 4000000
 #define L3_INPUT_SIZE 1500000
@@ -118,7 +122,7 @@ struct network_run_token network_run_async(void *l2_buffer, size_t l2_buffer_siz
   // First open the cluster
   pi_cluster_conf_init(&conf);
   conf.id=0;
-  unsigned int args[4];
+  unsigned int args[5];
   args[0] = (unsigned int) l2_buffer;
   args[1] = (unsigned int) l2_buffer_size;
   args[2] = (unsigned int) l2_final_output;

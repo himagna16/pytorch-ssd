@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-09-10T23:50:03.066319-05:00",
+  "validated_at": "2026-09-11T01:44:20.347464-05:00",
   "platform": "gvsoc",
   "model_type": "plain_follow",
   "follow_head_type": "xbin9_size_bucket4",
@@ -40,7 +40,7 @@
   "result": "exact_match",
   "artifacts": {
     "hex/inputs.hex": "e4546224503ae9aa6f5ef55f627ebff3496bd0d7be695f2760f792fe56e68328",
-    "src/network.c": "54bacbaece96fe6185bff27cf4962c12163e7937b1acd06c01958be3cd1af761",
+    "src/network.c": "1a6654a2089c62df54661c4df1771fdb14d44624c6e487ca246bd4db0bbfb9d4",
     "src/pulp_nn_utils.c": "6cb903143b5023572267895f0644c54023882c64e197174495ea67a4f9c918f1",
     "validation/output.txt": "afa06542d53ae3bb59497f602adcf655eb231ea67699f5109541c31b39790d37"
   }
