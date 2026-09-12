@@ -1,0 +1,18 @@
+[18:15:20] pets A/B suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/plan.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab matte=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_matte mirror=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_mirror start=1
+[18:15:20] flight 1/8  matte  F.pets__ships  r3 a1  (load1 5.50)
+  -> VALID  floor 0.0  sim/wall 0.985  6.442 Hz  track 0.12  gap_max 158.9  load1 9.40  
+[18:16:12] flight 2/8  mirror  F.pets__ships  r3 a1  (load1 9.40)
+  -> VALID  floor 0.2  sim/wall 0.98  6.449 Hz  track 0.682  gap_max 158.8  load1 8.62  
+[18:17:03] flight 3/8  mirror  F.pets__ships  r1 a1  (load1 8.62)
+  -> VALID  floor 0.2  sim/wall 0.984  6.435 Hz  track 0.571  gap_max 161.0  load1 8.18  
+[18:17:55] flight 4/8  matte  F.pets__ships  r1 a1  (load1 8.18)
+  -> VALID  floor 0.0  sim/wall 0.981  6.44 Hz  track 0.14  gap_max 158.9  load1 7.80  
+[18:18:47] flight 5/8  mirror  F.pets__ships  r4 a1  (load1 7.80)
+  -> VALID  floor 0.2  sim/wall 0.995  6.414 Hz  track 0.641  gap_max 178.9  load1 6.71  
+[18:19:39] flight 6/8  matte  F.pets__ships  r4 a1  (load1 6.50)
+  -> VALID  floor 0.0  sim/wall 0.973  6.429 Hz  track 0.08  gap_max 158.8  load1 8.79  
+[18:20:31] flight 7/8  matte  F.pets__ships  r2 a1  (load1 8.79)
+  -> VALID  floor 0.0  sim/wall 0.984  6.419 Hz  track 0.173  gap_max 158.6  load1 8.74  
+[18:21:22] flight 8/8  mirror  F.pets__ships  r2 a1  (load1 8.74)
+  -> VALID  floor 0.2  sim/wall 0.983  6.442 Hz  track 0.707  gap_max 158.6  load1 5.63  
+[18:22:14] ALL FLIGHTS DONE in 6 min
