@@ -1,0 +1,9 @@
+# order	condition	cell	scene	class	backend	camera	speed	duration_s	repeat
+1	matte	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	3
+2	mirror	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	3
+3	mirror	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	1
+4	matte	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	1
+5	mirror	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	4
+6	matte	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	4
+7	matte	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	2
+8	mirror	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	2

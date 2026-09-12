@@ -1,0 +1,97 @@
+====================================================================================================
+EXPERIMENT 2 - F.pets__ships ON BOTH FLOORS, ONE SESSION, INTERLEAVED, ABBA
+====================================================================================================
+8 VALID flights. Nothing here was measured on hardware; every frame is rendered.
+
+FLOOR PROVENANCE - read per flight from the scene the harness was about to fly
+ ord                                run  scene.xml refl  manifest refl     arm  plan said
+   1         matte__F.pets__ships__r3a1            0.00           0.00   matte      matte
+   2        mirror__F.pets__ships__r3a1            0.20           0.20  mirror     mirror
+   3        mirror__F.pets__ships__r1a1            0.20           0.20  mirror     mirror
+   4         matte__F.pets__ships__r1a1            0.00           0.00   matte      matte
+   5        mirror__F.pets__ships__r4a1            0.20           0.20  mirror     mirror
+   6         matte__F.pets__ships__r4a1            0.00           0.00   matte      matte
+   7         matte__F.pets__ships__r2a1            0.00           0.00   matte      matte
+   8        mirror__F.pets__ships__r2a1            0.20           0.20  mirror     mirror
+  mismatches: 0
+
+PER FLIGHT
+ ord     arm  rep  M6 drift  M1 track  1st latch  conf@1st  latched s  episodes  d_start   d_end  drift/ep
+   1   matte    3     0.826     0.120       0.93     0.703       2.33         4     2.63    2.10     0.146
+   2  mirror    3     2.744     0.682       0.31     0.783      16.43         1     2.63    0.32     2.541
+   3  mirror    1     2.347     0.571       0.31     0.904      13.67         1     2.63    0.71     2.072
+   4   matte    1     0.798     0.140       0.77     0.760       2.17         8     2.63    2.12     0.023
+   5  mirror    4     2.659     0.641       0.30     0.825      15.45         1     2.63    0.45     2.478
+   6   matte    4     0.524     0.080       1.09     0.754       1.55         2     2.62    2.49     0.146
+   7   matte    2     0.932     0.173       1.40     0.755       3.27         6     2.63    2.04     0.087
+   8  mirror    2     2.925     0.707       0.31     0.808      17.06         1     2.63    0.18     2.599
+
+PER ARM
+                            metric                        matte (n=4)                       mirror (n=4)
+                      M6 drift (m)            0.524-0.932 (med 0.812)            2.347-2.925 (med 2.702)
+              M1 tracking fraction            0.080-0.173 (med 0.130)            0.571-0.707 (med 0.661)
+           time to first latch (s)               0.77-1.40 (med 1.01)               0.30-0.31 (med 0.31)
+                 total latched (s)               1.55-3.27 (med 2.25)            13.67-17.06 (med 15.94)
+             false-follow episodes                        2-8 (med 5)                        1-1 (med 1)
+               conf at first latch            0.703-0.760 (med 0.754)            0.783-0.904 (med 0.817)
+   max drift within an episode (m)            0.023-0.146 (med 0.116)            2.072-2.599 (med 2.510)
+   range to the dog at the end (m)               2.04-2.49 (med 2.11)               0.18-0.71 (med 0.39)
+      peak confidence on the scene            0.816-0.925 (med 0.857)            0.965-0.983 (med 0.978)
+
+EFFECT SIZE, matte vs mirrored (the two arms are matched pairs, same session)
+                            metric  matte med  mirror med    ratio     U  p(normal)  separated
+                      M6 drift (m)      0.812       2.702     3.33   0.0      0.021        YES
+              M1 tracking fraction      0.130       0.661     5.09   0.0      0.021        YES
+           time to first latch (s)      1.010       0.310     0.31   0.0      0.021        YES
+                 total latched (s)      2.250      15.940     7.08   0.0      0.021        YES
+             false-follow episodes      5.000       1.000     0.20   0.0      0.021        YES
+               conf at first latch      0.754       0.817     1.08   0.0      0.021        YES
+   max drift within an episode (m)      0.116       2.510    21.54   0.0      0.021        YES
+   range to the dog at the end (m)      2.110       0.385     0.18   0.0      0.021        YES
+      peak confidence on the scene      0.857       0.978     1.14   0.0      0.021        YES
+
+With 4 vs 4 the smallest attainable exact two-sided p is 0.0286 (complete
+separation). The normal-approximation p above is only a rough guide; read the
+'separated' column, which says whether the two arms' ranges overlap at all.
+
+AGAINST THE M6 GATE (max_horizontal_drift_m < 0.5 m, hard)
+  matte : [0.524, 0.798, 0.826, 0.932]   passes 0/4   scoreboard headline (worst repeat) 0.932
+  mirror: [2.347, 2.659, 2.744, 2.925]   passes 0/4   scoreboard headline (worst repeat) 2.925
+
+CONFIDENCE DISTRIBUTION ON THE SCENE (a dog and a cat; there is no person here)
+    arm  frames   mean    med    p90    max  >=0.70  >=0.45   size buckets
+  matte     621  0.527  0.512  0.755  0.925   18.2%   61.5%   b0x334  b1x287
+ mirror     626  0.668  0.670  0.909  0.983   45.7%   85.0%   b0x169  b1x444  b2x13
+
+Per flight:
+ ord     arm  frames   mean    med    max  >=0.70   buckets
+   1   matte     158  0.517  0.498  0.816   10.8%   b0x80  b1x78
+   2  mirror     157  0.700  0.693  0.982   49.7%   b0x45  b1x107  b2x5
+   3  mirror     156  0.627  0.657  0.965   43.6%   b0x27  b1x126  b2x3
+   4   matte     157  0.534  0.499  0.892   26.8%   b0x72  b1x85
+   5  mirror     156  0.650  0.665  0.975   43.6%   b0x50  b1x105  b2x1
+   6   matte     150  0.534  0.534  0.821   12.0%   b0x92  b1x58
+   7   matte     156  0.524  0.515  0.925   23.1%   b0x90  b1x66
+   8  mirror     157  0.697  0.685  0.983   45.9%   b0x47  b1x106  b2x4
+
+THE MACHINE
+ ord     arm  load1 pre  load1 post  sim/wall     Hz  gap_max ms  |pitch|max  |roll|max   z_min  upset
+   1   matte       5.50        9.40     0.985   6.44       158.9        5.38       0.33   0.800      0
+   2  mirror       9.40        8.62     0.980   6.45       158.8        4.22       0.44   0.801      0
+   3  mirror       8.62        8.18     0.984   6.43       161.0        4.36       0.41   0.801      0
+   4   matte       8.18        7.80     0.981   6.44       158.9        4.92       0.20   0.801      0
+   5  mirror       7.80        6.71     0.995   6.41       178.9        4.30       0.42   0.800      0
+   6   matte       6.50        8.79     0.973   6.43       158.8       12.34       0.58   0.795      0
+   7   matte       8.79        8.74     0.984   6.42       158.6        4.46       0.50   0.800      0
+   8  mirror       8.74        5.63     0.983   6.44       158.6        4.84       0.68   0.801      0
+
+attitude upsets: 0 / 8   worst |pitch| 12.34 deg   worst |roll| 0.68 deg   z_min 0.795-0.801 m
+sim_wall_ratio: min 0.973 median 0.984 max 0.995   flights below 0.95: 0 of 8
+step_gap_ms.max, CHIP SPEED CLASS ONLY (all 8 flights; the 153 ms rate cap puts
+  the floor at ~154 ms by construction): min 158.6  median 158.9  max 178.9 ms
+  matte : gap_max 158.6-158.9 ms   load1 before 5.50-8.79 (mean 7.24)
+  mirror: gap_max 158.6-178.9 ms   load1 before 7.80-9.40 (mean 8.64)
+
+Chronological balance actually realised:
+  matte  flew at [1, 4, 6, 7], mean position 4.5 of 8
+  mirror flew at [2, 3, 5, 8], mean position 4.5 of 8

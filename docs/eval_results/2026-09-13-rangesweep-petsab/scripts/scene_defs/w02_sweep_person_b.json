@@ -1,0 +1,25 @@
+{
+  "scene_id": "w02_sweep_person_b",
+  "title": "Range sweep: person B (the second acceptance cutout) alone, static, unoccluded",
+  "purpose": "Second subject for the static range sweep, so any falloff can be checked against a cutout the D.occlusion cell never used. Same cutout as s06_two_people's distractor and s10_near_threshold_person's target.",
+  "lighting": "default",
+  "preview_cam_x": [0.0, 1.0, 2.0],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {"img_id": 42102, "ann_id": 1728930},
+      "height_m": 1.75,
+      "pos": [3.5, 0.0],
+      "motion": {"type": "static"},
+      "note": "Second person cutout in the v2 scene set."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": []
+  },
+  "prediction": {"model": "champion", "outcome": "not flown", "rationale": "Static render only; never flown."}
+}

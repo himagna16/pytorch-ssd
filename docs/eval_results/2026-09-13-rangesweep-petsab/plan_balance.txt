@@ -1,0 +1,17 @@
+wrote plan.tsv  (8 flights)
+
+  flight 1  matte   repeat 3
+  flight 2  mirror  repeat 3
+  flight 3  mirror  repeat 1
+  flight 4  matte   repeat 1
+  flight 5  mirror  repeat 4
+  flight 6  matte   repeat 4
+  flight 7  matte   repeat 2
+  flight 8  mirror  repeat 2
+
+BALANCE CHECKS (properties of the plan, computed before any flight):
+  matte  flies at positions [1, 4, 6, 7]  mean 4.5 of 8
+  mirror flies at positions [2, 3, 5, 8]  mean 4.5 of 8
+  corr(order, repeat) = +0.000
+  every pair is one matte + one mirrored flight at the same repeat: True
+  leading arm per pair: ['matte', 'mirror', 'mirror', 'matte']  (ABBA)

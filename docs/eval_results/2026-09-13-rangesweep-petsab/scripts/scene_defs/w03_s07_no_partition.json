@@ -1,0 +1,44 @@
+{
+  "scene_id": "w03_s07_no_partition",
+  "title": "s07_occlusion_reappear with the partition removed - the replay control",
+  "purpose": "Byte-for-byte the acceptance suite's occlusion scene except that occ_partition is deleted. Used to replay the D.occlusion__proven flight geometry with and without the partition in frame, so 'the partition is in the picture' can be separated from 'the subject is close'.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        0.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 1.6,
+        "period_s": 24.0
+      }
+    }
+  ],
+  "occluders": [],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": []
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "not flown",
+    "rationale": "Static replay only; never flown."
+  }
+}

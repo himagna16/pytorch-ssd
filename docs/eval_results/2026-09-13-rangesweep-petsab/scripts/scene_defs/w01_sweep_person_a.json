@@ -1,0 +1,25 @@
+{
+  "scene_id": "w01_sweep_person_a",
+  "title": "Range sweep: person A (the acceptance suite's subject) alone, static, unoccluded",
+  "purpose": "Static range sweep for the 2026-09-13 rangesweep experiment. The SAME COCO cutout, height and lighting as s07_occlusion_reappear / s15_static_offset, but with the partition removed and motion static, so a camera walked along -x gives true range as the only variable.",
+  "lighting": "default",
+  "preview_cam_x": [0.0, 1.0, 2.0],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {"img_id": 19432, "ann_id": 428692},
+      "height_m": 1.7,
+      "pos": [3.5, 0.0],
+      "motion": {"type": "static"},
+      "note": "Identical cutout/height to s07_occlusion_reappear's target; y moved to 0.0 and the occluder dropped."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": []
+  },
+  "prediction": {"model": "champion", "outcome": "not flown", "rationale": "Static render only; never flown."}
+}

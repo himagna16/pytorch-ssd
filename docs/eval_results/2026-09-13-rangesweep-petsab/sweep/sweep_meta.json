@@ -1,0 +1,132 @@
+{
+  "ranges": [
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    2.0,
+    2.25,
+    2.5,
+    2.75,
+    3.0,
+    3.25,
+    3.5,
+    3.75,
+    4.0
+  ],
+  "yaws": [
+    -10.0,
+    -5.0,
+    0.0,
+    5.0,
+    10.0
+  ],
+  "heights": [
+    0.8,
+    0.82,
+    0.84
+  ],
+  "draws": 3,
+  "warmup": 30,
+  "seed": 1001,
+  "cameras": [
+    "clean",
+    "himax_typical"
+  ],
+  "backends": [
+    "float",
+    "chip"
+  ],
+  "frame_wh": [
+    324,
+    244
+  ],
+  "fovy_deg": 70.0,
+  "vis_enter": 0.7,
+  "vis_exit": 0.45,
+  "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+  "scenes": {
+    "w01_sweep_person_a": {
+      "subject": "subj_person_target",
+      "pos": [
+        3.5,
+        0.0
+      ],
+      "height_m": 1.7,
+      "floor_reflectance": 0.0,
+      "coco": {
+        "kind": "coco_val2017",
+        "img_id": 19432,
+        "ann_id": 428692,
+        "category": "person",
+        "file_name": "000000019432.jpg",
+        "bbox_xywh": [
+          55.3,
+          26.8,
+          153.9,
+          404.1
+        ]
+      },
+      "n_renders": 195
+    },
+    "w02_sweep_person_b": {
+      "subject": "subj_person_target",
+      "pos": [
+        3.5,
+        0.0
+      ],
+      "height_m": 1.75,
+      "floor_reflectance": 0.0,
+      "coco": {
+        "kind": "coco_val2017",
+        "img_id": 42102,
+        "ann_id": 1728930,
+        "category": "person",
+        "file_name": "000000042102.jpg",
+        "bbox_xywh": [
+          20.1,
+          6.7,
+          220.2,
+          621.8
+        ]
+      },
+      "n_renders": 195
+    }
+  },
+  "backend_info": {
+    "float": {
+      "backend": "float",
+      "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+      "head": "xbin9_size_bucket4"
+    },
+    "chip": {
+      "backend": "chip",
+      "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx",
+      "eps": "0.0002009823510888964",
+      "shadow": "none",
+      "ready": "True",
+      "onnx_sha1": "d90555c8462b6dd6c3432d184b427d4d3e653fda",
+      "input_hw": "[128, 128]",
+      "n_out": "14",
+      "onnxruntime": "1.19.2",
+      "python": "/Users/saimaruvada/Downloads/drone/doryenv/bin/python3",
+      "threads": "2",
+      "transport": "fd"
+    }
+  },
+  "host": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "load_before": [
+      8.0458984375,
+      7.43115234375,
+      6.4443359375
+    ],
+    "load_after": [
+      9.5009765625,
+      7.7841796875,
+      6.5869140625
+    ]
+  },
+  "wall_s": 20.0,
+  "n_rows": 3120
+}

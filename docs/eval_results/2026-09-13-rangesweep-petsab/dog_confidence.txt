@@ -1,0 +1,47 @@
+============================================================================================
+EXPERIMENT 2 - CONFIDENCE ATTRIBUTED TO WHAT WAS ACTUALLY IN THE MODEL'S CROP
+============================================================================================
+The model emits one visibility output per frame, so frames are split by which
+subject lay within +-35 deg of the camera axis (the square centre crop).
+Subject positions come from the simulator's truth log, joined on the wall clock.
+
+    arm    in crop  frames   mean    med    p90    max  >=0.70  >=0.45  mean range to dog
+  matte   dog only     391  0.473  0.438  0.701  0.854   10.2%   46.8%               2.18
+  matte       both     230  0.620  0.625  0.786  0.925   31.7%   86.5%               2.48
+  matte   cat only       0
+  matte    neither       0
+ mirror   dog only     531  0.660  0.658  0.920  0.983   43.9%   82.3%               1.00
+ mirror       both      78  0.754  0.776  0.865  0.920   67.9%  100.0%               2.52
+ mirror   cat only       0
+ mirror    neither      17  0.530  0.531  0.578  0.583    0.0%  100.0%               0.20
+
+THE DOG ALONE, per flight (frames where the dog was in the crop and the cat was not)
+ ord     arm                                run  frames   mean    med    max  >=0.70
+   1   matte         matte__F.pets__ships__r3a1      93  0.467  0.454  0.784    7.5%
+   2  mirror        mirror__F.pets__ships__r3a1     138  0.691  0.660  0.982   45.7%
+   3  mirror        mirror__F.pets__ships__r1a1     137  0.607  0.589  0.965   40.9%
+   4   matte         matte__F.pets__ships__r1a1     103  0.475  0.426  0.826   15.5%
+   5  mirror        mirror__F.pets__ships__r4a1     137  0.636  0.628  0.975   40.1%
+   6   matte         matte__F.pets__ships__r4a1      92  0.510  0.498  0.803    6.5%
+   7   matte         matte__F.pets__ships__r2a1     103  0.443  0.385  0.854   10.7%
+   8  mirror        mirror__F.pets__ships__r2a1     119  0.714  0.695  0.983   49.6%
+
+Size bucket the head assigned while the dog alone was in the crop:
+  matte   bucket 0: 233 (59.6%)  bucket 1: 158 (40.4%)
+  mirror  bucket 0: 149 (28.1%)  bucket 1: 369 (69.5%)  bucket 2: 13 (2.4%)
+
+RANGE-MATCHED. The mirrored drone CLOSES on the dog, so its dog-only frames are
+taken from much nearer (mean 1.00 m vs 2.18 m) and part of its higher confidence
+is simply that it is closer. Binning the dog-only frames by true range to the dog
+removes that, and leaves only what the floor did:
+  range to dog  matte n  matte mean  matte >=.70  mirror n  mirror mean  mirror >=.70  delta mean
+   0.0- 1.0 m        0         nan         nan%       314        0.546         16.9%         nan
+   1.0- 1.5 m        0         nan         nan%        91        0.827         89.0%         nan
+   1.5- 2.0 m       28       0.366         3.6%        78        0.797         66.7%       0.431
+   2.0- 2.5 m      342       0.486        11.4%        48        0.869         97.9%       0.382
+   2.5- 3.0 m       21       0.395         0.0%         0          nan          nan%         nan
+  pooled over the 1.5-3.0 m band both arms actually visit: matte n=391 mean 0.473 (10.2% >= 0.70)   mirror n=126 mean 0.824 (78.6% >= 0.70)
+
+A 0.65 m dog at ~2.5 m should read bucket 0 on the ideal head
+(d(s) = H / (2 s tan(phi/2)) puts 0.65 m at bucket 0/1 only inside 1.86 m).
+Bucket 1 and above means the head is reading it as a taller object than it is.

@@ -1,0 +1,4 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/scoreboard.md
+suite verdict: FAIL  {'pass': 0, 'fail': 1, 'invalid': 0, 'characterised': 0}
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m

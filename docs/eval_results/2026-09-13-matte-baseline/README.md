@@ -366,8 +366,37 @@ outage, so the scorer charges the whole thing to relatch time.
 `D.occlusion__ships` does *not* close in that far (himax + 6.5 Hz keeps it at 2.90–3.09 m),
 which is exactly why it still passes at 1.329 s.
 
-**(c) But it is not only a bookkeeping artefact — the detector really does lose a
-plainly visible person.** `occlusion_proven_lost_track_in_plain_view.png` is frame 241 of
+> **RETRACTED 2026-09-12, the same night, by the static range sweep this section
+> asked for: `docs/eval_results/2026-09-13-rangesweep-petsab/`.**
+>
+> **There is no close-range detection falloff.** A sweep of 1.0–4.0 m in 0.25 m
+> steps, 2 subjects, 5 yaw offsets, 3 camera heights, both cameras and *both*
+> backends (3,120 frames) found that on the very cutout this cell flies, exactly
+> **1 frame in 1,560 falls below the 0.70 latch threshold, and it is at 3.75 m**.
+> Mean confidence at ≤2.0 m is *higher* than at 2.5–3.0 m on all four arms.
+>
+> **The table below is produced by a bug and must not be quoted.** `conf_vs_range.py`
+> joins the follower's `t` column to the truth log's `sim_t`; those origins differ by
+> up to −19 s and the offset drifts. Since the target sways ±1.6 m with a 24 s period,
+> the join misplaces it by 1.25 m on average and 3.12 m at worst. Re-joined on the
+> wall clock that both files carry, the trend **reverses**: 92.9% / 86.3% / 71.6%.
+> The printed bin labels are also 0.25 m low.
+>
+> **What actually costs the detections is viewing azimuth off the flat subject card.**
+> Confidence is flat out to about 35° and collapses past about 40°. Scene `s07`
+> couples azimuth to range by construction (target at 3.5, −1.6 with the drone on
+> y≈0, so closing to px 2.0 m means viewing at 46.8°). In the flight logs, 79.0% of
+> lost-track frames are at azimuth ≥40° against 5.5% of tracked frames, at the same
+> mean range. **Important limit:** a flat card foreshortens to nothing at 45° and a
+> real person does not, so this is a scene-fidelity artefact — and equally it is
+> *not* evidence that the network is fine on real people at 45°.
+>
+> Anyone reusing `conf_vs_range.py`, or any other analysis joining `t` to `sim_t`,
+> should re-check it. The sight-line geometry in (b) above uses a different join and
+> still stands.
+
+**(c) ~~But it is not only a bookkeeping artefact — the detector really does lose a
+plainly visible person.~~ WITHDRAWN, see the note above.** `occlusion_proven_lost_track_in_plain_view.png` is frame 241 of
 `D.occlusion__proven__r4a1`, mid-outage: the person is unoccluded, upright, centred and
 filling most of the frame, and the overlay reads `person 0.56 none | size 2`. Thirty
 frames later it reads `0.26 | size 0`. Confidence sits at 0.42–0.64 for seconds without
@@ -385,11 +414,11 @@ the drone at 2.86–2.92 m, i.e. permanently outside the range band where the ne
 struggles. **Removing the mirror did not create this weakness; it removed the thing that
 was hiding it.**
 
-I did not separate (b) from (c). The range binning is a within-flight association —
-the drone is closest late in the flight and near the partition, so range is confounded
-with both time and the partition's proximity. The clean experiment is a static range
-sweep on a single unoccluded scene, and I did not run one. **Which of the two effects
-dominates the 3.24 s is undetermined.**
+~~I did not separate (b) from (c).~~ **Resolved the same night.** The static range
+sweep this paragraph called for was run, and it removed (c) entirely: there is no
+close-range weakness. The relatch failure is (b), the sight line clearing the
+partition, plus viewing azimuth off a flat card — not a detector limitation.
+See `docs/eval_results/2026-09-13-rangesweep-petsab/`.
 
 ### Other things that got worse, none of which changed a verdict
 

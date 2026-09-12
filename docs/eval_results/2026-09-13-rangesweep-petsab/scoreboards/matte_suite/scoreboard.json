@@ -1,0 +1,1043 @@
+{
+  "schema": "crazysim-scoreboard/1",
+  "suite": "petsab_matte",
+  "started_utc": "2026-09-12T23:23:22Z",
+  "duration_s": 0,
+  "verdict": "FAIL",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "invalid": 0,
+    "characterised": 0
+  },
+  "flight_counts": {
+    "attempted": 4,
+    "valid": 4,
+    "invalid": 0,
+    "scored": 4
+  },
+  "model": {},
+  "cells": [
+    {
+      "cell_id": "F.pets__ships",
+      "scene": "s03_pets_only",
+      "scene_class": "F",
+      "backend": "chip",
+      "camera": "himax_typical",
+      "speed": "chip",
+      "runs": [
+        {
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/runs/F.pets__ships__r1a1",
+          "cell": {
+            "cell_id": "F.pets__ships",
+            "scene": "s03_pets_only",
+            "scene_class": "F",
+            "backend": "chip",
+            "camera": "himax_typical",
+            "speed": "chip",
+            "rate_hz": 6.5,
+            "latency_ms": 153,
+            "repeat": 1,
+            "attempt": 1,
+            "duration_s": 35,
+            "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_matte/s03_pets_only",
+            "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r1a1",
+            "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r1a1/truth.csv",
+            "sensor_seed": 1001,
+            "freeze_expected": false,
+            "needs_truth": true,
+            "suite": "core",
+            "condition": "matte",
+            "order": 4,
+            "floor_reflectance": 0.0,
+            "floor_reflectance_manifest": 0.0
+          },
+          "valid": true,
+          "validity": {
+            "sim_wall_ratio": 0.981,
+            "achieved_hz": 6.44,
+            "requested_hz": 6.5,
+            "min_step_gap_ms": 153.9,
+            "torn_fraction": 0.0,
+            "z_max": 0.84,
+            "truth_covers_window": true
+          },
+          "invalid_reasons": [],
+          "metrics": {
+            "M1_tracking_fraction": 0.14,
+            "M3_centered_fraction_while_tracking": 1.0,
+            "M4_stale_events": 0,
+            "M5_z_after_landing_m": 0.02,
+            "end_reason": "duration",
+            "control_steps": 157,
+            "M6_max_horizontal_drift_m": 0.798,
+            "person_height_m": null,
+            "dist_start_m": 2.63,
+            "dist_end_m": 2.12,
+            "person_in_view_fraction": 0.0,
+            "M8_false_follow_episodes": 8,
+            "flown_s": 24.2,
+            "M8_false_follow_per_min": 19.82,
+            "M8_t_first_false_follow_s": 0.77,
+            "M8_censored": false,
+            "M8_false_follow_total_s": 2.17,
+            "M8_max_drift_during_episode_m": 0.023,
+            "M8_conf_at_first_false_follow": 0.76,
+            "M8_tracked_episodes_total": 8,
+            "M9_stale_hover_rows": 0,
+            "M9_loss_episodes": 8,
+            "M9_reconfirm_latency_s": 0.314,
+            "M9_reconfirm_latency_all_s": [
+              0.312,
+              0.314,
+              0.313,
+              0.309,
+              0.312,
+              0.309,
+              0.312
+            ],
+            "M9_gt_visible_to_relatch_s": null,
+            "M9_gt_visible_to_relatch_all_s": [],
+            "M9_gt_halfvisible_to_relatch_s": null,
+            "M9_gt_halfvisible_to_relatch_all_s": [],
+            "M9_track_outage_s": 2.172,
+            "M9_track_outage_all_s": [
+              1.4,
+              0.625,
+              1.401,
+              1.246,
+              0.624,
+              2.172,
+              1.71
+            ],
+            "M9_late_command_after_loss_ms": null,
+            "M9_confirming_frames_used": 3,
+            "M9_steered_before_reconfirm": false,
+            "M9_unrecovered_loss": true,
+            "M9_motion_while_unconfirmed_m": 0.0,
+            "M9_landed_unexpectedly": false,
+            "M10_uncertain_fraction_absent": 0.2994,
+            "M10_conf_max_absent": 0.892,
+            "M10_uncertain_fraction_all": 0.2994,
+            "M11_yaw_reversals_per_min": 0.0,
+            "M11_vx_reversals_per_min": 0.0,
+            "M11_yaw_saturated_fraction": 0.0,
+            "M11_cmd_yaw_abs_mean": 6.667,
+            "backend": "chip",
+            "loop_hz": 6.44,
+            "frames_dropped": 207,
+            "chip_round_trip_ms_median": 0.67
+          },
+          "gates": [
+            {
+              "id": "M5_z_after_landing_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.02,
+              "op": "<=",
+              "threshold": 0.1,
+              "result": "PASS",
+              "basis": "existing scorecard rule: the drone must be on the floor after landing",
+              "would_pass": true
+            },
+            {
+              "id": "M6_max_horizontal_drift_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.798,
+              "op": "<",
+              "threshold": 0.5,
+              "result": "FAIL",
+              "basis": "a distractor may capture the track, but it must not fly across the room",
+              "would_pass": false
+            },
+            {
+              "id": "M8_false_follow_episodes",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 8,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_t_first_false_follow_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.77,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_false_follow_total_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 2.17,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_max_drift_during_episode_m",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.023,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M1_tracking_fraction",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.14,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M10_conf_max_absent",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.892,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            }
+          ],
+          "repeat": 1,
+          "attempt": 1
+        },
+        {
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/runs/F.pets__ships__r2a1",
+          "cell": {
+            "cell_id": "F.pets__ships",
+            "scene": "s03_pets_only",
+            "scene_class": "F",
+            "backend": "chip",
+            "camera": "himax_typical",
+            "speed": "chip",
+            "rate_hz": 6.5,
+            "latency_ms": 153,
+            "repeat": 2,
+            "attempt": 1,
+            "duration_s": 35,
+            "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_matte/s03_pets_only",
+            "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r2a1",
+            "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r2a1/truth.csv",
+            "sensor_seed": 1002,
+            "freeze_expected": false,
+            "needs_truth": true,
+            "suite": "core",
+            "condition": "matte",
+            "order": 7,
+            "floor_reflectance": 0.0,
+            "floor_reflectance_manifest": 0.0
+          },
+          "valid": true,
+          "validity": {
+            "sim_wall_ratio": 0.984,
+            "achieved_hz": 6.419,
+            "requested_hz": 6.5,
+            "min_step_gap_ms": 153.9,
+            "torn_fraction": 0.0,
+            "z_max": 0.84,
+            "truth_covers_window": true
+          },
+          "invalid_reasons": [],
+          "metrics": {
+            "M1_tracking_fraction": 0.173,
+            "M3_centered_fraction_while_tracking": 1.0,
+            "M4_stale_events": 0,
+            "M5_z_after_landing_m": 0.02,
+            "end_reason": "duration",
+            "control_steps": 156,
+            "M6_max_horizontal_drift_m": 0.932,
+            "person_height_m": null,
+            "dist_start_m": 2.63,
+            "dist_end_m": 2.04,
+            "person_in_view_fraction": 0.0,
+            "M8_false_follow_episodes": 6,
+            "flown_s": 24.1,
+            "M8_false_follow_per_min": 14.91,
+            "M8_t_first_false_follow_s": 1.4,
+            "M8_censored": false,
+            "M8_false_follow_total_s": 3.27,
+            "M8_max_drift_during_episode_m": 0.087,
+            "M8_conf_at_first_false_follow": 0.755,
+            "M8_tracked_episodes_total": 6,
+            "M9_stale_hover_rows": 0,
+            "M9_loss_episodes": 6,
+            "M9_reconfirm_latency_s": 0.315,
+            "M9_reconfirm_latency_all_s": [
+              0.311,
+              0.312,
+              0.311,
+              0.309,
+              0.315
+            ],
+            "M9_gt_visible_to_relatch_s": null,
+            "M9_gt_visible_to_relatch_all_s": [],
+            "M9_gt_halfvisible_to_relatch_s": null,
+            "M9_gt_halfvisible_to_relatch_all_s": [],
+            "M9_track_outage_s": 2.185,
+            "M9_track_outage_all_s": [
+              1.873,
+              1.095,
+              1.089,
+              1.244,
+              2.185
+            ],
+            "M9_late_command_after_loss_ms": null,
+            "M9_confirming_frames_used": 3,
+            "M9_steered_before_reconfirm": false,
+            "M9_unrecovered_loss": true,
+            "M9_motion_while_unconfirmed_m": 0.0,
+            "M9_landed_unexpectedly": false,
+            "M10_uncertain_fraction_absent": 0.3141,
+            "M10_conf_max_absent": 0.925,
+            "M10_uncertain_fraction_all": 0.3141,
+            "M11_yaw_reversals_per_min": 0.0,
+            "M11_vx_reversals_per_min": 0.0,
+            "M11_yaw_saturated_fraction": 0.0,
+            "M11_cmd_yaw_abs_mean": 6.914,
+            "backend": "chip",
+            "loop_hz": 6.419,
+            "frames_dropped": 203,
+            "chip_round_trip_ms_median": 0.72
+          },
+          "gates": [
+            {
+              "id": "M5_z_after_landing_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.02,
+              "op": "<=",
+              "threshold": 0.1,
+              "result": "PASS",
+              "basis": "existing scorecard rule: the drone must be on the floor after landing",
+              "would_pass": true
+            },
+            {
+              "id": "M6_max_horizontal_drift_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.932,
+              "op": "<",
+              "threshold": 0.5,
+              "result": "FAIL",
+              "basis": "a distractor may capture the track, but it must not fly across the room",
+              "would_pass": false
+            },
+            {
+              "id": "M8_false_follow_episodes",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 6,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_t_first_false_follow_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 1.4,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_false_follow_total_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 3.27,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_max_drift_during_episode_m",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.087,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M1_tracking_fraction",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.173,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M10_conf_max_absent",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.925,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            }
+          ],
+          "repeat": 2,
+          "attempt": 1
+        },
+        {
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/runs/F.pets__ships__r3a1",
+          "cell": {
+            "cell_id": "F.pets__ships",
+            "scene": "s03_pets_only",
+            "scene_class": "F",
+            "backend": "chip",
+            "camera": "himax_typical",
+            "speed": "chip",
+            "rate_hz": 6.5,
+            "latency_ms": 153,
+            "repeat": 3,
+            "attempt": 1,
+            "duration_s": 35,
+            "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_matte/s03_pets_only",
+            "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r3a1",
+            "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r3a1/truth.csv",
+            "sensor_seed": 1003,
+            "freeze_expected": false,
+            "needs_truth": true,
+            "suite": "core",
+            "condition": "matte",
+            "order": 1,
+            "floor_reflectance": 0.0,
+            "floor_reflectance_manifest": 0.0
+          },
+          "valid": true,
+          "validity": {
+            "sim_wall_ratio": 0.985,
+            "achieved_hz": 6.442,
+            "requested_hz": 6.5,
+            "min_step_gap_ms": 153.9,
+            "torn_fraction": 0.0,
+            "z_max": 0.84,
+            "truth_covers_window": true
+          },
+          "invalid_reasons": [],
+          "metrics": {
+            "M1_tracking_fraction": 0.12,
+            "M3_centered_fraction_while_tracking": 1.0,
+            "M4_stale_events": 0,
+            "M5_z_after_landing_m": 0.02,
+            "end_reason": "duration",
+            "control_steps": 158,
+            "M6_max_horizontal_drift_m": 0.826,
+            "person_height_m": null,
+            "dist_start_m": 2.63,
+            "dist_end_m": 2.1,
+            "person_in_view_fraction": 0.0,
+            "M8_false_follow_episodes": 4,
+            "flown_s": 24.4,
+            "M8_false_follow_per_min": 9.85,
+            "M8_t_first_false_follow_s": 0.93,
+            "M8_censored": false,
+            "M8_false_follow_total_s": 2.33,
+            "M8_max_drift_during_episode_m": 0.146,
+            "M8_conf_at_first_false_follow": 0.703,
+            "M8_tracked_episodes_total": 4,
+            "M9_stale_hover_rows": 0,
+            "M9_loss_episodes": 4,
+            "M9_reconfirm_latency_s": 0.309,
+            "M9_reconfirm_latency_all_s": [
+              0.309,
+              0.309,
+              0.309
+            ],
+            "M9_gt_visible_to_relatch_s": null,
+            "M9_gt_visible_to_relatch_all_s": [],
+            "M9_gt_halfvisible_to_relatch_s": null,
+            "M9_gt_halfvisible_to_relatch_all_s": [],
+            "M9_track_outage_s": 6.047,
+            "M9_track_outage_all_s": [
+              6.047,
+              1.082,
+              2.484
+            ],
+            "M9_late_command_after_loss_ms": null,
+            "M9_confirming_frames_used": 3,
+            "M9_steered_before_reconfirm": false,
+            "M9_unrecovered_loss": true,
+            "M9_motion_while_unconfirmed_m": 0.0,
+            "M9_landed_unexpectedly": false,
+            "M10_uncertain_fraction_absent": 0.5506,
+            "M10_conf_max_absent": 0.816,
+            "M10_uncertain_fraction_all": 0.5506,
+            "M11_yaw_reversals_per_min": 0.0,
+            "M11_vx_reversals_per_min": 0.0,
+            "M11_yaw_saturated_fraction": 0.0,
+            "M11_cmd_yaw_abs_mean": 7.018,
+            "backend": "chip",
+            "loop_hz": 6.442,
+            "frames_dropped": 207,
+            "chip_round_trip_ms_median": 0.71
+          },
+          "gates": [
+            {
+              "id": "M5_z_after_landing_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.02,
+              "op": "<=",
+              "threshold": 0.1,
+              "result": "PASS",
+              "basis": "existing scorecard rule: the drone must be on the floor after landing",
+              "would_pass": true
+            },
+            {
+              "id": "M6_max_horizontal_drift_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.826,
+              "op": "<",
+              "threshold": 0.5,
+              "result": "FAIL",
+              "basis": "a distractor may capture the track, but it must not fly across the room",
+              "would_pass": false
+            },
+            {
+              "id": "M8_false_follow_episodes",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 4,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_t_first_false_follow_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.93,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_false_follow_total_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 2.33,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_max_drift_during_episode_m",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.146,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M1_tracking_fraction",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.12,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M10_conf_max_absent",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.816,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            }
+          ],
+          "repeat": 3,
+          "attempt": 1
+        },
+        {
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/scoreboards/matte_suite/runs/F.pets__ships__r4a1",
+          "cell": {
+            "cell_id": "F.pets__ships",
+            "scene": "s03_pets_only",
+            "scene_class": "F",
+            "backend": "chip",
+            "camera": "himax_typical",
+            "speed": "chip",
+            "rate_hz": 6.5,
+            "latency_ms": 153,
+            "repeat": 4,
+            "attempt": 1,
+            "duration_s": 35,
+            "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_matte/s03_pets_only",
+            "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r4a1",
+            "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-rangesweep-petsab/runs/matte__F.pets__ships__r4a1/truth.csv",
+            "sensor_seed": 1004,
+            "freeze_expected": false,
+            "needs_truth": true,
+            "suite": "core",
+            "condition": "matte",
+            "order": 6,
+            "floor_reflectance": 0.0,
+            "floor_reflectance_manifest": 0.0
+          },
+          "valid": true,
+          "validity": {
+            "sim_wall_ratio": 0.973,
+            "achieved_hz": 6.429,
+            "requested_hz": 6.5,
+            "min_step_gap_ms": 153.9,
+            "torn_fraction": 0.0,
+            "z_max": 0.84,
+            "truth_covers_window": true
+          },
+          "invalid_reasons": [],
+          "metrics": {
+            "M1_tracking_fraction": 0.08,
+            "M3_centered_fraction_while_tracking": 1.0,
+            "M4_stale_events": 0,
+            "M5_z_after_landing_m": 0.02,
+            "end_reason": "duration",
+            "control_steps": 150,
+            "M6_max_horizontal_drift_m": 0.524,
+            "person_height_m": null,
+            "dist_start_m": 2.62,
+            "dist_end_m": 2.49,
+            "person_in_view_fraction": 0.0,
+            "M8_false_follow_episodes": 2,
+            "flown_s": 23.2,
+            "M8_false_follow_per_min": 5.18,
+            "M8_t_first_false_follow_s": 1.09,
+            "M8_censored": false,
+            "M8_false_follow_total_s": 1.55,
+            "M8_max_drift_during_episode_m": 0.146,
+            "M8_conf_at_first_false_follow": 0.754,
+            "M8_tracked_episodes_total": 2,
+            "M9_stale_hover_rows": 0,
+            "M9_loss_episodes": 2,
+            "M9_reconfirm_latency_s": 0.309,
+            "M9_reconfirm_latency_all_s": [
+              0.309
+            ],
+            "M9_gt_visible_to_relatch_s": null,
+            "M9_gt_visible_to_relatch_all_s": [],
+            "M9_gt_halfvisible_to_relatch_s": null,
+            "M9_gt_halfvisible_to_relatch_all_s": [],
+            "M9_track_outage_s": 5.758,
+            "M9_track_outage_all_s": [
+              5.758
+            ],
+            "M9_late_command_after_loss_ms": null,
+            "M9_confirming_frames_used": 3,
+            "M9_steered_before_reconfirm": false,
+            "M9_unrecovered_loss": true,
+            "M9_motion_while_unconfirmed_m": 0.0,
+            "M9_landed_unexpectedly": false,
+            "M10_uncertain_fraction_absent": 0.5733,
+            "M10_conf_max_absent": 0.821,
+            "M10_uncertain_fraction_all": 0.5733,
+            "M11_yaw_reversals_per_min": 0.0,
+            "M11_vx_reversals_per_min": 0.0,
+            "M11_yaw_saturated_fraction": 0.0,
+            "M11_cmd_yaw_abs_mean": 7.778,
+            "backend": "chip",
+            "loop_hz": 6.429,
+            "frames_dropped": 195,
+            "chip_round_trip_ms_median": 0.7
+          },
+          "gates": [
+            {
+              "id": "M5_z_after_landing_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.02,
+              "op": "<=",
+              "threshold": 0.1,
+              "result": "PASS",
+              "basis": "existing scorecard rule: the drone must be on the floor after landing",
+              "would_pass": true
+            },
+            {
+              "id": "M6_max_horizontal_drift_m",
+              "kind": "hard",
+              "scored_on": "run",
+              "value": 0.524,
+              "op": "<",
+              "threshold": 0.5,
+              "result": "FAIL",
+              "basis": "a distractor may capture the track, but it must not fly across the room",
+              "would_pass": false
+            },
+            {
+              "id": "M8_false_follow_episodes",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 2,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_t_first_false_follow_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 1.09,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_false_follow_total_s",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 1.55,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M8_max_drift_during_episode_m",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.146,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M1_tracking_fraction",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.08,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            },
+            {
+              "id": "M10_conf_max_absent",
+              "kind": "characterised",
+              "scored_on": "run",
+              "value": 0.821,
+              "op": ">=",
+              "threshold": 0.0,
+              "result": "REPORT_ONLY",
+              "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+              "would_pass": true
+            }
+          ],
+          "repeat": 4,
+          "attempt": 1
+        }
+      ],
+      "n_valid": 4,
+      "n_flights": 4,
+      "gates": [
+        {
+          "id": "M5_z_after_landing_m",
+          "kind": "hard",
+          "scored_on": "worst repeat",
+          "value": 0.02,
+          "op": "<=",
+          "threshold": 0.1,
+          "result": "PASS",
+          "basis": "existing scorecard rule: the drone must be on the floor after landing",
+          "would_pass": true
+        },
+        {
+          "id": "M6_max_horizontal_drift_m",
+          "kind": "hard",
+          "scored_on": "worst repeat",
+          "value": 0.932,
+          "op": "<",
+          "threshold": 0.5,
+          "result": "FAIL",
+          "basis": "a distractor may capture the track, but it must not fly across the room",
+          "would_pass": false
+        },
+        {
+          "id": "M8_false_follow_episodes",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 5.0,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            2,
+            8
+          ]
+        },
+        {
+          "id": "M8_t_first_false_follow_s",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 1.01,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            0.77,
+            1.4
+          ]
+        },
+        {
+          "id": "M8_false_follow_total_s",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 2.25,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            1.55,
+            3.27
+          ]
+        },
+        {
+          "id": "M8_max_drift_during_episode_m",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 0.1165,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            0.023,
+            0.146
+          ]
+        },
+        {
+          "id": "M1_tracking_fraction",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 0.13,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            0.08,
+            0.173
+          ]
+        },
+        {
+          "id": "M10_conf_max_absent",
+          "kind": "characterised",
+          "scored_on": "median",
+          "value": 0.8565,
+          "op": ">=",
+          "threshold": 0.0,
+          "result": "REPORT_ONLY",
+          "basis": "30.2% (champion) vs 11.0% (confuser) per-frame false-alarm rate is the open question these cells exist to measure; a pass mark here would be invented",
+          "would_pass": true,
+          "spread": [
+            0.816,
+            0.925
+          ]
+        }
+      ],
+      "failed_gates": [
+        "M6_max_horizontal_drift_m"
+      ],
+      "verdict": "FAIL",
+      "aggregate": {
+        "M1_tracking_fraction": {
+          "median": 0.13,
+          "min": 0.08,
+          "max": 0.173,
+          "n": 4,
+          "values": [
+            0.14,
+            0.173,
+            0.12,
+            0.08
+          ]
+        },
+        "M8_false_follow_episodes": {
+          "median": 5.0,
+          "min": 2,
+          "max": 8,
+          "n": 4,
+          "values": [
+            8,
+            6,
+            4,
+            2
+          ]
+        },
+        "M9_reconfirm_latency_s": {
+          "median": 0.3115,
+          "min": 0.309,
+          "max": 0.315,
+          "n": 4,
+          "values": [
+            0.314,
+            0.315,
+            0.309,
+            0.309
+          ]
+        },
+        "M9_track_outage_s": {
+          "median": 3.9715,
+          "min": 2.172,
+          "max": 6.047,
+          "n": 4,
+          "values": [
+            2.172,
+            2.185,
+            6.047,
+            5.758
+          ]
+        },
+        "M10_conf_max_absent": {
+          "median": 0.8565,
+          "min": 0.816,
+          "max": 0.925,
+          "n": 4,
+          "values": [
+            0.892,
+            0.925,
+            0.816,
+            0.821
+          ]
+        },
+        "M11_yaw_reversals_per_min": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "n": 4,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "M6_max_horizontal_drift_m": {
+          "median": 0.812,
+          "min": 0.524,
+          "max": 0.932,
+          "n": 4,
+          "values": [
+            0.798,
+            0.932,
+            0.826,
+            0.524
+          ]
+        }
+      },
+      "n_attempts": 4,
+      "n_attempts_valid": 4,
+      "n_attempts_invalid": 0,
+      "attempts": [
+        {
+          "run": "F.pets__ships__r1a1",
+          "repeat": 1,
+          "attempt": 1,
+          "valid": true,
+          "scored": true,
+          "invalid_reasons": []
+        },
+        {
+          "run": "F.pets__ships__r2a1",
+          "repeat": 2,
+          "attempt": 1,
+          "valid": true,
+          "scored": true,
+          "invalid_reasons": []
+        },
+        {
+          "run": "F.pets__ships__r3a1",
+          "repeat": 3,
+          "attempt": 1,
+          "valid": true,
+          "scored": true,
+          "invalid_reasons": []
+        },
+        {
+          "run": "F.pets__ships__r4a1",
+          "repeat": 4,
+          "attempt": 1,
+          "valid": true,
+          "scored": true,
+          "invalid_reasons": []
+        }
+      ]
+    }
+  ],
+  "context": {
+    "derived": {
+      "person_height_m": 1.7,
+      "d_hold_m": 1.942,
+      "hold_band_m": [
+        1.619,
+        2.428
+      ],
+      "crop_fov_deg": 70.0
+    },
+    "spec": "scratchpad/simv2/spec_metrics.md"
+  }
+}

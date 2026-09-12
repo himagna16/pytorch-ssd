@@ -1,0 +1,45 @@
+==============================================================================
+THE FLOWN D.occlusion__proven FRAMES, CUT BY RANGE AND BY AZIMUTH
+==============================================================================
+2838 flown frames from 4 flights. No rendering, no inference here -
+these are the confidences the follower itself logged.
+
+range   1.55 .. 3.84 m      azimuth 0.0 .. 47.2 deg
+correlation(range, azimuth) over the flown frames = +0.076   <- this is the confound
+
+MARGINAL BY RANGE (what the matte baseline reported):
+       range      n  mean conf   >=0.70  mean az
+  1.5- 2.0    657      0.919    92.1%     17.1
+  2.0- 2.5   1663      0.790    72.6%     30.3
+  2.5- 3.0    230      0.911    94.3%     18.8
+  3.0- 3.5    127      0.894    99.2%     23.2
+  3.5- 9.9    161      0.825    89.4%     24.2
+
+MARGINAL BY AZIMUTH:
+     azimuth      n  mean conf   >=0.70  mean range
+    0-  20    901      0.952    98.3%        2.16
+   20-  30    773      0.868    91.5%        2.66
+   30-  40    735      0.811    79.3%        2.27
+   40-  50    429      0.577    28.7%        2.27
+
+JOINT - mean conf / % >= 0.70 / n  (blank = the flight never visited that cell)
+  range \ az              0-20d             20-30d             30-40d             40-50d             50-90d
+  1.5- 2.0      0.97/ 99%/396      0.92/ 96%/151       0.75/ 62%/90       0.76/ 65%/20                   
+  2.0- 2.5      0.94/ 97%/350      0.86/ 87%/308      0.82/ 82%/602      0.56/ 27%/403                   
+  2.5- 3.0      0.95/100%/143       0.89/ 92%/38       0.82/ 84%/43        0.75/ 50%/6                   
+  3.0- 3.5       0.95/100%/11      0.89/ 99%/116                                                         
+  3.5- 9.9                         0.82/ 89%/160                                                         
+
+Read the rows: at a FIXED azimuth band, moving down a column (closer range)
+does not cost confidence. Read the columns: at a FIXED range band, moving
+right (more azimuth) does.
+
+Lost-track frames (n=371): mean azimuth 41.5 deg, mean range 2.28 m, 79.0% of them at azimuth >= 40 deg
+Tracked frames    (n=2467): mean azimuth 23.2 deg, mean range 2.35 m, 5.5% at azimuth >= 40 deg
+
+Per flight, the azimuth the drone worked itself round to:
+                           run  px max  az max  az at px_max
+     D.occlusion__proven__r1a1   2.013    44.6          32.4
+     D.occlusion__proven__r2a1   2.130    47.2          36.0
+     D.occlusion__proven__r3a1   1.912    43.7          34.5
+     D.occlusion__proven__r4a1   1.919    43.8          27.2

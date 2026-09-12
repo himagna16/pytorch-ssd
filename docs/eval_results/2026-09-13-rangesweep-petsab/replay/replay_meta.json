@@ -1,0 +1,16 @@
+{
+  "runs": [
+    "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-matte-baseline/runs/D.occlusion__proven__r1a1",
+    "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-matte-baseline/runs/D.occlusion__proven__r2a1",
+    "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-matte-baseline/runs/D.occlusion__proven__r3a1",
+    "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-matte-baseline/runs/D.occlusion__proven__r4a1"
+  ],
+  "scene_with": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s07_occlusion_reappear",
+  "scene_without": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rs/scenes_sweep/w03_s07_no_partition",
+  "stride": 1,
+  "backend": "float",
+  "camera": "clean",
+  "n_rows": 5676,
+  "pitch_sign": 1.0,
+  "no_attitude": true
+}

@@ -1,0 +1,60 @@
+==============================================================================
+EXPERIMENT 1, CONTROL REPLAY - is it the partition in frame, or the range?
+==============================================================================
+2838 replayed frames from 4 D.occlusion__proven matte flights, each rendered twice (partition present / absent)
+Backend float, camera clean - exactly what __proven flies. Nothing flew here.
+
+Replay fidelity (with_partition vs the flown log, frame by frame):
+  decoded x bin identical on 68.1% of frames; mean |dx| 0.0709 (one bin is 0.222 wide)
+  |d conf|  mean 0.1141  median 0.0721  p90 0.2920
+  the >=0.70 decision agrees with the flight on 79.8% of frames
+  (residual is state-estimate error and the camera's 0.03 m body offset; the
+   with/without comparison below is PAIRED on the same pose, so none of it leaks in)
+
+------------------------------------------------------------------------------
+PAIRED: same pose, partition present vs absent
+------------------------------------------------------------------------------
+     range bin     n  with part.   no part.    delta  >=0.70 with  >=0.70 without
+     1.5-2.0 m   657       0.921      0.937   +0.016        94.7%           95.7%
+     2.0-2.5 m  1663       0.800      0.855   +0.055        76.0%           87.6%
+     2.5-3.0 m   230       0.909      0.926   +0.017        90.4%           92.6%
+     3.0-3.5 m   127       0.909      0.918   +0.008        96.9%           96.9%
+       >=3.5 m   161       0.705      0.770   +0.064        55.9%           70.2%
+           ALL  2838       0.837      0.878   +0.041        81.3%           89.3%
+
+------------------------------------------------------------------------------
+THE FRAMES THE FLIGHT ACTUALLY LOST THE TRACK ON
+------------------------------------------------------------------------------
+lost-track frames: n=371  sight line clear on 100.0%
+   flown conf          mean 0.539   >=0.70 on 21.3%
+   replay WITH  part.  mean 0.627   >=0.70 on 40.7%
+   replay WITHOUT part. mean 0.742   >=0.70 on 62.8%
+   paired delta (without - with) mean +0.115
+
+tracked frames: n=2467  sight line clear on 100.0%
+   flown conf          mean 0.881   >=0.70 on 90.0%
+   replay WITH  part.  mean 0.868   >=0.70 on 87.4%
+   replay WITHOUT part. mean 0.898   >=0.70 on 93.3%
+   paired delta (without - with) mean +0.030
+
+------------------------------------------------------------------------------
+PER FLIGHT
+------------------------------------------------------------------------------
+                           run     n    with  without       d  lost n  lost:with  lost:without
+     D.occlusion__proven__r1a1   736   0.840    0.889  +0.048      88      0.668         0.798
+     D.occlusion__proven__r2a1   630   0.845    0.866  +0.021      69      0.584         0.598
+     D.occlusion__proven__r3a1   736   0.828    0.872  +0.045     110      0.604         0.742
+     D.occlusion__proven__r4a1   736   0.835    0.882  +0.047     104      0.644         0.790
+
+------------------------------------------------------------------------------
+WHY: how close the drone gets to the partition
+------------------------------------------------------------------------------
+partition face is at x = 2.15 m (box centre 2.2, half-extent 0.05).
+                           run  px max  gap to face  min range
+     D.occlusion__proven__r1a1   2.013        0.137      1.601
+     D.occlusion__proven__r2a1   2.130        0.020      1.547
+     D.occlusion__proven__r3a1   1.912        0.238      1.760
+     D.occlusion__proven__r4a1   1.919        0.231      1.711
+
+Frames where the drone is within 0.5 m of the partition face:
+  n=1070   with 0.775 (>=0.70 on 70.1%)   without 0.841 (>=0.70 on 83.1%)   delta +0.066

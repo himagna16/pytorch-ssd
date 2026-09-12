@@ -1,0 +1,32 @@
+==============================================================================
+RE-CHECK OF THE MATTE BASELINE'S conf_vs_range TABLE
+==============================================================================
+4 D.occlusion__proven matte flights, committed logs only.
+
+1. The two clocks
+   sim_t - follower_t over 2838 frames: min -19.03 s  median -6.84 s  max -0.08 s
+   The offset is not constant, so it cannot be corrected by a shift.
+   Target y placed by the t<->sim_t join vs by the wall join: mean error 1.251 m, max 3.122 m
+   (the target sways +-1.6 m with a 24 s period, so seconds of skew are metres)
+
+2. The baseline's table, reproduced with its own join
+  t <-> sim_t join (as published)   (n=2392)
+    printed as  1.5- 2.0 | truly [1.25,1.75)  n= 189  conf 0.686  >=0.70  54.0%
+    printed as  2.0- 2.5 | truly [1.75,2.25)  n= 811  conf 0.806  >=0.70  73.6%
+    printed as  2.5- 3.0 | truly [2.25,2.75)  n= 824  conf 0.911  >=0.70  92.5%
+    printed as  3.0- 3.5 | truly [2.75,3.25)  n= 368  conf 0.882  >=0.70  92.1%
+    printed as  3.5- 4.0 | truly [3.25,3.75)  n= 115  conf 0.849  >=0.70  89.6%
+    printed as  4.0- 4.5 | truly [3.75,4.25)  n=  85  conf 0.819  >=0.70  92.9%
+
+3. The same flights, joined on the wall clock both logs carry
+  wall-clock join   (n=2838)
+    printed as  1.5- 2.0 | truly [1.25,1.75)  n= 140  conf 0.919  >=0.70  92.9%
+    printed as  2.0- 2.5 | truly [1.75,2.25)  n=1060  conf 0.880  >=0.70  86.3%
+    printed as  2.5- 3.0 | truly [2.25,2.75)  n=1284  conf 0.780  >=0.70  71.6%
+    printed as  3.0- 3.5 | truly [2.75,3.25)  n= 128  conf 0.932  >=0.70  99.2%
+    printed as  3.5- 4.0 | truly [3.25,3.75)  n= 156  conf 0.857  >=0.70  91.7%
+    printed as  4.0- 4.5 | truly [3.75,4.25)  n=  70  conf 0.805  >=0.70  92.9%
+
+The monotonic close-range decline in the published table does not survive the
+corrected join. What remains is reported in flight_decomposition.txt, where the
+frames are cut by range AND by viewing azimuth.
