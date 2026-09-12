@@ -1,0 +1,70 @@
+{
+  "scene_id": "s12_dim_room",
+  "title": "Dim room",
+  "purpose": "Geometry identical to s01, lighting dim but still informative. Tests dim-ROOM perception: the render keeps real tonal structure (~43 DN mean, ~89 distinct levels) and the low-light physics comes from the sensor model, not from throwing the frame away.",
+  "lighting": "dim",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.0,
+        0.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 1.2,
+        "period_s": 20.0
+      }
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.9
+      },
+      {
+        "metric": "mean_true_heading_error_deg",
+        "op": "<=",
+        "value": 5.0
+      },
+      {
+        "metric": "end_reason",
+        "op": "==",
+        "value": "duration"
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "unknown",
+    "rationale": "Genuinely open. The frame now carries structure the model can use, but subject-vs-background contrast is only about +0.6 DN under flat dim light, so this leans on shape and texture rather than brightness. Pre-registered as unknown rather than guessed; it has not been flown."
+  },
+  "limitations": [
+    "REDEFINED. This scene used to be a near-black DARK FRAME test (render mean 1.15 DN, max 2, three distinct grey levels in the whole frame, subject contrast -0.5 DN). That carried no recoverable information: because the renderer quantises to 8 bits before camera_model.py runs, himax_typical could only amplify quantisation (mean 25 DN at the 340-line/8x/3.00x ceiling) and himax_low_light returned mean 5 DN. It could not test dim-room perception.",
+    "Its old caveat - 'the simulator has no auto-exposure while the real Himax does' - has been overtaken by events: camera_model.py now models the AE loop. Dim-room physics belongs to the sensor preset (himax_low_light drives ~24x total gain on this scene), not to a dark render.",
+    "For a sensor-failure / black-frame test use the camera-freeze path in run_acceptance.sh instead; this scene no longer covers it.",
+    "Not in the CORE acceptance matrix and not yet flown."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "scene_id": "s10_near_threshold_person",
+  "title": "Approach until you lose them",
+  "purpose": "The flight-level expression of the 18-19% boundary-band statistic.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    0.3,
+    0.6
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 42102,
+        "ann_id": 1728930
+      },
+      "height_m": 1.75,
+      "pos": [
+        1.5,
+        0.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.3,
+        "period_s": 18.0
+      },
+      "note": "Probe: 0.482 at 1.5 m, 0.844 at 2.5 m, 0.994 at 3.5 m - a genuine person, too large in frame, below the enter threshold."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "hover",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "confirm_transitions",
+        "op": "<=",
+        "value": 6
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "contested",
+    "rationale": "Must stop cleanly when confidence falls through 0.45, not oscillate."
+  }
+}

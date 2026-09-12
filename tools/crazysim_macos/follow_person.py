@@ -40,6 +40,9 @@ from PIL import Image, ImageDraw
 
 HERE = Path(__file__).resolve().parent
 DRONE_ROOT = HERE.parents[2]
+# Swappable perception (float = today's model, the default). perception_backends
+# imports Perception from this module lazily, so there is no import cycle.
+from perception_backends import add_backend_args, make_perception  # noqa: E402
 
 
 class FrameReceiver(threading.Thread):
@@ -257,6 +260,7 @@ def main():
     ap.add_argument("--unstable-root", type=Path, default=DRONE_ROOT / "pytorch_ssd_unstable")
     ap.add_argument("--ckpt", type=Path,
                     default=DRONE_ROOT / "pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth")
+    add_backend_args(ap)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
 
@@ -267,7 +271,7 @@ def main():
         saver = FrameSaver(a.save_frames)
         saver.start()
         (a.save_frames / "run_args.json").write_text(json.dumps({k: str(v) for k, v in vars(a).items()}, indent=2))
-    perc = Perception(a.unstable_root, a.ckpt)
+    perc = make_perception(a)
     t_wait = time.monotonic()
     while rx.latest()[0] is None:
         if time.monotonic() - t_wait > 15:
@@ -374,6 +378,13 @@ def main():
                        "pz": pose.get("stateEstimate.z"), "yaw": pose.get("stabilizer.yaw"),
                        "roll": pose.get("stabilizer.roll"), "pitch": pose.get("stabilizer.pitch"),
                        "fw_ts": pose.get("fw_ts"), "frame_count": count, "torn_frames": torn}
+                # chip backend extras, and the shadow model's decision on the same frame.
+                # Absent on the float path, so its log keeps exactly today's columns.
+                for k in ("vis_gate", "infer_ms", "round_trip_ms", "shadow_conf", "shadow_x_value",
+                          "shadow_x_soft", "shadow_x_bin_index", "shadow_size_value",
+                          "shadow_size_bucket_index"):
+                    if k in p:
+                        row[k] = p[k]
                 rows.append(row)
                 if a.latency_ms > 0:
                     # stamp is the frame's real arrival time here (frozen frames returned above)
@@ -433,6 +444,10 @@ def main():
         end_reason = f"error: {type(e).__name__}: {e}"
         raise
     finally:
+        try:
+            perc.close()          # stops the chip backend's inference server
+        except Exception:
+            pass
         if saver:
             saver.close()
         keys = sorted({k for r in rows for k in r})
@@ -460,6 +475,8 @@ def main():
             "z_after_landing": next((round(r["pz"], 2) for r in rows
                                      if r.get("event") == "after-land" and r.get("pz") is not None), None),
             "rate_hz_requested": a.rate_hz, "latency_ms_requested": a.latency_ms,
+            "backend": getattr(perc, "name", "float"),
+            "backend_info": getattr(perc, "info", None),
             "frames_processed": stats["processed"], "frames_dropped": stats["dropped"],
             "torn_frames": rx.info()[1],
         }

@@ -1,0 +1,94 @@
+{
+  "scene_id": "s05_person_plus_pet",
+  "title": "A person and a pet",
+  "purpose": "With one bearing output and no identity, does the pet capture the track?",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.2,
+        0.9
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.5,
+        "period_s": 24.0
+      }
+    },
+    {
+      "name": "subj_pet_distractor",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 297830,
+        "ann_id": 11206
+      },
+      "height_m": 0.65,
+      "pos": [
+        2.4,
+        -1.1
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.65,
+        "period_s": 30.0
+      },
+      "note": "Crosses toward centre while the person sways."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.9
+      },
+      {
+        "metric": "bearing_in_basin_fraction.subj_person_target",
+        "op": ">=",
+        "value": 0.95
+      },
+      {
+        "metric": "bearing_in_basin_fraction.subj_pet_distractor",
+        "op": "<=",
+        "value": 0.0
+      },
+      {
+        "metric": "phantom_bearing_fraction",
+        "op": "<=",
+        "value": 0.02
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "contested",
+    "rationale": "Both subjects clear 0.9. A single-bearing head given two strong responses can report either, or a weighted point between them; the phantom-bearing count is the number this scene exists for."
+  }
+}

@@ -1,0 +1,107 @@
+[23:11:17] acceptance2 suite=core cells=14 repeats=2 flights=28 out=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/simv2/core_run
+[23:11:17] flight 1/28  A.static__ships  repeat 1 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[23:12:19]   -> VALID
+      VALID   {"sim_wall_ratio": 0.993, "achieved_hz": 6.419, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:12:19] flight 2/28  A.static__ships  repeat 2 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[23:13:21]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 6.432, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:13:21] flight 3/28  B.moving__ships  repeat 1 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[23:14:28]   -> VALID
+      VALID   {"sim_wall_ratio": 0.98, "achieved_hz": 6.427, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:14:28] flight 4/28  B.moving__ships  repeat 2 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[23:15:34]   -> VALID
+      VALID   {"sim_wall_ratio": 0.982, "achieved_hz": 6.436, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:15:35] flight 5/28  C.empty__ships  repeat 1 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[23:16:26]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 6.425, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:16:26] flight 6/28  C.empty__ships  repeat 2 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[23:17:18]   -> VALID
+      VALID   {"sim_wall_ratio": 0.98, "achieved_hz": 6.431, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:17:18] flight 7/28  D.occlusion__ships  repeat 1 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[23:18:35]   -> VALID
+      VALID   {"sim_wall_ratio": 0.984, "achieved_hz": 6.44, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:18:35] flight 8/28  D.occlusion__ships  repeat 2 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[23:19:52]   -> VALID
+      VALID   {"sim_wall_ratio": 0.967, "achieved_hz": 6.435, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:19:52] flight 9/28  E.furniture__ships  repeat 1 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[23:20:44]   -> VALID
+      VALID   {"sim_wall_ratio": 0.978, "achieved_hz": 6.43, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:20:44] flight 10/28  E.furniture__ships  repeat 2 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[23:21:36]   -> VALID
+      VALID   {"sim_wall_ratio": 0.977, "achieved_hz": 6.427, "requested_hz": 6.5, "min_step_gap_ms": 153.8, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:21:36] flight 11/28  F.pets__ships  repeat 1 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[23:22:27]   -> VALID
+      VALID   {"sim_wall_ratio": 0.974, "achieved_hz": 6.435, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:22:27] flight 12/28  F.pets__ships  repeat 2 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[23:23:19]   -> VALID
+      VALID   {"sim_wall_ratio": 0.968, "achieved_hz": 6.439, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:23:19] flight 13/28  A.static__proven  repeat 1 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[23:24:21]   -> VALID
+      VALID   {"sim_wall_ratio": 0.993, "achieved_hz": 15.01, "requested_hz": 0.0, "min_step_gap_ms": 26.2, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:24:21] flight 14/28  A.static__proven  repeat 2 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[23:25:23]   -> VALID
+      VALID   {"sim_wall_ratio": 0.987, "achieved_hz": 15.014, "requested_hz": 0.0, "min_step_gap_ms": 41.8, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:25:23] flight 15/28  B.moving__proven  repeat 1 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[23:26:31]   -> VALID
+      VALID   {"sim_wall_ratio": 0.993, "achieved_hz": 14.997, "requested_hz": 0.0, "min_step_gap_ms": 44.2, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:26:31] flight 16/28  B.moving__proven  repeat 2 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[23:27:38]   -> VALID
+      VALID   {"sim_wall_ratio": 0.977, "achieved_hz": 14.99, "requested_hz": 0.0, "min_step_gap_ms": 43.5, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:27:38] flight 17/28  C.empty__proven  repeat 1 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[23:28:30]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 14.991, "requested_hz": 0.0, "min_step_gap_ms": 43.0, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:28:30] flight 18/28  C.empty__proven  repeat 2 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[23:29:22]   -> VALID
+      VALID   {"sim_wall_ratio": 0.981, "achieved_hz": 14.89, "requested_hz": 0.0, "min_step_gap_ms": 45.0, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:29:22] flight 19/28  D.occlusion__proven  repeat 1 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[23:30:39]   -> VALID
+      VALID   {"sim_wall_ratio": 0.979, "achieved_hz": 15.001, "requested_hz": 0.0, "min_step_gap_ms": 42.6, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:30:39] flight 20/28  D.occlusion__proven  repeat 2 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[23:31:57]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 15.01, "requested_hz": 0.0, "min_step_gap_ms": 44.0, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:31:57] flight 21/28  E.furniture__proven  repeat 1 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[23:32:49]   -> VALID
+      VALID   {"sim_wall_ratio": 0.975, "achieved_hz": 15.017, "requested_hz": 0.0, "min_step_gap_ms": 44.2, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:32:49] flight 22/28  E.furniture__proven  repeat 2 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[23:33:41]   -> VALID
+      VALID   {"sim_wall_ratio": 0.99, "achieved_hz": 14.864, "requested_hz": 0.0, "min_step_gap_ms": 25.7, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:33:41] flight 23/28  B.moving__delta_speed  repeat 1 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[23:34:48]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 6.429, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:34:48] flight 24/28  B.moving__delta_speed  repeat 2 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[23:35:56]   -> VALID
+      VALID   {"sim_wall_ratio": 0.977, "achieved_hz": 6.436, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:35:56] flight 25/28  B.moving__delta_camera  repeat 1 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[23:37:03]   -> VALID
+      VALID   {"sim_wall_ratio": 0.992, "achieved_hz": 14.797, "requested_hz": 0.0, "min_step_gap_ms": 44.3, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:37:03] flight 26/28  B.moving__delta_camera  repeat 2 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[23:38:10]   -> VALID
+      VALID   {"sim_wall_ratio": 0.988, "achieved_hz": 14.702, "requested_hz": 0.0, "min_step_gap_ms": 45.6, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[23:38:10] flight 27/28  B.moving__delta_backend  repeat 1 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[23:40:38]   -> flight did not produce a run (exit 142)
+[23:40:38] flight 27/28  B.moving__delta_backend  repeat 1 attempt 2  (s01_control_moving, chip/clean/full, 50s)
+[23:41:45]   -> VALID
+      VALID   {"sim_wall_ratio": 0.99, "achieved_hz": 14.56, "requested_hz": 0.0, "min_step_gap_ms": 45.4, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:41:45] flight 28/28  B.moving__delta_backend  repeat 2 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[23:42:52]   -> VALID
+      VALID   {"sim_wall_ratio": 0.992, "achieved_hz": 14.587, "requested_hz": 0.0, "min_step_gap_ms": 44.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[23:42:52] all flights done in 31 min; scoring
+/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/simv2/core_run/scoreboard.json
+/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/simv2/core_run/scoreboard.md
+suite verdict: FAIL  {'pass': 6, 'fail': 8, 'invalid': 0, 'characterised': 0}
+  FAIL           A.static__ships   failed: M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           B.moving__ships   failed: M7_dist_err_settled_mean_m,M7_final_in_band
+  PASS           C.empty__ships
+  PASS           D.occlusion__ships
+  PASS           E.furniture__ships
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m
+  FAIL           A.static__proven   failed: M7_dist_err_settled_mean_m
+  FAIL           B.moving__proven   failed: M7_final_in_band
+  PASS           C.empty__proven
+  PASS           D.occlusion__proven
+  PASS           E.furniture__proven
+  FAIL           B.moving__delta_backend   failed: M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           B.moving__delta_camera   failed: M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           B.moving__delta_speed   failed: M7_dist_err_settled_mean_m,M7_final_in_band
+[23:42:52] artifacts: /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/simv2/core_run
+[merge] see progress.md for the flights merged after the first scoring pass

@@ -1,0 +1,60 @@
+{
+  "scene_id": "s09_far_person",
+  "title": "Far person",
+  "purpose": "Small-in-frame recall collapse and boundary chatter. Re-fly this whenever preprocess.c changes: the Sep 11 resize study showed nearest-neighbour downscaling costs recall specifically on small people.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.5,
+    3.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        6.5,
+        0.0
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Measured in THIS scene, camera inside the room: 0.905 at 6.5 m. The far wall is at x = 7, so 6.5 m is the practical maximum range available."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "confirm_transitions",
+        "op": "<=",
+        "value": 4
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "probably passes",
+    "rationale": "CORRECTION to spec_scenes.md section 3. The spec set this scene at 6.5 m because P1 supposedly collapsed 0.998 -> 0.588 between 4.5 and 6.0 m. That falloff is an ARTIFACT: build_person_scene.py --preview places the camera at person_x - dist, and with the default person_x = 2.5 the 6.0/8.0/10.0 m probes sat at x = -3.5/-5.5/-7.5, i.e. OUTSIDE the room, behind the back wall at x = -3. probe/person_far/preview_d6.0.png is a blank white frame, so 0.588 is the model's reading of a featureless wall, not of a distant person. Rendered properly from inside this room, a 1.70 m person at 6.5 m reads 0.905 and should be followed. This room cannot place a person in the boundary band by range alone; a genuine small-in-frame test needs a longer room or a shorter subject."
+  },
+  "limitations": [
+    "Does NOT exercise the [0.45, 0.70) boundary band, contrary to the spec's intent: 6.5 m is the longest sight line this room allows and a person is still detected at 0.905 there. It remains the right flight-level regression detector for preprocess.c changes (smallest in-frame person available), but it is not the near-threshold scene. s10 is."
+  ]
+}

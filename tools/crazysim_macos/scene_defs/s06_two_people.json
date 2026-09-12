@@ -1,0 +1,94 @@
+{
+  "scene_id": "s06_two_people",
+  "title": "Two people, no identity",
+  "purpose": "Which person does a single-bearing head pick, and does it stay picked?",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_a",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        1.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.4,
+        "period_s": 22.0
+      }
+    },
+    {
+      "name": "subj_person_b",
+      "role": "person_distractor",
+      "coco": {
+        "img_id": 42102,
+        "ann_id": 1728930
+      },
+      "height_m": 1.75,
+      "pos": [
+        3.5,
+        -1.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.4,
+        "period_s": 17.0
+      },
+      "note": "Different period so the two de-phase."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": null,
+    "target_policy": "first_confirmed",
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.9
+      },
+      {
+        "metric": "bearing_in_first_confirmed_basin_fraction",
+        "op": ">=",
+        "value": 0.9
+      },
+      {
+        "metric": "basin_switches",
+        "op": "<=",
+        "value": 2
+      },
+      {
+        "metric": "phantom_bearing_fraction",
+        "op": "<=",
+        "value": 0.02
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "contested",
+    "rationale": "The network emits one bearing and has no identity, so no target can be named a priori; the manifest names a policy instead."
+  }
+}

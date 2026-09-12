@@ -1,0 +1,56 @@
+{
+  "scene_id": "s08b_exit_and_return_mirror",
+  "title": "Person crosses close and fast, the other way",
+  "purpose": "Mirror of s08, to catch a sign error in the yaw command.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "preview_t_s": 20.0,
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        2.0,
+        2.5
+      ],
+      "motion": {
+        "type": "drift",
+        "axis": "y",
+        "v_mps": -1.2,
+        "t_start_s": 18.0,
+        "min_m": -2.5
+      }
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "probably passes",
+    "rationale": "Mirror of s08."
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "scene_id": "s08_exit_and_return",
+  "title": "Person crosses close and fast",
+  "purpose": "Target leaves the model's +/-35 deg FOV at close range: 2.0 m and 1.2 m/s is 34 deg/s at closest approach, against a 40 deg/s yaw cap.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "preview_t_s": 20.0,
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        2.0,
+        -2.5
+      ],
+      "motion": {
+        "type": "drift",
+        "axis": "y",
+        "v_mps": 1.2,
+        "t_start_s": 18.0,
+        "max_m": 2.5
+      },
+      "note": "Starts at y=-2.5 so the crossing happens after takeoff; in the model's FOV only while |y| <= 2.0*tan35 = 1.40 m."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "probably passes",
+    "rationale": "The scorer must compute in_frame_fraction from the truth log and report whether an exit actually occurred. Tracking it the whole way is a PASS and means the scene should be re-tuned faster, not declared broken."
+  }
+}

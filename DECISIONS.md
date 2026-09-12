@@ -3,6 +3,22 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-12** — Simulator results are reported from a realistic camera and
+  the real chip network, not the float model on clean renders. A hard safety
+  gate is scored on the numerically **worst** repeat, never the first failing
+  one: a printed safety number must not understate what was observed. A cell
+  with fewer than two valid flights is INVALID, not passing. Rejected: quoting
+  the first failing repeat because it cannot change a verdict — it changes what
+  a reader believes the drone did.
+
+- **2026-09-12** — A published evidence folder keeps every flight's record but
+  only one representative flight's control log per cell, so it stays a few MB.
+  It must therefore be **re-scorable and idempotent**: `scoreboard.py` scores a
+  trimmed flight from its stored record, leaves that file untouched, and names
+  it on stdout. Rejected: re-deriving every flight from raw logs (it silently
+  rewrote 23 good records as invalid and failed every cell), and publishing
+  numbers that the folder itself cannot reproduce.
+
 - **2026-09-11** — All three chip candidates (QAT champion, confuser,
   confuser QAT+mining) pass the semantic gates on a 576-image pack and on an
   unbiased 1,000-image check. The confuser is cleared for the chip. OPEN for

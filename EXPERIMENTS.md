@@ -1,5 +1,51 @@
 # Experiment Log
 
+## Sep 12, 2026 — A realistic simulator, and what it says about the drone we plan to fly (Sai)
+
+The simulator used to fly the float model against clean renders. It now models
+the camera we actually have and runs the network we actually ship: a Himax
+HM01B0 sensor model (auto-exposure to 60 DN, 16.59 ms frame time at 60 fps,
+read noise, motion blur), a chip-in-the-loop mode that runs the real DORY int8
+network through the chip's own 2x2 preprocessing, and 18 scenes built from JSON
+definitions with ground truth for every subject. Scored by ten measurements
+with pass/fail limits (`tools/crazysim_macos/scoreboard.py`).
+
+A 14-cell matrix, 37 flights, 36 valid: **7 cells pass, 7 fail.** Full evidence,
+including every flight's record, in `docs/sim_results/2026-09-11-simv2/`.
+
+| finding | detail |
+|---|---|
+| the drone chases a dog | confirmed 0.31 s in at confidence 0.87-0.89, latched 68-78% of the flight, drifted 2.301 m and 2.666 m against a 0.5 m limit; survives the chip network and the realistic camera |
+| it does not hold its distance | settles at about 3.0-3.3 m where it should hold 1.94 m, in every chip configuration; the size head over-reads by 1.6-1.8x |
+| realism costs, isolated one factor at a time | realistic camera +0.32 m of distance error, chip network +0.13 m, chip frame rate +0.10 m |
+| what survives realism | pointing accuracy and every safety rule |
+
+The pet result is the closed-loop evidence for the champion-vs-confuser choice
+(per-frame false alarms: champion 30.2%, confuser 11.0%). That cell is red by
+design and must not be quietly disabled.
+
+Known and unfixed, so nobody reads more into this than it supports: on the worst
+frames the sensor model costs 7.27 ms against a 5 ms budget (6 of 16 runs);
+subjects are still opaque rectangular cards with baked backgrounds (MuJoCo 3.13
+drops the alpha channel); nine camera parameters come from the datasheet and
+have **never been measured** against a real Himax; scene s09 does not test the
+far-person case it was written for. Nothing here has run on hardware.
+
+## Sep 12, 2026 — Three faults in my own scoring tool (Sai)
+
+Found while publishing the suite above, and worth recording because two of them
+corrupt evidence rather than just misreport it.
+
+| fault | effect | fix |
+|---|---|---|
+| hard gates labelled "worst repeat" kept the *first failing* repeat | the pet drift was published as 2.301 m when the worse repeat was 2.666 m; no verdict changed, but the printed safety number understated what was observed | the gate now compares repeats and keeps the numerically worst |
+| re-scoring the published evidence folder destroyed it | the folder keeps one representative flight's `follow_log.csv` per cell, by design, to stay about 3 MB; re-scoring rewrote the other 23 flights' records as "fewer than 2 control steps" and dropped every cell to INVALID | a flight with no log but a stored record is scored from that record, left untouched, and named on stdout |
+| the folder's `suite_meta.json` named a different sweep | it carried the original core sweep's label and 1895 s duration while holding the merged suite's flights; the board only read `core-rescore` because the label was passed by hand | corrected to the merged suite's own identity, so the folder is self-describing |
+
+The published folder now re-scores to a byte-identical result twice running, and
+re-scoring a full suite is unchanged (verified byte-identical against a board
+built by the unpatched scorer).
+
 ## Sep 11, 2026 — Champion network integrated into the drone firmware (local branch, simulator-verified) (Sai)
 
 The drone firmware (`crazyflie-ssd`) still carried an older Aug 27 network.

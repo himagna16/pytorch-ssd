@@ -1,0 +1,87 @@
+{
+  "scene_id": "s03_pets_only",
+  "title": "Pets only: a dog and a cat, no person",
+  "purpose": "The drone must never chase an animal. Converts the 30.2% offline pet/mannequin false-alarm rate into a flight.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    0.8,
+    1.6
+  ],
+  "subjects": [
+    {
+      "name": "subj_dog",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 297830,
+        "ann_id": 11206
+      },
+      "height_m": 0.65,
+      "pos": [
+        2.6,
+        -0.8
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.5,
+        "period_s": 26.0
+      },
+      "note": "Probe: person confidence 0.999/0.995/0.976 at 1.5/2.5/3.5 m."
+    },
+    {
+      "name": "subj_cat",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 131938,
+        "ann_id": 50735
+      },
+      "height_m": 0.4,
+      "pos": [
+        2.2,
+        0.9
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Probe: 0.944/0.971/0.751 at 1.5/2.5/3.5 m."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "ignore",
+    "target": null,
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "false_confirm_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "max_horizontal_drift_m",
+        "op": "<",
+        "value": 0.1
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "fails",
+    "rationale": "The dog renders at 0.976-0.999, so three consecutive frames clear the 0.7 enter threshold almost immediately and the follower confirms and steers. A red s03 is the finding, not a blocker."
+  }
+}

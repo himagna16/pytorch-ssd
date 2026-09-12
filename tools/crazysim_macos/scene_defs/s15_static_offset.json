@@ -1,0 +1,67 @@
+{
+  "scene_id": "s15_static_offset",
+  "title": "Control: one person standing still, off to the side",
+  "purpose": "Class A (person, static) control for the v2 acceptance matrix. Geometry matches the legacy scenes/static_offset exactly (person 1.7 m at x=3.5, y=-1.0), so the Sep 10 baseline applies: 1.1 deg mean true-heading error, closed from 3.5 m to 2.3 m. The 16 v2 scenes had no static-person scene; run_acceptance2.sh needs one for class A.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        -1.0
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Same COCO cutout, same height and same position as scenes/static_offset, which run_acceptance.sh builds with --person-x 3.5 --person-y -1.0."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.95
+      },
+      {
+        "metric": "mean_true_heading_error_deg",
+        "op": "<=",
+        "value": 4.0
+      },
+      {
+        "metric": "max_true_heading_error_deg",
+        "op": "<=",
+        "value": 12.0
+      },
+      {
+        "metric": "end_reason",
+        "op": "==",
+        "value": "duration"
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "passes",
+    "rationale": "Identical geometry to the published static baseline (1.1 deg mean, closed to 2.3 m, inside the 1.62-2.43 m hold band)."
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "scene_id": "s14_target_substitution",
+  "title": "The person leaves, the dummy stays",
+  "purpose": "Does a confirmed track transfer to a human-scale dummy once the person is gone?",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "preview_t_s": 23.0,
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.2,
+        0.0
+      ],
+      "motion": {
+        "type": "drift",
+        "axis": "y",
+        "v_mps": 0.9,
+        "t_start_s": 22.0,
+        "max_m": 5.0
+      },
+      "note": "Leaves the model's FOV (|y| <= 3.2*tan35 = 2.24 m) at about t = 24.5 s."
+    },
+    {
+      "name": "subj_dummy_tall",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 253433,
+        "ann_id": 1159335
+      },
+      "height_m": 1.5,
+      "pos": [
+        3.2,
+        -0.6
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Probe: 0.964 at 3.0 m."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "ignore",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "false_confirm_fraction_after_target_exit",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "fails by construction",
+    "rationale": "T1 renders 0.964, so after the person exits the dummy supplies three consecutive frames above 0.7 and the follower re-confirms on it. The acceptance bar for s14 is DOCUMENTATION: report the substitution latency and record that the current architecture, which has no target identity, cannot prevent it."
+  },
+  "limitations": [
+    "This scene cannot pass. It measures an architectural gap; it does not close it."
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "scene_id": "s06b_two_people_one_leaves",
+  "title": "Two people, one walks out",
+  "purpose": "Variant of s06: B leaves; the follower must end locked on A with no phantom excursion.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_a",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        1.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 0.4,
+        "period_s": 22.0
+      }
+    },
+    {
+      "name": "subj_person_b",
+      "role": "person_distractor",
+      "coco": {
+        "img_id": 42102,
+        "ann_id": 1728930
+      },
+      "height_m": 1.75,
+      "pos": [
+        3.5,
+        -1.0
+      ],
+      "motion": {
+        "type": "drift",
+        "axis": "y",
+        "v_mps": -0.6,
+        "t_start_s": 25.0,
+        "min_m": -5.0
+      },
+      "note": "Walks out to the right from t = 25 s."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_a",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "bearing_in_basin_fraction.subj_person_a",
+        "op": ">=",
+        "value": 0.9
+      },
+      {
+        "metric": "phantom_bearing_fraction",
+        "op": "<=",
+        "value": 0.02
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "contested",
+    "rationale": "Departure of B is the interesting window."
+  }
+}

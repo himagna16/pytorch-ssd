@@ -1,0 +1,161 @@
+{
+  "scene_id": "s16_furniture_only",
+  "title": "Furniture and boxes, nobody home",
+  "purpose": "Class E (inanimate distractor) for the v2 acceptance matrix: the same chair, couch, plant and TV cutouts as s13, and the same crates and pillar, but with the person removed. s13 answers 'does furniture steal the track from a person'; this scene answers the prior question 'does furniture start a track at all', which is a hard zero-false-follow gate (class C rules) because none of these objects is person-shaped. The 16 v2 scenes had no furniture-only scene.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_clut_chair",
+      "role": "clutter",
+      "coco": {
+        "img_id": 446522,
+        "ann_id": 382375
+      },
+      "height_m": 0.95,
+      "pos": [
+        2.4,
+        -1.3
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Same cutout and placement as in s13. Probe there: 0.888/0.413/0.674 by range - the one object here that can cross the 0.70 enter threshold."
+    },
+    {
+      "name": "subj_clut_couch",
+      "role": "clutter",
+      "coco": {
+        "img_id": 509824,
+        "ann_id": 99519
+      },
+      "height_m": 0.85,
+      "pos": [
+        3.0,
+        1.9
+      ],
+      "motion": {
+        "type": "static"
+      }
+    },
+    {
+      "name": "subj_clut_plant",
+      "role": "clutter",
+      "coco": {
+        "img_id": 69795,
+        "ann_id": 20365
+      },
+      "height_m": 1.1,
+      "pos": [
+        1.8,
+        1.2
+      ],
+      "motion": {
+        "type": "static"
+      }
+    },
+    {
+      "name": "subj_clut_tv",
+      "role": "clutter",
+      "coco": {
+        "img_id": 366225,
+        "ann_id": 32786
+      },
+      "height_m": 0.6,
+      "pos": [
+        4.5,
+        -2.0
+      ],
+      "motion": {
+        "type": "static"
+      }
+    }
+  ],
+  "clutter_primitives": [
+    {
+      "name": "crate1",
+      "type": "box",
+      "size": [
+        0.3,
+        0.3,
+        0.25
+      ],
+      "pos": [
+        1.5,
+        -2.2,
+        0.25
+      ],
+      "material": "obstacle"
+    },
+    {
+      "name": "crate3",
+      "type": "box",
+      "size": [
+        0.4,
+        0.2,
+        0.3
+      ],
+      "pos": [
+        2.8,
+        -2.6,
+        0.3
+      ],
+      "material": "obstacle"
+    },
+    {
+      "name": "pillar2",
+      "type": "cylinder",
+      "size": [
+        0.12,
+        1.0
+      ],
+      "pos": [
+        4.2,
+        1.6,
+        1.0
+      ],
+      "material": "pillar"
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "ignore",
+    "target": null,
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "false_confirm_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "max_horizontal_drift_m",
+        "op": "<",
+        "value": 0.1
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "probably passes",
+    "rationale": "None of these objects is person-shaped, and the empty-room baseline never confirmed. The chair is the risk: it probed at 0.888 from close range in s13, so a single sustained look at it from ~1.5 m could clear 0.70 three frames running. That is exactly what this cell is for."
+  }
+}

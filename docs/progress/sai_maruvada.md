@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 11, 2026
-**Last updated:** 2026-09-11
+**Period covered:** Aug 24 to Sep 12, 2026
+**Last updated:** 2026-09-12
 
 ## Summary
 
@@ -46,7 +46,9 @@ processor. In the first three weeks I:
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
 | Progress report email for Prof. Mok | Sai | Sent Sep 11; Grace reviewed and agreed with her line | Await his reply on the demo slot and research credit |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
-| Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
+| Simulator: chip latency and saved frames | Sai | Done Sep 12: reviewed and committed | None |
+| Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2 | Fix distance keeping; team uses the pet result to pick champion vs confuser |
+| Distance keeping with the chip network | Sai | **Fails in simulation:** holds about 3 m where it should hold 1.94 m, in every chip configuration | Diagnose the size head, then re-fly the suite |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 
 ## Results and their status
@@ -58,6 +60,9 @@ processor. In the first three weeks I:
 | Reproduced David's GVSOC chip validation of his own app | Verified |
 | Our Aug 28 and Aug 31 chip apps | **Were broken.** The integer network gave one output for all 96 test images: the DORY code generator turned every negative weight into 0 on Apple Silicon, and the old check compared the chip against a reference built from the same corrupted weights |
 | Champion chip app after the fix | **Verified:** distinct output for all 96 images; exact on the chip simulator for 5 images, agreeing with an independent runtime; 94.8% visibility agreement with the float model |
+| The drone chases a dog in simulation | **Verified in simulation, not on hardware:** on the pet scene it confirmed a dog 0.31 s in at confidence 0.87-0.89, stayed latched 68-78% of the flight and drifted 2.3-2.7 m, against a 0.5 m limit. It survives the chip network and the realistic camera |
+| The drone does not hold its distance | **Verified in simulation:** with the chip network it settles near 3 m instead of 1.94 m in every configuration tested, because the size head over-reads. Pointing accuracy and the safety rules are unaffected |
+| Realism costs, measured one factor at a time | **Verified in simulation:** the realistic camera adds 0.32 m of distance error, the chip network 0.13 m, the chip's slower frame rate 0.10 m |
 | Confuser chip app after the fix | Runs correctly, but agrees with its float model on only 88.5% of visibility calls (bar 90%), all near the decision boundary |
 | Quantized export of our models | Verified healthy: every exported stage gives distinct outputs under an independent runtime |
 | Release pipeline runs off David's machine, 5 fixes | Runs; needs the DORY patch on Apple Silicon before it produces valid chip apps |
@@ -128,6 +133,33 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-12 (overnight).** Rebuilt the simulator to be realistic instead of
+  convenient, then used it to test the drone we actually intend to fly. Three
+  parts: a model of the real camera sensor (its auto-exposure, 60 fps timing,
+  noise and motion blur), a mode that runs the **real chip network** and the
+  chip's own image preprocessing in the loop rather than the float model, and a
+  scene suite of 18 scenes built from JSON definitions with full ground truth.
+  Added a scorecard of ten measurements with pass/fail limits, and flew a
+  14-case matrix, 37 flights, 36 valid: **7 cases pass, 7 fail.** Findings, all
+  in simulation and none on hardware: the drone **chases a dog** (confirmed in
+  0.31 s, drifts 2.3-2.7 m against a 0.5 m limit) and this survives every
+  realism setting; it **does not hold its distance** with the chip network
+  (about 3 m instead of 1.94 m, in every chip configuration); measured one at a
+  time, the realistic camera costs 0.32 m of distance error, the chip network
+  0.13 m, and the chip's slower frame rate 0.10 m; pointing accuracy and the
+  safety rules survive all of it. Also fixed three faults in my own scoring
+  tool: it reported the first failing repeat of a safety limit rather than the
+  worst one (the pet drift was published as 2.301 m when the worse repeat was
+  2.666 m); re-scoring the published evidence folder **destroyed** it, because
+  flights whose control log is trimmed for size were rewritten as "invalid" -
+  it now reads what those flights measured and says so on screen; and the
+  folder's own metadata named the wrong sweep. The published evidence now
+  re-scores to a byte-identical result twice running. Known and unfixed: on the
+  worst frames the sensor model costs 7.27 ms against a 5 ms budget; subjects
+  are still flat rectangular cards; nine camera parameters are taken from the
+  datasheet and **not measured**; one far-person scene does not test what it
+  was meant to.
 
 Newest first. One entry per working session.
 

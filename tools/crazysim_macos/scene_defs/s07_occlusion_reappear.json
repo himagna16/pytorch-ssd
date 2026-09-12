@@ -1,0 +1,79 @@
+{
+  "scene_id": "s07_occlusion_reappear",
+  "title": "Person passes behind a partition",
+  "purpose": "Reacquire time and re-confirmation after a VISIBILITY loss (frames keep arriving - this is not the stale-frame path that --simulate-stale-at already covers).",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 19432,
+        "ann_id": 428692
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        0.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 1.6,
+        "period_s": 24.0
+      }
+    }
+  ],
+  "occluders": [
+    {
+      "name": "occ_partition",
+      "center": [
+        2.2,
+        -0.95,
+        1.1
+      ],
+      "half_extents": [
+        0.05,
+        0.45,
+        1.1
+      ]
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "reacquire_confirm_streak",
+        "op": "==",
+        "value": 3
+      },
+      {
+        "metric": "reacquire_s",
+        "op": "<=",
+        "value": 1.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "probably passes",
+    "rationale": "Re-confirmation after visibility loss is implemented; this is its first flight-level test."
+  }
+}

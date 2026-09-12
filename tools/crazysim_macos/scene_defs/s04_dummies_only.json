@@ -1,0 +1,82 @@
+{
+  "scene_id": "s04_dummies_only",
+  "title": "Dummies only: a human-scale teddy and a low teddy",
+  "purpose": "Teddy/mannequin-shaped objects treated as people.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_dummy_tall",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 253433,
+        "ann_id": 1159335
+      },
+      "height_m": 1.5,
+      "pos": [
+        3.0,
+        0.0
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Probe: 0.692 at 2.0 m, 0.964 at 3.0 m."
+    },
+    {
+      "name": "subj_teddy_low",
+      "role": "nonperson_distractor",
+      "coco": {
+        "img_id": 409268,
+        "ann_id": 1160351
+      },
+      "height_m": 0.8,
+      "pos": [
+        2.4,
+        -1.4
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "Probe: 0.419/0.748/0.683 - straddles the [0.45, 0.70) boundary band."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "ignore",
+    "target": null,
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "false_confirm_fraction",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "commanded_motion_while_unconfirmed_m",
+        "op": "==",
+        "value": 0.0
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "fails",
+    "rationale": "T1 renders 0.964 at 3.0 m; T2 should chatter around the boundary."
+  },
+  "limitations": [
+    "COCO val2017 has no mannequin category. A human-scale teddy is the closest subject that could be built AND verified (human-shaped, human-sized, not a person, measured at 0.964 here). The P=1.00 mannequin figure in the Aug 28 error anatomy came from gallery inspection, not a labelled slice."
+  ]
+}

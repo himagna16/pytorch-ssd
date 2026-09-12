@@ -1,0 +1,13 @@
+{
+  "suite": "core-rescore",
+  "note": "clean cells reused from the original sweep; himax cells re-flown after the camera-model fixes",
+  "repeats": 2,
+  "cells": 14,
+  "started_utc": null,
+  "duration_s": null,
+  "timing_note": "this suite merges flights from two sweeps, so it has no single start time or duration; per-flight timing is in each run's summary.json",
+  "model": {
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+    "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx"
+  }
+}

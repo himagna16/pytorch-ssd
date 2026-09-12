@@ -62,6 +62,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from follow_person import DRONE_ROOT, FrameReceiver, Perception  # noqa: E402
+from perception_backends import add_backend_args, make_perception  # noqa: E402
 
 # GAP8 constants (app_config.h / inc/follow_packet.h on champion-core8-integration 0623a7d)
 EPS_OUT = 2.00982e-4              # champion QAT output quantum (firmware_contract.md)
@@ -366,7 +367,8 @@ class Gap8(threading.Thread):
             cap = stamp                          # capture completion = the full frame's arrival on the Mac
             t_proc = now
             p = self.perc(frame)
-            raw = to_raw_i32(p["raw"])
+            raw = ([int(v) for v in p["raw_i32"]] if "raw_i32" in p
+                   else to_raw_i32(p["raw"]))
             if self.a.infer_ms > 0:
                 wait = cap + self.a.infer_ms / 1000.0 - time.monotonic()
                 if wait > 0:
@@ -513,6 +515,7 @@ def main():
     ap.add_argument("--unstable-root", type=Path, default=DRONE_ROOT / "pytorch_ssd_unstable")
     ap.add_argument("--ckpt", type=Path,
                     default=DRONE_ROOT / "pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth")
+    add_backend_args(ap, shadow=False)
     a = ap.parse_args()
     if a.selftest:
         selftest()
@@ -528,7 +531,7 @@ def main():
     t0 = time.monotonic()
     rx = FrameReceiver(a.frame_port)
     rx.start()
-    perc = Perception(a.unstable_root, a.ckpt)
+    perc = make_perception(a)
     while rx.latest()[0] is None:
         if time.monotonic() - t0 > 15:
             sys.exit("No camera frames after 15 s; is the sim running with --camera? Not taking off.")
@@ -644,10 +647,10 @@ def main():
         end_reason = f"error: {type(e).__name__}: {e}"
         raise
     finally:
-        write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx)
+        write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx, perc)
 
 
-def write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx):
+def write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx, perc=None):
     def write_csv(path, rows):
         keys = []
         for r in rows:
@@ -697,6 +700,11 @@ def write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx):
         "stale_events": stale_events,
         "z_after_landing": round(al["pz"], 2) if al and al.get("pz") is not None else None,
         "rate_hz_requested": a.rate_hz, "infer_ms_requested": a.infer_ms,
+        # What actually ran, not what was requested: follow_person.py records
+        # these too, and without them a chip-in-the-loop run carries no evidence
+        # of which ONNX (sha1) and which output quantum the sidecar loaded.
+        "backend": getattr(perc, "name", "float"),
+        "backend_info": getattr(perc, "info", None),
         "frames_processed": gap8.stats["frames_processed"] if gap8 else 0,
         "frames_dropped": gap8.stats["frames_dropped"] if gap8 else 0,
         "torn_frames": rx.info()[1],
