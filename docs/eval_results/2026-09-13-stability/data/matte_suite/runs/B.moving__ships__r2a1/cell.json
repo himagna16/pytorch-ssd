@@ -1,0 +1,22 @@
+{
+  "cell_id": "B.moving__ships",
+  "scene": "s01_control_moving",
+  "scene_class": "B",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 2,
+  "attempt": 1,
+  "duration_s": 50,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/scenes_matte/s01_control_moving",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out/runs/matte__B.moving__ships__r2a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out/runs/matte__B.moving__ships__r2a1/truth.csv",
+  "sensor_seed": 1002,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "stability",
+  "condition": "matte",
+  "order": 17
+}

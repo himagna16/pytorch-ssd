@@ -9,28 +9,27 @@ the implementation, the proof it landed, and the re-fly.
 `docs/sim_results/2026-09-11-simv2/` was not modified; it remains the record of
 what was observed with the mirrored floor.
 
-> **Caveat added by the orchestrator, Sep 12, after the verification pass.**
-> The distance result below is strong and I believe it. The **attitude-upset
-> result is contaminated and should not be treated as a finding yet**, for three
-> reasons found by the verifier and by me:
+> **RETRACTED Sep 12, after a controlled re-run. The distance result below
+> stands; the attitude-upset result in §6 and §7 does not.**
 >
-> 1. **The two suites did not run the same code.** `camera_model.py` was edited
->    by a parallel task at 13:37 — after the matte suite finished (13:36) and
->    before the mirrored control started (13:41). The equivalence check was run
->    at 13:20, so it does not cover the version the control flew. A same-hour A/B
->    is only as good as its "same", and this one has a seam in it.
-> 2. **The upsets cluster on repeat 3**, not across the suite: repeat 3 tumbled
->    in 6 of the 7 cells. A per-cell effect would not respect flight order.
-> 3. **The machine was heavily loaded.** These flights ran while 14 agents worked
->    on this laptop; the 15-minute load average reached 32.9. Upset flights skew
->    toward low `sim_wall_ratio` (0.882–0.989, most below 0.93), which is the
->    signature of a simulator that could not keep up.
+> Those sections report that 9 of 21 matte flights lost attitude control against
+> 0 of 20 mirrored, and conclude "removing the mirror is not free". **That does
+> not reproduce.** A re-run designed to remove three contaminants — code pinned
+> byte-identical across both arms, conditions interleaved as 28 ABBA matched
+> pairs, and flight order decorrelated from repeat index — flew 56 flights and
+> found **0 upsets in 28 matte and 1 in 28 mirrored** (Fisher p = 1.00); the one
+> upset is on the *mirrored* arm. The Sep 12 rate is statistically excluded
+> (p = 1.4e-4). "Repeat 3", which tumbled in 6 of 7 cells here, tumbled 0 of 14
+> once it no longer meant "flown third".
 >
-> The honest reading: removing the mirror **fixed the distance error**, and
-> whether it costs flight stability is **not yet known**. Settling that needs a
-> re-fly on an idle machine with one fixed `camera_model.py`, flight order
-> randomised or repeat count raised. Do not quote the upset numbers to the team
-> or to Prof. Mok until that is done.
+> Why this run was wrong: `camera_model.py` was edited at 13:37, between the
+> matte suite ending (13:36) and the control starting (13:41); the upsets track
+> flight order rather than cells; and the laptop was running 14 agents at a
+> 15-minute load average of 32.9. The two arms differed in their exposure to
+> transient stalls, which disqualifies the floor as the explanation.
+>
+> **Removing the mirror is free.** It fixes distance and costs nothing measurable.
+> Full evidence: `docs/eval_results/2026-09-13-stability/`.
 
 ---
 
@@ -350,6 +349,13 @@ not the size head — which is exactly why it now reads ≈ 1.0: the drone is at
 
 ## 6. Results: tracking got worse, and flights left the flight envelope
 
+> **SUPERSEDED Sep 12 — this section's finding did not reproduce.** Kept
+> verbatim as the record of what was observed and concluded at the time.
+> The controlled re-run found 0 upsets in 28 matte flights; the tracking
+> drop reported here was a consequence of the upsets, and it also does not
+> reproduce (M1 on `delta_camera` 0.552 → 0.996). See
+> `docs/eval_results/2026-09-13-stability/`.
+
 This must not be buried.
 
 **M1 (tracking fraction) fell in five of the seven cells**, and four cells now
@@ -425,6 +431,13 @@ Two process problems follow:
 ---
 
 ## 7. Same-day control: the upsets belong to the fix, not to the machine
+
+> **SUPERSEDED Sep 12 — the conclusion in this heading is wrong.** The
+> same-day control was not the clean comparison it appears to be:
+> `camera_model.py` changed between the two arms, and the arms were run
+> back to back rather than interleaved, so machine state was not held
+> equal. A properly controlled re-run reversed the finding. Kept verbatim
+> as the record. See `docs/eval_results/2026-09-13-stability/`.
 
 Three explanations had to be separated, and only one experiment separates them.
 
@@ -534,9 +547,11 @@ scorer and it is why that one cell's numbers are set aside in §5.
 * The Sep 11 M7 numbers were measuring a renderer artefact — as that README's
   own Sep 12 correction already says — and the Sep 11 measurements themselves
   are reproducible (§7).
-* **Removing the mirror is not free.** 9 of 21 valid matte flights lost attitude
-  control; 0 of 20 valid mirrored flights did, on the same machine within the
-  same hour, Fisher exact p = 0.0013 (§6, §7).
+* ~~**Removing the mirror is not free.** 9 of 21 valid matte flights lost
+  attitude control; 0 of 20 valid mirrored flights did.~~ **RETRACTED Sep 12.**
+  It does not reproduce under a controlled design: 0 of 28 matte and 1 of 28
+  mirrored, Fisher p = 1.00, with the Sep 12 rate excluded at p = 1.4e-4.
+  **Removing the mirror is free.** See `docs/eval_results/2026-09-13-stability/`.
 
 **Not established:**
 

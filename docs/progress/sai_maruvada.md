@@ -50,7 +50,7 @@ processor. In the first three weeks I:
 | Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2. **One correction Sep 12:** the suite's explanation of the distance failure was wrong and is withdrawn - see the row below and docs/eval_results/2026-09-12-distance | Fix the simulator's reflective floor and the size decode, then re-fly the distance cells (see the distance-keeping row); team uses the pet result to pick champion vs confuser |
 | Flashing the champion app onto a real AI-deck | Sai | **Blocked:** the GAP8 build tooling (`aideck-gap8-examples/tools/build/`) is missing on this Mac, so nothing can be flashed yet | Restore the toolchain and write a flash runbook before the lab session |
 | Rehearsing the real-frame capture before the lab | Sai | In progress: the capture tool has never run against a real byte stream, so a mock streamer is being built to rehearse it | Prove capture + scoring end to end at home |
-| Distance keeping with the chip network | Sai | **Fails in simulation, and the published cause was wrong.** It holds about 3 m where it should hold 1.94 m, in every chip configuration - that part stands. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which is 20% reflective, so the renderer draws people 1.5-2.0x too tall and the network reads the person plus their reflection as one object. The size head reads real photographs correctly. Separately, the follower's own control law cannot get closer than 2.43 m, so the 1.94 m target was unreachable whatever the network did | The first of the two fixes has since landed in the working tree - the scene builder turned the floor reflection off and rebuilt the 18 scenes - and a re-fly is running, but it has **not finished**, so nobody has yet seen what the drone does without the mirror. Still to decide: soften how the size bucket is decoded (changes flight behaviour, so it must be flown), and accept that every published simulator result, including the September baselines, was rendered through the mirror. Do **not** retrain the size head |
+| Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Re-fly the full 14-cell suite on the fixed scenes so the published baseline is not rendered through a mirror. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 
 ## Results and their status
@@ -135,6 +135,23 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-12 (late).** Settled the question the earlier re-fly left open. The
+  first run had suggested that removing the simulator's mirrored floor made the
+  drone unstable, which would have made the fix a trade rather than a win. It
+  did not hold up: a controlled re-run, with the source files locked byte for
+  byte across both conditions and the two floors alternated flight by flight,
+  flew 56 flights and found **no upsets in 28 on the matte floor against one in
+  28 on the mirrored floor**. The earlier result was an artefact of running the
+  experiment on a laptop that had fourteen other jobs on it. The distance
+  improvement reproduced in all seven cases. Along the way the run turned up a
+  measurement lesson worth keeping: the number we had been using to judge whether
+  a flight was trustworthy is an average over the whole flight, and an upset is a
+  single moment, so a laptop that stalls in short bursts can ruin a flight without
+  that average moving at all. Also corrected two places where my own reports
+  claimed more than the data supported, and fixed a rule in the repository's
+  ignore file that had been hiding a 356-file evidence folder from version
+  control, so the numbers now ship with the flights behind them.
 
 - **2026-09-12 (evening).** Found that the headline explanation I published this
   morning was wrong, and corrected the record rather than quietly editing it. The

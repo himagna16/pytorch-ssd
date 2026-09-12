@@ -1,4 +1,7 @@
-data/
+# The COCO dataset, at the repo root ONLY. Anchored with a leading slash:
+# a bare "data/" matches every nested data/ directory at any depth, which
+# silently swallowed a 356-file evidence folder on Sep 12. Keep the slash.
+/data/
 *.pth
 *.onnx
 __pycache__/

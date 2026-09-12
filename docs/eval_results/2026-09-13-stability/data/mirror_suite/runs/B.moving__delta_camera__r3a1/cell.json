@@ -1,0 +1,22 @@
+{
+  "cell_id": "B.moving__delta_camera",
+  "scene": "s01_control_moving",
+  "scene_class": "B",
+  "backend": "float",
+  "camera": "himax_typical",
+  "speed": "full",
+  "rate_hz": 0,
+  "latency_ms": 0,
+  "repeat": 3,
+  "attempt": 1,
+  "duration_s": 50,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/scenes_mirror/s01_control_moving",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out/runs/mirror__B.moving__delta_camera__r3a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out/runs/mirror__B.moving__delta_camera__r3a1/truth.csv",
+  "sensor_seed": 1003,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "stability",
+  "condition": "mirror",
+  "order": 23
+}

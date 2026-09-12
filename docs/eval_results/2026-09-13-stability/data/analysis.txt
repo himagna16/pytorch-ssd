@@ -1,0 +1,152 @@
+========================================================================================================
+PER-FLIGHT TABLE (chronological)
+========================================================================================================
+ord cond    cell                     rp a verdict  sim/wall     Hz  track upsetF  z_min |pit|  ld1b
+  1 matte   A.static__proven          2 1 VALID       0.997  15.07  0.996      0   0.80   4.7  3.01
+  2 mirror  A.static__proven          2 1 VALID       0.989  14.93  0.996      0   0.80   4.2  8.00
+  3 mirror  B.moving__delta_backend   3 1 VALID       0.996  14.92  0.988      0   0.80   5.2  8.66
+  4 matte   B.moving__delta_backend   3 1 VALID       0.996  15.18  0.935      0   0.80   6.1  5.17
+  5 matte   B.moving__delta_speed     3 1 VALID       0.999   6.44  0.976      0   0.80   6.5  5.50
+  6 mirror  B.moving__delta_speed     3 1 VALID       1.000   6.40  0.992      0   0.80   4.6  9.21
+  7 mirror  B.moving__delta_camera    1 1 VALID       0.999  14.64  0.996      0   0.80   4.0  9.88
+  8 matte   B.moving__delta_camera    1 1 VALID       0.997  12.80  0.996      0   0.80   4.6 11.37
+  9 matte   B.moving__ships           1 1 VALID       0.996   6.38  0.992      0   0.80   4.7 10.27
+ 10 mirror  B.moving__ships           1 1 VALID       0.998   6.34  0.992      0   0.80   6.4  6.98
+ 11 mirror  B.moving__ships           4 1 VALID       0.999   6.34  0.992      0   0.80   8.1  5.81
+ 12 matte   B.moving__ships           4 1 VALID       0.994   6.37  0.992      0   0.80   4.6  5.90
+ 13 matte   A.static__ships           1 1 VALID       0.999   6.36  0.990      0   0.80   5.0  5.06
+ 14 mirror  A.static__ships           1 1 VALID       0.999   6.35  0.990      0   0.80   7.0  4.78
+ 15 mirror  A.static__proven          3 1 VALID       0.992  13.46  0.996      0   0.80   4.5  3.75
+ 16 matte   A.static__proven          3 1 VALID       0.997  15.04  0.996      0   0.80   4.5  8.17
+ 17 matte   B.moving__ships           2 1 VALID       0.980   6.43  0.980      0   0.80   4.5  9.23
+ 18 mirror  B.moving__ships           2 1 VALID       0.988   6.42  0.992      0   0.80   5.6  8.06
+ 19 mirror  A.static__ships           4 1 VALID       0.909   6.43  0.991      0   0.80   6.7  5.38   [SUSPECT sim/wall]
+ 20 matte   A.static__ships           4 1 VALID       0.888   6.43  0.990      0   0.80   4.0  5.77   [SUSPECT sim/wall]
+ 21 matte   A.static__proven          1 1 VALID       0.916  15.02  0.996      0   0.80   4.7  8.68   [SUSPECT sim/wall]
+ 22 mirror  A.static__proven          1 1 VALID       0.925  14.95  0.996      1   0.74  31.6  9.98   <-- UPSET   [SUSPECT sim/wall]
+ 23 mirror  B.moving__delta_camera    3 1 VALID       0.898  14.63  0.996      0   0.80   4.3 11.93   [SUSPECT sim/wall]
+ 24 matte   B.moving__delta_camera    3 1 VALID       0.926  14.82  0.996      0   0.80   4.2 10.16   [SUSPECT sim/wall]
+ 25 matte   B.moving__ships           3 1 VALID       0.901   6.43  0.905      0   0.80   3.8 14.60   [SUSPECT sim/wall]
+ 26 mirror  B.moving__ships           3 1 VALID       0.888   6.43  0.992      0   0.80   6.0  7.44   [SUSPECT sim/wall]
+ 27 mirror  A.static__proven          4 1 VALID       0.888  14.90  0.996      0   0.80   3.6  8.32   [SUSPECT sim/wall]
+ 28 matte   A.static__proven          4 1 VALID       0.913  15.12  0.996      0   0.80   5.0  8.85   [SUSPECT sim/wall]
+ 29 matte   B.moving__delta_camera    4 1 VALID       0.915  14.82  0.986      0   0.80   4.0  5.55   [SUSPECT sim/wall]
+ 30 mirror  B.moving__delta_camera    4 1 VALID       0.900  14.64  0.996      0   0.80   4.0  7.15   [SUSPECT sim/wall]
+ 31 mirror  B.moving__proven          1 1 VALID       0.902  14.45  0.996      0   0.80   4.6  9.09   [SUSPECT sim/wall]
+ 32 matte   B.moving__proven          1 1 VALID       0.901  12.98  0.996      0   0.80   4.9 17.57   [SUSPECT sim/wall]
+ 33 matte   A.static__ships           3 1 VALID       0.885   6.39  0.430      0   0.80   4.8 13.05   [SUSPECT sim/wall]
+ 34 mirror  A.static__ships           3 1 VALID       0.893   6.35  0.990      0   0.80   5.1  8.80   [SUSPECT sim/wall]
+ 35 mirror  B.moving__proven          4 1 VALID       0.904  12.85  0.996      0   0.80   4.8  6.14   [SUSPECT sim/wall]
+ 36 matte   B.moving__proven          4 1 VALID       0.920  14.60  0.980      0   0.80   4.8 10.26   [SUSPECT sim/wall]
+ 37 matte   B.moving__delta_backend   4 1 VALID       0.876  14.83  0.928      0   0.80   5.8 14.71   [SUSPECT sim/wall]
+ 38 mirror  B.moving__delta_backend   4 1 VALID       0.882  14.60  0.996      0   0.80   6.2  9.25   [SUSPECT sim/wall]
+ 39 mirror  B.moving__delta_speed     1 1 VALID       0.911   6.42  0.992      0   0.80   4.0  8.41   [SUSPECT sim/wall]
+ 40 matte   B.moving__delta_speed     1 1 VALID       0.909   6.44  0.992      0   0.80   4.5  9.59   [SUSPECT sim/wall]
+ 41 matte   B.moving__delta_speed     2 1 VALID       0.916   6.37  0.962      0   0.80   4.9  9.58   [SUSPECT sim/wall]
+ 42 mirror  B.moving__delta_speed     2 1 VALID       0.902   6.39  0.992      0   0.80   4.4  9.42   [SUSPECT sim/wall]
+ 43 mirror  B.moving__delta_speed     4 1 VALID       0.898   6.39  0.992      0   0.80   4.9 12.68   [SUSPECT sim/wall]
+ 44 matte   B.moving__delta_speed     4 1 VALID       0.993   6.43  0.923      0   0.80   4.5 12.16
+ 45 matte   B.moving__proven          2 1 VALID       0.995  15.10  0.986      0   0.80   6.1 10.54
+ 46 mirror  B.moving__proven          2 1 VALID       0.996  14.90  0.997      0   0.80   4.3 12.15
+ 47 mirror  B.moving__delta_backend   1 1 NORUN       0.000   0.00  0.000   None    nan   0.0 10.02
+ 47 mirror  B.moving__delta_backend   1 2 VALID       0.991  14.55  0.996      0   0.80   6.4  4.80
+ 48 matte   B.moving__delta_backend   1 1 VALID       0.989  14.84  0.918      0   0.80   6.4  4.64
+ 49 matte   A.static__ships           2 1 VALID       0.992   6.42  0.991      0   0.80   4.1  4.44
+ 50 mirror  A.static__ships           2 1 VALID       0.993   6.41  0.991      0   0.80   6.0  4.96
+ 51 mirror  B.moving__delta_camera    2 1 VALID       0.994  14.61  0.996      0   0.80   4.1  5.76
+ 52 matte   B.moving__delta_camera    2 1 VALID       0.992  14.80  0.996      0   0.80   4.2 10.46
+ 53 matte   B.moving__proven          3 1 VALID       0.996  15.09  0.991      0   0.80   6.4  9.13
+ 54 mirror  B.moving__proven          3 1 VALID       0.997  14.88  0.997      0   0.80   4.2 10.15
+ 55 mirror  B.moving__delta_backend   2 1 VALID       0.999  14.94  0.997      0   0.80   6.3 11.83
+ 56 matte   B.moving__delta_backend   2 1 VALID       0.996  15.10  0.919      0   0.80   7.2  7.21
+
+========================================================================================================
+1. UPSET RATE BY CONDITION  (scored-VALID flights)
+========================================================================================================
+  matte   0/28 = 0%
+  mirror  1/28 = 4%
+  contingency [[matte_up, matte_ok],[mirror_up, mirror_ok]] = [[0, 28], [1, 27]]
+  Fisher exact two-sided p = 1.0000   odds ratio = 0.0
+
+  same, restricted to flights with sim/wall >= 0.95:
+    matte   0/16 = 0%
+    mirror  0/15 = 0%
+    Fisher exact two-sided p = 1.0000
+
+========================================================================================================
+2. UPSET RATE BY FLIGHT ORDER  (the confound the first attempt could not rule out)
+========================================================================================================
+  flights  1-14 (quartile 1)  0/15 = 0%
+  flights 15-28 (quartile 2)  1/14 = 7%
+  flights 29-42 (quartile 3)  0/14 = 0%
+  flights 43-57 (quartile 4)  0/13 = 0%
+
+  by repeat index (decorrelated from order by design; corr = 0.000):
+    repeat 1  1/14 = 7%      mean chronological position 24.4
+    repeat 2  0/14 = 0%      mean chronological position 37.5
+    repeat 3  0/14 = 0%      mean chronological position 22.9
+    repeat 4  0/14 = 0%      mean chronological position 29.2
+
+========================================================================================================
+3. UPSET RATE BY CELL
+========================================================================================================
+  cell                     matte          mirror        
+  A.static__proven         0/4 = 0%       1/4 = 25%     
+  A.static__ships          0/4 = 0%       0/4 = 0%      
+  B.moving__delta_backend  0/4 = 0%       0/4 = 0%      
+  B.moving__delta_camera   0/4 = 0%       0/4 = 0%      
+  B.moving__delta_speed    0/4 = 0%       0/4 = 0%      
+  B.moving__proven         0/4 = 0%       0/4 = 0%      
+  B.moving__ships          0/4 = 0%       0/4 = 0%      
+
+========================================================================================================
+4. MATCHED PAIRS  (same cell, same repeat, flown back to back)
+========================================================================================================
+  complete pairs: 28
+    matte upset only : 0
+    mirror upset only: 1
+    both upset       : 0
+    neither          : 27
+    McNemar exact (discordant 1): p = 1.0000
+
+========================================================================================================
+5. THE MACHINE
+========================================================================================================
+  matte   sim/wall min 0.876 median 0.990 max 0.999 | load1_before median 9.18 max 17.57
+  mirror  sim/wall min 0.882 median 0.988 max 1.000 | load1_before median 8.37 max 12.68
+  flights below sim/wall 0.95: 25
+    ord  19 mirror  A.static__ships          sim/wall 0.909  upset=False
+    ord  20 matte   A.static__ships          sim/wall 0.888  upset=False
+    ord  21 matte   A.static__proven         sim/wall 0.916  upset=False
+    ord  22 mirror  A.static__proven         sim/wall 0.925  upset=True
+    ord  23 mirror  B.moving__delta_camera   sim/wall 0.898  upset=False
+    ord  24 matte   B.moving__delta_camera   sim/wall 0.926  upset=False
+    ord  25 matte   B.moving__ships          sim/wall 0.901  upset=False
+    ord  26 mirror  B.moving__ships          sim/wall 0.888  upset=False
+    ord  27 mirror  A.static__proven         sim/wall 0.888  upset=False
+    ord  28 matte   A.static__proven         sim/wall 0.913  upset=False
+    ord  29 matte   B.moving__delta_camera   sim/wall 0.915  upset=False
+    ord  30 mirror  B.moving__delta_camera   sim/wall 0.900  upset=False
+    ord  31 mirror  B.moving__proven         sim/wall 0.902  upset=False
+    ord  32 matte   B.moving__proven         sim/wall 0.901  upset=False
+    ord  33 matte   A.static__ships          sim/wall 0.885  upset=False
+    ord  34 mirror  A.static__ships          sim/wall 0.893  upset=False
+    ord  35 mirror  B.moving__proven         sim/wall 0.904  upset=False
+    ord  36 matte   B.moving__proven         sim/wall 0.920  upset=False
+    ord  37 matte   B.moving__delta_backend  sim/wall 0.876  upset=False
+    ord  38 mirror  B.moving__delta_backend  sim/wall 0.882  upset=False
+    ord  39 mirror  B.moving__delta_speed    sim/wall 0.911  upset=False
+    ord  40 matte   B.moving__delta_speed    sim/wall 0.909  upset=False
+    ord  41 matte   B.moving__delta_speed    sim/wall 0.916  upset=False
+    ord  42 mirror  B.moving__delta_speed    sim/wall 0.902  upset=False
+    ord  43 mirror  B.moving__delta_speed    sim/wall 0.898  upset=False
+  sim/wall on UPSET flights:  0.925
+  median sim/wall  upset 0.925  vs no-upset 0.989
+
+========================================================================================================
+6. INVALID / RETRIED FLIGHTS
+========================================================================================================
+  1 of 57 attempts not VALID
+    ord  47 mirror  B.moving__delta_backend  a1 NORUN: exit 142
+
+wrote /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out/flights_scanned.json

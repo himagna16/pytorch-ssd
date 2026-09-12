@@ -1,0 +1,39 @@
+MEDIAN DISTANCE HELD (M7_dist_final_m) and M7 SETTLED ERROR, metres
+Sep13 = this experiment (4 repeats/arm).  Sep12 = the first attempt (3 repeats/arm).
+
+cell                     |         distance held (m)         |        M7 settled err (m)        
+                         |  Sep13 mir  Sep13 mat  Sep12 mat |  Sep13 mir  Sep13 mat  Sep12 mat
+----------------------------------------------------------------------------------------------------
+A.static__proven         |      2.423      1.971      1.790 |      0.647      0.110      0.146
+A.static__ships          |      2.917      2.205      2.119 |      1.052      0.405      0.275
+B.moving__delta_backend  |      2.825      2.159      2.182 |      0.841      0.264      0.305
+B.moving__delta_camera   |      2.958      2.319      2.945 |      0.996      0.443      1.109
+B.moving__delta_speed    |      2.524      2.103      1.968 |      0.730      0.259      0.250
+B.moving__proven         |      2.652      2.151      1.891 |      0.734      0.246      0.285
+B.moving__ships          |      3.184      2.428      2.437 |      1.159      0.526      0.528
+
+
+DOES THE MIRROR -> MATTE DISTANCE IMPROVEMENT REPRODUCE?
+Sep12 quoted mirrored -> matte held distance.  Sep13 is the same comparison, interleaved.
+
+cell                             Sep12 mir->mat         Sep13 mir->mat   reproduced?
+------------------------------------------------------------------------------------
+A.static__proven            2.269 -> 1.790       2.423 -> 1.971              yes
+A.static__ships             2.982 -> 2.119       2.917 -> 2.205              yes
+B.moving__delta_backend     2.832 -> 2.182       2.825 -> 2.159              yes
+B.moving__delta_camera      2.936 -> 2.945       2.958 -> 2.319              n/a
+B.moving__delta_speed       2.626 -> 1.968       2.524 -> 2.103              yes
+B.moving__proven            2.616 -> 1.891       2.652 -> 2.151              yes
+B.moving__ships             3.314 -> 2.437       3.184 -> 2.428              yes
+
+
+M1 TRACKING FRACTION (median over valid flights)
+cell                      Sep13 mirror   Sep13 matte   Sep12 matte
+------------------------------------------------------------------
+A.static__proven                 0.996         0.996         0.996
+A.static__ships                  0.990         0.990         0.991
+B.moving__delta_backend          0.996         0.923         0.844
+B.moving__delta_camera           0.996         0.996         0.552
+B.moving__delta_speed            0.992         0.969         0.980
+B.moving__proven                 0.996         0.988         0.937
+B.moving__ships                  0.992         0.986         0.967
