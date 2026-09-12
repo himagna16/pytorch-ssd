@@ -41,10 +41,10 @@ processor. In the first three weeks I:
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
-| Simulator demo for Prof. Mok | Sai | Ready: one-command demo, rehearsed 7 times, plus backup videos | Confirm the day he picks |
+| Simulator demo for Prof. Mok | Sai | Ready: one-command demo, rehearsed 7 times; recorded video can be sent before the live demo | Send the video, then demo live on the day he picks |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
-| Progress report email for Prof. Mok | Sai | Drafted Sep 11 (progress, contributions, AI-tools note, link to this record) | Send, with Grace shown her line first |
+| Progress report email for Prof. Mok | Sai | Sent Sep 11; Grace reviewed and agreed with her line | Await his reply on the demo slot and research credit |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
 | Simulator: chip latency and saved frames | Sai | Built and flight-tested; in code review | Commit after review |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
@@ -131,6 +131,12 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (evening).** Sent Prof. Mok the progress report, with a
+  contributions list, a note that my part was built with AI coding tools
+  under my direction, a link to this record, and a question about
+  undergraduate research credit for next semester. Grace reviewed her line
+  and agreed with it. The recorded demo video is ready to send ahead of the
+  live demo.
 - **2026-09-11 (afternoon).** Built the demo kit: one command runs a full
   demo and prints a plain-English scorecard, rehearsed 7 times across all
   four scenes, with three backup videos rendered from real flight logs and a
