@@ -1,0 +1,44 @@
+{
+  "end_reason": "duration",
+  "control_steps": 482,
+  "loop_hz": 12.6,
+  "processed_hz": 12.62,
+  "tracking_fraction": 0.996,
+  "mean_abs_x_while_tracking": 0.077,
+  "centered_fraction_while_tracking": 0.977,
+  "z_max": 0.86,
+  "yaw_range_deg": [
+    -23.5,
+    23.8
+  ],
+  "final_pose": {
+    "px": 0.09,
+    "py": 0.0,
+    "pz": 0.8,
+    "yaw": 14.32
+  },
+  "stale_events": 0,
+  "z_after_landing": 0.02,
+  "rate_hz_requested": 0.0,
+  "latency_ms_requested": 0.0,
+  "backend": "float",
+  "backend_info": {
+    "backend": "float",
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+    "head": "xbin9_size_bucket4"
+  },
+  "frames_processed": 482,
+  "frames_dropped": 0,
+  "torn_frames": 0,
+  "step_gap_ms": {
+    "min": 47.3,
+    "median": 79.3,
+    "max": 106.0
+  },
+  "applied_latency_ms": {
+    "mean": 13.8,
+    "p90": 24.5,
+    "max": 72.0
+  },
+  "sim_wall_ratio": 0.996
+}

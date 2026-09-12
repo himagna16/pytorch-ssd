@@ -41,14 +41,16 @@ processor. In the first three weeks I:
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
-| Simulator demo for Prof. Mok | Sai | Ready: one-command demo, rehearsed 7 times; recorded video can be sent before the live demo | Send the video, then demo live on the day he picks |
+| Simulator demo for Prof. Mok | Sai | Sent Sep 12; Prof. Mok replied "Great progress, team!" and David called the simulation's prediction of the AI-deck behaviour impressive | Live demo slot still unset: he said Tue/Thu after 3:30 pm, I offered after 5 pm - needs one confirming email |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
-| Progress report email for Prof. Mok | Sai | Sent Sep 11; Grace reviewed and agreed with her line | Await his reply on the demo slot and research credit |
-| First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
+| Progress report email for Prof. Mok | Sai | Sent Sep 11 and answered Sep 12. Prof. Mok asked for periodic documentation that can be edited into a final project report | Keep this record current; ask again for the specific registration process for research credit |
+| First real AI-deck camera frames, motors off | Sai, MinHyuk | **Lab session next week**: Prof. Mok asked MinHyuk to meet the team with real hardware | Rehearse capture and scoring against a mock streamer before going; run the capture protocol in the lab |
 | Simulator: chip latency and saved frames | Sai | Done Sep 12: reviewed and committed | None |
-| Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2 | Fix distance keeping; team uses the pet result to pick champion vs confuser |
-| Distance keeping with the chip network | Sai | **Fails in simulation:** holds about 3 m where it should hold 1.94 m, in every chip configuration | Diagnose the size head, then re-fly the suite |
+| Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2. **One correction Sep 12:** the suite's explanation of the distance failure was wrong and is withdrawn - see the row below and docs/eval_results/2026-09-12-distance | Fix the simulator's reflective floor and the size decode, then re-fly the distance cells (see the distance-keeping row); team uses the pet result to pick champion vs confuser |
+| Flashing the champion app onto a real AI-deck | Sai | **Blocked:** the GAP8 build tooling (`aideck-gap8-examples/tools/build/`) is missing on this Mac, so nothing can be flashed yet | Restore the toolchain and write a flash runbook before the lab session |
+| Rehearsing the real-frame capture before the lab | Sai | In progress: the capture tool has never run against a real byte stream, so a mock streamer is being built to rehearse it | Prove capture + scoring end to end at home |
+| Distance keeping with the chip network | Sai | **Fails in simulation, and the published cause was wrong.** It holds about 3 m where it should hold 1.94 m, in every chip configuration - that part stands. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which is 20% reflective, so the renderer draws people 1.5-2.0x too tall and the network reads the person plus their reflection as one object. The size head reads real photographs correctly. Separately, the follower's own control law cannot get closer than 2.43 m, so the 1.94 m target was unreachable whatever the network did | The first of the two fixes has since landed in the working tree - the scene builder turned the floor reflection off and rebuilt the 18 scenes - and a re-fly is running, but it has **not finished**, so nobody has yet seen what the drone does without the mirror. Still to decide: soften how the size bucket is decoded (changes flight behaviour, so it must be flown), and accept that every published simulator result, including the September baselines, was rendered through the mirror. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 
 ## Results and their status
@@ -61,7 +63,7 @@ processor. In the first three weeks I:
 | Our Aug 28 and Aug 31 chip apps | **Were broken.** The integer network gave one output for all 96 test images: the DORY code generator turned every negative weight into 0 on Apple Silicon, and the old check compared the chip against a reference built from the same corrupted weights |
 | Champion chip app after the fix | **Verified:** distinct output for all 96 images; exact on the chip simulator for 5 images, agreeing with an independent runtime; 94.8% visibility agreement with the float model |
 | The drone chases a dog in simulation | **Verified in simulation, not on hardware:** on the pet scene it confirmed a dog 0.31 s in at confidence 0.87-0.89, stayed latched 68-78% of the flight and drifted 2.3-2.7 m, against a 0.5 m limit. It survives the chip network and the realistic camera |
-| The drone does not hold its distance | **Verified in simulation:** with the chip network it settles near 3 m instead of 1.94 m in every configuration tested, because the size head over-reads. Pointing accuracy and the safety rules are unaffected |
+| The drone does not hold its distance | **Verified in simulation, cause corrected Sep 12:** with the chip network it settles near 3 m instead of 1.94 m in every configuration tested. Pointing accuracy and the safety rules are unaffected. This row previously read "because the size head over-reads" - **that explanation is withdrawn.** The simulator's groundplane is a 20% mirror, so subjects render 1.5-2.0x too tall; measured against 2,635 real COCO photographs the size head is unbiased (signed error -0.007 to -0.015 float, +0.005 on the chip network we fly). The follower's control law also cannot reach 1.94 m at all - its floor is 2.43 m. **These simulator numbers describe a rendering artefact plus an unreachable target, and are not evidence about how the real drone keeps its distance.** Analysis: docs/eval_results/2026-09-12-distance/ |
 | Realism costs, measured one factor at a time | **Verified in simulation:** the realistic camera adds 0.32 m of distance error, the chip network 0.13 m, the chip's slower frame rate 0.10 m |
 | Confuser chip app after the fix | Runs correctly, but agrees with its float model on only 88.5% of visibility calls (bar 90%), all near the decision boundary |
 | Quantized export of our models | Verified healthy: every exported stage gives distinct outputs under an independent runtime |
@@ -134,6 +136,55 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 ## Session log
 
+- **2026-09-12 (evening).** Found that the headline explanation I published this
+  morning was wrong, and corrected the record rather than quietly editing it. The
+  simulator suite reported that the drone parks about 3 m from the person instead
+  of 1.94 m, and I had written that the network's size head "over-reads by
+  1.6-1.8x". It does not. The simulator's floor material is 20% reflective - a
+  mirror - so the renderer draws each person's reflection hanging below their
+  feet and the network reads the two as one object. Measured by rendering every
+  frame twice, once with the person removed, the subject is drawn **1.53x taller
+  than it should be at 2.4 m, rising to 2.01x at 3.8 m** - the same direction and
+  the same size as the 1.3-1.6x "over-read" I had reported, over the same
+  distances, and growing with distance the same way. Tested away from the simulator, on 2,635
+  real COCO photographs with exact ground truth, the size head is **unbiased** -
+  if anything it under-reads, never over-reads, and the integer network we
+  actually fly puts its bucket boundary at 0.506 where the true answer is 0.500,
+  about 1% out. Turning the mirror off in memory, changing nothing else, makes
+  the flown network read the distance essentially exactly right. A second,
+  separate problem: the follower stops closing the instant one frame reports the
+  middle size bucket, and a perfect network would report it at 2.43 m, so the
+  1.94 m target the scorecard gates on **was never reachable** - about 0.49 m of
+  the reported error is built into the control law. And the "over-read ratio"
+  column I published turns out to be arithmetic on the distance column, not an
+  independent measurement. So the distance cells measure a rendering artefact
+  plus an unreachable target, and I have withdrawn them as evidence about the
+  real drone. What I changed: correction notes in the published evidence README
+  (its §9), the experiment log, the decision log and this record; I did not
+  delete anything. What I deliberately did **not** change: the simulator scenes,
+  the scorer and the follower. Turning the floor reflection off invalidates every
+  published simulator result including the September baselines, and softening the
+  size decode changes flight behaviour six days before our first hardware
+  session; both are team calls and neither has been flown. Nothing here touched
+  hardware. For the lab session this makes the known-distance camera clips more
+  valuable, not less: they are the direct test of whether the size head is
+  accurate on real frames, and if the room has a shiny floor we should record
+  that and, if we can, capture one set on a matte surface too.
+
+- **2026-09-12 (afternoon).** Sent Prof. Mok the progress report and a recording
+  of the simulator demo. He replied "Great progress, team!" and is asking
+  MinHyuk Park to meet the team in the lab **next week to work with the real
+  hardware** - the project's first hardware session. David Liu replied that it
+  is impressive the simulation predicts the AI-deck's behaviour. On research
+  credit, Prof. Mok said periodic documentation "will come in handy if the team
+  wants to get an official grade for an undergrad research project from UT",
+  which supports the idea but does not yet give the registration process, so I
+  still need to ask. Started preparing for the hardware session, where the
+  honest position is that several things have never touched anything real: the
+  GAP8 build tooling needed to flash our app is **missing** on this Mac, and the
+  camera capture tool has never run against an actual byte stream. Both are
+  being fixed and rehearsed against substitutes before we go.
+
 - **2026-09-12 (overnight).** Rebuilt the simulator to be realistic instead of
   convenient, then used it to test the drone we actually intend to fly. Three
   parts: a model of the real camera sensor (its auto-exposure, 60 fps timing,
@@ -145,7 +196,10 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   in simulation and none on hardware: the drone **chases a dog** (confirmed in
   0.31 s, drifts 2.3-2.7 m against a 0.5 m limit) and this survives every
   realism setting; it **does not hold its distance** with the chip network
-  (about 3 m instead of 1.94 m, in every chip configuration); measured one at a
+  (about 3 m instead of 1.94 m, in every chip configuration) - *corrected the
+  same evening: the observation holds, but I had blamed the network's size head
+  and the cause is the simulator's reflective floor plus an unreachable target;
+  see the 2026-09-12 (evening) entry*; measured one at a
   time, the realistic camera costs 0.32 m of distance error, the chip network
   0.13 m, and the chip's slower frame rate 0.10 m; pointing accuracy and the
   safety rules survive all of it. Also fixed three faults in my own scoring

@@ -10,14 +10,29 @@ The drone holds station 1.3–1.65× further away than the control law is aiming
 configuration including the one every September baseline was measured in. Nobody had noticed,
 because until this sweep no metric converted the model's size bucket into metres.
 
+> **Correction (Sep 12) — read this before quoting any distance number below.** The
+> *behaviour* above is real and these cells still FAIL, but the **cause published here was
+> wrong**. This document attributed the distance failure to the network's size head
+> over-reading by 1.6–1.8×. It does not: the MuJoCo groundplane carries
+> `reflectance="0.2"`, a 20% mirror, so the renderer draws every subject **1.5–2.0× too
+> tall** and the network reads the person plus their reflection as one object. The size head
+> reads real people correctly. Separately, the follower's control law **cannot reach the
+> 1.94 m M7 target at all** — its floor is 2.428 m by construction. **The M7 results in this
+> suite therefore characterise a simulator artefact plus an unreachable gate, and must not be
+> cited as evidence about the drone's real distance-keeping ability.** Root cause, with
+> reproduction commands: `docs/eval_results/2026-09-12-distance/README.md`. What it changes
+> here: §9.
+
 Suite: **14 cells; 37 flights attempted, 36 valid, 1 invalid, 36 scored.**
 Verdict: **FAIL** — 7 cells pass, 7 fail.
 
-> **This document has been revised twice.** A *metrics* review (§7) corrected how flights were
-> scored and reported. A later *realism* review (§8) corrected the simulator itself — it found
+> **This document has been revised three times.** A *metrics* review (§7) corrected how flights
+> were scored and reported. A *realism* review (§8) corrected the simulator itself — it found
 > that the camera's motion blur had never actually done anything, so **all 16 `himax_typical`
-> flights were re-flown** and the suite re-scored. No verdict changed. Read §7 and §8 before
-> comparing against any earlier copy of this file.
+> flights were re-flown** and the suite re-scored. A *root-cause* review (§9) then found that the
+> document's central causal claim about the distance failure was wrong, and withdrew it; no
+> flight and no verdict changed. Read §7, §8 and §9 before comparing against any earlier copy
+> of this file.
 
 ---
 
@@ -81,7 +96,61 @@ where each threshold came from, and a per-attempt ledger); the same table for a 
 
 ## 3. Findings
 
-### 3.1 The drone parks too far away — and it is the size head, not the controller
+### 3.1 The drone parks too far away — and the cause published here was wrong
+
+> **Superseded Sep 12.** This section was published as *"The drone parks too far away — and it
+> is the size head, not the controller"*. **The heading and its conclusion are withdrawn.** The
+> observation stands: 6 of the 7 failures are the drone settling near 3 m instead of 1.94 m, and
+> those cells still FAIL. The *cause* was misattributed:
+>
+> - **It is a simulator artefact, not a network defect.** The MuJoCo groundplane material in
+>   `build_scene.py` (line 554 as this suite was flown) and `build_person_scene.py:34` carried
+>   `reflectance="0.2"` — a 20%
+>   mirror. The renderer draws the subject's reflection below its feet, and the network reads
+>   person-plus-reflection as one object. Measured by rendering each frame with and without the
+>   subject geom: the subject is drawn **1.53× taller than its panel at 2.4 m, rising to 2.01× at
+>   3.8 m** — the same direction and the same order of magnitude as the 1.345–1.649× the table
+>   below reports, over the same distance range, and rising with distance the same way. (It is
+>   not an exact per-cell match: at 2.69 m the drawing error interpolates to ≈1.64× against a
+>   published 1.345×. The two quantities are measured differently and are not expected to agree
+>   to the decimal — what matters is that the renderer, not the network, supplies the error.)
+>   Turn the mirror off in the compiled model and the same scene, same checkpoint, gives 0.91×
+>   (float) / 0.99× (chip).
+> - **The size head reads real people correctly.** On the 2635 COCO val2017 images containing a
+>   person, run through the project's own validation transform and scored against the trainer's
+>   own label, the float head's mean signed error is **−0.015**; over the 1475 images in the
+>   follower's actual size regime (0.25–0.85) it is **−0.007**, and over the intermediate subset
+>   **−0.043**. Every subset **under**-reads. On a 700-image slice (364 with a person) the
+>   deployed *chip* head scores **+0.005**, with its effective bucket-1→2 boundary at true size
+>   **0.506 against a nominal 0.500**. It is noisy (bucket exact-match 0.45–0.61), not biased.
+> - **A second, independent defect: the 1.94 m target is unreachable.** `follow_person.py:367`
+>   zeroes `vx` the instant the argmax bucket reads 2, and a *perfect* size head flips to bucket 2
+>   at image fraction 0.500, i.e. `1.7 / (2 · 0.500 · tan 35°)` = **2.428 m**. The M7 gate targets
+>   `HOLD_K·H` = 1.942 m, the bucket *centre*. **0.486 m of the reported M7 error is unreachable
+>   by construction, with any network.** The gate could never have passed.
+> - **The over-read ratio column is circular.** `M7_size_overread_ratio` is computed over a window
+>   that *starts* at the first bucket-2 frame, so its numerator sits near 0.625 by construction and
+>   the ratio reduces to `d / 1.942`. It never measured the size head.
+>
+> **Consequence: the M7 cells of this suite characterise a simulator artefact plus an unreachable
+> gate. Do not cite them as evidence about the drone's real distance-keeping ability, and do not
+> retrain or re-tune the size head on the strength of them.** Full analysis, every number
+> reproducible from a named script: `docs/eval_results/2026-09-12-distance/README.md` (read its
+> §12 verification note before quoting its §6). Summary of what this changes: §9.
+>
+> **Reproduction caveat, added by the verification pass.** Of that report's 12 scripts, 3
+> (`coco_size_probe.py`, `paste_probe.py`, `flip_analysis.py`) touch no scene file and were
+> re-run independently — they reproduce to the digit (−0.0145 / −0.0067 / −0.0432 signed error
+> over n=2635 / 1475 / 2059; paste-probe median 0.91×, min 0.78×, max 1.11× over the 9 of 12
+> cutouts that reach bucket 2; flip distances 3.29 m and 3.61 m against the 2.428 m floor). The
+> other 9 load `scenes_v2/*/scene.xml` from disk, and **those scenes have since been rebuilt
+> matte** (`reflectance="0"`). Running them now measures the fixed floor, not the mirror: to
+> reproduce the 1.53×–2.01× drawing error and the mirror-off A/B you must first rebuild with
+> `build_scene.py --all --floor-reflectance 0.2`. Those nine numbers are **cited here, not
+> re-verified** by this pass.
+>
+> The published text follows, kept for the record, with the individual claims the root-cause
+> review disproved marked in place.
 
 **6 of the 7 failures are this one problem.** The follower drives
 `vx = k_fwd * (0.625 − size_value)` and stops closing the instant the decoded size reaches the
@@ -106,6 +175,16 @@ the per-flight spread of the ratio. The ordering is monotone and holds under eve
 window tried (last 5 s and last 10 s give 1.31–1.75×), so the finding does not depend on the
 window — but the numbers above are the ones the scorer computes, and they are the ones to quote.
 
+> **Withdrawn Sep 12 — this table is not evidence about the size head.** The "over-read ratio"
+> column is a restatement of the "mean distance" column: the window it is computed over begins at
+> the first bucket-2 frame, and the drone stops moving there, so the decoded mean is pinned near
+> 0.625 and the ratio reduces to `d / 1.942`. Checked against `scoreboard.json` row by row, the
+> published ratio and `d / 1.942` agree to ±0.04 on every cell that reached hold (e.g.
+> `B.moving__ships` 1.649 vs 1.631; `B.moving__delta_camera` 1.567 vs 1.570; `A.static__proven`
+> 1.304 vs 1.344). What the ratios do measure is the **rendered** subject height, which the floor
+> mirror inflates by 1.53–2.01× over the same distance range. The metric should be dropped or
+> renamed; that is a change to `scoreboard.py`, which this correction does not touch.
+
 Four independent checks say this is real perception behaviour, not a harness artefact:
 
 1. **It is not the controller.** `cmd_vx` is exactly 0.00 while the drone sits at 3.4–3.8 m with
@@ -113,11 +192,34 @@ Four independent checks say this is real perception behaviour, not a harness art
 2. **It is not the scene.** The panel is a box of half-height 0.8500 (= 1.700 m, matching the
    manifest), and the rendered person spans 99.4% of it (1.690 m of 1.700 m). The geometry
    behind the distance target is honest to 0.6%.
+
+   > **Disproved Sep 12 — this is the check that missed it.** Both halves of the sentence are
+   > true and neither one is the question. The panel *is* right: rendered against the renderer's
+   > own segmentation buffer over 61 distances, the panel subtends `1.0011×` (min 0.9872, max
+   > 1.0101) of the angle a real 1.7 m person would — ±1 pixel in 244. And the texture *does*
+   > fill it. But "the rendered person spans 99.4% of the panel" measures the photo on the card,
+   > **not what the card puts on the screen.** Differencing each frame against the same frame with
+   > the subject geom hidden — everything the subject contributes to the image — gives an apparent
+   > height of **1.53–2.01× the panel**, all of it the floor reflection. It is the scene.
 3. **It is not the closed loop.** `build_scene.py --preview` probes the float model on a clean
    render with no simulator and no follower: at 2.69 m from a 1.7 m person, geometry says size
    0.451 (bucket 1) and the model returns 0.625 (bucket 2). The bias is visible in one still frame.
+
+   > **Disproved Sep 12.** True, and it rules out the follower — but not the renderer.
+   > `--preview` renders the same scene file, with the same reflective groundplane, so it
+   > reproduces the artefact rather than isolating the network. The controls that *do* remove the
+   > renderer point the other way: compositing a masked COCO person onto a flat wall at the exact
+   > pixel height the sim would produce gives a boundary ratio of **0.91× median** across 12
+   > subjects (0.78–1.11×) — including **0.91× for this suite's own subject**, the one 14 of the
+   > 18 scenes use — and flipping `mat_reflectance` to 0.0 in the compiled model, changing nothing
+   > else, gives **0.91×** on the rendered scene too. Two unrelated code paths agree.
 4. **It is not new.** The *proven* configuration over-reads by 1.345×. The September baseline's
    "closed to 2.3 m" was never the 1.94 m the control law aims at.
+
+   > **Still true, and it now reads the other way.** The cause is not new either: every scene ever
+   > built by `build_scene.py` or `build_person_scene.py` carries `reflectance="0.2"`, so the
+   > September baselines were measured through the same mirror. And "2.3 m was never 1.94 m" is
+   > the *second* defect (the 2.428 m control-law floor), not evidence about the network.
 
 The two `himax` rows moved slightly when those flights were re-flown on the fixed camera model
 (§8): 1.504 → 1.568× and 1.632 → 1.649×. The ordering, and the conclusion, are unchanged.
@@ -129,6 +231,27 @@ not a point: the static ships-as cell was re-flown four times and finished at 3.
 the near end of that range is the difference between "following me" and "watching me from across
 the room". The fix is in the size head (more buckets, or a scalar size output), not in `k_fwd` —
 the quantisation floor alone is ±0.40 m.
+
+> **Corrected Sep 12.** The recommended fix is withdrawn: **do not add buckets, add a scalar size
+> output, or retrain the size head on the strength of this suite.** §3 of the root-cause report
+> shows there is nothing to fix there. The two fixes it does identify belong to other people's
+> files and were **unflown as of this correction** (if a re-fly lands it will be recorded under
+> `docs/eval_results/`, and this paragraph should be updated to point at it): (a) set the
+> groundplane `reflectance` to 0.0 and rebuild the 18 scenes — which invalidates every scene on
+> disk and every published simulator result including
+> the September baselines, so it is a team call; (b) give `size` the soft decode that `x` already
+> has, or require N consecutive bucket-2 frames before zeroing `vx`, which changes flight
+> behaviour and must be flown before it ships. And the M7 report itself needs a decision: gate
+> against 2.428 m, which is what this control law can achieve, or change the law.
+>
+> **The 2.7–3.4 m range above is a simulator measurement contaminated by the mirror and must not
+> be quoted as a hardware prediction.** The root-cause report nonetheless predicts **~3 m on real
+> hardware for an unrelated reason**: the head is noisy, the law zeroes `vx` on a *single*
+> bucket-2 frame, and at a true size of 0.35–0.40 (a 1.7 m person at ≈3.2–3.4 m) it calls bucket
+> ≥ 2 on 24% of real COCO frames, so the drone parks wherever the first outlier fires — a
+> different distance every run. That prediction is a desk calculation from COCO statistics and
+> **is UNVERIFIED on hardware**; the coincidence of the two numbers is not confirmation of
+> either.
 
 ### 3.2 The cost of realism stacks, roughly additively, and the camera dominates
 
@@ -151,6 +274,15 @@ did by comparing against a stale 2-repeat baseline of 2.668 m.
 
 **Pointing error is untouched by all of it**: 2.77° proven → 2.87° (speed) → 2.91° (network) →
 2.99° (camera) → 3.16° (all three). Realism costs distance, not heading.
+
+> **Caveat added Sep 12.** The *distance* half of this table inherits §3.1's problem: every row
+> was flown through the reflective floor, which inflates the apparent subject by 1.5–2.0× in all
+> five configurations, so the deltas are differences between four contaminated numbers. A
+> render-in-the-loop replay of the forward channel (not a flight, and run on the float network)
+> suggests the artefact dominates and compresses the camera's contribution — with the mirror on
+> it puts clean at 3.37 m and himax at 3.21 m, and with it off at 2.24 m and 2.72 m. **Treat the
+> per-factor distance costs as provisional until the five cells are re-flown on a matte floor.**
+> The *pointing* row is unaffected by any of this and stands.
 
 ### 3.3 The drone chases a dog, and the chip network does not save it
 
@@ -234,6 +366,17 @@ error, while the gate is applied to a *settled-window mean*. Those differ:
 
 Every ships-as cell fails on both quantities, so the headline finding does not depend on this.
 But whoever owns the spec should decide which quantity M7 gates and make the basis string match it.
+
+> **A third problem with M7, found Sep 12: its target is unreachable.** M7 is scored against
+> `HOLD_K·H` = 1.942 m, the centre of size bucket 2. But `follow_person.py:367` sets
+> `vx = k_fwd · (0.625 − size_value)` where `size_value` is the **argmax** bucket centre from the
+> current frame — one of {0.125, 0.375, 0.625, 0.875}, no temporal filter — so forward motion
+> stops dead the first frame the bucket reads 2. A *perfect* size head flips at image fraction
+> 0.500, i.e. `1.7 / (2 · 0.500 · tan 35°)` = **2.428 m**. **0.486 m of every M7 error in this
+> suite is structural and no network can remove it.** `GATE_BASIS["M7_mean"]` half-knows this —
+> it justifies the 0.75 m threshold by "the approach parks near the far edge (~0.49 m)" — but the
+> headline target quoted throughout this document is still 1.94 m. Either gate against 2.428 m or
+> change the law; both live in files this correction does not own.
 
 **`A.static__proven` is a coin flip, and it is now scored on every flight of it.** The cell has
 five valid flights, with settled-window means of 0.611, 0.658, 0.669, 0.782 and 0.953 m against a
@@ -515,3 +658,49 @@ worse and was not fixed. The measured remedy, not yet applied: skip the convolut
 kernel's side tap falls below ~0.0005, which at the observed in-flight rates skips 64.5% of
 frames while forgoing at most ~0.26 DN, well under the quantisation floor.
 
+---
+
+## 9. What the root-cause review changed (Sep 12)
+
+A third review asked the one question §3.1 had answered without a test that could separate the
+renderer from the network: *is the size head actually over-reading?* It is not. The full analysis, with a named script and a reproduction
+command behind every number, is in
+**`docs/eval_results/2026-09-12-distance/README.md`** — read its §12 verification note before
+quoting its §6.
+
+**No flight was re-flown, no scene file was changed, no verdict changed.** 7 cells still pass, 7
+still fail, on the same gates. What changed is what this document says those failures *mean*.
+
+| # | Claim as published | What the review measured |
+|---|---|---|
+| 1 | "**The size head over-reads by 1.345–1.649×**" (§3.1, and the `EXPERIMENTS.md` entry's "1.6–1.8x") | **Withdrawn.** On the 2635 COCO val2017 images with a person, scored through the project's own validation transform against the trainer's own label, the float head's mean signed error is **−0.015** (**−0.007** over the 1475 images in the follower's 0.25–0.85 regime, **−0.043** over the intermediate subset) — every subset **under**-reads. On a 700-image slice the deployed **chip** head scores **+0.005**, boundary at true size 0.506 against a nominal 0.500. It is *noisy* (bucket exact-match 0.45–0.61), not biased. Composited onto a flat wall at exactly the pixel height the sim would produce, 12 subjects — including this suite's own — give a boundary ratio of **0.91× median**, not 1.6×. |
+| 2 | "It is not the scene — the rendered person spans 99.4% of the panel" (§3.1 check 2) | **Disproved.** That measures the texture on the card. The card's contribution *to the image*, measured by differencing each frame against the same frame with the subject geom hidden, is **1.53× the panel at 2.4 m rising to 2.01× at 3.8 m** — the floor reflection. Cause: `reflectance="0.2"` on the groundplane material — in `build_scene.py` at line 554 and `build_person_scene.py:34` **as this suite was flown**, and present then in all 18 `scenes_v2/*/scene.xml` and all 3 legacy `scenes/*/scene_person.xml`. (Since this correction was written, the scene builder has made the floor matte by default and the 18 `scenes_v2` scenes now carry `reflectance="0"`; `build_person_scene.py:34` and the 3 legacy scenes still carry 0.2. The line number above is the flown version, not the current one.) The geometry the *panel* subtends is correct to ±1 pixel in 244 (1.0011× over 61 distances), and `scoreboard.py`'s `HOLD_K`/`BAND_K` pinhole arithmetic is correct. |
+| 3 | "It is not the closed loop — `--preview` shows the bias in one still frame" (§3.1 check 3) | **Disproved.** `--preview` renders the same reflective floor, so it reproduces the artefact rather than isolating the network. Flipping `mat_reflectance` to 0.0 on the *compiled* model — one number, same scene file, same checkpoint — moves the flip from 3.30 m to 2.20 m (float, PIL-bilinear preprocessing) and from 3.10 m to 2.40 m (chip through `firmware_preprocess`, i.e. **0.99× of the 2.428 m ideal**). Its own author's caveat applies: "outermost bucket ≥ 2" is a maximum over a noisy non-monotonic curve, so the ±0.3 m of quoted precision on these numbers is not real. The *direction and size* of the move is the finding, not the decimals. |
+| 4 | `M7_size_overread_ratio` is independent evidence about the size head | **Withdrawn as circular.** Its window starts at the first bucket-2 frame and the drone stops there, so the numerator is pinned near 0.625 and the ratio reduces to `d / 1.942`. Verified against this folder's own `scoreboard.json`: published ratio vs `d / 1.942` is 1.649 vs 1.631 (`B.moving__ships`), 1.567 vs 1.570 (`B.moving__delta_camera`), 1.304 vs 1.344 (`A.static__proven`). Drop or rename it — a `scoreboard.py` change, not made here. |
+| 5 | M7's target is 1.94 m | **Unreachable by construction.** `follow_person.py:367` zeroes `vx` on a single argmax bucket-2 frame; a perfect head flips at 2.428 m. **0.486 m of every M7 error is structural.** The gate could not have passed with any network. |
+| 6 | "The fix is in the size head (more buckets, or a scalar size output)" (§3.1) | **Withdrawn. Do not retrain or re-tune the size head on the strength of this suite.** The candidate fixes are (a) `reflectance` → 0.0 and rebuild the scenes — which invalidates every scene on disk and every published simulator result, a team call; (b) a soft size decode, or N consecutive bucket-2 frames before stopping — a flight-behaviour change that must be flown; (c) a decision about what M7 gates. **None had been flown as of this correction** — the predicted effects come from a render-in-the-loop replay of the forward channel on the float network, not from the acceptance suite — and all three live in files this correction does not own. If a re-fly lands it will be recorded under `docs/eval_results/`. **Update, later the same day:** (a) has landed in the working tree — the floor is matte by default and the 18 `scenes_v2` scenes are rebuilt — and a re-fly is running under `docs/eval_results/2026-09-12-mirror-refly/`, whose README is still a placeholder marked "do not cite". So (a) is implemented and still **unflown**; (b) and (c) are untouched. |
+
+**What this does *not* change.** The observed behaviour, every distance measured, every verdict,
+and every non-M7 finding. The drone did settle near 3 m in these flights; those cells fail; the
+pet result, the occlusion results, the empty-room and furniture results, the pointing errors and
+the §7/§8 corrections are all untouched. What is withdrawn is the *explanation*, and with it the
+right to read the M7 numbers as a statement about the drone.
+
+**How to read the M7 cells from now on:** as a measurement of a simulator artefact plus an
+unreachable gate. They do not tell you what the real drone will do. The root-cause report's own
+hardware expectation — that a real drone will stop wherever the first false bucket-2 frame
+fires, around 3 m, at a different distance every run, for reasons that have nothing to do with
+the mirror — is a desk calculation from COCO statistics and is **UNVERIFIED**: nothing in either
+document has been near hardware.
+
+**Not corrected here, and owned by someone else:**
+
+- `scoreboard.py` — the comment at line 419 ("how far the size head over-reads"), the metric name
+  `M7_size_overread_ratio`, and the 1.942 m M7 target. `scoreboard.md` is generated from it and
+  was not hand-edited; it carries no causal claim, only the band definition "every distance the
+  size head calls bucket 2", which is correct as a definition.
+- `docs/hardware/lab_session_runbook.md` **has since been corrected by its own owner** (the SKIP
+  entry now carries the mirror cause, the 2.43 m floor and an explicit "do not retrain or re-tune
+  the size head"). When this section was first written it still called the distance failure "a
+  size-head problem, diagnosable at a desk from the frames M4 produces"; that wording is gone.
+  The M4 known-distance clips remain the right hardware test.

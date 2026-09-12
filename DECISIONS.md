@@ -3,6 +3,38 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-12** — The published cause of the distance failure is WITHDRAWN. The
+  Sep 11 suite's "the size head over-reads by 1.6-1.8x" is wrong: the MuJoCo
+  groundplane material carries `reflectance="0.2"`, a 20% mirror, so the renderer
+  draws subjects 1.5-2.0x too tall and the network reads person-plus-reflection
+  as one object. The size head reads real people correctly: mean signed error
+  -0.015 over the 2635 COCO val images with a person and -0.007 over the 1475 in
+  the follower's own size regime (every subset under-reads), and +0.005 on the
+  deployed chip network over a 700-image slice.
+  Separately, the follower's control law cannot reach 1.94 m at all - it stops on
+  a single argmax bucket-2 frame, whose perfect-head distance is 2.428 m - so the
+  M7 gate targeted a distance the code cannot produce. **The Sep 11 M7 results
+  characterise a simulator artefact plus an unreachable gate and are not evidence
+  about the drone's real distance keeping.** The observed behaviour and every
+  verdict are unchanged (still 7 pass / 7 fail); only the explanation is
+  withdrawn. Rejected: retraining or re-tuning the size head, which the suite
+  appeared to justify and the measurements do not. Evidence:
+  `docs/eval_results/2026-09-12-distance/`. OPEN for the team, because each
+  belongs to someone else's file and one changes flight behaviour six days before
+  the first hardware session: (a) set `reflectance` to 0.0 and rebuild the 18
+  scenes, which invalidates every scene on disk and every published simulator
+  result including the September baselines; (b) give `size` the soft decode `x`
+  already has, or require N consecutive bucket-2 frames before stopping - must be
+  flown, not shipped on a desk result; (c) decide whether M7 gates 2.428 m or the
+  control law changes, and drop or rename `M7_size_overread_ratio`, which is
+  algebraically `d / 1.942` and never measured the size head. None of the three
+  had been flown when this entry was written; the predicted effect of the scene
+  fix is a render-in-the-loop replay, not a re-fly of the acceptance suite.
+  Later the same day: (a) landed in the working tree — `build_scene.py` now defaults to
+  `FLOOR_REFLECTANCE = 0.0` and the 18 `scenes_v2` scenes carry `reflectance="0"` — and a
+  re-fly is in progress under `docs/eval_results/2026-09-12-mirror-refly/`, still a
+  placeholder. So (a) is implemented but UNFLOWN; (b) and (c) remain open.
+
 - **2026-09-12** — Simulator results are reported from a realistic camera and
   the real chip network, not the float model on clean renders. A hard safety
   gate is scored on the numerically **worst** repeat, never the first failing

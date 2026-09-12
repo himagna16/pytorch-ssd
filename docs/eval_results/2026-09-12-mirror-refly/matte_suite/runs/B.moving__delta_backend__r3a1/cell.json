@@ -1,0 +1,20 @@
+{
+  "cell_id": "B.moving__delta_backend",
+  "scene": "s01_control_moving",
+  "scene_class": "B",
+  "backend": "chip",
+  "camera": "clean",
+  "speed": "full",
+  "rate_hz": 0,
+  "latency_ms": 0,
+  "repeat": 3,
+  "attempt": 1,
+  "duration_s": 50,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s01_control_moving",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte/runs/B.moving__delta_backend__r3a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte/runs/B.moving__delta_backend__r3a1/truth.csv",
+  "sensor_seed": 1003,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core"
+}

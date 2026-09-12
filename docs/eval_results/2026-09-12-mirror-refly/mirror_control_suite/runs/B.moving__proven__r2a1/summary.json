@@ -1,0 +1,25 @@
+{
+  "end_reason": "error: Exception: Connection timed out",
+  "control_steps": 0,
+  "loop_hz": 0,
+  "processed_hz": 0,
+  "tracking_fraction": 0.0,
+  "mean_abs_x_while_tracking": null,
+  "centered_fraction_while_tracking": null,
+  "z_max": null,
+  "yaw_range_deg": null,
+  "final_pose": {},
+  "stale_events": 0,
+  "z_after_landing": null,
+  "rate_hz_requested": 0.0,
+  "latency_ms_requested": 0.0,
+  "backend": "float",
+  "backend_info": {
+    "backend": "float",
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+    "head": "xbin9_size_bucket4"
+  },
+  "frames_processed": 0,
+  "frames_dropped": 0,
+  "torn_frames": 0
+}

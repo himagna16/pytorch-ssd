@@ -1,0 +1,43 @@
+{
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1",
+  "cell": {
+    "cell_id": "A.static__proven",
+    "scene": "s15_static_offset",
+    "scene_class": "A",
+    "backend": "float",
+    "camera": "clean",
+    "speed": "full",
+    "rate_hz": 0,
+    "latency_ms": 0,
+    "repeat": 1,
+    "attempt": 1,
+    "duration_s": 45,
+    "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s15_static_offset",
+    "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1",
+    "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1/truth.csv",
+    "sensor_seed": 1001,
+    "freeze_expected": false,
+    "needs_truth": true,
+    "suite": "core"
+  },
+  "valid": false,
+  "validity": {
+    "sim_wall_ratio": null,
+    "achieved_hz": 0.0,
+    "requested_hz": 0.0,
+    "min_step_gap_ms": null,
+    "torn_fraction": null,
+    "z_max": null,
+    "truth_covers_window": null
+  },
+  "invalid_reasons": [
+    "sim/wall None < 0.8",
+    "fewer than 2 control steps",
+    "never reached flight height (z_max=None)",
+    "no follower control log, so the truth log covers nothing"
+  ],
+  "metrics": {},
+  "gates": [],
+  "repeat": 1,
+  "attempt": 1
+}

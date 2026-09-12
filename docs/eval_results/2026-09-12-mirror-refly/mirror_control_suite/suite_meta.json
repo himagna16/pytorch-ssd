@@ -1,0 +1,11 @@
+{
+  "suite": "core",
+  "repeats": 3,
+  "cells": 7,
+  "started_utc": "2026-09-12T18:41:42Z",
+  "duration_s": 1765,
+  "model": {
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+    "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx"
+  }
+}

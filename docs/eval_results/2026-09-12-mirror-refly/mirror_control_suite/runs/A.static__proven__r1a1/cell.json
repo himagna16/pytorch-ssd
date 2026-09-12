@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.static__proven",
+  "scene": "s15_static_offset",
+  "scene_class": "A",
+  "backend": "float",
+  "camera": "clean",
+  "speed": "full",
+  "rate_hz": 0,
+  "latency_ms": 0,
+  "repeat": 1,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s15_static_offset",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1/truth.csv",
+  "sensor_seed": 1001,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core"
+}

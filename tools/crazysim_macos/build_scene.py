@@ -45,6 +45,12 @@ Usage:
     build_scene.py --all [--preview] [--check]
     build_scene.py --def scene_defs/s03_pets_only.json --preview
     build_scene.py --all --check          # verify COCO ids + cutouts, build nothing
+    build_scene.py --all --preview --floor-reflectance 0.2   # pre-Sep-12 mirrored floor
+
+The groundplane is MATTE (reflectance 0.0) as of 2026-09-12. It was 0.2 before
+that, which MuJoCo renders as a specular mirror; see FLOOR_REFLECTANCE below.
+Scenes built with different values are not comparable and every flight result
+must say which it used - the manifest records it under room.floor_reflectance.
 """
 import argparse
 import hashlib
@@ -90,6 +96,21 @@ BG_REF_RANGE_M = 2.5
 ROOM = {"far_x": 7.0, "back_x": -3.0, "left_y": 6.0, "right_y": -6.0, "height": 2.0}
 DRONE_START = (0.0, 0.0)
 FLIGHT_HEIGHT = 0.8
+
+# --- groundplane reflectance ------------------------------------------------
+# 0.0 = matte floor. This was 0.2 until Sep 12 2026, inherited unchanged from
+# build_person_scene.py, and 0.2 in MuJoCo is a *specular mirror*, not a sheen:
+# the renderer draws a full mirror image of every subject hanging below its feet.
+# Measured on the built s15/s01 scenes, that made the subject's drawn vertical
+# extent 1.53x the panel at 2.4 m rising to 2.01x at 3.8 m (the reflection spans
+# world z = 0 -> -1.7 against the panel's 0 -> +1.7, so once it clears the frame
+# bottom the combined extent is exactly 2x). The follower's size head then read a
+# subject 1.5-2x too tall and stopped the drone early. See
+#   docs/eval_results/2026-09-12-distance/README.md   (root cause)
+#   docs/eval_results/2026-09-12-mirror-refly/README.md (the fix + re-fly)
+# Rebuild with --floor-reflectance 0.2 to reproduce the pre-Sep-12 scenes, e.g.
+# to re-derive the Sep 11 acceptance baselines.
+FLOOR_REFLECTANCE = 0.0
 
 # --- camera / model geometry (see spec_scenes.md 4.2) -----------------------
 FRAME_W, FRAME_H = 324, 244
@@ -519,7 +540,8 @@ def subject_body_xml(s, aspect, drives):
                           "z_center_m": round(float(s.get("z_center_m", h / 2)), 4)}
 
 
-def build_xml(d, subj_xml, extra_assets, far_wall_mat, visual, lights):
+def build_xml(d, subj_xml, extra_assets, far_wall_mat, visual, lights,
+              floor_reflectance: float = FLOOR_REFLECTANCE):
     tex = "".join(
         f'    <texture type="2d" name="tex_{s["name"]}" file="{s["name"]}.png"/>\n'
         f'    <material name="mat_{s["name"]}" texture="tex_{s["name"]}" rgba="1 1 1 1"/>\n'
@@ -551,7 +573,7 @@ def build_xml(d, subj_xml, extra_assets, far_wall_mat, visual, lights):
     <texture type="skybox" builtin="gradient" rgb1="{sky}" rgb2="0 0 0" width="512" height="3072"/>
     <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4"
              rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="512" height="512"/>
-    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="2 2" reflectance="0.2"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="2 2" reflectance="{floor_reflectance:g}"/>
     <material name="wall" rgba="0.62 0.62 0.66 1"/>
     <material name="pillar" rgba="0.5 0.35 0.25 1"/>
     <material name="obstacle" rgba="0.4 0.5 0.4 1"/>
@@ -575,7 +597,8 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build(d, coco, coco_root: Path, out_root: Path, argv, background_mode: str = "flat"):
+def build(d, coco, coco_root: Path, out_root: Path, argv, background_mode: str = "flat",
+          floor_reflectance: float = FLOOR_REFLECTANCE):
     out = out_root / d["scene_id"]
     out.mkdir(parents=True, exist_ok=True)
     visual, lights, extra_assets, far_wall_mat, light_manifest = lighting_block(d.get("lighting", "default"))
@@ -635,7 +658,7 @@ def build(d, coco, coco_root: Path, out_root: Path, argv, background_mode: str =
             "note": s.get("note", ""),
         })
 
-    xml = build_xml(d, subj_xml, extra_assets, far_wall_mat, visual, lights)
+    xml = build_xml(d, subj_xml, extra_assets, far_wall_mat, visual, lights, floor_reflectance)
     scene_path = out / "scene.xml"
     scene_path.write_text(xml)
 
@@ -718,7 +741,15 @@ def build(d, coco, coco_root: Path, out_root: Path, argv, background_mode: str =
             "asset_sha256": {f"{s['name']}.png": sha256(out / f"{s['name']}.png") for s in subjects},
         },
         "room": {"template": "person_room_v1", "walls": ROOM, "wall_rgb": list(WALL_RGB),
-                 "drone_start": list(DRONE_START), "flight_height_m": FLIGHT_HEIGHT},
+                 "drone_start": list(DRONE_START), "flight_height_m": FLIGHT_HEIGHT,
+                 "floor_reflectance": floor_reflectance,
+                 "floor_reflectance_note": (
+                     "MuJoCo groundplane material reflectance. 0.0 = matte. Scenes built "
+                     "before 2026-09-12 used 0.2, which is a specular mirror: it drew a "
+                     "reflection of every subject below its feet and made the subject's "
+                     "apparent height 1.53x (2.4 m) to 2.01x (3.8 m) the panel. Any result "
+                     "flown against a scene with a non-zero value here is not comparable "
+                     "with one flown against a matte floor.")},
         "lighting": light_manifest,
         "camera": {"frame_wh": [FRAME_W, FRAME_H], "fovy_deg": FOVY_DEG,
                    "focal_px": round(FOCAL_PX, 2), "crop": "center 244x244 -> 128x128",
@@ -1004,6 +1035,12 @@ def main():
                          "valid. 'sampled' measures what is really behind each panel and "
                          "paints that instead - better edge match on people and pets, but it "
                          "changes what the network reports, so it is opt-in and unflown.")
+    ap.add_argument("--floor-reflectance", type=float, default=FLOOR_REFLECTANCE,
+                    help="MuJoCo groundplane material reflectance. Default %(default)s "
+                         "(matte). 0.2 was the value before 2026-09-12 and is a specular "
+                         "mirror - it draws a reflection of each subject below its feet and "
+                         "inflates the subject's apparent height 1.5-2x. Pass 0.2 only to "
+                         "reproduce the pre-Sep-12 scenes.")
     ap.add_argument("--no-model", action="store_true", help="skip the model probe in --preview")
     ap.add_argument("--unstable-root", type=Path, default=DRONE_ROOT / "pytorch_ssd_unstable")
     ap.add_argument("--ckpt", type=Path,
@@ -1031,10 +1068,12 @@ def main():
 
     argv = sys.argv[1:]
     for d in defs:
-        out, manifest = build(d, coco, a.coco_root, a.out, argv, a.background)
+        out, manifest = build(d, coco, a.coco_root, a.out, argv, a.background,
+                              a.floor_reflectance)
         n = len(manifest["subjects"])
         drives = manifest["scripted_motion"]["drives"]
         print(f"built {out}  ({n} subject(s), lighting {manifest['lighting']['variant']}"
+              f", floor reflectance {a.floor_reflectance:g}"
               f"{', ' + str(len(drives)) + ' scripted drive(s)' if drives else ''})")
         if a.preview:
             cam_xs = a.cam_x or d.get("preview_cam_x") or [0.0, 1.0, 2.0]

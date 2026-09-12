@@ -1,6 +1,53 @@
 # Experiment Log
 
+## Sep 12, 2026 — CORRECTION: the distance failure is a reflective simulator floor, not the size head (Sai)
+
+The Sep 12 simulator entry below reported that the drone settles at about 3.0-3.3 m
+instead of 1.94 m **because the size head over-reads by 1.6-1.8x**. The observation is
+right; **the cause is wrong and is withdrawn.** Evidence, with a reproduction command
+behind every number: `docs/eval_results/2026-09-12-distance/`.
+
+| claim | status |
+|---|---|
+| the drone settles near 3 m instead of 1.94 m, and those cells FAIL | **unchanged** - still true, still failing |
+| the size head over-reads by 1.6-1.8x | **withdrawn** - mean signed error **-0.015** over the 2635 COCO val2017 images with a person, **-0.007** over the 1475 in the follower's own 0.25-0.85 size regime, -0.043 over the intermediate subset: every subset *under*-reads. On a 700-image slice the deployed chip network scores **+0.005**, with its bucket boundary at true size 0.506 against a nominal 0.500. The head is noisy (bucket exact-match 0.45-0.61), not biased |
+| the scene geometry is honest ("the person spans 99.4% of the panel") | **true but not the question** - that measures the texture on the card. The card's contribution to the image is 1.53x the panel at 2.4 m rising to 2.01x at 3.8 m |
+| cause of that | **the MuJoCo groundplane material carries `reflectance="0.2"`, a 20% mirror**, in `build_scene.py` (the `groundplane` material, line 554 as the suite was flown) and `build_person_scene.py:34`, so the network reads the person plus their reflection as one object. Flip it to 0.0 in the compiled model and the chip network reads 0.99x of ideal |
+| the M7 gate's 1.94 m target is reachable | **refuted** - `follow_person.py:367` zeroes forward velocity on a single argmax bucket-2 frame, and a perfect size head flips at 2.428 m. 0.486 m of every M7 error is structural |
+| `M7_size_overread_ratio` measures the size head | **refuted** - its window starts at the first bucket-2 frame, so it reduces to `d / 1.942`. Checked against the published `scoreboard.json`: 1.649 vs 1.631, 1.567 vs 1.570, 1.304 vs 1.344 |
+
+**Consequence.** The Sep 11 suite's M7 cells characterise a simulator artefact plus an
+unreachable gate. They must not be cited as evidence about the drone's real
+distance-keeping ability. **Do not retrain or re-tune the size head on the strength of
+them.** Nothing else in the suite is affected: the pet result, the occlusion results,
+the pointing errors, the empty-room and furniture results and both earlier reviews all
+stand, and no verdict changed (still 7 pass / 7 fail).
+
+**Not fixed, and not this correction's to fix:** setting `reflectance` to 0.0 invalidates
+every scene on disk and every published simulator result including the September
+baselines (team call); giving `size` the soft decode `x` already has changes flight
+behaviour six days before the first hardware session and must be flown; and M7 needs a
+decision about whether it gates 2.428 m or the law changes. `scoreboard.py` still names
+the metric `M7_size_overread_ratio` and still targets 1.942 m. **None of the three had
+been flown when this entry was written**; the predicted effect of the scene fix comes
+from a render-in-the-loop replay of the forward channel on the float network, not from
+the acceptance suite. A re-fly, if one happens, belongs under `docs/eval_results/`.
+
+**Status update, later the same day:** the scene builder has since set the groundplane matte by default (`FLOOR_REFLECTANCE = 0.0`, with a `--floor-reflectance` flag to reproduce the old scenes) and rebuilt the 18 `scenes_v2` scenes, which now carry `reflectance="0"`. That is item (a) landing, in the working tree, not yet committed. A re-fly is in progress under `docs/eval_results/2026-09-12-mirror-refly/`, whose README is still a placeholder marked "do not cite" — **so item (a) is implemented but its effect on the suite is still UNFLOWN and unverified here.** Items (b) and (c) are untouched.
+
+**Nothing here touched hardware, and nothing was re-flown.** The report's own hardware
+expectation - that a real drone stops wherever the first false bucket-2 frame fires,
+around 3 m, at a different distance every run, for reasons unrelated to the mirror - is
+a desk calculation from COCO statistics and is UNVERIFIED.
+
 ## Sep 12, 2026 — A realistic simulator, and what it says about the drone we plan to fly (Sai)
+
+> **Corrected Sep 12 (same day):** the distance finding below is real as an observation but its
+> stated cause — "the size head over-reads by 1.6-1.8x" — is **withdrawn**. The cause is a 20%
+> reflective MuJoCo groundplane that draws subjects 1.5-2.0x too tall, plus a control law whose
+> reachable floor is 2.43 m, so the 1.94 m target was unreachable. The size head reads real
+> people correctly. See the correction entry at the top of this log. Every other finding here
+> stands.
 
 The simulator used to fly the float model against clean renders. It now models
 the camera we actually have and runs the network we actually ship: a Himax
@@ -16,7 +63,7 @@ including every flight's record, in `docs/sim_results/2026-09-11-simv2/`.
 | finding | detail |
 |---|---|
 | the drone chases a dog | confirmed 0.31 s in at confidence 0.87-0.89, latched 68-78% of the flight, drifted 2.301 m and 2.666 m against a 0.5 m limit; survives the chip network and the realistic camera |
-| it does not hold its distance | settles at about 3.0-3.3 m where it should hold 1.94 m, in every chip configuration; the size head over-reads by 1.6-1.8x |
+| it does not hold its distance | settles at about 3.0-3.3 m where it should hold 1.94 m, in every chip configuration. **Cause withdrawn Sep 12:** this was published as "the size head over-reads by 1.6-1.8x"; it is a reflective simulator floor plus an unreachable target. See the correction entry |
 | realism costs, isolated one factor at a time | realistic camera +0.32 m of distance error, chip network +0.13 m, chip frame rate +0.10 m |
 | what survives realism | pointing accuracy and every safety rule |
 
