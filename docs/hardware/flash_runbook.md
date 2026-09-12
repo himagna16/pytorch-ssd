@@ -125,7 +125,7 @@ at `~/Downloads/drone/cfloaderenv` with `cfclient 2026.8` / `cflib 0.1.33`.
 | `cfloader` | `~/Downloads/drone/cfloaderenv/bin/` **only** | yes, re-checked 2026-09-12 |
 | `cfclient` 2026.8 (console + GUI) | `~/Downloads/drone/cfloaderenv/bin/` **only** | yes; PyQt6 6.7.1 import chain OK |
 | libusb (Crazyradio dependency) | `/opt/homebrew/lib/libusb-1.0.dylib` → libusb 1.0.30 | yes, via brew |
-| **`cv2` — MISSING everywhere** | not in any of the five venvs | **no.** Needed only by Bitcraze's `opencv-viewer.py`, i.e. by the *capture* fallback, not by flashing. Install before the lab: see `lab_session_runbook.md` §2.1 |
+| **`cv2` — installed 2026-09-12** | `trainenv` only (4.9.0, pinned, `--no-deps` so numpy stays 1.24.4) | **no.** Needed only by Bitcraze's `opencv-viewer.py`, i.e. by the *capture* fallback, not by flashing |
 
 `cfclient` and `cfloader` live in a **fifth** venv created for this on 2026-09-12,
 next to `trainenv` / `nemoenv` / `crazysimenv` / `doryenv`. `lab_session_runbook.md`

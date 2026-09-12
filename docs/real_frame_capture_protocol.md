@@ -96,9 +96,9 @@ real images. Nothing flies today.
    There is a **second, different** `opencv-viewer.py` under
    `examples/image_processing/FaceDetection/` — not that one. This viewer
    converts raw frames to color, so use it only to see that the stream works;
-   do not score its `--save` images. **It needs `cv2`, which is not installed in
-   any venv on the capture Mac** — see `docs/hardware/lab_session_runbook.md`
-   section 2.1, and install it before the lab. Its `import cv2` is at line 70,
+   do not score its `--save` images. **It needs `cv2`, which is installed in
+   `trainenv`** (see `docs/hardware/lab_session_runbook.md` section 2.1), so run it
+   with that venv's python. Its `import cv2` is at line 70,
    *after* the socket connect at line 58, so a missing cv2 will look like a deck
    fault: it connects, prints `Socket connected`, then dies on the import.
 2. **Mirror check (must pass).** Record two 10 s clips into their own folder,

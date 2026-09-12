@@ -211,18 +211,19 @@ cfclient/cfloader command must be spelled with the full venv path. See
 `docs/hardware/flash_runbook.md` section 3 — this is the single most likely
 copy-paste mistake of the session.
 
-**Still genuinely missing — `cv2`, in every venv on the machine:**
+**`cv2` — INSTALLED 2026-09-12, no longer a blocker:**
 
 ```
-$ for v in trainenv nemoenv crazysimenv cfloaderenv doryenv; do
-    ~/Downloads/drone/$v/bin/python -c "import cv2"; done
-ModuleNotFoundError: No module named 'cv2'          (all five)
+$ ~/Downloads/drone/trainenv/bin/python -c "import cv2, numpy; print(cv2.__version__, numpy.__version__)"
+4.9.0 1.24.4
 ```
 
-What that costs you: Bitcraze's own `opencv-viewer.py` cannot run, and that is
-the designated fallback for "the AP is up but `cpx_grab.py` cannot connect".
-**Install it before you leave** — `~/Downloads/drone/trainenv/bin/python -m pip
-install opencv-python` — and re-run the loop above until it prints a version.
+It is in `trainenv` only, which is the venv the capture commands use. It was
+installed with `--no-deps` and pinned to `opencv-python==4.9.0.80` on purpose:
+`trainenv` holds numpy 1.24.4, which the training and export work depends on, and
+an unpinned install would have dragged numpy forward. Verified after installing
+that numpy is still 1.24.4 and `cflib` still imports. If you ever reinstall it,
+use the same two flags. The other four venvs still have no cv2 and do not need it.
 
 **A trap in that fallback, read from the source on 2026-09-12:**
 `opencv-viewer.py` has `import cv2` at **line 70**, *after* `client_socket.connect()`
@@ -773,8 +774,8 @@ Each one: the symptom, what to do, and how long to spend before moving on.
   `examples/other/wifi-img-streamer/opencv-viewer.py` — use this;
   `examples/image_processing/FaceDetection/opencv-viewer.py` — not this.
 
-  **It needs `cv2`, which is missing from all five venvs on this machine**
-  (section 2.1). Install it before you leave. Its `import cv2` sits at line 70,
+  **It needs `cv2`, which is now installed in `trainenv`** (section 2.1), so run
+  it with that venv's python. Its `import cv2` sits at line 70,
   *after* the socket connect at line 58, so a missing cv2 looks like a deck fault:
   it will connect, print `Socket connected`, and then die on the import. It also has
   no connect timeout — against an unreachable deck it blocks for over a minute
