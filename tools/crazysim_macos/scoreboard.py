@@ -416,14 +416,26 @@ def metrics_for_run(cell, summary, rows, truth, manifest):
                 m["M7_dist_err_settled_max_m"] = round(float(np.max(e)), 3)
                 m["M7_in_band_fraction"] = round(float(np.mean(
                     (d_true[win] >= band[0]) & (d_true[win] <= band[1]))), 3)
-                # How far the size head over-reads, on the SAME window the gate
-                # above is scored on. Computed here so the published table is
-                # regenerable from the run data instead of typed by hand.
+                # Decoded size against the size the geometry implies, on the SAME
+                # window the gate above is scored on.
+                #
+                # CORRECTED Sep 12: this ratio was published as "how far the size
+                # head over-reads" and it is NOT that. The window is *defined* as
+                # the frames where the decoded bucket is 2, so decoded size is
+                # pinned near the bucket-2 value (the size a person subtends at
+                # d_hold) for every frame in it. The ratio therefore reduces to
+                # roughly d_true / d_hold - it restates how far away the drone
+                # parked, which the M7 distance metrics above already say, and
+                # carries no information about the head's accuracy. It is kept
+                # because the components are real measurements, and renamed so
+                # nobody cites it as evidence about the network again. To measure
+                # the size head, score it against images of known subject height
+                # (see docs/eval_results/2026-09-12-distance/).
                 geom = H / (2.0 * d_true[win] * TAN_HALF_FOV)
                 m["M7_size_window_dist_mean_m"] = round(float(np.mean(d_true[win])), 3)
                 m["M7_size_geom_mean"] = round(float(np.mean(geom)), 3)
                 m["M7_size_decoded_mean"] = round(float(np.mean(size_dec[win])), 3)
-                m["M7_size_overread_ratio"] = round(
+                m["M7_decoded_over_geom_ratio"] = round(
                     float(np.mean(size_dec[win]) / np.mean(geom)), 3)
             m["M7_dist_final_m"] = round(float(d_true[-1]), 3)
             m["M7_reached_hold"] = bool(reached)
@@ -809,7 +821,7 @@ def score_cell(cell_id, runs):
                          "M9_gt_halfvisible_to_relatch_s", "M9_reconfirm_latency_s",
                          "M9_track_outage_s",
                          "M7_size_window_dist_mean_m", "M7_size_geom_mean",
-                         "M7_size_decoded_mean", "M7_size_overread_ratio",
+                         "M7_size_decoded_mean", "M7_decoded_over_geom_ratio",
                          "M10_uncertain_fraction_present", "M10_conf_max_absent",
                          "M11_yaw_reversals_per_min", "M6_max_horizontal_drift_m")
                         if aggregate(valid, k)}
