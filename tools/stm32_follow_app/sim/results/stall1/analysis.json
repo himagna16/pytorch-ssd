@@ -1,0 +1,84 @@
+{
+  "run": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/demo_fc/flights/run_stall1",
+  "end_reason": "duration: operator land (followapp.enable = 0)",
+  "active_s": 25.1,
+  "mode_fraction_while_active": {
+    "WAIT_WARMUP": 0.0,
+    "HOVER": 0.026,
+    "FOLLOW": 0.974,
+    "LAND": 0.0
+  },
+  "reasons_while_active": {
+    "none": 0.974,
+    "hover_stale": 0.023,
+    "hover_reconfirm": 0.003
+  },
+  "packets": {
+    "built": 501,
+    "delivered": 501,
+    "dropped_by_fault": 0,
+    "held_by_fault": 15,
+    "send_errors": 0,
+    "app_rxApp": 501,
+    "app_rxRej": 0,
+    "app_rxStale_total": 45
+  },
+  "max_abs_yaw_rate_cmd_dps": 26.67,
+  "max_abs_vx_cmd_mps": 0.2,
+  "max_horizontal_drift_m": 0.672,
+  "yaw_range_deg": [
+    -30.3,
+    21.3
+  ],
+  "z_while_active_m": [
+    0.8,
+    0.92
+  ],
+  "z_after_landing_m": 0.02,
+  "sim_wall_ratio": 0.994,
+  "yaw_convention": {
+    "follow_samples_with_yaw_cmd": 467,
+    "measured_rate_same_sign_as_cmd": 1.0,
+    "median_measured_over_cmd": 0.72
+  },
+  "heading_error_deg": {
+    "at_takeover": 17.0,
+    "mean_abs_4.5_5.5s": 1.2,
+    "turned_toward_person": true,
+    "settled_mean": 3.3,
+    "settled_p90": 6.1,
+    "settled_max": 8.7
+  },
+  "link_stall": {
+    "window_s": [
+      10.0,
+      11.0
+    ],
+    "packets_held": 15,
+    "packets_dropped": 0,
+    "held_packet_latency_s": [
+      0.026,
+      0.965
+    ],
+    "burst_delivered_t": [
+      11.002,
+      11.002
+    ],
+    "rule0_stale_packets_counted": 14,
+    "max_eMs_logged": 967.0,
+    "stopped_steering_after_window_start_s": 0.471,
+    "stop_reason": "hover_stale",
+    "stop_after_last_ontime_packet_s": 0.502,
+    "reasons_in_window": [
+      "hover_reconfirm",
+      "hover_stale",
+      "none"
+    ],
+    "steered_between_window_start_and_burst_end": false,
+    "held_packets_fresh_on_arrival": 2,
+    "resume_follow_after_burst_s": 0.126,
+    "fresh_packets_before_resume": 2,
+    "fresh_bit01_packets_before_resume": 2,
+    "landed": false
+  }
+}

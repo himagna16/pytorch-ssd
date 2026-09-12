@@ -1,0 +1,87 @@
+{
+  "run": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/demo_fc/flights/run_freeze15",
+  "end_reason": "duration: operator land (followapp.enable = 0)",
+  "active_s": 25.07,
+  "mode_fraction_while_active": {
+    "WAIT_WARMUP": 0.0,
+    "HOVER": 0.059,
+    "FOLLOW": 0.941,
+    "LAND": 0.0
+  },
+  "reasons_while_active": {
+    "none": 0.941,
+    "hover_stale": 0.047,
+    "hover_not_confirmed": 0.006,
+    "hover_reconfirm": 0.006
+  },
+  "packets": {
+    "built": 480,
+    "delivered": 480,
+    "dropped_by_fault": 0,
+    "held_by_fault": 0,
+    "send_errors": 0,
+    "app_rxApp": 480,
+    "app_rxRej": 0,
+    "app_rxStale_total": 31
+  },
+  "max_abs_yaw_rate_cmd_dps": 26.67,
+  "max_abs_vx_cmd_mps": 0.2,
+  "max_horizontal_drift_m": 0.626,
+  "yaw_range_deg": [
+    -27.7,
+    22.6
+  ],
+  "z_while_active_m": [
+    0.8,
+    0.91
+  ],
+  "z_after_landing_m": 0.02,
+  "sim_wall_ratio": 0.994,
+  "yaw_convention": {
+    "follow_samples_with_yaw_cmd": 491,
+    "measured_rate_same_sign_as_cmd": 0.984,
+    "median_measured_over_cmd": 0.72
+  },
+  "heading_error_deg": {
+    "at_takeover": 19.3,
+    "mean_abs_4.5_5.5s": 4.2,
+    "turned_toward_person": true,
+    "settled_mean": 3.3,
+    "settled_p90": 6.0,
+    "settled_max": 7.8
+  },
+  "camera_freeze": {
+    "window_s": [
+      10.0,
+      11.5
+    ],
+    "last_good_frame_t": 9.901,
+    "hover_after_last_good_s": 0.487,
+    "hover_ageMs_fw": 502.0,
+    "steered_after_freeze_before_hover": false,
+    "land_after_last_good_s": 15.114,
+    "land_reason": "none",
+    "ageMs_fw_last_sample_before_land": 74.0,
+    "landRsn": 0.0,
+    "no_target_packets_during_freeze": 3,
+    "no_target_spacing_s": [
+      0.502,
+      0.502
+    ],
+    "frames_after_freeze_bits": [
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "first_bit0_frame_index": 3,
+    "resume_follow_after_freeze_end_s": 0.369,
+    "frames_delivered_before_resume": 5,
+    "bit01_packets_before_resume": 3,
+    "steered_before_3rd_bit01_packet": false
+  }
+}

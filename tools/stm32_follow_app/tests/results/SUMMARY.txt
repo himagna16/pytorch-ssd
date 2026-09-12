@@ -1,0 +1,69 @@
+case                                                       clocks    py_v6 viol       c6/c6w viol      py land s         c6w land s        maxage  c6 dl/nv  diff_w py-vs-c6w: mism/non-shift/steps, st0 mism/packets, e_max us | diff py-vs-c6: mism/non-shift/steps
+(g0) +1 s link latency from 5 s, on the ground; take-off a random    {'P3': 298200}   {}/{}            None              None              0.0     0/200     0/0/0, st0 85418, e 1001967 | 0/0/0  [take-off 25s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 84501]
+(g1) ground silence 8 s (NINA down 5-13 s), link +1 s afte random    {'P3': 298200}   {}/{}            None              None              0.0     0/200     0/0/0, st0 85539, e 1006786 | 0/0/0  [take-off 25s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 84552]
+(g2) ground silence 9.9 s, link +1 s after it; take-off at random    {'P3': 298200}   {}/{}            None              None              0.0     0/200     0/0/0, st0 80161, e 1885 | 0/0/0  [take-off 25s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 80161]
+(g3) ground silence 12 s, link +1 s after it; take-off at  random    {'P3': 298200}   {}/{}            None              None              0.0     0/200     0/0/0, st0 73169, e 1595 | 0/0/0  [take-off 25s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 73169]
+(g4) ground silence 30 s, link +1 s after it; take-off at  random    {'P3': 298200}   {}/{}            None              None              0.0     0/200     0/0/0, st0 79797, e 1548 | 0/0/0  [take-off 45s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 79797]
+(g5) +0.08 s at 5 s and again at 16 s (absorbed one by one random    {}               {}/{}            None              None              0.0     0/200     0/0/0, st0 95601, e 80958 | 0/0/0  [take-off 30s: c6 never armed 200/200, c6w never armed 200/200, floor-only stale pkts 95601]
+(g6) CONTROL: healthy link; take-off at 25 s               random    {}               {}/{}            None              None              0.095   0/0       0/0/298200, st0 0, e 1764 | 0/0/298200  [take-off 25s: c6 never armed 0/200, c6w never armed 0/200, floor-only stale pkts 0]
+MC orig                                                    random    {}               {}/{}            (0.012, 3.003)    (0.012, 3.002)    0.49    222/1     18/0/2095500, st0 0, e 2439 | 13/0/1160907  (py_v6 == committed log)
+MC ext                                                     random    {}               {}/{}            (0.006, 3.009)    (0.006, 3.009)    0.496   268/4     13/0/1915287, st0 0, e 2203 | 10/0/955548  (py_v6 == committed log)
+MC orig+nina_outages                                       random    {}               {}/{}            (0.015, 3.006)    (0.015, 3.006)    0.491   197/6     11/0/2095500, st0 0, e 2273 | 10/0/1244727  (py_v6 == committed log)
+MC ext+nina_outages                                        random    {}               {}/{}            (0.013, 3.008)    (0.001, 3.008)    0.497   269/3     13/0/1936242, st0 0, e 2257 | 8/0/955548  (py_v6 == committed log)
+MC orig+nina_outages+esp_outages                           random    {}               {}/{}            (0.012, 3.003)    (0.012, 3.003)    0.491   225/4     24/5/2095500, st0 6, e 2134 | 19/5/1135761  <-- mode diff  (py_v6 == committed log)
+(a) camera outage 10 s                                     random    {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.482   0/0       30/0/538200, st0 0, e 2205 | 30/0/538200  (py_v6 == committed log)
+(b) inference fails every frame 10 s                       random    {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.095   0/0       28/0/538200, st0 0, e 1909 | 28/0/538200  (py_v6 == committed log)
+(c) GAP8 hangs                                             random    {}               {}/{}            (2.992, 2.992)    (2.992, 2.992)    0.482   0/0       0/0/538200, st0 0, e 991 | 0/0/538200  (py_v6 == committed log)
+(d) 1 good frame / 2 s among failures 20 s                 random    {}               {}/{}            None              None              0.095   0/0       0/0/638200, st0 0, e 1628 | 0/0/638200  (py_v6 == committed log)
+(d') 1 good frame / 3.5 s among failures 20 s              random    {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.095   0/0       32/0/638200, st0 0, e 1628 | 32/0/638200  (py_v6 == committed log)
+(e) single failed frame                                    random    {}               {}/{}            None              None              0.095   0/0       0/0/538200, st0 0, e 1909 | 0/0/538200  (py_v6 == committed log)
+(x1) GAP8 main-loop stall 1.5 s then recovery              random    {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1919 | 0/0/538200  (py_v6 == committed log)
+(x1b) stall 1.5 s with a capture completed during it       random    {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1717 | 0/0/538200  (py_v6 == committed log)
+(x2) NINA/CPX stall 2.0 s                                  random    {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1631 | 0/0/538200  (py_v6 == committed log)
+(x2b) NINA stall 0.5 s                                     random    {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1722 | 0/0/538200  (py_v6 == committed log)
+(x2c) NINA stall 0.6 s                                     random    {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1757 | 0/0/538200  (py_v6 == committed log)
+(x2d) NINA stall 0.3 s                                     random    {}               {}/{}            None              None              0.392   0/0       0/0/538200, st0 0, e 1642 | 0/0/538200  (py_v6 == committed log)
+(x2n) NINA stall 0.09 s (below the 100 ms bound)           random    {}               {}/{}            None              None              0.182   0/0       0/0/538200, st0 0, e 1909 | 0/0/538200  (py_v6 == committed log)
+(x3) NINA stall 1.0 s, GAP8 hangs 0.1 s in                 random    {}               {}/{}            (2.922, 3.002)    (2.922, 3.002)    0.482   0/0       12/0/538200, st0 0, e 992 | 12/0/538200  (py_v6 == committed log)
+(x3b) NINA stall 2.0 s, GAP8 hangs 0.1 s in                random    {}               {}/{}            (2.922, 3.002)    (2.922, 3.002)    0.482   0/0       12/0/538200, st0 0, e 1668 | 12/0/538200  (py_v6 == committed log)
+(x3c) NINA stall 2.9 s, GAP8 hangs 0.1 s in                random    {}               {}/{}            (2.812, 3.002)    (2.812, 3.002)    0.482   0/0       9/0/538200, st0 0, e 1514 | 9/0/538200  (py_v6 == committed log)
+(x2e) ESP32-internal stall 2.0 s (GAP8 sees success)       random    {}               {}/{}            None              None              0.482   0/0       6/5/538200, st0 1, e 1710 | 6/5/538200  <-- mode diff  (py_v6 == committed log)
+(x2f) ESP32-internal stall 0.3 s                           random    {}               {}/{}            None              None              0.382   0/0       1/1/538200, st0 2, e 1594 | 1/1/538200  <-- mode diff  (py_v6 == committed log)
+(x2g) ESP32-internal stall 0.09 s                          random    {}               {}/{}            None              None              0.172   0/0       0/0/538200, st0 0, e 1658 | 0/0/538200  (py_v6 == committed log)
+(x3d) ESP32 stall 1.0 s, GAP8 hangs 0.1 s in               random    {}               {}/{}            (2.812, 2.872)    (2.812, 2.872)    0.482   0/0       0/0/538200, st0 0, e 1128 | 0/0/538200  (py_v6 == committed log)
+(x3e) ESP32 stall 2.9 s, GAP8 hangs 0.1 s in               random    {}               {}/{}            (2.812, 2.872)    (2.812, 2.872)    0.482   0/0       0/0/538200, st0 0, e 1128 | 0/0/538200  (py_v6 == committed log)
+(x2h) RESIDUAL: +0.3 s ESP32 latency held 15 s, 0.3 s GAP8 random    {}               {}/{}            (0.049, 0.049)    (0.049, 0.049)    0.392   0/0       0/0/538200, st0 18838, e 301416 | 0/0/538200  (py_v6 == committed log)
+MC orig                                                    wrap      {}               {}/{}            (2.99, 3.002)     (2.988, 3.002)    0.49    77/1      6/0/838200, st0 0, e 1636 | 4/0/511302
+MC ext                                                     wrap      {}               {}/{}            (0.02, 3.008)     (0.02, 3.009)     0.493   104/1     11/0/762762, st0 0, e 2082 | 7/0/398145
+MC orig+nina_outages                                       wrap      {}               {}/{}            (0.0, 3.003)      (0.0, 3.003)      0.494   79/3      10/0/838200, st0 0, e 1883 | 7/0/494538
+MC ext+nina_outages                                        wrap      {}               {}/{}            (0.009, 3.008)    (0.017, 3.008)    0.494   115/3     10/0/737616, st0 0, e 1800 | 6/0/343662
+MC orig+nina_outages+esp_outages                           wrap      {}               {}/{}            (0.036, 3.002)    (0.036, 3.002)    0.49    79/1      6/0/838200, st0 2, e 2298 | 4/0/502920
+(a) camera outage 10 s                                     wrap      {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.482   0/0       16/0/538200, st0 0, e 2239 | 16/0/538200
+(b) inference fails every frame 10 s                       wrap      {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.095   0/0       22/0/538200, st0 0, e 1957 | 22/0/538200
+(c) GAP8 hangs                                             wrap      {}               {}/{}            (2.992, 2.992)    (2.992, 2.992)    0.482   0/0       0/0/538200, st0 0, e 1419 | 0/0/538200
+(d) 1 good frame / 2 s among failures 20 s                 wrap      {}               {}/{}            None              None              0.095   0/0       0/0/638200, st0 0, e 1730 | 0/0/638200
+(d') 1 good frame / 3.5 s among failures 20 s              wrap      {}               {}/{}            (2.992, 3.002)    (2.992, 3.002)    0.095   0/0       14/0/638200, st0 0, e 1730 | 14/0/638200
+(e) single failed frame                                    wrap      {}               {}/{}            None              None              0.095   0/0       0/0/538200, st0 0, e 1957 | 0/0/538200
+(x1) GAP8 main-loop stall 1.5 s then recovery              wrap      {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1770 | 0/0/538200
+(x1b) stall 1.5 s with a capture completed during it       wrap      {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1612 | 0/0/538200
+(x2) NINA/CPX stall 2.0 s                                  wrap      {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 2095 | 0/0/538200
+(x2b) NINA stall 0.5 s                                     wrap      {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1515 | 0/0/538200
+(x2c) NINA stall 0.6 s                                     wrap      {}               {}/{}            None              None              0.482   0/0       0/0/538200, st0 0, e 1506 | 0/0/538200
+(x2d) NINA stall 0.3 s                                     wrap      {}               {}/{}            None              None              0.392   0/0       0/0/538200, st0 0, e 1658 | 0/0/538200
+(x2n) NINA stall 0.09 s (below the 100 ms bound)           wrap      {}               {}/{}            None              None              0.182   0/0       0/0/538200, st0 0, e 1957 | 0/0/538200
+(x3) NINA stall 1.0 s, GAP8 hangs 0.1 s in                 wrap      {}               {}/{}            (2.922, 3.002)    (2.922, 3.002)    0.482   0/0       8/0/538200, st0 0, e 1204 | 8/0/538200
+(x3b) NINA stall 2.0 s, GAP8 hangs 0.1 s in                wrap      {}               {}/{}            (2.922, 3.002)    (2.922, 3.002)    0.482   0/0       8/0/538200, st0 0, e 1204 | 8/0/538200
+(x3c) NINA stall 2.9 s, GAP8 hangs 0.1 s in                wrap      {}               {}/{}            (2.812, 3.002)    (2.812, 3.002)    0.482   0/0       6/0/538200, st0 0, e 1204 | 6/0/538200
+(x2e) ESP32-internal stall 2.0 s (GAP8 sees success)       wrap      {}               {}/{}            None              None              0.482   0/0       12/10/538200, st0 2, e 1748 | 12/10/538200  <-- mode diff
+(x2f) ESP32-internal stall 0.3 s                           wrap      {}               {}/{}            None              None              0.382   0/0       0/0/538200, st0 1, e 1750 | 0/0/538200
+(x2g) ESP32-internal stall 0.09 s                          wrap      {}               {}/{}            None              None              0.172   0/0       0/0/538200, st0 0, e 1590 | 0/0/538200
+(x3d) ESP32 stall 1.0 s, GAP8 hangs 0.1 s in               wrap      {}               {}/{}            (2.812, 2.872)    (2.812, 2.872)    0.482   0/0       0/0/538200, st0 0, e 1610 | 0/0/538200
+(x3e) ESP32 stall 2.9 s, GAP8 hangs 0.1 s in               wrap      {}               {}/{}            (2.812, 2.872)    (2.812, 2.872)    0.482   0/0       0/0/538200, st0 0, e 1610 | 0/0/538200
+(x2h) RESIDUAL: +0.3 s ESP32 latency held 15 s, 0.3 s GAP8 wrap      {}               {}/{}            (0.049, 0.049)    (0.049, 0.049)    0.392   0/0       0/0/538200, st0 18700, e 300931 | 0/0/538200
+
+checks.txt:
+finalize crosscheck (C vs spec): {'cases': 300000, 'failures': 0}
+v6 byte / frame-ref crosscheck (C vs spec): {'cases': 300000, 'failures': 0}
+encoding asserts OK
+
+RESULT: OK

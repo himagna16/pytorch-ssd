@@ -1,0 +1,97 @@
+{
+  "end_reason": "duration: operator land (followapp.enable = 0)",
+  "control_steps": 258,
+  "loop_hz": 6.5,
+  "tracking_fraction": 1.0,
+  "mean_abs_x_while_tracking": 0.088,
+  "centered_fraction_while_tracking": 0.988,
+  "stale_events": 0,
+  "z_after_landing": 0.02,
+  "rate_hz_requested": 6.5,
+  "infer_ms_requested": 153.0,
+  "frames_processed": 314,
+  "frames_dropped": 409,
+  "torn_frames": 0,
+  "step_gap_ms": {
+    "min": 153.9,
+    "median": 155.0,
+    "max": 156.9
+  },
+  "sim_wall_ratio": 0.996,
+  "app_mode_fraction_while_active": {
+    "WAIT_WARMUP": 0.0,
+    "HOVER": 0.0,
+    "FOLLOW": 1.0,
+    "LAND": 0.0
+  },
+  "app_max_abs_yaw_rate_dps": 26.67,
+  "app_max_abs_vx_mps": 0.2,
+  "app_final": {
+    "state": 4,
+    "mode": 2,
+    "reason": 0,
+    "rxApp": 314,
+    "rxRej": 0,
+    "rxStale": 14,
+    "landRsn": 2,
+    "armErr": 0
+  },
+  "packets": {
+    "built": 314,
+    "delivered": 314,
+    "dropped_by_fault": 0,
+    "held_by_fault": 0,
+    "send_errors": 0
+  },
+  "gap8": {
+    "frames_processed": 314,
+    "frames_dropped": 409,
+    "frames_ignored_frozen": 0,
+    "no_target_packets": 0,
+    "reconfirm_resets": 1,
+    "frames_too_old": 0,
+    "frames_bit0": 302,
+    "clock_start_ms": 4257949727
+  },
+  "fault_windows": {},
+  "events": {
+    "packets_start": 4.225612375012133,
+    "takeoff": 4.730630624981131,
+    "enable": 7.877611834031995,
+    "active": 7.877618084021378,
+    "land_requested_or_seen": 47.999972708988935,
+    "done": 50.72562579199439,
+    "after_land": {
+      "t": 52.835686500009615,
+      "pz": 0.01989375241100788,
+      "px": 0.5551913976669312,
+      "py": 0.047221265733242035,
+      "state": 4
+    }
+  },
+  "args": {
+    "uri": "udp://127.0.0.1:19850",
+    "frame_port": "5200",
+    "duration": "40.0",
+    "height": "0.8",
+    "yaw_sign": "None",
+    "arm_fresh": "None",
+    "rate_hz": "6.5",
+    "infer_ms": "153.0",
+    "gap8_clock_start_ms": "None",
+    "freeze_at": "None",
+    "freeze_for": "None",
+    "stall_at": "None",
+    "stall_for": "None",
+    "delay_at": "None",
+    "delay_for": "None",
+    "drop_at": "None",
+    "drop_for": "None",
+    "delay_ms": "None",
+    "no_fly": "False",
+    "selftest": "False",
+    "out": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/demo_fc/flights/run_moving_chip",
+    "unstable_root": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable",
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth"
+  }
+}

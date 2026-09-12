@@ -1,0 +1,75 @@
+{
+  "run": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/demo_fc/flights/run_freeze5",
+  "end_reason": "app landed on its own (landRsn 1, reason land_latched)",
+  "active_s": 13.08,
+  "mode_fraction_while_active": {
+    "WAIT_WARMUP": 0.0,
+    "HOVER": 0.193,
+    "FOLLOW": 0.807,
+    "LAND": 0.0
+  },
+  "reasons_while_active": {
+    "none": 0.807,
+    "hover_stale": 0.193
+  },
+  "packets": {
+    "built": 258,
+    "delivered": 258,
+    "dropped_by_fault": 0,
+    "held_by_fault": 0,
+    "send_errors": 0,
+    "app_rxApp": 258,
+    "app_rxRej": 0,
+    "app_rxStale_total": 31
+  },
+  "max_abs_yaw_rate_cmd_dps": 26.67,
+  "max_abs_vx_cmd_mps": 0.2,
+  "max_horizontal_drift_m": 0.396,
+  "yaw_range_deg": [
+    -4.2,
+    20.9
+  ],
+  "z_while_active_m": [
+    0.8,
+    0.92
+  ],
+  "z_after_landing_m": 0.02,
+  "sim_wall_ratio": 0.991,
+  "yaw_convention": {
+    "follow_samples_with_yaw_cmd": 188,
+    "measured_rate_same_sign_as_cmd": 1.0,
+    "median_measured_over_cmd": 0.76
+  },
+  "heading_error_deg": {
+    "at_takeover": 16.5,
+    "mean_abs_4.5_5.5s": 0.6,
+    "turned_toward_person": true,
+    "settled_mean": 3.9,
+    "settled_p90": 10.5,
+    "settled_max": 14.8
+  },
+  "camera_freeze": {
+    "window_s": [
+      10.0,
+      15.0
+    ],
+    "last_good_frame_t": 9.987,
+    "hover_after_last_good_s": 0.488,
+    "hover_ageMs_fw": 501.0,
+    "steered_after_freeze_before_hover": false,
+    "landed_by": "controller (rule 1)",
+    "land_after_last_good_s": 3.026,
+    "reason_before_land": "hover_stale",
+    "ageMs_fw_last_sample_before_land": 2998.0,
+    "ageMs_fw_first_landing_sample": 3030.0,
+    "no_target_packets_during_freeze": 9,
+    "no_target_spacing_s": [
+      0.501,
+      0.501,
+      0.502,
+      0.5,
+      0.502,
+      0.501
+    ]
+  }
+}

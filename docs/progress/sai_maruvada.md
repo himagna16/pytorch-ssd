@@ -41,7 +41,8 @@ processor. In the first three weeks I:
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
-| Simulator demo for Prof. Mok | Sai | Availability sent: Tuesday or Thursday after 5 pm | Confirm the day he picks; rehearse the simulator run |
+| Simulator demo for Prof. Mok | Sai | Ready: one-command demo, rehearsed 7 times, plus backup videos | Confirm the day he picks |
+| Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
 | Progress report email for Prof. Mok | Sai | Drafted Sep 11 (progress, contributions, AI-tools note, link to this record) | Send, with Grace shown her line first |
 | First real AI-deck camera frames, motors off | Oaj, frontend trio, MinHyuk | Protocol and scoring tool written; in review | Schedule the capture session |
@@ -130,6 +131,17 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-11 (afternoon).** Built the demo kit: one command runs a full
+  demo and prints a plain-English scorecard, rehearsed 7 times across all
+  four scenes, with three backup videos rendered from real flight logs and a
+  talk track. Wrote the drone-side flight controller that turns the model's
+  output into flight commands under our safety rules, in portable C with
+  30,313 unit checks, and put it inside the Crazyflie firmware. In
+  simulation it follows a person from firmware code with the same accuracy
+  as the laptop version (2.7 degrees), refuses to steer on stale frames, and
+  lands 3 s after the last good frame. Two independent reviews found and
+  closed a real flaw: a link that was already slow before take-off could let
+  the drone arm on stale frames.
 - **2026-09-11 (midday).** Wrote the progress report email Prof. Mok asked
   for: the project's results, a contributions list, a note that my part was
   built with AI coding tools under my direction, and a link to this record.
@@ -142,7 +154,7 @@ Newest first. One entry per working session.
   chip: it passes every check but gains nothing, because the release
   discards the ranges learned in QAT.
 - **2026-09-11 (morning).** Put the champion network into a local branch of
-  the drone firmware and ran three rounds of independent safety review: it
+  the drone firmware and ran six rounds of independent safety review: it
   now rejects failed inferences, resets tracking on camera or pipeline
   failures, and makes the drone land 3 s after the last good frame in every
   simulated failure pattern. Found that the firmware's image resize costs

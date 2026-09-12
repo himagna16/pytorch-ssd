@@ -141,7 +141,8 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
     bit 0 = confirmed tracking (unchanged meaning), bit 1 = this frame's visibility confidence
     >= the enter threshold (p >= 0.7; the decoder's per-frame test `v[9] >= 4216`). Rule 4 now
     needs 3 consecutive fresh packets with bit 0 AND bit 1 set, so after a stall the GAP8
-    cannot see (inside the ESP32), only p >= 0.7 frames count. Version bumped 5 -> 6 so a v5
+    cannot see (inside the ESP32), only p >= 0.7 frames count. (Safety review 7 refined
+    this to 3 *distinct* frames - increasing `frame_id`; see rule 4 in section 3.) Version bumped 5 -> 6 so a v5
     parser that tests `tracking != 0` rejects v6 (no STM32 parser exists yet).
     (c) Docs (finding 3): arm following/take-off only after the rule-0 warm-up; a persistent
     latency step > 0.1 s is stale and lands at 3.0 s (fail-safe, by design); com-task
@@ -214,6 +215,22 @@ arithmetic (compare samples only through signed 32-bit differences; both clocks 
   window forgets the old minimum. Reset the window when `frame_id` goes backwards or `s` jumps by
   more than 10 s; the warm-up then applies again.
 - Residual: a latency that stays elevated by <= 0.1 s for a whole window is absorbed into `off`.
+- **Latency floor (required, safety review 7).** The windowed rule alone is fail-safe only in the
+  air. If the link gets slower while the drone waits on the ground (controller stepping, not armed),
+  the 10 s window forgets the healthy minimum, every late packet then has `e = 0`, and a take-off
+  gate that checks only "warm-up done + fresh frame" arms and steers on late frames (a +1 s step
+  gave FOLLOW on frames ~1.04 s old after 10 s, with or without a ground silence before it). The
+  STM32 therefore also keeps `floor` = the lowest `s` since the last clock reset, allowed to rise by
+  200 ppm of the time since that sample (crystal drift), and treats a packet as stale when
+  `s - floor > 0.1 s` as well; the take-off gate refuses while the newest packet is stale that way.
+  The floor survives packet silences (a link that comes back slower is still caught); it restarts
+  only with the window on a clock discontinuity (`frame_id` backwards, `s` jumping by > 10 s).
+  Remaining residuals: (1) a link that is already slow when the GAP8 (or the STM32) boots, or
+  after a GAP8 reboot, sets the floor itself: bench-check `L_min` before every enable; (2) the
+  200 ppm allowance lets a step X > 0.1 s be absorbed after (X - 0.1 s) / 200 ppm of unbroken
+  slowness (4 min for +0.15 s, 75 min for +1 s). Implemented in
+  `tools/stm32_follow_app/follow_controller.c` (the review6 Python "v6" rule model does not have it;
+  its `groundstep` timelines in `tools/stm32_follow_app/tests/` show the gap).
 
 On each accepted packet, arriving at `t_rx`:
 - `frame_age_20ms == 255`: set `t_fresh = NONE`. **Land immediately** if airborne, and never arm on it.
@@ -226,7 +243,9 @@ Every control step (`t_fresh = NONE`, including before the first packet since bo
 3. `tracking` bit 0 clear -> hover (target not confirmed or lost; `x_center`/`size_center` are not valid).
 4. **Re-confirmation after a stale hover (required, fix rounds 4 and 6).** After any control step in
    rule 1 or 2 (including `t_fresh = NONE` and before the first packet since boot), keep
-   hovering until **3 consecutive fresh** packets arrive with `tracking` **bit 0 AND bit 1** set,
+   hovering until **3 consecutive fresh** packets arrive with `tracking` **bit 0 AND bit 1** set
+   and **increasing `frame_id`** (a copy of an already counted packet, e.g. a link retransmit,
+   neither counts nor restarts the count; safety review 7),
    `frame_age_20ms * 0.020 <= 0.5` and `e <= 0.1 s` (rule 0). Any other packet (either bit clear,
    older, 255, stale by rule 0) restarts the count. Bit 1 makes the count use only p >= 0.7
    frames: after a stall the GAP8 cannot see (inside the ESP32), the GAP8 hysteresis still reports
@@ -585,10 +604,12 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
    - land when `now - t_fresh > 3.0 s`, latched;
    - hover when `now - t_fresh > 0.5 s`;
    - hover on `tracking == 0`;
-   - after any stale hover, require 3 consecutive fresh packets with `tracking` bit 0 AND bit 1
+   - after any stale hover, require 3 consecutive fresh packets (increasing `frame_id`) with `tracking` bit 0 AND bit 1
      set (rule 4) before steering;
-   - rule 0: packets with excess latency `e > 0.1 s` are stale; arm following/take-off only after
-     the 2 s warm-up.
+   - rule 0: packets with excess latency `e > 0.1 s` are stale, and so are packets more than 0.1 s
+     above the latency floor (lowest `s` since boot + 200 ppm drift); arm following/take-off only
+     after the 2 s warm-up and never while the link is slower than its floor; bench-check `L_min`
+     before every enable.
 
    Before props-on, bench-test each one by unplugging the deck, holding the camera covered,
    and stalling the link.

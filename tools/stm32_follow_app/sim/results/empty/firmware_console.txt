@@ -1,0 +1,65 @@
+address : 192.168.65.254 , port : 19950 
+SOCKET_LINK: Create socket succeed 
+SOCKET_LINK: Binding succeed 
+SOCKET_LINK: Waiting for connection with gazebo ... 
+SOCKET_LINK: Connection established with gazebo 
+SYS: ----------------------------
+SYS: Software-in-the-Loop Simulator is up and running!
+SYS: Build 24:aa6571dc465f (v1.2-alpha +24) CLEAN
+ESTKALMANUNSCENTED: Sigma Points chosen
+SENSORS: Forcing sensors to SensorImplementation_sitl
+AK8963 I2C connection [OK].
+LPS25H I2C connection [OK].
+Entering sensorsTask() 
+ESTIMATOR: Using Kalman (2) estimator
+CONTROLLER: Using PID (1) controller
+SYS: About to run tests in system.c.
+SENSORS TEST PASSED [OK].
+SYS: Self test passed!
+STAB: Wait for sensor calibration...
+FOLLOW: follow app up: app channel only, waiting for followapp.enable
+GYro Bias found 
+STAB: Starting stabilizer loop
+ESTKALMAN: State out of bounds, resetting
+SUP: Can not fly
+SUP: Ready to fly
+ESTKALMAN: WARNING: Kalman prediction rate off (85)
+STAB: WARNING: stabilizer loop rate is off (711)
+ESTKALMAN: WARNING: Kalman prediction rate off (88)
+ESTKALMAN: WARNING: Kalman prediction rate off (89)
+ESTKALMAN: WARNING: Kalman prediction rate off (87)
+ESTKALMAN: WARNING: Kalman prediction rate off (86)
+ESTKALMAN: WARNING: Kalman prediction rate off (87)
+ESTKALMAN: WARNING: Kalman prediction rate off (91)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+FOLLOW: armed, taking over at z=0.80
+ESTKALMAN: WARNING: Kalman prediction rate off (91)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (92)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (92)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (96)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (94)
+FOLLOW: landing (operator)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)
+FOLLOW: landed
+ESTKALMAN: WARNING: Kalman prediction rate off (95)
+ESTKALMAN: WARNING: Kalman prediction rate off (96)
+ESTKALMAN: WARNING: Kalman prediction rate off (93)

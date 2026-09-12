@@ -1,0 +1,14 @@
+# crazysim-mac:follow-app = crazysim-mac:arm64 + the follow app compiled into the
+# SITL firmware (cf2). Build context: tools/stm32_follow_app. Needs no network:
+# everything comes from the local base image and this directory.
+#   sim/build_image.sh
+FROM crazysim-mac:arm64
+COPY follow_controller.c follow_controller.h /root/follow_app/
+COPY app/src /root/follow_app/app/src
+COPY sim/sitl_follow_app.cmake /root/follow_app/sim/
+WORKDIR /root/CrazySim/crazyflie-firmware/sitl_make/build
+RUN printf '\ninclude(/root/follow_app/sim/sitl_follow_app.cmake)\n' >> ../CMakeLists.txt \
+ && cmake .. > /root/follow_app/cmake.log \
+ && make -j"$(nproc)" cf2 2>&1 | tee /root/follow_app/make.log | tail -5 \
+ && strings cf2 | grep -q followapp && echo "cf2 contains the followapp param/log groups"
+WORKDIR /root/CrazySim/crazyflie-firmware

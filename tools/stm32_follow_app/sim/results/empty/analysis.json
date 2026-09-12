@@ -1,0 +1,50 @@
+{
+  "run": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/demo_fc/flights/run_empty",
+  "end_reason": "duration: operator land (followapp.enable = 0)",
+  "active_s": 20.08,
+  "mode_fraction_while_active": {
+    "WAIT_WARMUP": 0.0,
+    "HOVER": 1.0,
+    "FOLLOW": 0.0,
+    "LAND": 0.0
+  },
+  "reasons_while_active": {
+    "hover_not_confirmed": 1.0
+  },
+  "packets": {
+    "built": 423,
+    "delivered": 423,
+    "dropped_by_fault": 0,
+    "held_by_fault": 0,
+    "send_errors": 0,
+    "app_rxApp": 423,
+    "app_rxRej": 0,
+    "app_rxStale_total": 31
+  },
+  "max_abs_yaw_rate_cmd_dps": 0.0,
+  "max_abs_vx_cmd_mps": 0.0,
+  "max_horizontal_drift_m": 0.0,
+  "yaw_range_deg": [
+    0.0,
+    0.0
+  ],
+  "z_while_active_m": [
+    0.8,
+    0.92
+  ],
+  "z_after_landing_m": 0.02,
+  "sim_wall_ratio": 0.997,
+  "yaw_convention": {
+    "follow_samples_with_yaw_cmd": 0,
+    "measured_rate_same_sign_as_cmd": null,
+    "median_measured_over_cmd": null
+  },
+  "heading_error_deg": {
+    "at_takeover": -180.0,
+    "mean_abs_4.5_5.5s": 180.0,
+    "turned_toward_person": true,
+    "settled_mean": 180.0,
+    "settled_p90": 180.0,
+    "settled_max": 180.0
+  }
+}

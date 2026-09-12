@@ -1,0 +1,3 @@
+(x2h) RESIDUAL: +0.3 s ESP32 latency held 15 s, 0.3 s GAP8 stall at 12 s
+  random clocks {'runs': 20, 'st0_mism': 183, 'e_maxdiff_us': 299913, 'mode_mism': 0}
+  aligned clocks {'runs': 20, 'st0_mism': 0, 'e_maxdiff_us': 920, 'mode_mism': 0}

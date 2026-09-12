@@ -1,0 +1,3 @@
+finalize crosscheck (C vs spec): {'cases': 300000, 'failures': 0}
+v6 byte / frame-ref crosscheck (C vs spec): {'cases': 300000, 'failures': 0}
+encoding asserts OK

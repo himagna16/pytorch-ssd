@@ -49,6 +49,23 @@ Tutorial demos 1–4 don't fly; 5–7 fly.
 | Camera | 324x244 grayscale at ~13 fps (target 20) |
 | Our deployed model on sim frames | runs; empty room → person confidence 0.047 |
 
+## Demo (one command)
+
+```bash
+./demo.sh                  # moving person, 3D viewer, then a plain-English scorecard
+./demo.sh --scene freeze   # camera freezes mid-flight: hover, then land (also: static, empty)
+./demo.sh --headless       # no window; use when the screen is locked
+./demo.sh --stop           # clean up a simulator left over from an earlier run
+```
+
+It builds missing scenes, checks Docker and the screen lock, flies one
+flight on a fresh sim with the person's true position logged, shuts
+everything down, and prints the scorecard (`demo_scorecard.py`). Logs go to
+`follow_runs/demo_<scene>_<time>/`. `run_sim_headless.sh` is the windowless
+launcher it uses for `--headless`. `make_demo_video.py` renders a flight
+flown with `--save-frames` into an MP4 (camera view with the model's output,
+plus a top-down map). Talk track and backup videos: `docs/demo/`.
+
 ## Person following (closed loop)
 
 Our deployed model flies the simulated drone: simulated AI-deck frames go
