@@ -1,0 +1,49 @@
+====================================================================================================
+PER-FLIGHT MACHINE + ATTITUDE RECORD  (all 28 matte flights)
+====================================================================================================
+ord cell                 rep verdict sim/wall     Hz gap_max ld1_be ld1_af |pitch| |roll|  z_min upset
+  1 E.furniture__proven    2 VALID      0.997 15.008    81.4   5.61   7.72     0.0    0.0  0.801     -
+  2 D.occlusion__ships     4 VALID      0.994  6.422   158.8   7.72   5.62     6.0   0.23    0.8     -
+  3 E.furniture__proven    3 VALID      0.997 14.982    91.9   5.62   7.29     0.0    0.0  0.801     -
+  4 D.occlusion__proven    4 VALID      0.996 15.081    84.6   7.29  10.51    4.32   0.43  0.798     -
+  5 E.furniture__ships     2 VALID      0.994  6.418   158.9  10.51   7.08     0.0    0.0  0.801     -
+  6 F.pets__ships          4 VALID      0.998  6.408   158.8   7.08   7.29     5.0   0.22  0.801     -
+  7 D.occlusion__proven    3 VALID      0.996 15.079   106.8   7.29   10.8    5.62   0.41  0.798     -
+  8 D.occlusion__ships     3 VALID      0.995  6.405   158.9   10.8   8.19    3.99   0.19    0.8     -
+  9 C.empty__proven        3 VALID      0.995 14.994    85.0   8.19   8.23     0.0    0.0  0.801     -
+ 10 E.furniture__proven    4 VALID      0.996 15.011    86.8   8.23   9.82     0.0    0.0  0.801     -
+ 11 C.empty__ships         1 VALID       0.99  6.415   158.6   9.82   7.25     0.0    0.0  0.801     -
+ 12 C.empty__ships         2 VALID      0.992  6.411   158.9   7.25   6.26     0.0    0.0  0.801     -
+ 13 C.empty__proven        1 VALID      0.994 14.998    91.0   6.26   7.65     0.0    0.0  0.801     -
+ 14 F.pets__ships          1 VALID      0.997  6.403   158.8   7.65   5.93     4.2   0.22  0.801     -
+ 15 C.empty__proven        4 VALID      0.999  15.01    76.6   5.93   6.95     0.0    0.0  0.801     -
+ 16 C.empty__ships         3 VALID      0.994  6.414   158.8   6.95   5.66     0.0    0.0    0.8     -
+ 17 E.furniture__ships     3 VALID      0.984   6.42   158.8   5.66   6.69     0.0    0.0  0.801     -
+ 18 D.occlusion__ships     1 VALID      0.989  6.409   158.8   6.69   6.23    4.26   0.24    0.8     -
+ 19 D.occlusion__proven    1 VALID      0.993 15.078   102.8   6.23   8.78     4.6   0.56  0.801     -
+ 20 F.pets__ships          2 VALID      0.997  6.404   158.8   8.78   6.37     3.9   0.11  0.801     -
+ 21 E.furniture__ships     1 VALID      0.997  6.418   158.8   6.37   5.29     0.0    0.0  0.801     -
+ 22 D.occlusion__ships     2 VALID      0.997  6.411   158.9   5.29   5.21    3.91   0.23    0.8     -
+ 23 E.furniture__proven    1 VALID      0.996 14.976    78.5   5.21   7.34     0.0    0.0  0.801     -
+ 24 E.furniture__ships     4 VALID      0.992  6.342   163.6   7.34   6.87     0.0    0.0  0.801     -
+ 25 D.occlusion__proven    2 VALID      0.999  12.96   104.1   6.87   9.92     4.9    0.5  0.798     -
+ 26 C.empty__ships         4 VALID      0.999  6.366   163.7   9.92   8.04     0.0    0.0  0.802     -
+ 27 F.pets__ships          3 VALID      0.996  6.356   163.7   8.04   7.45    5.42   0.54    0.8     -
+ 28 C.empty__proven        2 VALID        1.0 12.909   104.2   7.45   9.54     0.0    0.0  0.801     -
+
+SUMMARY
+  flights                  28, all verdicts: {'VALID': 28}
+  attitude upsets          0/28
+  worst |pitch| anywhere   6.00 deg
+  worst |roll|  anywhere   0.56 deg
+  z_min range              0.798 .. 0.802
+  sim_wall_ratio           min 0.984  median 0.9960  max 1.0
+  flights below 0.95       0
+  load1 before             min 5.21  median 7.27  max 10.8
+
+  step_gap_ms.max by speed class (the rate cap makes chip cells structurally slow):
+    full (no cap)                n=12  min    76.6  median    88.9  max   106.8
+    chip (6.5 Hz, 153 ms cap)    n=16  min   158.6  median   158.8  max   163.7
+
+  SUSPECT FLIGHTS (gap_max far above its class median, or sim_wall_ratio < 0.95):
+    none

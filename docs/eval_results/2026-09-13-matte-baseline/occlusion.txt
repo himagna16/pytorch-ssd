@@ -1,0 +1,20 @@
+partition spans y [-1.4, -0.5] at x=2.2; target at (3.5, -1.6)
+sight line from py=0 clears the partition edge once px > 1.609 m
+
+--- MATTE  D.occlusion__proven
+  D.occlusion__proven__r1a1    px_max  2.01  dist_end  2.31  lost  88/736 rows  sightline CLEAR during loss  97.7%  conf while lost: med 0.424 max 0.981
+  D.occlusion__proven__r2a1    px_max  2.13  dist_end  1.91  lost  69/630 rows  sightline CLEAR during loss  97.1%  conf while lost: med 0.644 max 0.941
+  D.occlusion__proven__r3a1    px_max  1.91  dist_end  2.38  lost 110/736 rows  sightline CLEAR during loss  98.2%  conf while lost: med 0.529 max 0.908
+  D.occlusion__proven__r4a1    px_max  1.92  dist_end  2.29  lost 104/736 rows  sightline CLEAR during loss  98.1%  conf while lost: med 0.541 max 0.936
+--- MIRROR D.occlusion__proven (Sep 11)
+  D.occlusion__proven__r1a1    px_max  1.43  dist_end  2.86  lost 172/729 rows  sightline CLEAR during loss   0.0%  conf while lost: med 0.132 max 0.919
+  D.occlusion__proven__r2a1    (no follow_log.csv published)
+
+--- MATTE  D.occlusion__ships
+  D.occlusion__ships__r1a1     px_max  1.36  dist_end  2.90  lost  97/309 rows  sightline CLEAR during loss   9.3%  conf while lost: med 0.135 max 0.841
+  D.occlusion__ships__r2a1     px_max  1.26  dist_end  2.95  lost 109/311 rows  sightline CLEAR during loss  11.0%  conf while lost: med 0.149 max 0.864
+  D.occlusion__ships__r3a1     px_max  1.26  dist_end  2.98  lost 115/312 rows  sightline CLEAR during loss   0.0%  conf while lost: med 0.164 max 0.867
+  D.occlusion__ships__r4a1     px_max  1.01  dist_end  3.09  lost 140/314 rows  sightline CLEAR during loss   0.0%  conf while lost: med 0.153 max 0.945
+--- MIRROR D.occlusion__ships (Sep 11)
+  D.occlusion__ships__r1a1     px_max  0.44  dist_end  3.71  lost 107/308 rows  sightline CLEAR during loss   0.0%  conf while lost: med 0.096 max 0.933
+  D.occlusion__ships__r2a1     (no follow_log.csv published)

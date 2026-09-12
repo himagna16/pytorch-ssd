@@ -1,0 +1,22 @@
+=== MATTE  D.occlusion__proven (4 flights pooled) ===
+confidence vs true range to target  (pooled rows: 2392)
+   range  1.5- 2.0 m  n= 189  conf mean 0.686  median 0.717  frac >= 0.70 latch threshold  54.0%
+   range  2.0- 2.5 m  n= 811  conf mean 0.806  median 0.880  frac >= 0.70 latch threshold  73.6%
+   range  2.5- 3.0 m  n= 824  conf mean 0.911  median 0.957  frac >= 0.70 latch threshold  92.5%
+   range  3.0- 3.5 m  n= 368  conf mean 0.882  median 0.914  frac >= 0.70 latch threshold  92.1%
+   range  3.5- 4.0 m  n= 115  conf mean 0.849  median 0.873  frac >= 0.70 latch threshold  89.6%
+   range  4.0- 4.5 m  n=  85  conf mean 0.819  median 0.813  frac >= 0.70 latch threshold  92.9%
+
+=== MIRROR D.occlusion__proven r1a1 (the only Sep 11 flight with a published log) ===
+confidence vs true range to target  (pooled rows: 611)
+   range  2.5- 3.0 m  n= 331  conf mean 0.707  median 0.977  frac >= 0.70 latch threshold  68.0%
+   range  3.0- 3.5 m  n= 229  conf mean 0.929  median 0.987  frac >= 0.70 latch threshold  92.6%
+   range  3.5- 4.0 m  n=  31  conf mean 0.966  median 0.981  frac >= 0.70 latch threshold 100.0%
+   range  4.0- 4.5 m  n=  20  conf mean 0.970  median 0.974  frac >= 0.70 latch threshold 100.0%
+
+=== MATTE  D.occlusion__ships (4 flights pooled, stays far, still PASSES) ===
+confidence vs true range to target  (pooled rows: 1065)
+   range  2.5- 3.0 m  n=  45  conf mean 0.940  median 0.967  frac >= 0.70 latch threshold 100.0%
+   range  3.0- 3.5 m  n= 749  conf mean 0.618  median 0.777  frac >= 0.70 latch threshold  60.3%
+   range  3.5- 4.0 m  n= 201  conf mean 0.630  median 0.710  frac >= 0.70 latch threshold  52.2%
+   range  4.0- 4.5 m  n=  70  conf mean 0.604  median 0.604  frac >= 0.70 latch threshold  25.7%

@@ -1,0 +1,23 @@
+{
+  "cell_id": "C.empty__ships",
+  "scene": "s02_control_empty",
+  "scene_class": "C",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 1,
+  "attempt": 1,
+  "duration_s": 35,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s02_control_empty",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/out/runs/C.empty__ships__r1a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/out/runs/C.empty__ships__r1a1/truth.csv",
+  "sensor_seed": 1001,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core",
+  "condition": "matte",
+  "order": 11,
+  "floor_reflectance": 0.0
+}

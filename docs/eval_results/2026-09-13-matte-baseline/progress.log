@@ -1,0 +1,58 @@
+[17:02:05] matte completion suite starting: plan=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/plan.tsv out=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/out root=/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 start=1
+[17:02:05] flight 1/28  E.furniture__proven  r2 a1  (load1 5.61)
+  -> VALID  sim/wall 0.997  15.008 Hz  track 0.0  gap_max 81.4  load1 7.72  
+[17:02:57] flight 2/28  D.occlusion__ships  r4 a1  (load1 7.72)
+  -> VALID  sim/wall 0.994  6.422 Hz  track 0.554  gap_max 158.8  load1 5.62  
+[17:04:13] flight 3/28  E.furniture__proven  r3 a1  (load1 5.62)
+  -> VALID  sim/wall 0.997  14.982 Hz  track 0.0  gap_max 91.9  load1 7.29  
+[17:05:06] flight 4/28  D.occlusion__proven  r4 a1  (load1 7.29)
+  -> VALID  sim/wall 0.996  15.081 Hz  track 0.859  gap_max 84.6  load1 10.51  
+[17:06:23] flight 5/28  E.furniture__ships  r2 a1  (load1 10.51)
+  -> VALID  sim/wall 0.994  6.418 Hz  track 0.0  gap_max 158.9  load1 7.08  
+[17:07:15] flight 6/28  F.pets__ships  r4 a1  (load1 7.08)
+  -> VALID  sim/wall 0.998  6.408 Hz  track 0.093  gap_max 158.8  load1 7.29  
+[17:08:06] flight 7/28  D.occlusion__proven  r3 a1  (load1 7.29)
+  -> VALID  sim/wall 0.996  15.079 Hz  track 0.851  gap_max 106.8  load1 10.80  
+[17:09:24] flight 8/28  D.occlusion__ships  r3 a1  (load1 10.80)
+  -> VALID  sim/wall 0.995  6.405 Hz  track 0.631  gap_max 158.9  load1 8.19  
+[17:10:40] flight 9/28  C.empty__proven  r3 a1  (load1 8.19)
+  -> VALID  sim/wall 0.995  14.994 Hz  track 0.0  gap_max 85.0  load1 8.23  
+[17:11:33] flight 10/28  E.furniture__proven  r4 a1  (load1 8.23)
+  -> VALID  sim/wall 0.996  15.011 Hz  track 0.0  gap_max 86.8  load1 9.82  
+[17:12:25] flight 11/28  C.empty__ships  r1 a1  (load1 9.82)
+  -> VALID  sim/wall 0.99  6.415 Hz  track 0.0  gap_max 158.6  load1 7.25  
+[17:13:17] flight 12/28  C.empty__ships  r2 a1  (load1 7.25)
+  -> VALID  sim/wall 0.992  6.411 Hz  track 0.0  gap_max 158.9  load1 6.26  
+[17:14:08] flight 13/28  C.empty__proven  r1 a1  (load1 6.26)
+  -> VALID  sim/wall 0.994  14.998 Hz  track 0.0  gap_max 91.0  load1 7.65  
+[17:15:01] flight 14/28  F.pets__ships  r1 a1  (load1 7.65)
+  -> VALID  sim/wall 0.997  6.403 Hz  track 0.193  gap_max 158.8  load1 5.93  
+[17:15:52] flight 15/28  C.empty__proven  r4 a1  (load1 5.93)
+  -> VALID  sim/wall 0.999  15.01 Hz  track 0.0  gap_max 76.6  load1 6.95  
+[17:16:45] flight 16/28  C.empty__ships  r3 a1  (load1 6.95)
+  -> VALID  sim/wall 0.994  6.414 Hz  track 0.0  gap_max 158.8  load1 5.66  
+[17:17:36] flight 17/28  E.furniture__ships  r3 a1  (load1 5.66)
+  -> VALID  sim/wall 0.984  6.42 Hz  track 0.0  gap_max 158.8  load1 6.69  
+[17:18:28] flight 18/28  D.occlusion__ships  r1 a1  (load1 6.69)
+  -> VALID  sim/wall 0.989  6.409 Hz  track 0.686  gap_max 158.8  load1 6.23  
+[17:19:45] flight 19/28  D.occlusion__proven  r1 a1  (load1 6.23)
+  -> VALID  sim/wall 0.993  15.078 Hz  track 0.88  gap_max 102.8  load1 8.78  
+[17:21:02] flight 20/28  F.pets__ships  r2 a1  (load1 8.78)
+  -> VALID  sim/wall 0.997  6.404 Hz  track 0.079  gap_max 158.8  load1 6.37  
+[17:21:54] flight 21/28  E.furniture__ships  r1 a1  (load1 6.37)
+  -> VALID  sim/wall 0.997  6.418 Hz  track 0.0  gap_max 158.8  load1 5.29  
+[17:22:46] flight 22/28  D.occlusion__ships  r2 a1  (load1 5.29)
+  -> VALID  sim/wall 0.997  6.411 Hz  track 0.65  gap_max 158.9  load1 5.21  
+[17:24:03] flight 23/28  E.furniture__proven  r1 a1  (load1 5.21)
+  -> VALID  sim/wall 0.996  14.976 Hz  track 0.0  gap_max 78.5  load1 7.34  
+[17:24:55] flight 24/28  E.furniture__ships  r4 a1  (load1 7.34)
+  -> VALID  sim/wall 0.992  6.342 Hz  track 0.0  gap_max 163.6  load1 6.87  
+[17:25:47] flight 25/28  D.occlusion__proven  r2 a1  (load1 6.87)
+  -> VALID  sim/wall 0.999  12.96 Hz  track 0.89  gap_max 104.1  load1 9.92  
+[17:27:04] flight 26/28  C.empty__ships  r4 a1  (load1 9.92)
+  -> VALID  sim/wall 0.999  6.366 Hz  track 0.0  gap_max 163.7  load1 8.04  
+[17:27:56] flight 27/28  F.pets__ships  r3 a1  (load1 8.04)
+  -> VALID  sim/wall 0.996  6.356 Hz  track 0.181  gap_max 163.7  load1 7.45  
+[17:28:47] flight 28/28  C.empty__proven  r2 a1  (load1 7.45)
+  -> VALID  sim/wall 1.0  12.909 Hz  track 0.0  gap_max 104.2  load1 9.54  
+[17:29:40] ALL FLIGHTS DONE in 27 min

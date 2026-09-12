@@ -1,0 +1,14 @@
+wrote 28 flights to /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/plan.tsv
+spearman(order, repeat) = -0.010  (want ~0)
+  repeat 1: mean chronological position  17.0 of 28
+  repeat 2: mean chronological position  16.1 of 28
+  repeat 3: mean chronological position  12.4 of 28
+  repeat 4: mean chronological position  12.4 of 28
+  C.empty__proven        positions [9, 13, 15, 28]
+  C.empty__ships         positions [11, 12, 16, 26]
+  D.occlusion__proven    positions [4, 7, 19, 25]
+  D.occlusion__ships     positions [2, 8, 18, 22]
+  E.furniture__proven    positions [1, 3, 10, 23]
+  E.furniture__ships     positions [5, 17, 21, 24]
+  F.pets__ships          positions [6, 14, 20, 27]
+total flight seconds (excl. sim startup): 1180

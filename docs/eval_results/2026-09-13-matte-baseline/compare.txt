@@ -1,0 +1,143 @@
+========================================================================================================
+COMPLETE 14-CELL BASELINE:  mirrored (Sep 11, reflectance 0.2)  vs  matte (reflectance 0.0)
+========================================================================================================
+cell                     mirror  matte   change       n_mir n_mat  failed gates (matte)
+A.static__ships          FAIL    PASS    FAIL -> PASS     4     4  -
+B.moving__ships          FAIL    PASS    FAIL -> PASS     2     4  -
+C.empty__ships           PASS    PASS    same             2     4  -
+D.occlusion__ships       PASS    PASS    same             2     4  -
+E.furniture__ships       PASS    PASS    same             2     4  -
+F.pets__ships            FAIL    FAIL    same             2     4  M6_max_horizontal_drift_m
+A.static__proven         PASS    PASS    same             5     4  -
+B.moving__proven         FAIL    FAIL    same             5     4  M10_uncertain_fraction_present
+C.empty__proven          PASS    PASS    same             2     4  -
+D.occlusion__proven      PASS    FAIL    PASS -> FAIL     2     4  M9_gt_visible_to_relatch_s
+E.furniture__proven      PASS    PASS    same             2     4  -
+B.moving__delta_backend  FAIL    FAIL    same             2     4  M1_tracking_fraction,M10_uncertain_fraction_present
+B.moving__delta_camera   FAIL    PASS    FAIL -> PASS     2     4  -
+B.moving__delta_speed    FAIL    FAIL    same             2     4  M10_uncertain_fraction_present
+
+  mirrored: 7 PASS / 7 FAIL
+  matte:    9 PASS / 5 FAIL
+  verdict changes: 4
+    A.static__ships: FAIL -> PASS
+    B.moving__ships: FAIL -> PASS
+    D.occlusion__proven: PASS -> FAIL
+    B.moving__delta_camera: FAIL -> PASS
+
+========================================================================================================
+EVERY GATE THAT MOVED, PER CELL
+========================================================================================================
+
+--- A.static__ships   (FAIL -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present         0.0882      0.101  <= 0.15      REPORT_ONLY  REPORT_ONLY 
+    M2_heading_err_max_deg                    4.4        4.0  <= 12.0      PASS         PASS        
+    M2_heading_err_mean_deg                 4.135      3.335  <= 8.0       REPORT_ONLY  REPORT_ONLY 
+    M3_centered_fraction_while_tracking     0.9775     0.9785  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m              1.153     0.4055  <= 0.75      FAIL         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        
+
+--- B.moving__ships   (FAIL -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present         0.0083     0.0595  <= 0.15      REPORT_ONLY  REPORT_ONLY 
+    M11_yaw_reversals_per_min                3.18       4.77  <= 24.0      REPORT_ONLY  REPORT_ONLY 
+    M1_tracking_fraction                    0.992      0.986  >= 0.9       REPORT_ONLY  REPORT_ONLY 
+    M2_heading_err_max_deg                  7.855       9.28  <= 14.0      PASS         PASS        
+    M2_heading_err_mean_deg                  3.16      3.255  <= 10.0      REPORT_ONLY  REPORT_ONLY 
+    M3_centered_fraction_while_tracking     0.9685      0.974  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m              1.225      0.526  <= 0.75      FAIL         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        
+
+--- C.empty__ships   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_conf_max_absent                    0.5915     0.4985  <= 0.7       REPORT_ONLY  REPORT_ONLY 
+
+--- D.occlusion__ships   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M1_tracking_fraction                    0.657     0.6405  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M2_heading_err_mean_deg                  5.11       4.65  <= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M9_gt_halfvisible_to_relatch_s          2.512      2.108  <= 1.5       REPORT_ONLY  REPORT_ONLY 
+    M9_gt_visible_to_relatch_s             1.3335      1.329  <= 1.5       PASS         PASS        
+    M9_reconfirm_latency_s                 0.3175     0.3125  <= 1.5       REPORT_ONLY  REPORT_ONLY 
+    M9_track_outage_s                     15.8065     11.924  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+
+--- E.furniture__ships   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_conf_max_absent                    0.6165     0.4355  <= 0.7       REPORT_ONLY  REPORT_ONLY 
+
+--- F.pets__ships   (FAIL -> FAIL)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_conf_max_absent                     0.974     0.8745  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M1_tracking_fraction                   0.7345      0.137  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M6_max_horizontal_drift_m               2.666      0.927  < 0.5        FAIL         FAIL        
+    M8_false_follow_episodes                  1.0        5.5  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M8_false_follow_total_s                 15.15       2.35  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M8_max_drift_during_episode_m           2.292     0.0915  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M8_t_first_false_follow_s                0.31        1.1  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+
+--- A.static__proven   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present            0.0     0.0063  <= 0.05      PASS         PASS        
+    M2_heading_err_max_deg                   1.74       1.76  <= 12.0      PASS         PASS        
+    M2_heading_err_mean_deg                  0.94        0.9  <= 4.0       PASS         PASS        
+    M3_centered_fraction_while_tracking      0.986     0.9865  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m              0.669       0.11  <= 0.75      PASS         PASS        
+
+--- B.moving__proven   (FAIL -> FAIL)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present            0.0     0.0599  <= 0.05      PASS         FAIL        
+    M11_yaw_reversals_per_min                 4.7       4.72  <= 24.0      REPORT_ONLY  REPORT_ONLY 
+    M1_tracking_fraction                    0.997     0.9885  >= 0.95      PASS         PASS        
+    M2_heading_err_mean_deg                  2.77      3.055  <= 6.0       PASS         PASS        
+    M7_dist_err_settled_mean_m              0.744      0.246  <= 0.75      PASS         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        
+
+--- C.empty__proven   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_conf_max_absent                    0.6405       0.51  <= 0.7       REPORT_ONLY  REPORT_ONLY 
+
+--- D.occlusion__proven   (PASS -> FAIL)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M1_tracking_fraction                   0.7735     0.8695  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M2_heading_err_mean_deg                 3.935      3.285  <= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M9_gt_halfvisible_to_relatch_s         1.1335     3.2405  <= 1.0       REPORT_ONLY  REPORT_ONLY 
+    M9_gt_visible_to_relatch_s             0.4705     3.2405  <= 1.0       PASS         FAIL        
+    M9_reconfirm_latency_s                  0.171     0.4105  <= 1.0       REPORT_ONLY  REPORT_ONLY 
+    M9_track_outage_s                       8.471     3.2405  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+
+--- E.furniture__proven   (PASS -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_conf_max_absent                    0.4265      0.464  <= 0.7       REPORT_ONLY  REPORT_ONLY 
+
+--- B.moving__delta_backend   (FAIL -> FAIL)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present         0.0125     0.1071  <= 0.05      PASS         FAIL        
+    M11_yaw_reversals_per_min               4.685       4.69  <= 24.0      REPORT_ONLY  REPORT_ONLY 
+    M1_tracking_fraction                   0.9935     0.9235  >= 0.95      PASS         FAIL        
+    M2_heading_err_max_deg                  7.525      8.855  <= 14.0      PASS         PASS        
+    M2_heading_err_mean_deg                 2.905        2.8  <= 6.0       PASS         PASS        
+    M3_centered_fraction_while_tracking      0.983      0.985  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m               0.83      0.264  <= 0.75      FAIL         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        
+
+--- B.moving__delta_camera   (FAIL -> PASS)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present            0.0     0.0073  <= 0.15      REPORT_ONLY  REPORT_ONLY 
+    M11_yaw_reversals_per_min                4.18      4.725  <= 24.0      REPORT_ONLY  REPORT_ONLY 
+    M2_heading_err_max_deg                    8.8      9.515  <= 14.0      PASS         PASS        
+    M2_heading_err_mean_deg                 2.985       3.16  <= 8.0       REPORT_ONLY  REPORT_ONLY 
+    M3_centered_fraction_while_tracking      0.979      0.986  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m              1.107      0.443  <= 0.75      FAIL         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        
+
+--- B.moving__delta_speed   (FAIL -> FAIL)
+    gate                                   mirror      matte  gate rule    mir          mat         
+    M10_uncertain_fraction_present            0.0     0.0725  <= 0.05      PASS         FAIL        
+    M11_yaw_reversals_per_min                 4.7       4.74  <= 24.0      REPORT_ONLY  REPORT_ONLY 
+    M1_tracking_fraction                    0.992      0.969  >= 0.9299999999999999 PASS         PASS        
+    M2_heading_err_max_deg                  8.615     10.595  <= 14.0      PASS         PASS        
+    M2_heading_err_mean_deg                 2.865       3.03  <= 8.0       PASS         PASS        
+    M3_centered_fraction_while_tracking     0.9795     0.9825  >= 0.0       REPORT_ONLY  REPORT_ONLY 
+    M7_dist_err_settled_mean_m             0.7975     0.2585  <= 0.75      FAIL         PASS        
+    M7_final_in_band                          0.0        1.0  == 1.0       FAIL         PASS        

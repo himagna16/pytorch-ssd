@@ -1,0 +1,23 @@
+{
+  "cell_id": "D.occlusion__ships",
+  "scene": "s07_occlusion_reappear",
+  "scene_class": "D",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 3,
+  "attempt": 1,
+  "duration_s": 60,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s07_occlusion_reappear",
+  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/out/runs/D.occlusion__ships__r3a1",
+  "truth": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/matte_baseline/out/runs/D.occlusion__ships__r3a1/truth.csv",
+  "sensor_seed": 1003,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core",
+  "condition": "matte",
+  "order": 8,
+  "floor_reflectance": 0.0
+}
