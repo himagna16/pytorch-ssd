@@ -1,0 +1,119 @@
+[15:07:03] stability A/B starting: plan=data/plan.tsv out=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out start=1
+[15:07:03] flight 1/56  matte  A.static__proven  r2 a1  (load1 3.01)
+  -> VALID  sim/wall 0.997  15.073 Hz  track 0.996  load1 8.00  
+[15:08:06] flight 2/56  mirror  A.static__proven  r2 a1  (load1 8.00)
+  -> VALID  sim/wall 0.989  14.926 Hz  track 0.996  load1 8.66  
+[15:09:08] flight 3/56  mirror  B.moving__delta_backend  r3 a1  (load1 8.66)
+  -> VALID  sim/wall 0.996  14.924 Hz  track 0.988  load1 5.17  
+[15:10:15] flight 4/56  matte  B.moving__delta_backend  r3 a1  (load1 5.17)
+  -> VALID  sim/wall 0.996  15.175 Hz  track 0.935  load1 5.50  
+[15:11:21] flight 5/56  matte  B.moving__delta_speed  r3 a1  (load1 5.50)
+  -> VALID  sim/wall 0.999  6.44 Hz  track 0.976  load1 8.62  
+[15:12:29] flight 6/56  mirror  B.moving__delta_speed  r3 a1  (load1 9.21)
+  -> VALID  sim/wall 1.0  6.403 Hz  track 0.992  load1 9.88  
+[15:13:36] flight 7/56  mirror  B.moving__delta_camera  r1 a1  (load1 9.88)
+  -> VALID  sim/wall 0.999  14.638 Hz  track 0.996  load1 11.37  
+[15:14:43] flight 8/56  matte  B.moving__delta_camera  r1 a1  (load1 11.37)
+  -> VALID  sim/wall 0.997  12.804 Hz  track 0.996  load1 10.27  
+[15:15:50] flight 9/56  matte  B.moving__ships  r1 a1  (load1 10.27)
+  -> VALID  sim/wall 0.996  6.384 Hz  track 0.992  load1 6.98  
+[15:16:57] flight 10/56  mirror  B.moving__ships  r1 a1  (load1 6.98)
+  -> VALID  sim/wall 0.998  6.342 Hz  track 0.992  load1 5.81  
+[15:18:03] flight 11/56  mirror  B.moving__ships  r4 a1  (load1 5.81)
+  -> VALID  sim/wall 0.999  6.344 Hz  track 0.992  load1 5.90  
+[15:19:10] flight 12/56  matte  B.moving__ships  r4 a1  (load1 5.90)
+  -> VALID  sim/wall 0.994  6.374 Hz  track 0.992  load1 5.06  
+[15:20:17] flight 13/56  matte  A.static__ships  r1 a1  (load1 5.06)
+  -> VALID  sim/wall 0.999  6.359 Hz  track 0.99  load1 4.78  
+[15:21:19] flight 14/56  mirror  A.static__ships  r1 a1  (load1 4.78)
+  -> VALID  sim/wall 0.999  6.352 Hz  track 0.99  load1 3.75  
+[15:22:21] flight 15/56  mirror  A.static__proven  r3 a1  (load1 3.75)
+  -> VALID  sim/wall 0.992  13.459 Hz  track 0.996  load1 8.17  
+[15:23:23] flight 16/56  matte  A.static__proven  r3 a1  (load1 8.17)
+  -> VALID  sim/wall 0.997  15.036 Hz  track 0.996  load1 9.23  
+[15:24:25] flight 17/56  matte  B.moving__ships  r2 a1  (load1 9.23)
+  -> VALID  sim/wall 0.98  6.428 Hz  track 0.98  load1 8.06  
+[15:25:32] flight 18/56  mirror  B.moving__ships  r2 a1  (load1 8.06)
+  -> VALID  sim/wall 0.988  6.425 Hz  track 0.992  load1 5.38  
+[15:26:39] flight 19/56  mirror  A.static__ships  r4 a1  (load1 5.38)
+  -> VALID  sim/wall 0.909  6.428 Hz  track 0.991  load1 5.77  
+[15:27:41] flight 20/56  matte  A.static__ships  r4 a1  (load1 5.77)
+  -> VALID  sim/wall 0.888  6.427 Hz  track 0.99  load1 8.68  
+[15:28:42] flight 21/56  matte  A.static__proven  r1 a1  (load1 8.68)
+  -> VALID  sim/wall 0.916  15.02 Hz  track 0.996  load1 9.98  
+[15:29:45] flight 22/56  mirror  A.static__proven  r1 a1  (load1 9.98)
+  -> VALID  sim/wall 0.925  14.948 Hz  track 0.996  load1 11.93  
+[15:30:47] flight 23/56  mirror  B.moving__delta_camera  r3 a1  (load1 11.93)
+  -> VALID  sim/wall 0.898  14.633 Hz  track 0.996  load1 9.91  
+[15:31:54] flight 24/56  matte  B.moving__delta_camera  r3 a1  (load1 10.16)
+  -> VALID  sim/wall 0.926  14.817 Hz  track 0.996  load1 14.60  
+[15:33:01] flight 25/56  matte  B.moving__ships  r3 a1  (load1 14.60)
+  -> VALID  sim/wall 0.901  6.43 Hz  track 0.905  load1 7.44  
+[15:34:08] flight 26/56  mirror  B.moving__ships  r3 a1  (load1 7.44)
+  -> VALID  sim/wall 0.888  6.427 Hz  track 0.992  load1 8.32  
+[15:35:15] flight 27/56  mirror  A.static__proven  r4 a1  (load1 8.32)
+  -> VALID  sim/wall 0.888  14.899 Hz  track 0.996  load1 8.85  
+[15:36:17] flight 28/56  matte  A.static__proven  r4 a1  (load1 8.85)
+  -> VALID  sim/wall 0.913  15.12 Hz  track 0.996  load1 9.50  
+[15:37:19] flight 29/56  matte  B.moving__delta_camera  r4 a1  (load1 9.50)
+[15:38:23] interrupted - tearing down
+[15:48:17] stability A/B starting: plan=data/plan.tsv out=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/stability/out start=29
+[15:48:17] flight 29/56  matte  B.moving__delta_camera  r4 a1  (load1 5.55)
+  -> VALID  sim/wall 0.915  14.822 Hz  track 0.986  load1 7.15  
+[15:49:25] flight 30/56  mirror  B.moving__delta_camera  r4 a1  (load1 7.15)
+  -> VALID  sim/wall 0.9  14.641 Hz  track 0.996  load1 9.09  
+[15:50:32] flight 31/56  mirror  B.moving__proven  r1 a1  (load1 9.09)
+  -> VALID  sim/wall 0.902  14.448 Hz  track 0.996  load1 17.57  
+[15:51:39] flight 32/56  matte  B.moving__proven  r1 a1  (load1 17.57)
+  -> VALID  sim/wall 0.901  12.981 Hz  track 0.996  load1 13.05  
+[15:52:46] flight 33/56  matte  A.static__ships  r3 a1  (load1 13.05)
+  -> VALID  sim/wall 0.885  6.393 Hz  track 0.43  load1 8.80  
+[15:53:48] flight 34/56  mirror  A.static__ships  r3 a1  (load1 8.80)
+  -> VALID  sim/wall 0.893  6.351 Hz  track 0.99  load1 5.02  
+[15:54:50] flight 35/56  mirror  B.moving__proven  r4 a1  (load1 6.14)
+  -> VALID  sim/wall 0.904  12.851 Hz  track 0.996  load1 10.26  
+[15:55:57] flight 36/56  matte  B.moving__proven  r4 a1  (load1 10.26)
+  -> VALID  sim/wall 0.92  14.597 Hz  track 0.98  load1 14.71  
+[15:57:04] flight 37/56  matte  B.moving__delta_backend  r4 a1  (load1 14.71)
+  -> VALID  sim/wall 0.876  14.831 Hz  track 0.928  load1 9.25  
+[15:58:11] flight 38/56  mirror  B.moving__delta_backend  r4 a1  (load1 9.25)
+  -> VALID  sim/wall 0.882  14.596 Hz  track 0.996  load1 8.41  
+[15:59:18] flight 39/56  mirror  B.moving__delta_speed  r1 a1  (load1 8.41)
+  -> VALID  sim/wall 0.911  6.416 Hz  track 0.992  load1 9.59  
+[16:00:25] flight 40/56  matte  B.moving__delta_speed  r1 a1  (load1 9.59)
+  -> VALID  sim/wall 0.909  6.436 Hz  track 0.992  load1 9.58  
+[16:01:32] flight 41/56  matte  B.moving__delta_speed  r2 a1  (load1 9.58)
+  -> VALID  sim/wall 0.916  6.374 Hz  track 0.962  load1 9.42  
+[16:02:39] flight 42/56  mirror  B.moving__delta_speed  r2 a1  (load1 9.42)
+  -> VALID  sim/wall 0.902  6.389 Hz  track 0.992  load1 12.68  
+[16:03:47] flight 43/56  mirror  B.moving__delta_speed  r4 a1  (load1 12.68)
+  -> VALID  sim/wall 0.898  6.393 Hz  track 0.992  load1 12.16  
+[16:04:54] flight 44/56  matte  B.moving__delta_speed  r4 a1  (load1 12.16)
+  -> VALID  sim/wall 0.993  6.43 Hz  track 0.923  load1 10.54  
+[16:06:01] flight 45/56  matte  B.moving__proven  r2 a1  (load1 10.54)
+  -> VALID  sim/wall 0.995  15.101 Hz  track 0.986  load1 12.15  
+[16:07:08] flight 46/56  mirror  B.moving__proven  r2 a1  (load1 12.15)
+  -> VALID  sim/wall 0.996  14.904 Hz  track 0.997  load1 10.02  
+[16:08:15] flight 47/56  mirror  B.moving__delta_backend  r1 a1  (load1 10.02)
+  -> NORUN  sim/wall None  None Hz  track None  load1 4.80  exit 142
+[16:10:44] flight 47/56  mirror  B.moving__delta_backend  r1 a2  (load1 4.80)
+  -> VALID  sim/wall 0.991  14.555 Hz  track 0.996  load1 4.64  
+[16:11:51] flight 48/56  matte  B.moving__delta_backend  r1 a1  (load1 4.64)
+  -> VALID  sim/wall 0.989  14.84 Hz  track 0.918  load1 4.44  
+[16:12:57] flight 49/56  matte  A.static__ships  r2 a1  (load1 4.44)
+  -> VALID  sim/wall 0.992  6.417 Hz  track 0.991  load1 4.96  
+[16:13:59] flight 50/56  mirror  A.static__ships  r2 a1  (load1 4.96)
+  -> VALID  sim/wall 0.993  6.412 Hz  track 0.991  load1 5.76  
+[16:15:01] flight 51/56  mirror  B.moving__delta_camera  r2 a1  (load1 5.76)
+  -> VALID  sim/wall 0.994  14.61 Hz  track 0.996  load1 10.46  
+[16:16:08] flight 52/56  matte  B.moving__delta_camera  r2 a1  (load1 10.46)
+  -> VALID  sim/wall 0.992  14.805 Hz  track 0.996  load1 9.13  
+[16:17:15] flight 53/56  matte  B.moving__proven  r3 a1  (load1 9.13)
+  -> VALID  sim/wall 0.996  15.093 Hz  track 0.991  load1 10.15  
+[16:18:22] flight 54/56  mirror  B.moving__proven  r3 a1  (load1 10.15)
+  -> VALID  sim/wall 0.997  14.885 Hz  track 0.997  load1 11.83  
+[16:19:29] flight 55/56  mirror  B.moving__delta_backend  r2 a1  (load1 11.83)
+  -> VALID  sim/wall 0.999  14.941 Hz  track 0.997  load1 7.21  
+[16:20:36] flight 56/56  matte  B.moving__delta_backend  r2 a1  (load1 7.21)
+  -> VALID  sim/wall 0.996  15.097 Hz  track 0.919  load1 4.98  
+[16:21:42] ALL FLIGHTS DONE in 33 min

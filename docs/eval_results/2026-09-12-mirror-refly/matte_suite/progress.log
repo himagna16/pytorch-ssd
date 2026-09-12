@@ -1,0 +1,78 @@
+[13:12:04] acceptance2 suite=core cells=7 repeats=3 flights=21 out=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte
+[13:12:04] flight 1/21  A.static__ships  repeat 1 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[13:13:06]   -> VALID
+      VALID   {"sim_wall_ratio": 0.995, "achieved_hz": 6.426, "requested_hz": 6.5, "min_step_gap_ms": 153.8, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:13:06] flight 2/21  A.static__ships  repeat 2 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[13:14:08]   -> VALID
+      VALID   {"sim_wall_ratio": 0.994, "achieved_hz": 6.425, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:14:08] flight 3/21  A.static__ships  repeat 3 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[13:15:10]   -> VALID
+      VALID   {"sim_wall_ratio": 0.954, "achieved_hz": 6.43, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:15:10] flight 4/21  B.moving__ships  repeat 1 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[13:16:17]   -> VALID
+      VALID   {"sim_wall_ratio": 0.99, "achieved_hz": 6.432, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:16:17] flight 5/21  B.moving__ships  repeat 2 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[13:17:24]   -> VALID
+      VALID   {"sim_wall_ratio": 0.985, "achieved_hz": 6.424, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:17:24] flight 6/21  B.moving__ships  repeat 3 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[13:18:31]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 6.423, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 1.28, "truth_covers_window": true}
+[13:18:31] flight 7/21  A.static__proven  repeat 1 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[13:19:33]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 14.926, "requested_hz": 0.0, "min_step_gap_ms": 43.8, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:19:33] flight 8/21  A.static__proven  repeat 2 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[13:20:35]   -> VALID
+      VALID   {"sim_wall_ratio": 0.984, "achieved_hz": 14.75, "requested_hz": 0.0, "min_step_gap_ms": 44.1, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:20:35] flight 9/21  A.static__proven  repeat 3 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[13:21:37]   -> VALID
+      VALID   {"sim_wall_ratio": 0.905, "achieved_hz": 13.455, "requested_hz": 0.0, "min_step_gap_ms": 21.7, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:21:37] flight 10/21  B.moving__proven  repeat 1 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[13:22:44]   -> VALID
+      VALID   {"sim_wall_ratio": 0.928, "achieved_hz": 13.447, "requested_hz": 0.0, "min_step_gap_ms": 23.3, "torn_fraction": 0.0, "z_max": 1.49, "truth_covers_window": true}
+[13:22:44] flight 11/21  B.moving__proven  repeat 2 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[13:23:51]   -> VALID
+      VALID   {"sim_wall_ratio": 0.976, "achieved_hz": 14.531, "requested_hz": 0.0, "min_step_gap_ms": 25.3, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:23:51] flight 12/21  B.moving__proven  repeat 3 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[13:24:58]   -> VALID
+      VALID   {"sim_wall_ratio": 0.917, "achieved_hz": 13.45, "requested_hz": 0.0, "min_step_gap_ms": 42.9, "torn_fraction": 0.0, "z_max": 0.86, "truth_covers_window": true}
+[13:24:58] flight 13/21  B.moving__delta_speed  repeat 1 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[13:26:06]   -> VALID
+      VALID   {"sim_wall_ratio": 0.997, "achieved_hz": 6.364, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.86, "truth_covers_window": true}
+[13:26:06] flight 14/21  B.moving__delta_speed  repeat 2 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[13:27:13]   -> VALID
+      VALID   {"sim_wall_ratio": 0.992, "achieved_hz": 6.378, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.86, "truth_covers_window": true}
+[13:27:13] flight 15/21  B.moving__delta_speed  repeat 3 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[13:28:20]   -> INVALID: reasons: achieved 2.87 Hz < 0.9 x 6.5 Hz
+[13:28:21] flight 15/21  B.moving__delta_speed  repeat 3 attempt 2  (s01_control_moving, float/clean/chip, 50s)
+[13:29:29]   -> VALID
+      VALID   {"sim_wall_ratio": 0.988, "achieved_hz": 6.438, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:29:29] flight 16/21  B.moving__delta_camera  repeat 1 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[13:30:38]   -> VALID
+      VALID   {"sim_wall_ratio": 0.927, "achieved_hz": 2.602, "requested_hz": 0.0, "min_step_gap_ms": 322.5, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:30:38] flight 17/21  B.moving__delta_camera  repeat 2 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[13:31:46]   -> VALID
+      VALID   {"sim_wall_ratio": 0.922, "achieved_hz": 9.396, "requested_hz": 0.0, "min_step_gap_ms": 21.6, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:31:46] flight 18/21  B.moving__delta_camera  repeat 3 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[13:32:53]   -> VALID
+      VALID   {"sim_wall_ratio": 0.906, "achieved_hz": 13.486, "requested_hz": 0.0, "min_step_gap_ms": 43.9, "torn_fraction": 0.0, "z_max": 0.88, "truth_covers_window": true}
+[13:32:53] flight 19/21  B.moving__delta_backend  repeat 1 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[13:34:00]   -> VALID
+      VALID   {"sim_wall_ratio": 0.997, "achieved_hz": 14.985, "requested_hz": 0.0, "min_step_gap_ms": 44.4, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:34:00] flight 20/21  B.moving__delta_backend  repeat 2 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[13:35:06]   -> VALID
+      VALID   {"sim_wall_ratio": 0.978, "achieved_hz": 14.917, "requested_hz": 0.0, "min_step_gap_ms": 41.4, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:35:06] flight 21/21  B.moving__delta_backend  repeat 3 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[13:36:13]   -> VALID
+      VALID   {"sim_wall_ratio": 0.919, "achieved_hz": 13.234, "requested_hz": 0.0, "min_step_gap_ms": 29.8, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:36:13] all flights done in 24 min; scoring
+/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte/scoreboard.json
+/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte/scoreboard.md
+suite verdict: FAIL  {'pass': 3, 'fail': 4, 'invalid': 0, 'characterised': 0}
+  PASS           A.static__ships
+  PASS           B.moving__ships
+  PASS           A.static__proven
+  FAIL           B.moving__proven   failed: M1_tracking_fraction,M10_uncertain_fraction_present,M2_heading_err_max_deg
+  FAIL           B.moving__delta_backend   failed: M1_tracking_fraction,M10_uncertain_fraction_present
+  FAIL           B.moving__delta_camera   failed: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           B.moving__delta_speed   failed: M10_uncertain_fraction_present
+[13:36:14] artifacts: /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/refly_matte
