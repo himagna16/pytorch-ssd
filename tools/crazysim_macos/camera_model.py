@@ -921,7 +921,14 @@ class CameraModel:
         median frame moved 1.20 -> 1.54 ms (+28%) while the worst frame moved
         1.1 -> 6.7 ms (+500%) - the median degrades gracefully, the tail does not.
         ``test_worst_frame_cost_with_motion_blur_on_every_frame`` therefore gates
-        on the median, expressed in machine-independent elementwise passes.
+        on the median, twice: once in machine-independent elementwise passes,
+        which is what catches a regression, and once against spec 8's 5 ms
+        outright, which is what says the chain fits the budget on this machine.
+        Both live in that file's ``_assert_frame_budget``. Re-measured
+        2026-09-12: ``cpu_p95_ms`` is NOT a usable gate either - on a healthy
+        chain it ran 0.95-1.74 ms idle but 3.12-5.96 ms under a 14-process
+        bandwidth load, breaching 5 ms on 3 of 9 bursts with no code change,
+        while the median stayed inside 1.16-1.54 ms throughout.
 
         **The two ``over_5ms`` counters are observations, not verdicts.** They say
         "this many frames took over 5 ms", on the named clock. They do NOT say the

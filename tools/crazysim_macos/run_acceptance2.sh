@@ -56,7 +56,10 @@ while [ $# -gt 0 ]; do
     --list) LIST=1; shift;;
     --smoke) SMOKE=1; shift;;
     --cameras) CAMERAS=1; shift;;
-    --duration) DUR_OVERRIDE="$2"; shift 2;;
+    --duration) DUR_OVERRIDE="$2"
+                case "$DUR_OVERRIDE" in ''|*[!0-9]*) echo "--duration wants whole seconds, got '$DUR_OVERRIDE'"; exit 2;; esac
+                [ "$DUR_OVERRIDE" -ge 1 ] || { echo "--duration wants at least 1 second, got '$DUR_OVERRIDE'"; exit 2; }
+                shift 2;;
     --lock) LOCK="$2"; shift 2;;
     -h|--help) sed -n '2,34p' "$0"; exit 0;;
     *) echo "unknown flag $1"; exit 2;;
@@ -105,7 +108,6 @@ if [ "$CAMERAS" = 1 ]; then MATRIX_TXT="$CAMERA_M"; SUITE=cameras; fi
 if [ -n "$ONLY" ]; then MATRIX_TXT="$(echo "$MATRIX_TXT" | grep -E "$ONLY")"; fi
 [ -z "$MATRIX_TXT" ] && { echo "no cells match --only '$ONLY'"; exit 2; }
 if [ -n "$DUR_OVERRIDE" ]; then
-  case "$DUR_OVERRIDE" in *[!0-9]*) echo "--duration wants whole seconds, got '$DUR_OVERRIDE'"; exit 2;; esac
   MATRIX_TXT="$(echo "$MATRIX_TXT" | awk -F'|' -v d="$DUR_OVERRIDE" 'BEGIN{OFS="|"} NF>1{$7=d} {print}')"
 fi
 

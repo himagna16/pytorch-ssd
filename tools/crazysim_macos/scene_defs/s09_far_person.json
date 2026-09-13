@@ -1,13 +1,14 @@
 {
   "scene_id": "s09_far_person",
-  "title": "Far person",
-  "purpose": "Small-in-frame recall collapse and boundary chatter. Re-fly this whenever preprocess.c changes: the Sep 11 resize study showed nearest-neighbour downscaling costs recall specifically on small people.",
+  "title": "Far person, approaching",
+  "purpose": "Small-in-frame recall at the longest sight line this room can offer, measured as an ACQUISITION RANGE rather than as a single yes/no at one distance. The person stands at the room's maximum axial depth (6.9 m, 44 px tall) until sim t = 18 s, then walks in at 0.25 m/s to 4.0 m (74 px), arriving at t = 29.6 s. The observable is the range at which the follower first confirms, plus how many times it flips while crossing the threshold. Re-fly this whenever preprocess.c changes: the Sep 11 resize study showed nearest-neighbour downscaling costs recall specifically on small people, and that cost shows up here as the acquisition range moving. If this scene is ever added to run_acceptance2.sh it needs a cell duration of at least 45 s: in the committed simv2 suite a 45 s cell's scored window ran sim t = 10.45-35.55 s, which contains the whole 18-29.6 s walk-in.",
   "lighting": "default",
   "preview_cam_x": [
     0.0,
-    1.5,
-    3.0
+    1.0,
+    2.0
   ],
+  "preview_t_s": 0.0,
   "subjects": [
     {
       "name": "subj_person_target",
@@ -18,13 +19,17 @@
       },
       "height_m": 1.7,
       "pos": [
-        6.5,
+        6.9,
         0.0
       ],
       "motion": {
-        "type": "static"
+        "type": "drift",
+        "axis": "x",
+        "v_mps": -0.25,
+        "t_start_s": 18.0,
+        "min_m": 4.0
       },
-      "note": "Measured in THIS scene, camera inside the room: 0.905 at 6.5 m. The far wall is at x = 7, so 6.5 m is the practical maximum range available."
+      "note": "Measured 2026-09-12 on the MATTE floor (the current default, floor_reflectance 0), champion float net through build_scene.py --preview's own preprocessing, camera on the drone eye line at (0, 0, 0.8) facing +x. Apparent height / confidence along this scene's own path: 6.9 m 44 px 0.701 | 6.5 m 47 px 0.654 | 6.0 m 51 px 0.853 | 5.5 m 55 px 0.906 | 5.0 m 60 px 0.959 | 4.5 m 66 px 0.925 | 4.0 m 74 px 0.933. The previous note here claimed 0.905 at 6.5 m; that number is REAL but was measured on the pre-Sep-12 reflective floor and reproduces exactly with --floor-reflectance 0.2. On the matte floor the same placement reads 0.654, i.e. the old note overstated this scene's target by about +0.25 confidence. x = 6.9 is the true maximum: the far wall's inner face is at x = 6.95 and the panel is 8 mm thick, leaving 46 mm of clearance. The old 6.5 was 0.4 m short of the maximum it claimed to be."
     }
   ],
   "expected_behaviour": {
@@ -51,10 +56,14 @@
   },
   "prediction": {
     "model": "champion",
-    "outcome": "probably passes",
-    "rationale": "CORRECTION to spec_scenes.md section 3. The spec set this scene at 6.5 m because P1 supposedly collapsed 0.998 -> 0.588 between 4.5 and 6.0 m. That falloff is an ARTIFACT: build_person_scene.py --preview places the camera at person_x - dist, and with the default person_x = 2.5 the 6.0/8.0/10.0 m probes sat at x = -3.5/-5.5/-7.5, i.e. OUTSIDE the room, behind the back wall at x = -3. probe/person_far/preview_d6.0.png is a blank white frame, so 0.588 is the model's reading of a featureless wall, not of a distant person. Rendered properly from inside this room, a 1.70 m person at 6.5 m reads 0.905 and should be followed. This room cannot place a person in the boundary band by range alone; a genuine small-in-frame test needs a longer room or a shorter subject."
+    "outcome": "contested",
+    "rationale": "The static opening - observed from the follower's first scored frame (sim t ~ 10 s, see the limitation below) until the walk-in starts at 18 s - sits exactly on the enter threshold: 0.701 measured against follow_person.py's --vis-enter 0.7, needing 3 consecutive frames. Whether the drone confirms at 6.9 m or waits for the walk-in is genuinely undecided and is what the scene is for. It should confirm no later than ~6.0 m (0.853) and be solid by 5.5 m (0.906). The failure mode to watch is chatter during the static opening, which confirm_transitions bounds. All of these are champion-float-net numbers from a static render; the flown path is the chip net through firmware_preprocess and will differ."
   },
   "limitations": [
-    "Does NOT exercise the [0.45, 0.70) boundary band, contrary to the spec's intent: 6.5 m is the longest sight line this room allows and a person is still detected at 0.905 there. It remains the right flight-level regression detector for preprocess.c changes (smallest in-frame person available), but it is not the near-threshold scene. s10 is."
+    "This scene CANNOT pose a decisive far-person question, and the reason is structural rather than a choice made here. Apparent height is set by the subject's AXIAL depth (x), not by Euclidean range - measured: a 1.7 m person at x = 6.9 renders 44 px tall for every y from 0 to 4.6 m, while the reported range grows 6.90 -> 8.29 m. Axial depth is capped by the far wall at x = 6.95 and by the drone's spawn, which is hardcoded as `-- 0,0` in run_sim_headless.sh and is the same for every scene. So the smallest the reference person can ever be, in any scene in this room, is ~44 px in the 244-px frame (23 px at the model's 128x128 input), where the champion float net reads 0.65-0.72 - straddling the 0.70 enter threshold, and NOT monotone in range (6.5 m 0.654, 6.6 m 0.662, 6.7 m 0.681, 6.8 m 0.716, 6.9 m 0.701, because the card's baked background changes with subject_x). Genuine small-in-frame recall collapse starts below ~35 px drawn (33 px -> 0.366, 28 px -> 0.280, and a 0.28 floor all the way down to 12 px), which needs >= 8.6 m of axial depth. Nothing editable in this file reaches it.",
+    "Two workarounds were built and measured, and both are rejected here rather than left as open options. (1) Shrinking height_m to fake distance is INVALID: at six matched drawn heights (32/34/36/38/40/42 px) a shrunk subject at 6.5 m reads 0.378/0.367/0.426/0.586/0.648/0.601 against 0.512/0.650/0.642/0.696/0.758/0.658 for the real 1.7 m person at the matching range - lower in 6 cases out of 6. The mechanism was not isolated - a shorter card sits lower in the frame relative to the 0.8 m eye line, and the two sets also differ in whole-frame composition and brightness (114-137 DN with the camera drawn back vs 146 DN at 6.5 m) - but whatever the cause, equal pixel height does not buy equal confidence, so height_m is not a usable stand-in for range. (2) Placing the person off-axis buys no smallness at the start (see above) and drops confidence to 0.377-0.583 at y = 2.0-4.6 m; and follow_person.py commands zero yaw while unconfirmed, so the drone would never turn toward a target it cannot confirm.",
+    "The fix that WOULD make a static far-person test possible is not in this file: spawn the drone near the back wall instead of at the origin. The room's interior runs x = -2.95 to 6.95, so a spawn at x = -2.8 gives 9.7 m of axial depth and a 30.5 px person - inside the collapse regime measured above - without touching the room or the subject. That is a run_sim_headless.sh change (and DRONE_START in build_scene.py, which only records it in the manifest). Reported, not made.",
+    "The gates above are declarative. scoreboard.py reads only expected_behaviour.target from the manifest; it does not evaluate expected_behaviour.gates, and commanded_motion_while_unconfirmed_m and confirm_transitions are not among the metrics it computes. s09 is also not in run_acceptance2.sh's CORE matrix, so this scene has never been flown.",
+    "t_start_s is on the SIMULATOR clock, not the follower's. The simulator - and this subject's drive law with it - is already running during process start-up and the drone's take-off, so the walk-in must be scheduled late enough that the static far-person phase is still there when scoring begins. Measured across all 13 committed runs in docs/sim_results/2026-09-11-simv2/runs (correlating each run's follow_log.csv wall clock against its truth.csv, which logs wall and sim time side by side), the follower's FIRST scored row lands at sim t = 8.65-10.90 s. t_start_s = 18.0 leaves roughly 8 s of observed hold at 6.9 m and is in line with the other drift scenes (s08 18 s, s14 22 s, s06b 25 s). An earlier start - 8.0 s, as in the first version of this fix - would have put the entire static phase before the first scored frame. Anything that changes sim start-up or take-off timing moves this window, so the observed hold length is approximate and should be read from the truth log."
   ]
 }

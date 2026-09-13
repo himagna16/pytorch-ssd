@@ -9,6 +9,7 @@ Every test states the number the spec predicts and the tolerance it is checked
 to, so a failure says which parameter drifted rather than just "not equal".
 No pytest dependency: this is a plain script with a tiny runner.
 """
+import contextlib
 import math
 import sys
 import threading
@@ -488,7 +489,8 @@ def test_per_frame_cost_is_under_the_budget():
 
     The companion to test_worst_frame_cost_with_motion_blur_on_every_frame,
     which pins the exposure at the integration ceiling instead. Both gate on
-    the same statistic and for the same reason: this used to assert the WALL
+    the same statistic and for the same reason, through the same gate function
+    (``_assert_frame_budget``): this used to assert the WALL
     mean over 60 frames against a literal 5 ms, and a single descheduled frame
     can put 30+ ms of wall time into that mean on a laptop running a build (the
     worst wall frame measured while writing this was 196 ms, against a 0.93 ms
@@ -505,26 +507,7 @@ def test_per_frame_cost_is_under_the_budget():
             m.apply(src, omega, 0.077)              # warm up, settle AE
         (passes, c, unit), nburst = _best_of_bursts(m, src, omega, 60)
         _report(name, passes, c, unit, nburst)
-        assert passes < BUDGET_PASSES, (
-            f"{name}: {passes:.0f} elementwise passes per frame on the CPU "
-            f"clock at the settled exposure, budget {BUDGET_PASSES}")
-        # ABSOLUTE BACKSTOP for spec 8's 5 ms/frame cap. The pass count is
-        # machine-independent by design, which means it alone can never say
-        # whether the chain fits inside 5 ms on THIS machine: 120 passes is
-        # ~1.6 ms here but would be ~4.7 ms on a box with a 3x slower
-        # elementwise pass, and over 5 ms on a slower one still - and the gate
-        # would not notice. So the CPU MEDIAN is also held against the spec
-        # number outright. The tail is deliberately not: the worst frame is the
-        # statistic contention inflates 3-5x (see the N-sweep above), and that
-        # is what made the old gate a false-failure generator. The median is
-        # the one that survives - measured 1.20-1.22 ms idle and at worst
-        # 1.92 ms with 14 bandwidth-heavy processes on a machine at load
-        # average 55, so this has ~2.6x of headroom and is not a flake risk.
-        assert c["cpu_median_ms"] < 5.0, (
-            f"{name}: median frame costs {c['cpu_median_ms']:.2f} ms of CPU, "
-            f"over spec 8 section 8's 5 ms cap. Unlike the pass count this is "
-            f"an absolute number, so a slow machine can trip it honestly - "
-            f"check cpu_median_ms on a quiet run before blaming the chain.")
+        _assert_frame_budget(name, passes, c, unit, nburst)
 
 
 @test
@@ -849,6 +832,7 @@ def _elementwise_pass_ms(reps=5):
 
 
 BUDGET_PASSES = 120       # see test_worst_frame_cost_with_motion_blur_on_every_frame
+FRAME_BUDGET_MS = 5.0     # spec 8 section 8: the per-frame cap itself, in ms
 BURSTS = 4
 _SLICES = 5
 
@@ -903,6 +887,88 @@ def _report(label, passes, c, unit, nburst):
           f"{c['cpu_over_5ms_frames']} cpu / {c['wall_over_5ms_frames']} wall"
           + ("  <-- machine was busy; re-run idle to interpret"
              if c["cpu_over_5ms_frames"] or c["wall_over_5ms_frames"] else ""))
+
+
+def _assert_frame_budget(label, passes, c, unit, nburst, budget=BUDGET_PASSES):
+    """Spec 8 section 8's 5 ms/frame cap, asserted the two ways that survive a
+    shared laptop. Both cost tests call this, so there is ONE definition of
+    "over budget" instead of two copies that can drift apart - and one function
+    that ``test_the_frame_budget_gate_actually_fires_on_a_slowed_model`` can
+    point at a deliberately slowed chain to prove it still bites.
+
+    **1. Relative, machine-independent.** The CPU-time median frame divided by
+    one elementwise pass sampled between slices of the same burst must be under
+    ``budget`` (120) passes. This is the gate that catches a regression: the
+    chain reads 89-95 passes idle, so it fires at a 1.3x uniform slowdown, and
+    the pre-optimisation allocating chain reads 133-152 through it (measured
+    2026-09-12, two independent sessions: 146-149 himax_typical, 149-152
+    himax_low_light, idle). Bayer is the known blind spot - the allocating
+    chain is only 82-84 passes there.
+
+    **2. Absolute.** That same CPU median must also be under ``FRAME_BUDGET_MS``
+    outright. The pass count is machine-independent by design, which means it
+    alone can never say whether the chain fits inside 5 ms on THIS machine: 120
+    passes is ~1.6 ms here but would be ~4.7 ms where an elementwise pass costs
+    3x more, and over 5 ms on a slower box still - and the relative gate would
+    not notice. This one would. Its resolution is the flip side of the same
+    coin: this laptop is about four times faster than the budget requires, so it
+    needs a 4.1x slowdown (1.21 -> 5.0 ms) before it fires. On a machine already
+    spending 4 ms a frame it fires at 1.25x.
+
+    **Both are CPU time** (``time.thread_time``), not wall. Wall time put 196 ms
+    into a single frame of an otherwise 0.93 ms chain on this machine while a
+    build ran; CPU time excludes the OS *running* someone else, which is the
+    largest single source of that noise. It does not exclude the cache-miss
+    stall time another process imposes on us, which is why the statistic is the
+    **median** and not the tail - the trade-off, and the measurements behind it,
+    are in ``test_worst_frame_cost_with_motion_blur_on_every_frame``. Everything
+    tail-shaped is printed by ``_report`` and not asserted.
+    """
+    assert passes < budget, (
+        f"{label}: {passes:.0f} elementwise passes per frame on the CPU clock, "
+        f"budget {budget}, best of {nburst} burst(s). This statistic is "
+        f"normalised against a yardstick sampled between slices of the same "
+        f"burst, and healthy readings have stayed inside 54-111 across three "
+        f"independent sessions with up to 14 bandwidth-heavy processes "
+        f"competing (load average 8-55), so a busy laptop is an unlikely "
+        f"explanation - suspect the chain. The current chain is 89-95 passes "
+        f"idle (69-70 for Bayer); the pre-optimisation allocating chain "
+        f"measures 133-152 through this same test.")
+    assert c["cpu_median_ms"] < FRAME_BUDGET_MS, (
+        f"{label}: the median frame costs {c['cpu_median_ms']:.2f} ms of CPU, "
+        f"over spec 8 section 8's {FRAME_BUDGET_MS:.0f} ms/frame cap. Unlike "
+        f"the pass count this is an absolute number, so a slow machine can trip "
+        f"it honestly - check cpu_median_ms on a quiet run before blaming the "
+        f"chain. Healthy on an M4 Pro: 0.90-1.23 ms idle and 1.16-1.54 ms with "
+        f"14 bandwidth-heavy processes competing, so contention alone has never "
+        f"moved this statistic past 1.6 ms.")
+
+
+@contextlib.contextmanager
+def _extra_passes(mixes):
+    """Slow every frame by ``4 * mixes`` elementwise passes, inside the clock.
+
+    The injection point is ``_ae_update``: called exactly once per frame from
+    inside ``_apply``, after the chain and before ``_cost_ms`` is stamped, so
+    the added cost lands in ``cost_stats`` the way a real regression would
+    rather than being measured around. The work itself is the yardstick's own
+    four-op mix, so the slowdown is denominated in the same unit the gate counts
+    in, and inflates under contention exactly as the denominator does - which is
+    what keeps the proof below honest on a busy machine.
+    """
+    y = _Yardstick()
+    real = cm.CameraModel._ae_update
+
+    def slow_ae(self, measured_mean, dt):
+        for _ in range(mixes):
+            y._mix()
+        return real(self, measured_mean, dt)
+
+    cm.CameraModel._ae_update = slow_ae
+    try:
+        yield 4 * mixes
+    finally:
+        cm.CameraModel._ae_update = real
 
 
 @test
@@ -973,6 +1039,32 @@ def test_worst_frame_cost_with_motion_blur_on_every_frame():
     from "this laptop is busy" on the tail, which is why the tail is reported
     rather than asserted.
 
+    Add one more to that list, measured 2026-09-12, because it is the first
+    thing a reader reaches for: **a trimmed tail instead of the max.** The
+    budget is per-frame and ``cpu_p95_ms`` is a per-frame statistic, so
+    ``cpu_p95_ms < 5.0`` looks like the compromise that keeps the cap honest
+    without the max's flakiness. It is not. Nine healthy 300-frame bursts (three
+    presets x three repetitions) against the N=14 load:
+
+        statistic        healthy, idle      healthy, N=14 load
+        cpu median       0.90-1.23 ms         1.16-1.54 ms
+        cpu p90          0.93-1.26 ms         2.11-4.47 ms
+        cpu p95          0.95-1.74 ms         3.12-5.96 ms   <-- over the cap
+        cpu max          0.98-2.98 ms         4.69-7.62 ms
+
+    p95 breached the 5 ms cap on 3 of those 9 bursts with no code change at
+    all, and p90 came within 0.5 ms of it - the same false-failure behaviour
+    that retired the ``cpu_max_ms`` gate, just at a lower rate. Over the same
+    nine bursts the median never left 1.16-1.54 ms. **The median is the only
+    statistic measured here that a busy laptop does not move**, and that is the
+    whole reason the cap is asserted on it.
+
+    What the two assertions can each detect is stated in
+    ``_assert_frame_budget``, and
+    ``test_the_frame_budget_gate_actually_fires_on_a_slowed_model`` drives a
+    deliberately slowed chain through both of them every run, so neither is a
+    claim that has never been tested.
+
     **What the narrowing costs, and what pays for it.** A regression that hits
     only a few frames per hundred would no longer trip a timing assertion. The
     regression this test exists to catch was exactly that shape - twenty
@@ -1033,33 +1125,123 @@ def test_worst_frame_cost_with_motion_blur_on_every_frame():
             f"{n * nburst} frames, expected {2 * n * nburst} "
             f"(both axes, every frame)")
         _report(f"{preset} {calls[0]}x{calls[1]}", passes, c, unit, nburst)
-        assert passes < BUDGET_PASSES, (
-            f"{preset}: {passes:.0f} elementwise passes per frame on the CPU "
-            f"clock, budget {BUDGET_PASSES}, best of {nburst} burst(s). This "
-            f"statistic is normalised against a yardstick sampled between "
-            f"slices of the same burst, and it stayed inside 63-111 across two "
-            f"independent sessions with up to 14 bandwidth-heavy processes "
-            f"competing (load average 8-55), so a busy laptop is an "
-            f"unlikely explanation - suspect the chain. The current chain is "
-            f"90-94 passes idle (69 for Bayer); the pre-optimisation allocating "
-            f"chain measures 133-146 through this same test.")
-        # ABSOLUTE BACKSTOP for spec 8's 5 ms/frame cap. The pass count is
-        # machine-independent by design, which means it alone can never say
-        # whether the chain fits inside 5 ms on THIS machine: 120 passes is
-        # ~1.6 ms here but would be ~4.7 ms on a box with a 3x slower
-        # elementwise pass, and over 5 ms on a slower one still - and the gate
-        # would not notice. So the CPU MEDIAN is also held against the spec
-        # number outright. The tail is deliberately not: the worst frame is the
-        # statistic contention inflates 3-5x (see the N-sweep above), and that
-        # is what made the old gate a false-failure generator. The median is
-        # the one that survives - measured 1.20-1.22 ms idle and at worst
-        # 1.92 ms with 14 bandwidth-heavy processes on a machine at load
-        # average 55, so this has ~2.6x of headroom and is not a flake risk.
-        assert c["cpu_median_ms"] < 5.0, (
-            f"{preset}: median frame costs {c['cpu_median_ms']:.2f} ms of CPU, "
-            f"over spec 8 section 8's 5 ms cap. Unlike the pass count this is "
-            f"an absolute number, so a slow machine can trip it honestly - "
-            f"check cpu_median_ms on a quiet run before blaming the chain.")
+        _assert_frame_budget(preset, passes, c, unit, nburst)
+
+
+@test
+def test_the_frame_budget_gate_actually_fires_on_a_slowed_model():
+    """Proof that ``_assert_frame_budget`` has teeth - re-run every suite run.
+
+    A budget nobody has ever watched fail is indistinguishable from no budget,
+    and this one has been round that loop already: the September round dropped
+    the tail assertion for good reasons (see the test above) and a verifier then
+    found the 5 ms cap had gone unasserted altogether for a while. Asserting it
+    again is only half the job. "It would fail if the model regressed" is a
+    claim until something makes it fail, so this test makes it fail, on purpose,
+    every run, and fails loudly if it cannot.
+
+    The chain is slowed by a known number of elementwise passes per frame
+    through ``_extra_passes`` - injected at ``_ae_update``, inside ``_apply``'s
+    own timed region, using the yardstick's four-op mix - and the real gate
+    function is then pointed at the result. Four cases:
+
+    ======================  ==================================================
+    healthy                 gate must pass
+    slowed to ~2.2x         the 120-pass relative gate must fire. The target is
+                            2.2x the budget, not a hair over it: under a
+                            14-process load a 1.7x target once landed at 133
+                            passes against the budget of 120, and an 11% margin
+                            in a test whose failure message is "the gate has no
+                            teeth" is the wrong thing to leave thin.
+    ~10 ms/frame            the absolute 5 ms cap must fire. The pass budget is
+                            lifted to infinity for this case only, so that the
+                            two assertions can be shown to fire *independently*
+                            - the pass assertion is checked first, so without
+                            lifting it, the absolute one would never be the
+                            thing that spoke.
+    healthy again           the injection really was removed; the gate is green
+    ======================  ==================================================
+
+    Both slowdown sizes are computed at runtime from the burst just measured,
+    not hard-coded, so this keeps working on a faster or slower machine and
+    under contention (the injected work and the yardstick inflate together).
+
+    **What this test does NOT prove.** It exercises a *uniform* slowdown, which
+    is the shape the median gate can see. It says nothing about a
+    few-frames-in-a-hundred regression - that shape is deliberately outside what
+    any timing gate here asserts, and is covered by
+    ``test_apply_reuses_its_buffers_instead_of_allocating_per_frame`` instead.
+    """
+    rng = np.random.default_rng(4)
+    src = rng.integers(30, 230, (244, 324, 3), dtype=np.uint8)
+    omega = np.array([0.0, 0.35, 0.70])
+    n = 50                       # short bursts: the signal here is huge
+    print()
+
+    def measure(mixes, bursts=BURSTS, budget=BUDGET_PASSES):
+        m = cm.CameraModel("himax_typical", seed=1, overrides={"ae_enabled": False})
+        m._t_lines = float(cm.MAX_INTG_LINES)
+        for _ in range(20):
+            m.apply(src, omega, 0.077)          # warm up undisturbed
+        ctx = _extra_passes(mixes) if mixes else contextlib.nullcontext()
+        with ctx:
+            return _best_of_bursts(m, src, omega, n, bursts, budget)
+
+    # 1. Healthy: the gate must not fire.
+    (p0, c0, u0), nb0 = measure(0)
+    _report("healthy", p0, c0, u0, nb0)
+    _assert_frame_budget("healthy chain", p0, c0, u0, nb0)
+
+    # 2. Slowed past the pass budget: the relative gate must fire.
+    mix1 = max(1, int(math.ceil((BUDGET_PASSES * 2.2 - p0) / 4.0)))
+    (p1, c1, u1), nb1 = measure(mix1, bursts=2)
+    _report(f"slowed +{4 * mix1} passes", p1, c1, u1, nb1)
+    try:
+        _assert_frame_budget("slowed chain", p1, c1, u1, nb1)
+    except AssertionError as e:
+        # Whichever budget the measurement actually breached is the one that
+        # must have spoken. Normally that is the pass budget - 2.2x of it is
+        # ~3.6 ms here, well under the cap. But the two gates are only ordered,
+        # not independent: a yardstick inflated past ~42 us by contention would
+        # divide this same slowdown down below 120 passes while the absolute
+        # cap still saw it, and asserting flatly on the pass message would then
+        # fail for a reason that has nothing to do with teeth.
+        msg = str(e)
+        want = "elementwise passes" if p1 >= BUDGET_PASSES else "5 ms"
+        assert want in msg, f"the wrong gate fired (expected {want!r}): {e}"
+        note(f"{'pass gate' if want[0] == 'e' else 'absolute cap'} fired at "
+             f"{p1:.0f} passes / {c1['cpu_median_ms']:.2f} ms "
+             f"(healthy {p0:.0f} / {c0['cpu_median_ms']:.2f} ms)")
+    else:
+        raise AssertionError(
+            f"the {BUDGET_PASSES}-pass gate did NOT fire on a chain slowed by "
+            f"{4 * mix1} elementwise passes per frame: it read {p1:.0f} passes "
+            f"({c1['cpu_median_ms']:.2f} ms) against a healthy {p0:.0f}. "
+            f"The relative half of the frame budget has no teeth.")
+
+    # 3. Slowed past the 5 ms cap itself, with the pass budget lifted so the
+    #    absolute assertion is the one that has to speak.
+    mix2 = max(1, int(math.ceil((FRAME_BUDGET_MS * 2.0 / u0 - p0) / 4.0)))
+    (p2, c2, u2), nb2 = measure(mix2, bursts=1, budget=float("inf"))
+    _report(f"slowed +{4 * mix2} passes", p2, c2, u2, nb2)
+    try:
+        _assert_frame_budget("slowed chain", p2, c2, u2, nb2, budget=float("inf"))
+    except AssertionError as e:
+        assert "5 ms" in str(e), f"the wrong gate fired: {e}"
+        note(f"absolute cap fired at {c2['cpu_median_ms']:.2f} ms / {p2:.0f} "
+             f"passes, with the pass budget lifted")
+    else:
+        raise AssertionError(
+            f"the {FRAME_BUDGET_MS:.0f} ms/frame cap did NOT fire on a chain "
+            f"whose median frame costs {c2['cpu_median_ms']:.2f} ms of CPU "
+            f"({p2:.0f} passes). The absolute half of the frame budget has no "
+            f"teeth, which means spec 8's cap is effectively unasserted.")
+
+    # 4. And the injection really is gone again.
+    (p3, c3, u3), nb3 = measure(0)
+    _assert_frame_budget("healthy again", p3, c3, u3, nb3)
+    note(f"green again at {p3:.0f} passes / {c3['cpu_median_ms']:.2f} ms once "
+         f"the injected work is removed")
 
 
 @test
@@ -1074,8 +1256,9 @@ def test_apply_reuses_its_buffers_instead_of_allocating_per_frame():
     Timing cannot police that reliably on a shared laptop (see
     ``test_worst_frame_cost_with_motion_blur_on_every_frame``), so this measures
     the cause instead of the symptom: ``tracemalloc``'s high-water mark across
-    one ``apply`` call, after warm-up. It involves no clock, so contention,
-    thermal state and numpy version cannot move it.
+    one ``apply`` call, after warm-up. It involves no clock, so contention and
+    thermal state cannot move it. The numpy version CAN - see the floor table
+    below - so the two numbers that matter are quoted per venv.
 
     Measured on an M4 Pro, reproducible to 0.1 KiB across repeats:
 
@@ -1084,12 +1267,52 @@ def test_apply_reuses_its_buffers_instead_of_allocating_per_frame():
         himax_low_light      207.3 KiB          3402.5 KiB
         himax_color_bayer    206.2 KiB          2780.4 KiB
 
-    One 244x324 float64 frame buffer is 618 KiB, so the budget below is one
+    One 244x324 float64 frame buffer is 617.6 KiB, so the budget below is one
     frame buffer: 3x above what the chain does and 4.5x below the allocating
     version, for every preset including Bayer. The ~206 KiB that is left is
     real and expected - the returned uint8 frame is 77 KiB of it (callers keep
     their frames), and the rest is the fancy-index border fixup inside
     ``_convolve_axis``.
+
+    **SENSITIVITY FLOOR - the smallest regression this gate can see.** The gate
+    fires on the *difference* between the budget and the baseline, so anything
+    smaller than that difference is invisible to it. Bisected to 0.5 KiB on
+    2026-09-12 by injecting a per-frame temporary held alive across the whole
+    ``apply`` call - the exact shape of the regression this exists to catch:
+
+        venv / numpy        baseline    largest leak    smallest leak
+                                        that SLIPS      that is CAUGHT
+        trainenv 1.24.4     206.6 KiB     411.0 KiB       411.5 KiB
+          (himax_low_light  207.3 KiB     410.0 KiB       410.5 KiB)
+        crazysimenv 2.4.6   142.5 KiB     474.5 KiB       475.0 KiB
+          (himax_low_light  143.5 KiB     473.5 KiB       474.0 KiB)
+
+    So in the venv the tests actually run in, the floor is **~411 KiB per
+    frame**: two thirds of a float64 frame buffer. Concretely, one extra
+    244x324 float64 temporary (617.6 KiB) is caught; one extra float32
+    temporary (308.8 KiB) is NOT, and neither is anything smaller. A 308 KiB
+    per-frame leak passes this gate silently, and the timing gate would not see
+    it either (it is worth about 0.1 ms). That is the blind spot between the
+    two cost tests; nothing in this suite currently covers it.
+
+    That 411 KiB is the floor for the WORST shape - a temporary live at the
+    same moment the chain reaches its own high-water mark, which is what the
+    table above injects. A leak that only appears after that moment is even
+    harder to see, because it stacks on whatever is still live rather than on
+    the 206 KiB peak: injected at ``_ae_update`` (step 13, when only the 77 KiB
+    returned frame is left) the floor measures 540.0 KiB slips / 540.5 KiB
+    caught on himax_typical, verified 2026-09-12 in trainenv. So read 411 KiB
+    as "nothing below this is ever caught", not as "anything above it is".
+
+    The regression the gate was built for is 7.8x the floor - the allocating
+    chain sits 3196 KiB above baseline - so it is caught with room to spare.
+    But do not read a pass here as "nothing new allocates". If that is what you
+    want, the budget is the knob: halving it to one float32 frame (308.8 KiB)
+    would drop the floor to ~102 KiB while still leaving 49% of headroom over
+    the numpy 1.24 baseline. It is left at one float64 frame here because the
+    baseline is numpy-version-dependent by 64 KiB and this file has to pass in
+    both venvs; tightening it is a deliberate decision for whoever owns the
+    budget, not a drive-by.
     """
     rng = np.random.default_rng(4)
     src = rng.integers(30, 230, (244, 324, 3), dtype=np.uint8)
