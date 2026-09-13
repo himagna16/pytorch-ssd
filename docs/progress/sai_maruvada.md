@@ -35,7 +35,7 @@ processor. In the first three weeks I:
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Confuser model on the chip | Sai | Cleared: passes all gates on a 576-image pack and 93-95% agreement on 1,000 random images | Team picks champion vs confuser |
+| Champion vs confuser, now flown | Sai | **Both models flown head to head for the first time** (48 flights, one session, interleaved). Until now every flight had used the champion, so the choice was about to be made by comparing a model with flight evidence against one with none. The confuser does what it was built for: on the dog it drifts 0.22 m and passes the 0.5 m limit where the champion drifts 0.97 m and fails. But it does not follow people: it tracks a standing person on **0%** of frames and fails the pointing and distance limits on both person-following cases. Re-scoring at every threshold from 0.45 to 0.80 shows the champion at its normal setting beats the confuser at **every** setting on **both** axes at once, so retuning does not rescue it | Team decision (Sai, Grace, David), now with flight evidence on both sides. Open follow-up: re-fly the confuser at its own 0.45-0.60 threshold, since the threshold study was open-loop |
 | Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
@@ -135,6 +135,24 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-12 (late night).** Flew the two candidate models against each other,
+  which had never been done: every closed-loop flight in this project had used
+  the champion, so the team was about to choose between a model with flight
+  evidence and one with none. 48 flights in one session, alternating between the
+  models so neither got an easier machine. The confuser does exactly what it was
+  designed to do, and it is not enough: it essentially stops chasing the dog
+  (0.22 m of drift against the champion's 0.97 m, and it passes the safety limit
+  the champion fails), but it **does not follow people at all**, tracking a
+  standing person on 0% of frames across four flights. The obvious objection is
+  that I judged it using settings tuned for the other model, so I re-scored every
+  frame at thresholds from 0.45 to 0.80: the champion at its normal setting is
+  better than the confuser at every setting, on both accuracy and false alarms at
+  once. That bounds the question rather than closing it, because it re-scores
+  frames from flights the confuser never got to steer. Also settled two smaller
+  things: there is no close-range detection weakness (the evidence for one was a
+  clock bug in my own analysis, now retracted), and a controlled repeat confirmed
+  the dog improvement is real.
 
 - **2026-09-12 (night).** Re-flew the seven test cases that still had no clean
   data, so the team finally has a complete 14-case baseline with no mirror in it.
