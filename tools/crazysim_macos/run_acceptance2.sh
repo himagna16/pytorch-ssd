@@ -11,6 +11,12 @@
 #
 #   14 cells x 2 repeats = 28 flights, ~50 min.
 #
+# The CORE matrix only ever asks for two of camera_model.py's four sensor presets
+# (clean and himax_typical), so himax_low_light and himax_color_bayer had no way in.
+# --cameras is a separate 2-cell matrix that flies exactly those two, as the same
+# float/full delta on the same moving scene as B.moving__delta_camera, so the three
+# camera cells are directly comparable. CORE is untouched by it.
+#
 # Every flight is headless (the Mac screen may be asleep), runs alone behind the shared
 # simulator lock, logs the simulator's ground truth for every subject, and is checked for
 # validity the moment it lands; an INVALID flight is re-flown once. The lock is released
@@ -24,6 +30,8 @@
 #   ./run_acceptance2.sh --only 'B\.'         # regex filter on cell id
 #   ./run_acceptance2.sh --list               # print the matrix and exit
 #   ./run_acceptance2.sh --smoke              # one short flight per spine, for plumbing
+#   ./run_acceptance2.sh --cameras            # the 2 never-flown presets (low light, Bayer)
+#   ./run_acceptance2.sh --duration 20        # override every selected cell's duration
 set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -38,6 +46,8 @@ REPEATS=2
 ONLY=""
 LIST=0
 SMOKE=0
+CAMERAS=0
+DUR_OVERRIDE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --out) OUT="$2"; shift 2;;
@@ -45,8 +55,10 @@ while [ $# -gt 0 ]; do
     --only) ONLY="$2"; shift 2;;
     --list) LIST=1; shift;;
     --smoke) SMOKE=1; shift;;
+    --cameras) CAMERAS=1; shift;;
+    --duration) DUR_OVERRIDE="$2"; shift 2;;
     --lock) LOCK="$2"; shift 2;;
-    -h|--help) sed -n '2,30p' "$0"; exit 0;;
+    -h|--help) sed -n '2,34p' "$0"; exit 0;;
     *) echo "unknown flag $1"; exit 2;;
   esac
 done
@@ -75,11 +87,27 @@ B.moving__ships|s01_control_moving|B|chip|himax_typical|chip|20
 C.empty__proven|s02_control_empty|C|float|clean|full|20
 MATRIX
 
+# The two presets the CORE matrix never asks for. Same scene/backend/speed as
+# B.moving__delta_camera (float, full speed, s01) with only the camera moved, so
+# these read as two more deltas off spine 2 rather than a different experiment.
+read -r -d '' CAMERA_M <<'MATRIX'
+B.moving__delta_lowlight|s01_control_moving|B|float|himax_low_light|full|50
+B.moving__delta_bayer|s01_control_moving|B|float|himax_color_bayer|full|50
+MATRIX
+
 MATRIX_TXT="$CORE"
 SUITE=core
+if [ "$SMOKE" = 1 ] && [ "$CAMERAS" = 1 ]; then
+  echo "--smoke and --cameras select different matrices; pick one"; exit 2
+fi
 if [ "$SMOKE" = 1 ]; then MATRIX_TXT="$SMOKE_M"; SUITE=smoke; REPEATS=1; fi
+if [ "$CAMERAS" = 1 ]; then MATRIX_TXT="$CAMERA_M"; SUITE=cameras; fi
 if [ -n "$ONLY" ]; then MATRIX_TXT="$(echo "$MATRIX_TXT" | grep -E "$ONLY")"; fi
 [ -z "$MATRIX_TXT" ] && { echo "no cells match --only '$ONLY'"; exit 2; }
+if [ -n "$DUR_OVERRIDE" ]; then
+  case "$DUR_OVERRIDE" in *[!0-9]*) echo "--duration wants whole seconds, got '$DUR_OVERRIDE'"; exit 2;; esac
+  MATRIX_TXT="$(echo "$MATRIX_TXT" | awk -F'|' -v d="$DUR_OVERRIDE" 'BEGIN{OFS="|"} NF>1{$7=d} {print}')"
+fi
 
 N_CELLS=$(echo "$MATRIX_TXT" | wc -l | tr -d ' ')
 if [ "$LIST" = 1 ]; then
