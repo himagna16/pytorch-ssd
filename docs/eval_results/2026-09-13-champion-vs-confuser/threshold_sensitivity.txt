@@ -1,0 +1,106 @@
+THRESHOLD SENSITIVITY - open-loop re-scoring of the frames these flights saw
+==============================================================================
+NOT a prediction of a re-flown suite: if the confuser had latched, the drone
+would have moved and seen different frames. This bounds the question only.
+latch rule re-applied: >= thr for 3 consecutive frames to enter, < 0.45 to leave
+
+-- confidence distribution, pooled over flights --
+   model/group                      n    mean     p05     p50     p95     max
+   cham/person/person in view     2970   0.738   0.147   0.818   0.973   0.995
+   conf/person/person in view     2983   0.484   0.176   0.521   0.753   0.965
+   cham/distra/no person in v     1722   0.465   0.322   0.448   0.723   0.909
+   conf/distra/no person in v     1694   0.342   0.182   0.297   0.633   0.766
+
+-- median latched fraction WITH THE PERSON IN VIEW (A/B/D cells) --
+   higher is better; this is the recall axis
+      thr     champion     confuser
+     0.45       0.9798       0.3724
+     0.50       0.9798       0.3208
+     0.55       0.9772       0.2705
+     0.60       0.9772       0.1681
+     0.65       0.9755       0.0633
+     0.70       0.9670       0.0415
+     0.75       0.9645       0.0043
+     0.80       0.9472       0.0000
+
+-- median latched fraction WITH NO PERSON IN VIEW, PER CELL --
+   lower is better; this is the false-alarm axis. Pooling C/E/F hides the
+   result: C and E elicit nothing from either model at any threshold, so a
+   pooled median is 0 for both and says nothing. F.pets is where it lives.
+   C.empty__ships
+      thr     champion     confuser
+     0.45       0.3025       0.0000
+     0.50       0.0000       0.0000
+     0.55       0.0000       0.0000
+     0.60       0.0000       0.0000
+     0.65       0.0000       0.0000
+     0.70       0.0000       0.0000
+     0.75       0.0000       0.0000
+     0.80       0.0000       0.0000
+
+   E.furniture__ships
+      thr     champion     confuser
+     0.45       0.0000       0.0000
+     0.50       0.0000       0.0000
+     0.55       0.0000       0.0000
+     0.60       0.0000       0.0000
+     0.65       0.0000       0.0000
+     0.70       0.0000       0.0000
+     0.75       0.0000       0.0000
+     0.80       0.0000       0.0000
+
+   F.pets__ships
+      thr     champion     confuser
+     0.45       0.5156       0.5965
+     0.50       0.4717       0.5056
+     0.55       0.4344       0.3674
+     0.60       0.3832       0.2010
+     0.65       0.2947       0.1034
+     0.70       0.1302       0.0000
+     0.75       0.0439       0.0000
+     0.80       0.0138       0.0000
+
+-- median latched fraction WITH THE PERSON IN VIEW, PER CELL --
+   A.static__ships
+      thr     champion     confuser
+     0.45       0.9902       0.9904
+     0.50       0.9902       0.9904
+     0.55       0.9902       0.9739
+     0.60       0.9902       0.7089
+     0.65       0.9902       0.0000
+     0.70       0.9902       0.0000
+     0.75       0.9902       0.0000
+     0.80       0.9805       0.0000
+
+   B.moving__ships
+      thr     champion     confuser
+     0.45       0.9915       0.3724
+     0.50       0.9915       0.3208
+     0.55       0.9915       0.2705
+     0.60       0.9915       0.2107
+     0.65       0.9915       0.1679
+     0.70       0.9915       0.0906
+     0.75       0.9915       0.0655
+     0.80       0.9810       0.0041
+
+   D.occlusion__ships
+      thr     champion     confuser
+     0.45       0.6459       0.2096
+     0.50       0.6377       0.1799
+     0.55       0.5929       0.1468
+     0.60       0.5607       0.1242
+     0.65       0.5262       0.0633
+     0.70       0.5002       0.0415
+     0.75       0.4839       0.0197
+     0.80       0.4708       0.0000
+
+-- the operating points the two releases actually selected --
+   champion selected at 0.70 (checkpoint_vis_thresh / quant_eval_vis_thresh)
+   confuser selected at 0.60
+   the follower flies BOTH at 0.70 (--vis-enter default)
+
+   person in view     champion  at own 0.70: 0.9670   as flown 0.70: 0.9670
+   person in view     confuser  at own 0.60: 0.1681   as flown 0.70: 0.0415
+   no person in view  champion  at own 0.70: 0.1302   as flown 0.70: 0.1302
+   no person in view  confuser  at own 0.60: 0.2010   as flown 0.70: 0.0000
+   (false-alarm row is F.pets only; C and E are zero everywhere)

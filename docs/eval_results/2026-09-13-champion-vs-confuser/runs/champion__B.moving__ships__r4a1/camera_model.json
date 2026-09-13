@@ -1,0 +1,63 @@
+{
+  "preset": "himax_typical",
+  "seed": 1004,
+  "width": 324,
+  "height": 244,
+  "params": {
+    "name": "himax_typical",
+    "enabled": true,
+    "scene_light": 1.0,
+    "ae_enabled": true,
+    "ae_target_dn": 60.0,
+    "ae_damping": 0.25,
+    "ae_fixed_exposure": null,
+    "psf_sigma_center_px": 0.65,
+    "psf_sigma_corner_px": 1.1,
+    "vignette_a2": 0.22,
+    "vignette_a4": 0.1,
+    "k1": 0.0,
+    "motion_blur": true,
+    "motion_blur_min_px": 0.01,
+    "focal_px_per_rad": 174.23405682253798,
+    "rolling_shutter": false,
+    "shot_noise": true,
+    "read_noise": true,
+    "prnu_sigma": 0.008,
+    "dsnu_sigma_dn": 0.4,
+    "dead_px_frac": 1e-05,
+    "banding_depth": 0.0,
+    "bayer": false
+  },
+  "unmeasured": [
+    "psf_sigma_center_px",
+    "psf_sigma_corner_px",
+    "vignette_a2",
+    "vignette_a4",
+    "prnu_sigma",
+    "dsnu_sigma_dn",
+    "dead_px_frac",
+    "ae_damping",
+    "scene_light"
+  ],
+  "derived": {
+    "e_per_dn_1x": 29.0,
+    "read_noise_e": 4.7,
+    "full_well_e": 7400.0,
+    "focal_px_per_rad": 174.23
+  },
+  "state": {
+    "exposure_lines": 155.0,
+    "exposure_ms": 4.816,
+    "analog_gain": 1.0,
+    "digital_gain": 1.0,
+    "exposure_factor": 0.45588,
+    "ae_converged": true
+  },
+  "cost": {
+    "frames": 700,
+    "mean_ms": 3.339,
+    "median_ms": 3.363,
+    "p95_ms": 4.116,
+    "max_ms": 8.424
+  }
+}

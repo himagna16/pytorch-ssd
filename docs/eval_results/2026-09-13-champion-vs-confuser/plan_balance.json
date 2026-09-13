@@ -1,0 +1,68 @@
+{
+  "seed": 20260913,
+  "n_flights": 48,
+  "n_pairs": 24,
+  "corr_repeat_vs_flight_order_pearson": 0.0,
+  "corr_repeat_vs_flight_order_spearman": 0.0,
+  "corr_repeat_vs_pair_position_pearson": 0.0,
+  "corr_repeat_vs_pair_position_spearman": 0.0,
+  "mean_flight_order_champion": 24.5,
+  "mean_flight_order_confuser": 24.5,
+  "champion_first_pairs": 12,
+  "confuser_first_pairs": 12,
+  "same_cell_adjacent_pairs": 0,
+  "per_cell_first_slot": {
+    "A.static__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    },
+    "B.moving__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    },
+    "C.empty__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    },
+    "D.occlusion__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    },
+    "E.furniture__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    },
+    "F.pets__ships": {
+      "champion_first": 2,
+      "confuser_first": 2
+    }
+  },
+  "per_cell_mean_order": {
+    "A.static__ships": {
+      "champion": 19.0,
+      "confuser": 19.0
+    },
+    "B.moving__ships": {
+      "champion": 20.0,
+      "confuser": 20.0
+    },
+    "C.empty__ships": {
+      "champion": 26.5,
+      "confuser": 26.5
+    },
+    "D.occlusion__ships": {
+      "champion": 34.5,
+      "confuser": 34.5
+    },
+    "E.furniture__ships": {
+      "champion": 28.0,
+      "confuser": 28.0
+    },
+    "F.pets__ships": {
+      "champion": 19.0,
+      "confuser": 19.0
+    }
+  },
+  "corr_repeat_vs_order_champion": 0.013451,
+  "corr_repeat_vs_order_confuser": -0.013451
+}

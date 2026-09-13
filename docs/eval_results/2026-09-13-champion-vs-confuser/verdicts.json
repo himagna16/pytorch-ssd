@@ -1,0 +1,75 @@
+{
+  "A.static__ships": {
+    "champion": {
+      "verdict": "PASS",
+      "failed": []
+    },
+    "confuser": {
+      "verdict": "FAIL",
+      "failed": [
+        "M2_heading_err_max_deg",
+        "M7_dist_err_settled_mean_m",
+        "M7_final_in_band"
+      ]
+    }
+  },
+  "B.moving__ships": {
+    "champion": {
+      "verdict": "PASS",
+      "failed": []
+    },
+    "confuser": {
+      "verdict": "FAIL",
+      "failed": [
+        "M2_heading_err_max_deg",
+        "M7_dist_err_settled_mean_m"
+      ]
+    }
+  },
+  "C.empty__ships": {
+    "champion": {
+      "verdict": "PASS",
+      "failed": []
+    },
+    "confuser": {
+      "verdict": "PASS",
+      "failed": []
+    }
+  },
+  "D.occlusion__ships": {
+    "champion": {
+      "verdict": "FAIL",
+      "failed": [
+        "M9_gt_visible_to_relatch_s"
+      ]
+    },
+    "confuser": {
+      "verdict": "FAIL",
+      "failed": [
+        "M9_gt_visible_to_relatch_s"
+      ]
+    }
+  },
+  "E.furniture__ships": {
+    "champion": {
+      "verdict": "PASS",
+      "failed": []
+    },
+    "confuser": {
+      "verdict": "PASS",
+      "failed": []
+    }
+  },
+  "F.pets__ships": {
+    "champion": {
+      "verdict": "FAIL",
+      "failed": [
+        "M6_max_horizontal_drift_m"
+      ]
+    },
+    "confuser": {
+      "verdict": "CHARACTERISED",
+      "failed": []
+    }
+  }
+}

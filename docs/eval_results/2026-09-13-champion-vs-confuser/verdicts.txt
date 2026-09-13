@@ -1,0 +1,47 @@
+SCOREBOARD VERDICTS - champion vs confuser, same six chip cells, matte floor
+==============================================================================
+   champion   suite verdict FAIL   counts {'pass': 4, 'fail': 2, 'invalid': 0, 'characterised': 0}   flights {'attempted': 24, 'valid': 24, 'invalid': 0, 'scored': 24}
+   confuser   suite verdict FAIL   counts {'pass': 2, 'fail': 3, 'invalid': 0, 'characterised': 1}   flights {'attempted': 24, 'valid': 24, 'invalid': 0, 'scored': 24}
+
+   cell                     champion   confuser   gates failed
+   ------------------------------------------------------------------------
+   A.static__ships              PASS       FAIL   champion: -
+                                                  confuser: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+   B.moving__ships              PASS       FAIL   champion: -
+                                                  confuser: M2_heading_err_max_deg,M7_dist_err_settled_mean_m
+   C.empty__ships               PASS       PASS   champion: -
+                                                  confuser: -
+   D.occlusion__ships           FAIL       FAIL   champion: M9_gt_visible_to_relatch_s
+                                                  confuser: M9_gt_visible_to_relatch_s
+   E.furniture__ships           PASS       PASS   champion: -
+                                                  confuser: -
+   F.pets__ships                FAIL CHARACTERISED   champion: M6_max_horizontal_drift_m
+                                                  confuser: -
+
+GATE VALUES, for every gate at least one model failed
+==============================================================================
+   A.static__ships
+      M2_heading_err_max_deg             need <= 12.0   champion 4.435 PASS   confuser 15.95 FAIL
+      M7_dist_err_settled_mean_m         need <= 0.75   champion 0.397 PASS   confuser 1.698 FAIL
+      M7_final_in_band                   need == 1.0   champion 1.0 PASS   confuser 0.0 FAIL
+
+   B.moving__ships
+      M2_heading_err_max_deg             need <= 14.0   champion 8.8 PASS   confuser 29.055 FAIL
+      M7_dist_err_settled_mean_m         need <= 0.75   champion 0.519 PASS   confuser 0.8235 FAIL
+
+   C.empty__ships: no gate failed for either model
+   D.occlusion__ships
+      M9_gt_visible_to_relatch_s         need <= 1.5   champion 4.8675 FAIL   confuser 2.7635 FAIL
+
+   E.furniture__ships: no gate failed for either model
+   F.pets__ships
+      M6_max_horizontal_drift_m          need < 0.5   champion 0.974 FAIL   confuser 0.215 PASS
+
+CHARACTERISED (non-gating) METRICS ON F.pets__ships
+==============================================================================
+   M8_false_follow_episodes           champion 3.5   confuser 0.0
+   M8_t_first_false_follow_s          champion 0.635   confuser 7.1
+   M8_false_follow_total_s            champion 2.355   confuser 0.0
+   M8_max_drift_during_episode_m      champion 0.091   confuser 0.0
+   M1_tracking_fraction               champion 0.1305   confuser 0.0
+   M10_conf_max_absent                champion 0.8755   confuser 0.7485

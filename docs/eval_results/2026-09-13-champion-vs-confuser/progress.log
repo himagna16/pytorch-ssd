@@ -1,0 +1,100 @@
+[18:45:47] champion-vs-confuser suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-vs-confuser/plan.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-vs-confuser scenes=/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 start=1
+[18:45:47]   champion = /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx (eps 0.0002009823510888964)
+[18:45:47]   confuser = /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_eval576_confuser/quant_eval/model_id_dory.onnx (eps 0.00021179195027798414)
+[18:45:47] flight 1/48  champion  F.pets__ships  r2 a1  (pair 1, load1 4.67)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.367 Hz  track 0.16  gap_max 163.6  upset False  load1 4.50  
+[18:46:38] flight 2/48  confuser  F.pets__ships  r2 a1  (pair 1, load1 4.50)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.999  6.352 Hz  track 0.0  gap_max 163.8  upset False  load1 5.04  
+[18:47:30] flight 3/48  confuser  A.static__ships  r3 a1  (pair 2, load1 5.04)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.997  6.355 Hz  track 0.0  gap_max 165.2  upset False  load1 5.34  
+[18:48:32] flight 4/48  champion  A.static__ships  r3 a1  (pair 2, load1 5.34)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.997  6.353 Hz  track 0.944  gap_max 163.9  upset False  load1 4.80  
+[18:49:34] flight 5/48  confuser  C.empty__ships  r2 a1  (pair 3, load1 4.80)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.363 Hz  track 0.0  gap_max 163.7  upset False  load1 4.69  
+[18:50:26] flight 6/48  champion  C.empty__ships  r2 a1  (pair 3, load1 4.69)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 1.0  6.363 Hz  track 0.0  gap_max 177.8  upset False  load1 4.33  
+[18:51:17] flight 7/48  champion  B.moving__ships  r2 a1  (pair 4, load1 4.33)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.34 Hz  track 0.991  gap_max 163.8  upset False  load1 4.97  
+[18:52:24] flight 8/48  confuser  B.moving__ships  r2 a1  (pair 4, load1 4.97)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.996  6.344 Hz  track 0.105  gap_max 163.9  upset False  load1 4.40  
+[18:53:31] flight 9/48  champion  A.static__ships  r2 a1  (pair 5, load1 4.40)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.369 Hz  track 0.99  gap_max 163.4  upset False  load1 4.17  
+[18:54:33] flight 10/48  confuser  A.static__ships  r2 a1  (pair 5, load1 4.17)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.996  6.359 Hz  track 0.0  gap_max 178.1  upset False  load1 4.39  
+[18:55:34] flight 11/48  confuser  E.furniture__ships  r4 a1  (pair 6, load1 4.39)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.347 Hz  track 0.0  gap_max 165.9  upset False  load1 4.57  
+[18:56:26] flight 12/48  champion  E.furniture__ships  r4 a1  (pair 6, load1 4.57)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.368 Hz  track 0.0  gap_max 163.8  upset False  load1 4.54  
+[18:57:18] flight 13/48  confuser  B.moving__ships  r3 a1  (pair 7, load1 4.54)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.997  6.351 Hz  track 0.178  gap_max 163.8  upset False  load1 4.87  
+[18:58:25] flight 14/48  champion  B.moving__ships  r3 a1  (pair 7, load1 4.87)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 1.0  6.375 Hz  track 0.992  gap_max 163.7  upset False  load1 4.60  
+[18:59:31] flight 15/48  champion  C.empty__ships  r3 a1  (pair 8, load1 4.60)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.996  6.36 Hz  track 0.0  gap_max 163.8  upset False  load1 5.51  
+[19:00:23] flight 16/48  confuser  C.empty__ships  r3 a1  (pair 8, load1 5.51)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 1.0  6.367 Hz  track 0.0  gap_max 163.8  upset False  load1 5.25  
+[19:01:15] flight 17/48  champion  D.occlusion__ships  r1 a1  (pair 9, load1 5.25)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.357 Hz  track 0.531  gap_max 163.9  upset False  load1 4.87  
+[19:02:32] flight 18/48  confuser  D.occlusion__ships  r1 a1  (pair 9, load1 4.87)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.352 Hz  track 0.052  gap_max 163.9  upset False  load1 4.44  
+[19:03:49] flight 19/48  confuser  F.pets__ships  r4 a1  (pair 10, load1 4.44)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.999  6.36 Hz  track 0.0  gap_max 175.1  upset False  load1 4.29  
+[19:04:40] flight 20/48  champion  F.pets__ships  r4 a1  (pair 10, load1 4.29)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.356 Hz  track 0.035  gap_max 163.7  upset False  load1 4.54  
+[19:05:32] flight 21/48  confuser  A.static__ships  r1 a1  (pair 11, load1 4.54)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.364 Hz  track 0.0  gap_max 163.7  upset False  load1 4.72  
+[19:06:34] flight 22/48  champion  A.static__ships  r1 a1  (pair 11, load1 4.72)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.997  6.357 Hz  track 0.99  gap_max 163.8  upset False  load1 4.34  
+[19:07:36] flight 23/48  champion  E.furniture__ships  r2 a1  (pair 12, load1 4.34)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.997  6.362 Hz  track 0.0  gap_max 163.8  upset False  load1 4.51  
+[19:08:27] flight 24/48  confuser  E.furniture__ships  r2 a1  (pair 12, load1 4.51)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.999  6.352 Hz  track 0.0  gap_max 163.6  upset False  load1 4.72  
+[19:09:19] flight 25/48  champion  F.pets__ships  r1 a1  (pair 13, load1 4.72)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.996  6.362 Hz  track 0.109  gap_max 163.9  upset False  load1 4.10  
+[19:10:11] flight 26/48  confuser  F.pets__ships  r1 a1  (pair 13, load1 4.10)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.994  6.358 Hz  track 0.0  gap_max 163.9  upset False  load1 5.57  
+[19:11:03] flight 27/48  confuser  B.moving__ships  r4 a1  (pair 14, load1 5.57)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.997  6.37 Hz  track 0.057  gap_max 163.8  upset False  load1 5.75  
+[19:12:09] flight 28/48  champion  B.moving__ships  r4 a1  (pair 14, load1 5.75)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.351 Hz  track 0.913  gap_max 163.9  upset False  load1 4.93  
+[19:13:16] flight 29/48  confuser  F.pets__ships  r3 a1  (pair 15, load1 5.57)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 1.0  6.353 Hz  track 0.014  gap_max 163.8  upset False  load1 4.41  
+[19:14:08] flight 30/48  champion  F.pets__ships  r3 a1  (pair 15, load1 4.41)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 1.001  6.361 Hz  track 0.152  gap_max 163.7  upset False  load1 3.95  
+[19:15:00] flight 31/48  champion  B.moving__ships  r1 a1  (pair 16, load1 3.95)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.356 Hz  track 0.992  gap_max 163.8  upset False  load1 5.40  
+[19:16:07] flight 32/48  confuser  B.moving__ships  r1 a1  (pair 16, load1 5.40)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.997  6.347 Hz  track 0.076  gap_max 163.7  upset False  load1 5.15  
+[19:17:13] flight 33/48  champion  E.furniture__ships  r3 a1  (pair 17, load1 5.15)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.354 Hz  track 0.0  gap_max 163.6  upset False  load1 4.90  
+[19:18:05] flight 34/48  confuser  E.furniture__ships  r3 a1  (pair 17, load1 4.90)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.358 Hz  track 0.0  gap_max 163.8  upset False  load1 3.99  
+[19:18:57] flight 35/48  confuser  D.occlusion__ships  r4 a1  (pair 18, load1 3.99)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.997  6.353 Hz  track 0.031  gap_max 163.9  upset False  load1 4.28  
+[19:20:14] flight 36/48  champion  D.occlusion__ships  r4 a1  (pair 18, load1 4.28)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.996  6.367 Hz  track 0.561  gap_max 163.7  upset False  load1 5.24  
+[19:21:31] flight 37/48  confuser  C.empty__ships  r4 a1  (pair 19, load1 5.24)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 1.0  6.358 Hz  track 0.0  gap_max 163.6  upset False  load1 5.70  
+[19:22:22] flight 38/48  champion  C.empty__ships  r4 a1  (pair 19, load1 5.70)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.36 Hz  track 0.0  gap_max 163.8  upset False  load1 5.35  
+[19:23:14] flight 39/48  champion  D.occlusion__ships  r3 a1  (pair 20, load1 5.35)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.997  6.363 Hz  track 0.452  gap_max 183.9  upset False  load1 5.10  
+[19:24:31] flight 40/48  confuser  D.occlusion__ships  r3 a1  (pair 20, load1 5.10)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.999  6.353 Hz  track 0.0  gap_max 163.9  upset False  load1 4.87  
+[19:25:48] flight 41/48  champion  A.static__ships  r4 a1  (pair 21, load1 4.87)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.997  6.366 Hz  track 0.99  gap_max 163.8  upset False  load1 4.35  
+[19:26:49] flight 42/48  confuser  A.static__ships  r4 a1  (pair 21, load1 4.35)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 1.0  6.354 Hz  track 0.0  gap_max 163.8  upset False  load1 5.43  
+[19:27:51] flight 43/48  confuser  E.furniture__ships  r1 a1  (pair 22, load1 5.43)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.998  6.35 Hz  track 0.0  gap_max 163.7  upset False  load1 4.23  
+[19:28:43] flight 44/48  champion  E.furniture__ships  r1 a1  (pair 22, load1 4.23)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.999  6.357 Hz  track 0.0  gap_max 163.7  upset False  load1 4.32  
+[19:29:35] flight 45/48  confuser  D.occlusion__ships  r2 a1  (pair 23, load1 4.32)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.992  6.381 Hz  track 0.073  gap_max 163.8  upset False  load1 4.64  
+[19:30:51] flight 46/48  champion  D.occlusion__ships  r2 a1  (pair 23, load1 4.64)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.378 Hz  track 0.469  gap_max 163.8  upset False  load1 5.23  
+[19:32:08] flight 47/48  champion  C.empty__ships  r1 a1  (pair 24, load1 5.23)
+  -> VALID  floor 0.0  eps 0.0002009823510888964  sim/wall 0.998  6.358 Hz  track 0.0  gap_max 163.8  upset False  load1 4.69  
+[19:33:00] flight 48/48  confuser  C.empty__ships  r1 a1  (pair 24, load1 4.69)
+  -> VALID  floor 0.0  eps 0.00021179195027798414  sim/wall 0.999  6.349 Hz  track 0.0  gap_max 163.5  upset False  load1 6.01  
+[19:33:52] ALL FLIGHTS DONE in 48 min

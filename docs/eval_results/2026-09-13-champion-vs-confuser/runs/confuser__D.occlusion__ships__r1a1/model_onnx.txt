@@ -1,0 +1,1 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_eval576_confuser/quant_eval/model_id_dory.onnx

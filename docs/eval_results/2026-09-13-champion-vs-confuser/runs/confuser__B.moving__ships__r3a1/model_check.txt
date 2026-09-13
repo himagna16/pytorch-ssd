@@ -1,0 +1,1 @@
+MODEL_OK onnx=/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_eval576_confuser/quant_eval/model_id_dory.onnx eps=0.00021179195027798414 sha1=56ed6ee703f8ffd26c4f58fc8bc67df290cee218

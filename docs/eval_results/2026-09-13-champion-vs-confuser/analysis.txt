@@ -1,0 +1,140 @@
+CHAMPION vs CONFUSER - 48-flight interleaved session, matte floor, chip cells
+==============================================================================
+flight records: 48   valid: {'champion': 24, 'confuser': 24}
+
+-- realised order (from what actually flew, first attempts) --
+   n                                      48
+   corr_repeat_vs_order_pearson           0.0
+   corr_repeat_vs_order_spearman          0.0
+   mean_order_champion                    24.5
+   mean_order_confuser                    24.5
+   max_consecutive_same_model             2
+   corr_repeat_vs_order_champion          0.013451
+   corr_repeat_vs_order_confuser          -0.013451
+
+-- health --
+   champion:
+      sim_wall_ratio   min 0.996 med 0.998 max 1.001
+      step_gap_ms.max  min 163.4 med 163.8 max 183.9
+      load1 before     min 3.95 med 4.68 max 5.75
+      load1 after      min 3.95 med 4.645 max 5.51
+      |pitch|max 9.651 deg  |roll|max 0.68 deg  pz_min 0.798 m
+      attitude upsets: 0 flights, 0 frames; below-floor frames 0
+      floor xml [0.0] manifest [0.0]
+      eps [0.0002009823510888964]  onnx_sha1 ['d90555c8462b6dd6c3432d184b427d4d3e653fda']
+   confuser:
+      sim_wall_ratio   min 0.992 med 0.998 max 1.0
+      step_gap_ms.max  min 163.5 med 163.8 max 178.1
+      load1 before     min 3.99 med 4.745 max 5.57
+      load1 after      min 3.99 med 4.72 max 6.01
+      |pitch|max 4.895 deg  |roll|max 0.414 deg  pz_min 0.799 m
+      attitude upsets: 0 flights, 0 frames; below-floor frames 0
+      floor xml [0.0] manifest [0.0]
+      eps [0.00021179195027798414]  onnx_sha1 ['56ed6ee703f8ffd26c4f58fc8bc67df290cee218']
+
+== A.static__ships ===========================================================
+   metric                                                     champion                     confuser   paired delta
+   M1_tracking_fraction                   0.99 [0.99, 0.99, 0.944, 0.99]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.99 *
+   M2_heading_err_mean_deg                3.61 [4.08, 3.6, 3.62, 2.33] 15.95 [15.95, 15.95, 15.95, 15.95]   12.34 *
+   M2_heading_err_max_deg                 4.435 [5.66, 4.24, 4.54, 4.33] 15.95 [15.95, 15.95, 15.95, 15.95]   11.515 *
+   M7_dist_err_settled_mean_m             0.397 [0.262, 0.437, 0.421, 0.373] 1.698 [1.698, 1.698, 1.698, 1.698]   1.301 *
+   M7_dist_final_m                        2.286 [2.275, 2.297, 2.333, 2.206] 3.64 [3.64, 3.64, 3.64, 3.64]   1.354 *
+   M7_in_band_fraction                    0.7685 [0.987, 0.616, 0.794, 0.743]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.7685 *
+   M9_loss_episodes                                   0.0 [0, 0, 1, 0]             0.0 [0, 0, 0, 0]   0.0
+   M9_track_outage_s                      1.427 [None, None, 1.427, None] None [None, None, None, None]   None
+   M9_gt_visible_to_relatch_s             None [None, None, None, None] None [None, None, None, None]   None
+   M9_reconfirm_latency_s                 1.571 [None, None, 1.571, None] None [None, None, None, None]   None
+   M9_unrecovered_loss                        0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M10_conf_mean_present                  0.8185 [0.84, 0.797, 0.771, 0.852] 0.5865 [0.529, 0.586, 0.587, 0.603]   -0.23 *
+   M10_uncertain_fraction_present         0.0993 [0.0485, 0.0952, 0.2347, 0.1034]  1.0 [0.9906, 1.0, 1.0, 1.0]   0.9007 *
+   tracked_fraction_when_in_view          0.9902 [0.9903, 0.9905, 0.9439, 0.9901]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.9902 *
+   longest_unlatched_while_in_view_s      0.1565 [0.155, 0.153, 1.267, 0.158] 33.2555 [33.152, 32.081, 33.359, 33.365]   32.5445 *
+   conf_mean_present                      0.8182 [0.8398, 0.7967, 0.7711, 0.8525] 0.5862 [0.5285, 0.5856, 0.5869, 0.6033]   -0.2302 *
+   dist_mean_m                            2.5245 [2.439, 2.552, 2.558, 2.497] 3.64 [3.64, 3.64, 3.64, 3.64]   1.1155 *
+
+== B.moving__ships ===========================================================
+   metric                                                     champion                     confuser   paired delta
+   M1_tracking_fraction                   0.9915 [0.992, 0.991, 0.992, 0.913] 0.0905 [0.076, 0.105, 0.178, 0.057]   -0.871 *
+   M2_heading_err_mean_deg                3.375 [3.39, 3.36, 3.24, 3.42] 15.905 [16.39, 15.56, 12.39, 16.25]   12.515 *
+   M2_heading_err_max_deg                 8.8 [8.52, 9.19, 9.08, 8.32] 29.055 [31.25, 28.45, 29.66, 28.15]   20.205 *
+   M7_dist_err_settled_mean_m             0.519 [0.481, 0.547, 0.509, 0.529] 0.8235 [0.822, 0.911, 0.825, 0.814]   0.3285 *
+   M7_dist_final_m                        2.2725 [2.236, 2.304, 2.241, 2.348] 2.5965 [2.668, 2.836, 2.525, 2.522]   0.358 *
+   M7_in_band_fraction                    0.4365 [0.461, 0.411, 0.491, 0.412]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.4365 *
+   M9_loss_episodes                                   0.0 [0, 0, 0, 2]             3.0 [2, 4, 7, 2]   3.0
+   M9_track_outage_s                      2.202 [None, None, None, 2.202] 11.122 [1.408, 13.252, 8.992, 26.843]   24.641 *
+   M9_gt_visible_to_relatch_s             None [None, None, None, None] None [None, None, None, None]   None
+   M9_reconfirm_latency_s                 0.94 [None, None, None, 0.94] 0.321 [0.313, 0.324, 0.476, 0.318]   -0.622 *
+   M9_unrecovered_loss                        0.0 [0.0, 0.0, 0.0, 0.0]     1.0 [1.0, 1.0, 1.0, 1.0]   1.0 *
+   M10_conf_mean_present                  0.878 [0.876, 0.888, 0.88, 0.856] 0.5325 [0.534, 0.487, 0.581, 0.531]   -0.3335 *
+   M10_uncertain_fraction_present         0.061 [0.0753, 0.0427, 0.0466, 0.0952] 0.4656 [0.4407, 0.4454, 0.5783, 0.4857]   0.3966 *
+   tracked_fraction_when_in_view          0.9915 [0.9916, 0.9915, 0.9915, 0.9134] 0.0906 [0.0763, 0.1048, 0.1783, 0.0571]   -0.8715 *
+   longest_unlatched_while_in_view_s      0.155 [0.153, 0.156, 0.154, 2.047] 19.547 [25.997, 13.097, 8.831, 26.685]   18.7895 *
+   conf_mean_present                      0.8778 [0.8759, 0.8876, 0.8796, 0.8563] 0.5328 [0.5341, 0.4875, 0.5806, 0.5314]   -0.3334 *
+   dist_mean_m                            2.5175 [2.483, 2.544, 2.508, 2.527] 2.8375 [2.836, 2.887, 2.815, 2.839]   0.3275 *
+
+== C.empty__ships ============================================================
+   metric                                                     champion                     confuser   paired delta
+   M8_false_follow_episodes                           0.0 [0, 0, 0, 0]             0.0 [0, 0, 0, 0]   0.0
+   M8_false_follow_total_s                    0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M8_max_drift_during_episode_m              0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M6_max_horizontal_drift_m                  0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M1_tracking_fraction                       0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M8_t_first_false_follow_s              None [None, None, None, None] None [None, None, None, None]   None
+   M8_conf_at_first_false_follow          None [None, None, None, None] None [None, None, None, None]   None
+   M10_conf_max_absent                    0.4935 [0.531, 0.497, 0.484, 0.49] 0.3445 [0.37, 0.336, 0.353, 0.334]   -0.1585 *
+   conf_mean_absent                       0.4547 [0.4869, 0.4543, 0.4503, 0.4552] 0.2953 [0.3188, 0.2924, 0.2935, 0.297]   -0.16 *
+   conf_p95_absent                        0.48 [0.5168, 0.4807, 0.4706, 0.4793] 0.3231 [0.3463, 0.3215, 0.3238, 0.3224]   -0.1581 *
+   conf_max_absent                        0.4937 [0.5305, 0.4973, 0.4836, 0.49] 0.3443 [0.3701, 0.3356, 0.353, 0.3344]   -0.158 *
+   frac_absent_conf_over_latch                0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+
+== D.occlusion__ships ========================================================
+   metric                                                     champion                     confuser   paired delta
+   M1_tracking_fraction                   0.5 [0.531, 0.469, 0.452, 0.561] 0.0415 [0.052, 0.073, 0.0, 0.031]   -0.4655 *
+   M2_heading_err_mean_deg                6.77 [7.91, 10.32, 5.63, 5.46] 16.83 [17.42, 11.67, 16.57, 17.09]   10.225 *
+   M2_heading_err_max_deg                 21.93 [19.49, 24.37, 24.54, 14.81] 25.505 [31.44, 24.54, 24.53, 26.47]   5.915
+   M7_dist_err_settled_mean_m             1.109 [1.101, 1.092, 1.126, 1.117] 1.5085 [1.383, 1.447, 1.826, 1.57]   0.404 *
+   M7_dist_final_m                        2.3835 [2.38, 2.255, 2.387, 2.401] 3.3345 [3.262, 3.089, 3.59, 3.407]   0.944 *
+   M7_in_band_fraction                    0.028 [0.012, 0.083, 0.044, 0.011]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.028 *
+   M9_loss_episodes                                   2.5 [3, 2, 3, 2]             1.5 [3, 2, 0, 1]   -0.5
+   M9_track_outage_s                      15.636 [16.22, 16.267, 15.052, 14.771] 19.79 [21.407, 18.173, None, None]   3.5465 *
+   M9_gt_visible_to_relatch_s             4.8675 [5.491, 9.101, 4.244, 4.091] 2.7635 [2.546, 2.981, None, None]   -4.5325 *
+   M9_reconfirm_latency_s                 0.314 [0.78, 0.313, 0.311, 0.315] 0.625 [0.939, 0.311, None, None]   0.0785
+   M9_unrecovered_loss                        0.0 [0.0, 0.0, 0.0, 0.0]     1.0 [1.0, 1.0, 0.0, 1.0]   1.0
+   M10_conf_mean_present                  0.58 [0.586, 0.597, 0.568, 0.574] 0.378 [0.361, 0.375, 0.405, 0.381]   -0.2075 *
+   M10_uncertain_fraction_present         0.223 [0.2066, 0.2395, 0.2721, 0.1993] 0.2476 [0.2361, 0.2591, 0.3411, 0.2237]   0.027 *
+   tracked_fraction_when_in_view          0.5002 [0.5311, 0.4693, 0.4525, 0.5608] 0.0415 [0.0525, 0.0731, 0.0, 0.0305]   -0.4656 *
+   longest_unlatched_while_in_view_s      15.481 [16.064, 16.113, 14.898, 14.612] 26.4295 [21.25, 18.019, 46.907, 31.609]   11.0915 *
+   conf_mean_present                      0.5799 [0.5856, 0.5967, 0.5683, 0.5742] 0.3781 [0.3612, 0.3753, 0.4046, 0.3809]   -0.2074 *
+   dist_mean_m                            3.167 [3.153, 3.181, 3.2, 3.112] 3.57 [3.515, 3.477, 3.694, 3.625]   0.428 *
+
+== E.furniture__ships ========================================================
+   metric                                                     champion                     confuser   paired delta
+   M8_false_follow_episodes                           0.0 [0, 0, 0, 0]             0.0 [0, 0, 0, 0]   0.0
+   M8_false_follow_total_s                    0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M8_max_drift_during_episode_m              0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M6_max_horizontal_drift_m                  0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M1_tracking_fraction                       0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+   M8_t_first_false_follow_s              None [None, None, None, None] None [None, None, None, None]   None
+   M8_conf_at_first_false_follow          None [None, None, None, None] None [None, None, None, None]   None
+   M10_conf_max_absent                    0.4565 [0.463, 0.497, 0.444, 0.45] 0.28 [0.286, 0.293, 0.274, 0.262]   -0.1825 *
+   conf_mean_absent                       0.3666 [0.3676, 0.3808, 0.3656, 0.3586] 0.2164 [0.2166, 0.2312, 0.2163, 0.2009]   -0.1503 *
+   conf_p95_absent                        0.4281 [0.4299, 0.4361, 0.4262, 0.4052] 0.2575 [0.2548, 0.2779, 0.2601, 0.2382]   -0.1666 *
+   conf_max_absent                        0.4567 [0.4634, 0.497, 0.4436, 0.45] 0.2802 [0.2862, 0.2929, 0.2741, 0.2615]   -0.1829 *
+   frac_absent_conf_over_latch                0.0 [0.0, 0.0, 0.0, 0.0]     0.0 [0.0, 0.0, 0.0, 0.0]   0.0
+
+== F.pets__ships =============================================================
+   metric                                                     champion                     confuser   paired delta
+   M8_false_follow_episodes                           3.5 [4, 5, 3, 2]             0.0 [0, 0, 1, 0]   -3.0 *
+   M8_false_follow_total_s                2.355 [1.73, 3.0, 2.98, 0.48]    0.0 [0.0, 0.0, 0.16, 0.0]   -2.275 *
+   M8_max_drift_during_episode_m          0.091 [0.064, 0.118, 0.158, 0.001]     0.0 [0.0, 0.0, 0.0, 0.0]   -0.091 *
+   M6_max_horizontal_drift_m              0.7475 [0.674, 0.974, 0.821, 0.476]   0.0 [0.0, 0.0, 0.215, 0.0]   -0.64 *
+   M1_tracking_fraction                   0.1305 [0.109, 0.16, 0.152, 0.035]   0.0 [0.0, 0.0, 0.014, 0.0]   -0.1235 *
+   M8_t_first_false_follow_s              0.635 [0.31, 1.1, 0.79, 0.48]  7.1 [None, None, 7.1, None]   6.31 *
+   M8_conf_at_first_false_follow          0.752 [0.723, 0.78, 0.79, 0.724] 0.711 [None, None, 0.711, None]   -0.079 *
+   M10_conf_max_absent                    0.8755 [0.884, 0.909, 0.867, 0.82] 0.7485 [0.737, 0.745, 0.752, 0.766]   -0.131 *
+   conf_mean_absent                       0.5577 [0.5481, 0.555, 0.5604, 0.599] 0.5241 [0.5434, 0.5177, 0.467, 0.5304]   -0.0529 *
+   conf_p95_absent                        0.7906 [0.7784, 0.8221, 0.7985, 0.7827] 0.673 [0.6862, 0.6657, 0.6729, 0.673]   -0.1177 *
+   conf_max_absent                        0.8755 [0.884, 0.9086, 0.8669, 0.8204] 0.7485 [0.7375, 0.7453, 0.7517, 0.7661]   -0.1308 *
+   frac_absent_conf_over_latch            0.192 [0.1449, 0.1867, 0.2, 0.1972] 0.0249 [0.0441, 0.0217, 0.028, 0.0073]   -0.1685 *
+
+* = every matched pair moved the same way

@@ -1,0 +1,9 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-vs-confuser/scoreboards/champion_suite/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-vs-confuser/scoreboards/champion_suite/scoreboard.md
+suite verdict: FAIL  {'pass': 4, 'fail': 2, 'invalid': 0, 'characterised': 0}
+  PASS           A.static__ships
+  PASS           B.moving__ships
+  PASS           C.empty__ships
+  FAIL           D.occlusion__ships   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__ships
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m
