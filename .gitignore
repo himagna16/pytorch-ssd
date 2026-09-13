@@ -15,3 +15,10 @@ export/hybrid_follow/*.txt
 export/hybrid_follow/*.json
 export/hybrid_follow/weights_txt/
 visibility_diagnostic*.csv
+
+# Per-flight render caches and snapshot frames: transient, large, and not part of
+# published evidence. Every evidence folder keeps the metrics, logs and truth,
+# not the pictures. Added 2026-09-12 after a blanket "git add -f" swept 96 cache
+# files and 330 snapshots into one results commit.
+cache/
+snap_*.png

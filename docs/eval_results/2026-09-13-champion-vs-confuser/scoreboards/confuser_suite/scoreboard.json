@@ -1,7 +1,7 @@
 {
   "schema": "crazysim-scoreboard/1",
   "suite": "cvc_confuser",
-  "started_utc": "2026-09-13T00:34:13Z",
+  "started_utc": "2026-09-13T00:36:43Z",
   "duration_s": 0,
   "verdict": "FAIL",
   "counts": {
