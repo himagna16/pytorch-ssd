@@ -35,8 +35,8 @@ processor. In the first three weeks I:
 | 8-core chip build | Sai | Verified on the chip simulator: bit-exact, 154 ms to 23 ms per inference; app rebuilt with DORY fixes 0002/0003 | Use in the drone firmware |
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
-| Champion vs confuser, now flown | Sai | **Both models flown head to head for the first time** (48 flights, one session, interleaved). Until now every flight had used the champion, so the choice was about to be made by comparing a model with flight evidence against one with none. The confuser does what it was built for: on the dog it drifts 0.22 m and passes the 0.5 m limit where the champion drifts 0.97 m and fails. But it does not follow people: it tracks a standing person on **0%** of frames and fails the pointing and distance limits on both person-following cases. Re-scoring at every threshold from 0.45 to 0.80 shows the champion at its normal setting beats the confuser at **every** setting on **both** axes at once, so retuning does not rescue it | Team decision (Sai, Grace, David), now with flight evidence on both sides. Open follow-up: re-fly the confuser at its own 0.45-0.60 threshold, since the threshold study was open-loop |
-| Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
+| Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
+| Making the champion safer around pets | Sai | **Now the top open defect.** The champion drifts 0.97 m toward a dog against a 0.5 m limit, and false-alarms on pets and mannequins on 30% of frames. Cheapest possible fix is being flown now: raising the confirmation threshold, which on paper costs no accuracy at 0.75 and about 2% at 0.80 while removing the false alarms entirely | Finish the threshold flights. If configuration is not enough, fine-tune the champion against pets and mannequins, which needs Grace's preserve-QAT-alphas work to survive release || Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,22 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-13.** The team met over dinner (David and the other members; Prof.
+  Mok was not there) and **chose the champion model.** The deciding evidence was
+  last night's head-to-head flights: the safer model fixes the pet problem and
+  will not follow a person at all, which the still-picture numbers had badly
+  understated. My recommendation going in was the same, on the argument that it
+  is easier to make an accurate model safer than to make a safe model accurate,
+  and the flight data supports it. That settles the question and immediately
+  promotes the champion's habit of chasing pets to the project's biggest
+  remaining problem. I started on the cheapest possible fix straight away:
+  the drone only locks onto something after three confident frames in a row, and
+  raising the confidence needed looks, on paper, as though it removes the pet
+  false alarms for almost no loss of accuracy. That costs nothing to ship if it
+  works, since it needs no retraining. It is being flown now rather than taken on
+  trust, because the paper version re-scores pictures from flights taken at the
+  old setting.
 
 - **2026-09-12 (late night).** Flew the two candidate models against each other,
   which had never been done: every closed-loop flight in this project had used
