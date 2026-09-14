@@ -19,17 +19,28 @@ Newest entries at the top. Never delete entries — supersede them.
   **This makes the champion's pet false-alarm rate the project's top open defect**
   (0.974 m drift against a 0.5 m gate; 30.2% per-frame on pets and mannequins).
   Order of attack, cheapest first: (a) raise the follower's confirmation
-  threshold — open-loop re-scoring says 0.75 costs no recall and cuts false
-  alarms 2.5x, and 0.80 costs about 2% recall for zero, and this needs no
-  retraining, re-export or new release; (b) if configuration is not enough,
+  threshold, which needs no retraining, re-export or new release. *[Corrected
+  the same day: this entry first quoted open-loop false-alarm figures of
+  0.0176 / 0.0070 / 0.0000 at 0.70 / 0.75 / 0.80. Those were the median pooled
+  over the empty-room, furniture and pet cells, two of which are zero, and the
+  file they came from says so. The pet cell itself reads 0.1302 / 0.0439 /
+  0.0138, and 0.80 is not zero.]* **Settled in closed loop the same evening,
+  96 flights: 0.75 passes the pet gate 4 of 4 (worst drift 0.376 m, from
+  1.369 m) with no measurable recall cost; 0.80 also passes the gate but costs
+  12 points of tracking on a standing person; a 4-consecutive-frame rule at
+  0.70 fails 2 of 4. The open-loop lead pointed at 0.80 and was wrong.
+  Adopt 0.75.** Evidence: `docs/eval_results/2026-09-13-champion-threshold/`; (b) if configuration is not enough,
   hard-negative fine-tune the champion on pets and mannequins, which is the
   confuser's recipe applied to the model we keep; (c) Grace's
   `--preserve-qat-alphas`, which is what would let such a fine-tune keep its
   learned ranges through the release instead of having them recalibrated away.
 
-  Caveat recorded with the decision: the threshold figures above are open-loop
-  re-scoring of frames flown at 0.70, so they are a lead and are being settled in
-  closed loop now.
+  The threshold lives in more than one place: the host follower's `--vis-enter`
+  and, separately, the firmware's `VIS_ENTER_RAW = 4216` (0.70 in the chip's
+  integer output units) plus the GAP8 packet's p>=0.7 bit. Changing one without
+  the others would have the simulator and the drone confirming targets at
+  different bars. That is a shared-contract change and goes through a branch
+  and PR, not straight to main.
 
 - **2026-09-12** — The published cause of the distance failure is WITHDRAWN. The
   Sep 11 suite's "the size head over-reads by 1.6-1.8x" is wrong: the MuJoCo
