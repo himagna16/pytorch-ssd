@@ -1,0 +1,34 @@
+{
+  "labels": "d1.5_b-25_vis1_subj-p01_light-room_take1",
+  "host": "127.0.0.1",
+  "port": 5151,
+  "saved": 30,
+  "received": 30,
+  "undecodable": 0,
+  "short": 0,
+  "seconds": 2.0,
+  "stream_fps": 14.99,
+  "every": 1,
+  "formats": [
+    0
+  ],
+  "sizes": [
+    [
+      324,
+      244
+    ]
+  ],
+  "bayer": false,
+  "pixel_provenance": [
+    "raw"
+  ],
+  "provenance_counts": {
+    "raw": 30
+  },
+  "raw_frames": 30,
+  "jpeg_decoded_frames": 0,
+  "stopped_because": "the --seconds clip length ran out",
+  "mock": false,
+  "started_unix": 1789393063.672,
+  "flipped_left_right_by": "flip_folder.py"
+}

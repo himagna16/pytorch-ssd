@@ -1,0 +1,16 @@
+# person_d2.5_b-8
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_edge/person_d2.5_b-8 --port 5153 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5153 --seconds 2 --every 1 --dist 2.5 --bearing -8 --vis 1 --subject p01 --light room --out captured_edge/p01
+
+# person_d2.5_b8
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_edge/person_d2.5_b8 --port 5153 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5153 --seconds 2 --every 1 --dist 2.5 --bearing 8 --vis 1 --subject p01 --light room --out captured_edge/p01
+
+# person_d3.5_b-8
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_edge/person_d3.5_b-8 --port 5153 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5153 --seconds 2 --every 1 --dist 3.5 --bearing -8 --vis 1 --subject p01 --light room --out captured_edge/p01
+
+# person_d3.5_b8
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_edge/person_d3.5_b8 --port 5153 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5153 --seconds 2 --every 1 --dist 3.5 --bearing 8 --vis 1 --subject p01 --light room --out captured_edge/p01
+

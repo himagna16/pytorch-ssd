@@ -1,0 +1,114 @@
+{
+  "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+  "frames_dir": "captured/pet",
+  "n_frames": 30,
+  "crop_hfov_deg": 70.0,
+  "vis_threshold": 0.5,
+  "follower": {
+    "enter": 0.75,
+    "exit": 0.45,
+    "confirm_frames": 3
+  },
+  "jpeg_frames": 0,
+  "unreadable_files": 0,
+  "bayer_phase_spread_dn": 0.09330177307128906,
+  "unlabelled_files": 0,
+  "sidecar_files": 0,
+  "overall": {
+    "n": 30.0,
+    "vis_acc": 0.0,
+    "mean_conf": 0.8181900342305501,
+    "track_frac": 0.9,
+    "bin_n": 0.0,
+    "bin_acc": null,
+    "bin_acc1": null,
+    "bear_err": null,
+    "bear_abs_err": null,
+    "size_acc": null,
+    "size_acc1": null
+  },
+  "empty_false_tracks": 1,
+  "mirror_check": {
+    "left_n": 0,
+    "right_n": 0,
+    "left_ok": null,
+    "right_ok": null,
+    "one_side_only": false,
+    "thin_sides": [],
+    "jpeg_frames_used": 0,
+    "outside_crop_n": 0,
+    "centre_bin_frac": null,
+    "target_bins": [],
+    "target_bin_span": 0,
+    "x_bin_stuck": false,
+    "stuck_bin": null,
+    "model_dead": false,
+    "outputs_that_vary": [],
+    "reason": "no detected person frames off-center",
+    "verdict": "NO DATA"
+  },
+  "groups": {
+    "dist": {},
+    "bearing": {},
+    "light": {
+      "room": {
+        "n": 30.0,
+        "vis_acc": 0.0,
+        "mean_conf": 0.8181900342305501,
+        "track_frac": 0.9,
+        "bin_n": 0.0,
+        "bin_acc": null,
+        "bin_acc1": null,
+        "bear_err": null,
+        "bear_abs_err": null,
+        "size_acc": null,
+        "size_acc1": null
+      }
+    },
+    "subject": {
+      "pet": {
+        "n": 30.0,
+        "vis_acc": 0.0,
+        "mean_conf": 0.8181900342305501,
+        "track_frac": 0.9,
+        "bin_n": 0.0,
+        "bin_acc": null,
+        "bin_acc1": null,
+        "bear_err": null,
+        "bear_abs_err": null,
+        "size_acc": null,
+        "size_acc1": null
+      }
+    }
+  },
+  "clips": [
+    {
+      "subject": "pet",
+      "light": "room",
+      "dist": 2.5,
+      "bearing": 0.0,
+      "vis": 0,
+      "take": 1,
+      "dir": ".",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": null,
+      "expected_size_bucket": null,
+      "size_bucket_mode": 1,
+      "bins": {
+        "4": 30
+      },
+      "n": 30.0,
+      "vis_acc": 0.0,
+      "mean_conf": 0.8181900342305501,
+      "track_frac": 0.9,
+      "bin_n": 0.0,
+      "bin_acc": null,
+      "bin_acc1": null,
+      "bear_err": null,
+      "bear_abs_err": null,
+      "size_acc": null,
+      "size_acc1": null
+    }
+  ]
+}

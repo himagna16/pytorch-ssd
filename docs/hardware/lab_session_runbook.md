@@ -278,7 +278,7 @@ through MuJoCo first, so give it a few seconds and wait for the
   ~/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py \
   --host 127.0.0.1 --port 5151 --seconds 6 --every 1 \
   --dist 2.5 --bearing -25 --vis 1 --subject p01 --light room \
-  --out ~/drone_rehearsal/mockcheck
+  --out ~/drone_rehearsal/$(date +%F)/mockcheck
 ```
 
 Then stop the mock (Ctrl-C in terminal 1) and restart it serving the other side:
@@ -297,7 +297,7 @@ Record the matching clip into the **same** folder — note this is a *different*
   ~/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py \
   --host 127.0.0.1 --port 5151 --seconds 6 --every 1 \
   --dist 2.5 --bearing 25 --vis 1 --subject p01 --light room \
-  --out ~/drone_rehearsal/mockcheck
+  --out ~/drone_rehearsal/$(date +%F)/mockcheck
 ```
 
 Then score the folder:
@@ -305,11 +305,30 @@ Then score the folder:
 ```bash
 ~/Downloads/drone/trainenv/bin/python \
   ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py \
-  ~/drone_rehearsal/mockcheck
+  ~/drone_rehearsal/$(date +%F)/mockcheck
 ```
 
 (Re-using port 5151 for the restart is fine — the mock sets `SO_REUSEADDR`, so it
 binds again immediately. Verified 2026-09-12.)
+
+**Why the folder now carries the date.** Until 2026-09-14 these commands wrote to
+a fixed `~/drone_rehearsal/mockcheck`. The second time anyone rehearses on the
+same Mac, `cpx_grab.py` refuses the clip — reproduced by typing the old command
+on 2026-09-14, with the 2026-09-12 rehearsal still on disk:
+
+```
+/Users/saimaruvada/drone_rehearsal/mockcheck already has a recording with these labels, take 1 (d2.5_b-25_vis1_subj-p01_light-room_take1).
+Use --take 2 for a new recording (delete the old take's files first if you are replacing it), or pick another --out folder.
+```
+
+That is the take-collision guard doing its job (section 5), but it is a needless
+stall in a rehearsal. `$(date +%F)` expands in both zsh and bash, so a fresh day
+gets a fresh folder; rehearsing twice on one day still needs `--take 2` or a
+different `--out`. Also note: a clip recorded this way (`--host 127.0.0.1
+--port 5151`) is **not** marked `"mock": true` in its `_clip.json` — only the
+`--mock` shorthand sets that flag — so the only thing separating a rehearsal
+folder from lab data is its `host`/`port` fields (`127.0.0.1` / `5151`) and
+where you put it. Keep rehearsals out of `~/drone_frames/`.
 
 Real output from this rehearsal on 2026-09-12:
 
@@ -323,10 +342,34 @@ MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% o
   RIGHT frames with bin > 4: 100% of 90  -> PASS
 ```
 
+Re-run verbatim on 2026-09-14 (fresh folder): `... 100% of 90; RIGHT frames with
+bin > 4: 100% of 90  -> PASS`, clip confidences 0.85 and 0.78 against the 0.94 /
+0.86 above. The exact confidences depend on the rendered bank (the scenes and the
+sensor model were both edited on 2026-09-12); the verdict and the bins (`1:90`,
+`7:90`) are unchanged, and those are what the check is about.
+
 **Also rehearse the failure**, so nobody has to interpret it for the first time under
-time pressure. There is no `--mirror` flag; produce the MIRRORED verdict by **swapping
-the labels**: serve `--bearing 25` and record it as `--bearing -25`, then serve
-`--bearing -25` and record it as `--bearing 25`. Real output:
+time pressure. The mock has a `--flip` flag that mirrors every frame left-right,
+which is what a horizontally mirrored image path looks like to the scorer. (Whether
+the real deck's fault, if it has one, is this pure left-right mirror or something
+else, such as a 180° rotation, is a hardware question nobody has answered yet; the
+rehearsal only shows the scorer catches the left-right case.) Add `--flip` to **both** mock
+commands above and record the two clips into a new folder (say
+`~/drone_rehearsal/$(date +%F)/mirrorflip`); the labels stay honest and the
+pixels lie. Real output, 2026-09-14, with the real checkpoint:
+
+```
+  frames: s15_static_offset rendered at d=2.5 m bearing=-25 deg, preset himax_typical  [MIRRORED left-right]
+p01/room/take1                    2.5   -25   1   90  0.93   100%    98%      1      1 7:90                   0%    0%   +47.3    2/1
+p01/room/take1                    2.5    25   1   90  0.82   100%    98%      1      7 1:90                   0%    0%   -48.2    2/1
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 0% of 90; RIGHT frames with bin > 4: 0% of 90  -> MIRRORED: image looks flipped (left and right swapped)
+```
+
+(An earlier version of this paragraph said "there is no `--mirror` flag" and
+produced the verdict by **swapping the labels** — serve `--bearing 25` and record it
+as `--bearing -25`, then the reverse. That still works and prints the same verdict,
+but it rehearses the wrong thing: mislabelled clips, not a mirrored camera. Use
+`--flip`.) The label-swap output, for reference:
 
 ```
 p01/room/take1                    2.5   -25   1   80  0.86   100%    98%      1      1 7:80      0%    0%   +49.3
@@ -432,34 +475,18 @@ Nothing is listening on this machine's port 5051. For a real AI-deck drop --host
       (nobody has seen a real frame), the synthetic rehearsal frames compressed to
       about **7 KB** each and real sensor noise compresses far worse, and running
       out of disk mid-capture is unrecoverable while spare gigabytes cost nothing.
-- [ ] `git pull --rebase`. **But read the next item before trusting it.**
-- [ ] **Confirm the files exist, with `ls` — a `git pull` will not deliver several of
-      them.** The two sibling documents now exist (checked 2026-09-12), so the old
-      "drop S1/S2 if the document is missing" advice is withdrawn. The *new* problem is
-      that the lab-critical files are **untracked**, so they live only on this Mac:
+- [ ] `git pull --rebase`.
+- [ ] **Confirm the files exist, with `ls`.** On 2026-09-12 this item warned that
+      `docs/hardware/` and `tools/real_frames/{mock_streamer,measure_camera}.py`
+      were **untracked** (`??` in `git status`) and would not survive a `git pull`
+      on another laptop. **That is no longer true**: they were committed the same
+      day (`f0a6a90`, "Correct the distance root cause ... prepare for the hardware
+      lab"), and on 2026-09-14 `git ls-files docs/hardware tools/real_frames` lists
+      all eight files with a clean `git status`. A `git pull` on another laptop
+      *does* deliver them now. Still run the `ls` below on the machine you are
+      actually taking — it costs nothing and catches a stale clone.
 
-      ```bash
-      cd ~/Downloads/drone/pytorch_ssd && git status --porcelain \
-        docs/hardware/ tools/real_frames/
-      ```
-
-      Real output on 2026-09-12:
-
-      ```
-      ?? docs/hardware/
-      ?? tools/real_frames/measure_camera.py
-      ?? tools/real_frames/mock_streamer.py
-      ```
-
-      `??` means untracked. **A `git pull` cannot bring down a file that was never
-      committed, and a fresh clone on another laptop would have none of these** — no
-      flash runbook, no camera protocol, no mock streamer, no `measure_camera.py`.
-      So either **take this Mac to the lab**, or copy those paths across by hand
-      (USB stick, AirDrop, scp) and check them with `ls` on the machine you will
-      actually use. Getting them committed is version-control work that belongs
-      outside the lab prep; just do not assume it happened.
-
-      Then confirm, on the laptop you are taking:
+      Confirm, on the laptop you are taking:
 
       ```bash
       ls -l ~/Downloads/drone/pytorch_ssd/docs/hardware/flash_runbook.md \
@@ -483,8 +510,24 @@ Nothing is listening on this machine's port 5051. For a real AI-deck drop --host
 
       The last line must read `24/24 recovered inside tolerance`.
 - [ ] Confirm the checkpoint is on the laptop and the scorer runs offline. Scoring is
-      fast: 192 frames took **1.4 s wall** end to end including model load, so scoring
-      in the room costs nothing.
+      fast: 192 frames took **1.4 s wall** end to end including model load (570 frames
+      in 19 clips: 2.4 s on 2026-09-14), so scoring in the room costs nothing.
+- [ ] **Run the scorer's own rehearsal with the real checkpoint**, once, at home
+      (about 40 s; it renders through MuJoCo, so nothing else may be using the
+      simulator):
+
+      ```bash
+      ~/Downloads/drone/trainenv/bin/python \
+        ~/Downloads/drone/pytorch_ssd/tools/real_frames/test_score_real_frames.py --real --real-frames 40
+      ```
+
+      The last line must read `39/39 checks passed`, and two lines above it must
+      say `real MuJoCo render + real checkpoint -> PASS` and `... -> MIRRORED`.
+      First run on 2026-09-14: 39/39, 37 s wall, PASS on 680 upright frames
+      (bin acc 96%, +-1 100%, bearing err +0.6 deg, 0 false tracks) and MIRRORED
+      on the flipped copy. Until that day the `--real` path had never been executed;
+      every earlier mirror-check rehearsal used a stub model. See
+      `docs/eval_results/2026-09-14-lab-rehearsal/README.md`.
 - [ ] Send MinHyuk section 7's questions **the day before**, so the answers arrive before
       the session rather than during it.
 
@@ -1038,8 +1081,11 @@ wrong about two of these:**
   venvs)."~~ **`cfloader` and `cfclient` now exist**, in a fifth venv,
   `~/Downloads/drone/cfloaderenv` (cfclient 2026.8, cflib 0.1.33, PyQt6 6.7.1,
   `cfloader` and `cfclient` executables both present). They are still absent from
-  `trainenv`, `nemoenv`, `crazysimenv` and `doryenv`. **`cv2` is still missing —
-  from all five venvs, cfloaderenv included.** See section 2.1 for the commands.
+  `trainenv`, `nemoenv`, `crazysimenv` and `doryenv`. ~~**`cv2` is still missing —
+  from all five venvs, cfloaderenv included.**~~ **Stale too:** `cv2` 4.9.0 was
+  installed into `trainenv` later on 2026-09-12 (section 2.1 has the command and
+  the numpy pin) and imports there on 2026-09-14. It is still absent from the
+  other four venvs, which is fine — only `trainenv` runs the viewer.
 - ~~"`cflib.crtp.scan_interfaces()` ... prints 'Cannot find a Crazyradio Dongle' -> []"~~
   It returns **`[['udp://127.0.0.1:19850', '']]`**, not `[]`, in both `trainenv` and
   `cfloaderenv`. The printed warning is the signal; the list is not.
@@ -1058,9 +1104,37 @@ wrong about two of these:**
 - **The zsh word-splitting trap.** `G="$P .../cpx_grab.py"; $G --n 5` works in bash
   and fails in zsh, which is this Mac's shell. The shell-function form used in
   sections 4.0 and 4.0a was run in both shells and works in both.
-- **`docs/hardware/`, `tools/real_frames/mock_streamer.py` and
-  `tools/real_frames/measure_camera.py` are untracked** (`git status --porcelain`
-  shows `??`). A `git pull` will not deliver them to another laptop. Section 2.3.
+- ~~**`docs/hardware/`, `tools/real_frames/mock_streamer.py` and
+  `tools/real_frames/measure_camera.py` are untracked**~~ — true when written,
+  stale since commit `f0a6a90` the same day. On 2026-09-14 all eight files are
+  tracked and `git status` is clean. Section 2.3.
+
+**Verified by running it on 2026-09-14, with the REAL checkpoint** (still no
+hardware). Full record with every command and output:
+`docs/eval_results/2026-09-14-lab-rehearsal/README.md`.
+
+- Section 2.2 typed verbatim: `MIRROR CHECK ... 100% of 90; ... 100% of 90 -> PASS`
+  against `successor_qat_ep3_eval.pth`. The mock's `--flip` gives
+  `0% of 90; 0% of 90 -> MIRRORED`.
+- The whole protocol geometry (3 distances x 5 bearings, 30 frames each, empty room
+  x3, a dog with no person), rendered through the `himax_typical` sensor model and
+  pushed through `mock_streamer.py -> cpx_grab.py -> score_real_frames.py`:
+  `PASS` at 100% / 100% of 180 per side, vis acc 100% at every distance, bin acc
+  97% (+-1 100%), the flipped copy `MIRRORED` at 0% / 0%, the empty-room folder
+  alone `NO DATA`, 570 of 570 captured frames byte-identical to what the mock served,
+  every `.png` stamped `pixel_provenance=raw`.
+- **The dog clip confirms a FALSE TRACK** (mean confidence 0.82, range 0.70-0.85,
+  29 of 30 frames above the 0.75 bar): `EMPTY / NO-PERSON ... confirmed (false) tracks = 1 -> FALSE
+  TRACKS: the drone would move`. That is the model, not the chain — the scorer
+  reported it correctly — and it is what the protocol's `plush`/`pet` clip exists to
+  measure. Expect it, write it down, do not treat it as a capture fault.
+- `test_score_real_frames.py --real --real-frames 40`: 39/39, first ever run.
+- `measure_camera.py selftest`: `24/24 recovered inside tolerance`, 19 s wall.
+- The 4.0 header block (`grab`/`score` functions) in zsh: `grab --help | head -2`
+  prints usage.
+- The earlier "vis acc 0%" seen on 90 PIL-drawn test frames (Sep 12) re-scored today
+  gives the same 0% (mean confidence 0.03-0.40): it was the crude drawings, not the
+  checkpoint — the same checkpoint scores 100% on rendered people.
 
 **UNVERIFIED — needs the real drone:**
 

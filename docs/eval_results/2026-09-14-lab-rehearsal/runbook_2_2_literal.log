@@ -1,0 +1,56 @@
+### terminal 1 (runbook 2.2, verbatim):
+mock AI-deck streaming on tcp://127.0.0.1:5151
+  frames: s15_static_offset rendered at d=2.5 m bearing=-25 deg, preset himax_typical
+  format: raw (format 0)  15 fps  chunk 1020 B
+  faults: none
+### terminal 2 (runbook 2.2, verbatim):
+/Users/saimaruvada/drone_rehearsal/mockcheck already has a recording with these labels, take 1 (d2.5_b-25_vis1_subj-p01_light-room_take1).
+Use --take 2 for a new recording (delete the old take's files first if you are replacing it), or pick another --out folder.
+exit code of cpx_grab: 1
+mock killed (Ctrl-C equivalent)
+
+### re-run in a FRESH folder (/Users/saimaruvada/drone_rehearsal/2026-09-14/mockcheck); same commands otherwise
+--- terminal 1: mock --bearing -25
+mock AI-deck streaming on tcp://127.0.0.1:5151
+  frames: s15_static_offset rendered at d=2.5 m bearing=-25 deg, preset himax_typical
+--- terminal 2: cpx_grab --bearing -25
+connected to tcp://127.0.0.1:5151  labels: d2.5_b-25_vis1_subj-p01_light-room_take1
+saving to /Users/saimaruvada/drone_rehearsal/2026-09-14/mockcheck
+done: 90 saved, 90 received, 0 undecodable, 0 cut short, 6.0 s, ~15.0 fps
+(mock stopped, Ctrl-C equivalent)
+--- terminal 1: mock --bearing 25
+mock AI-deck streaming on tcp://127.0.0.1:5151
+  frames: s15_static_offset rendered at d=2.5 m bearing=25 deg, preset himax_typical
+--- terminal 2: cpx_grab --bearing 25
+connected to tcp://127.0.0.1:5151  labels: d2.5_b25_vis1_subj-p01_light-room_take1
+saving to /Users/saimaruvada/drone_rehearsal/2026-09-14/mockcheck
+done: 90 saved, 90 received, 0 undecodable, 0 cut short, 6.0 s, ~15.0 fps
+(mock stopped, Ctrl-C equivalent)
+--- score:
+
+model successor_qat_ep3_eval.pth | 180 frames in 2 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+p01/room/take1                    2.5   -25   1   90  0.85   100%    98%      1      1 1:90                 100%  100%    +1.8    2/1   
+p01/room/take1                    2.5    25   1   90  0.78   100%    96%      1      7 7:90                 100%  100%    -0.9    2/1   
+
+by dist:
+             2.5: n= 180  vis acc  100%  track   97%  bin acc  100% (+-1  100%)  bearing err  +0.5 (|err| 1.4)  size acc    0% (+-1 100%)
+
+by bearing:
+           -25.0: n=  90  vis acc  100%  track   98%  bin acc  100% (+-1  100%)  bearing err  +1.8 (|err| 1.8)  size acc    0% (+-1 100%)
+            25.0: n=  90  vis acc  100%  track   96%  bin acc  100% (+-1  100%)  bearing err  -0.9 (|err| 0.9)  size acc    0% (+-1 100%)
+
+by light:
+            room: n= 180  vis acc  100%  track   97%  bin acc  100% (+-1  100%)  bearing err  +0.5 (|err| 1.4)  size acc    0% (+-1 100%)
+
+by subject:
+             p01: n= 180  vis acc  100%  track   97%  bin acc  100% (+-1  100%)  bearing err  +0.5 (|err| 1.4)  size acc    0% (+-1 100%)
+
+EMPTY / NO-PERSON clips: 0 clips, 0 frames, confirmed (false) tracks = 0  -> NONE RECORDED: this says nothing yet. Record the empty room and the stuffed animal (vis0).
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 90; RIGHT frames with bin > 4: 100% of 90  -> PASS
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: /Users/saimaruvada/drone_rehearsal/2026-09-14/mockcheck/scores.csv
+summary JSON:  /Users/saimaruvada/drone_rehearsal/2026-09-14/mockcheck/scores.json

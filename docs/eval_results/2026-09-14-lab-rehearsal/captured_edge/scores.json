@@ -1,0 +1,259 @@
+{
+  "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+  "frames_dir": "captured_edge",
+  "n_frames": 120,
+  "crop_hfov_deg": 70.0,
+  "vis_threshold": 0.5,
+  "follower": {
+    "enter": 0.75,
+    "exit": 0.45,
+    "confirm_frames": 3
+  },
+  "jpeg_frames": 0,
+  "unreadable_files": 0,
+  "bayer_phase_spread_dn": 0.12057113647460938,
+  "unlabelled_files": 0,
+  "sidecar_files": 0,
+  "overall": {
+    "n": 120.0,
+    "vis_acc": 1.0,
+    "mean_conf": 0.9365442136923472,
+    "track_frac": 0.925,
+    "bin_n": 120.0,
+    "bin_acc": 1.0,
+    "bin_acc1": 1.0,
+    "bear_err": 0.7134820427585251,
+    "bear_abs_err": 0.7134820427585251,
+    "size_acc": 0.55,
+    "size_acc1": 1.0
+  },
+  "empty_false_tracks": 0,
+  "mirror_check": {
+    "left_n": 60,
+    "right_n": 60,
+    "left_ok": 1.0,
+    "right_ok": 1.0,
+    "one_side_only": false,
+    "thin_sides": [],
+    "jpeg_frames_used": 0,
+    "outside_crop_n": 0,
+    "centre_bin_frac": 0.0,
+    "target_bins": [
+      3,
+      5
+    ],
+    "target_bin_span": 2,
+    "x_bin_stuck": false,
+    "stuck_bin": null,
+    "model_dead": false,
+    "outputs_that_vary": [
+      "x-bin",
+      "size bucket",
+      "confidence"
+    ],
+    "reason": "every side >= 90% on the correct side",
+    "verdict": "PASS"
+  },
+  "groups": {
+    "dist": {
+      "2.5": {
+        "n": 60.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9478343904018403,
+        "track_frac": 0.9333333333333333,
+        "bin_n": 60.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.5730974918323171,
+        "bear_abs_err": 0.5730974918323171,
+        "size_acc": 0.1,
+        "size_acc1": 1.0
+      },
+      "3.5": {
+        "n": 60.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9252540369828542,
+        "track_frac": 0.9166666666666666,
+        "bin_n": 60.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.8538665936847333,
+        "bear_abs_err": 0.8538665936847333,
+        "size_acc": 1.0,
+        "size_acc1": 1.0
+      }
+    },
+    "bearing": {
+      "-8.0": {
+        "n": 60.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9654402583837509,
+        "track_frac": 0.9333333333333333,
+        "bin_n": 60.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.9185610464695323,
+        "bear_abs_err": 0.9185610464695323,
+        "size_acc": 0.5,
+        "size_acc1": 1.0
+      },
+      "8.0": {
+        "n": 60.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9076481690009435,
+        "track_frac": 0.9166666666666666,
+        "bin_n": 60.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.5084030390475182,
+        "bear_abs_err": 0.5084030390475182,
+        "size_acc": 0.6,
+        "size_acc1": 1.0
+      }
+    },
+    "light": {
+      "room": {
+        "n": 120.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9365442136923472,
+        "track_frac": 0.925,
+        "bin_n": 120.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.7134820427585251,
+        "bear_abs_err": 0.7134820427585251,
+        "size_acc": 0.55,
+        "size_acc1": 1.0
+      }
+    },
+    "subject": {
+      "p01": {
+        "n": 120.0,
+        "vis_acc": 1.0,
+        "mean_conf": 0.9365442136923472,
+        "track_frac": 0.925,
+        "bin_n": 120.0,
+        "bin_acc": 1.0,
+        "bin_acc1": 1.0,
+        "bear_err": 0.7134820427585251,
+        "bear_abs_err": 0.7134820427585251,
+        "size_acc": 0.55,
+        "size_acc1": 1.0
+      }
+    }
+  },
+  "clips": [
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 2.5,
+      "bearing": -8.0,
+      "vis": 1,
+      "take": 1,
+      "dir": "p01",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 3,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 2,
+      "bins": {
+        "3": 30
+      },
+      "n": 30.0,
+      "vis_acc": 1.0,
+      "mean_conf": 0.9821397801240285,
+      "track_frac": 0.9333333333333333,
+      "bin_n": 30.0,
+      "bin_acc": 1.0,
+      "bin_acc1": 1.0,
+      "bear_err": 0.6247291650732921,
+      "bear_abs_err": 0.6247291650732921,
+      "size_acc": 0.0,
+      "size_acc1": 1.0
+    },
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 2.5,
+      "bearing": 8.0,
+      "vis": 1,
+      "take": 1,
+      "dir": "p01",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 5,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 2,
+      "bins": {
+        "5": 30
+      },
+      "n": 30.0,
+      "vis_acc": 1.0,
+      "mean_conf": 0.9135290006796519,
+      "track_frac": 0.9333333333333333,
+      "bin_n": 30.0,
+      "bin_acc": 1.0,
+      "bin_acc1": 1.0,
+      "bear_err": 0.521465818591342,
+      "bear_abs_err": 0.521465818591342,
+      "size_acc": 0.2,
+      "size_acc1": 1.0
+    },
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 3.5,
+      "bearing": -8.0,
+      "vis": 1,
+      "take": 1,
+      "dir": "p01",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 3,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 1,
+      "bins": {
+        "3": 30
+      },
+      "n": 30.0,
+      "vis_acc": 1.0,
+      "mean_conf": 0.9487407366434734,
+      "track_frac": 0.9333333333333333,
+      "bin_n": 30.0,
+      "bin_acc": 1.0,
+      "bin_acc1": 1.0,
+      "bear_err": 1.2123929278657721,
+      "bear_abs_err": 1.2123929278657721,
+      "size_acc": 1.0,
+      "size_acc1": 1.0
+    },
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 3.5,
+      "bearing": 8.0,
+      "vis": 1,
+      "take": 1,
+      "dir": "p01",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 5,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 1,
+      "bins": {
+        "5": 30
+      },
+      "n": 30.0,
+      "vis_acc": 1.0,
+      "mean_conf": 0.9017673373222351,
+      "track_frac": 0.9,
+      "bin_n": 30.0,
+      "bin_acc": 1.0,
+      "bin_acc1": 1.0,
+      "bear_err": 0.4953402595036944,
+      "bear_abs_err": 0.4953402595036944,
+      "size_acc": 1.0,
+      "size_acc1": 1.0
+    }
+  ]
+}

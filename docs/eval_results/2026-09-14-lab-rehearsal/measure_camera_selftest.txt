@@ -1,0 +1,123 @@
+selftest: synthesising into /var/folders/t1/qkz58by56t72yrf1frb1j5h00000gn/T/cammeas_x43ia5z0
+selftest: 1621 frames written in 16.3 s
+
+=== camera measurement: /var/folders/t1/qkz58by56t72yrf1frb1j5h00000gn/T/cammeas_x43ia5z0 ===
+    SYNTHETIC selftest - no hardware involved   operator: measure_camera.py selftest
+
+[dark]  100 frames
+  mean 22.41 DN, 2.5% of pixels at 0, temporal sigma 5.73 DN
+  implied total gain in the dark : 23.54x (model's AE ceiling is 24x)
+  DSNU at that gain             : 9.47 DN
+  dsnu_sigma_dn (referred to 1x): 0.4022  (sim uses 0.4)
+  note: DSNU referred to 1x by dividing by the implied gain; that assumes DSNU scales with gain, as camera_model assumes.
+
+[flat]  140 frames, level 60.3 DN
+  vignette_a2 = 0.2375  (sim uses 0.22)
+  vignette_a4 = 0.0839  (sim uses 0.1)
+  relative illumination: 0.814 at the side, 0.679 in the corner (model: 0.82 / 0.68), fit rms 4.7% of centre, roll180 used
+  prnu_sigma  = 0.00943  (sim uses 0.008)   (total FPN 0.696 DN, DSNU subtracted)
+  defects: 52 px in 13 clusters -> dead_px_frac = 0.00019697  (sim uses 1e-05: 19.7x off)
+  temporal sigma 1.477 DN at 60 DN -> 28.74 e-/DN here
+
+[level ladder]  4 levels
+  level_01     64.42 DN   var_t   2.304   var_fpn   0.537   37518 px
+  level_02    112.06 DN   var_t   3.925   var_fpn   1.140   29764 px
+  level_03    171.12 DN   var_t   5.947   var_fpn   2.105   19144 px
+  level_04    222.12 DN   var_t   7.995   var_fpn   3.382   13428 px
+  photon transfer: slope 0.03588 DN2/DN -> 27.87 e-/DN at the operating gain (R2 0.9984)
+  read noise 0.0 DN -> total gain 1.0x -> e_per_dn_1x = 27.87  (sim uses 29)
+  fpn transfer: prnu_sigma = 0.00789  (sim uses 0.008), DSNU 0.556 DN at this gain -> dsnu_sigma_dn = 0.5559 (R2 0.9991)
+
+[edge]  80 frames from edge, edge_corner_a  (lattice scan of 40 windows)
+  edge           roi [126, 58, 72, 72]    r=0.14  angle  +5.1 deg  contrast  114 DN  ->  LSF sigma 0.651 px, preset 0.654 (gauss fit 0.591)
+  edge           roi [126, 113, 72, 72]   r=0.14  angle  +5.0 deg  contrast  114 DN  ->  LSF sigma 0.642 px, preset 0.645 (gauss fit 0.594)
+  edge_corner_a  roi [126, 58, 72, 72]    r=0.14  angle  +5.0 deg  contrast  114 DN  ->  LSF sigma 0.620 px, preset 0.624 (gauss fit 0.593)
+  edge_corner_a  roi [126, 113, 72, 72]   r=0.14  angle  +5.0 deg  contrast  114 DN  ->  LSF sigma 0.570 px, preset 0.580 (gauss fit 0.593)
+  edge           roi [126, 4, 72, 72]     r=0.40  angle  +5.0 deg  contrast  110 DN  ->  LSF sigma 0.661 px, preset 0.664 (gauss fit 0.593)
+  edge_corner_a  roi [126, 4, 72, 72]     r=0.40  angle  +5.0 deg  contrast  110 DN  ->  LSF sigma 0.656 px, preset 0.659 (gauss fit 0.594)
+  edge           roi [126, 168, 72, 72]   r=0.41  angle  +5.0 deg  contrast  111 DN  ->  LSF sigma 0.637 px, preset 0.641 (gauss fit 0.595)
+  edge_corner_a  roi [126, 168, 72, 72]   r=0.41  angle  +5.0 deg  contrast  110 DN  ->  LSF sigma 0.651 px, preset 0.653 (gauss fit 0.593)
+  edge           roi [4, 58, 72, 72]      r=0.62  angle  +5.0 deg  contrast  104 DN  ->  LSF sigma 0.624 px, preset 0.628 (gauss fit 0.607)
+  edge           roi [4, 113, 72, 72]     r=0.62  angle  +5.0 deg  contrast  105 DN  ->  LSF sigma 0.650 px, preset 0.653 (gauss fit 0.606)
+  edge           roi [248, 58, 72, 72]    r=0.62  angle  +5.0 deg  contrast  103 DN  ->  LSF sigma 0.603 px, preset 0.609 (gauss fit 0.590)
+  edge           roi [248, 113, 72, 72]   r=0.62  angle  +5.0 deg  contrast  126 DN  ->  LSF sigma 0.467 px, preset 0.502 (gauss fit 0.617)
+  edge           roi [4, 4, 72, 72]       r=0.72  angle  +5.0 deg  contrast   98 DN  ->  LSF sigma 0.676 px, preset 0.678 (gauss fit 0.604)
+  edge           roi [4, 168, 72, 72]     r=0.73  angle  +5.0 deg  contrast  100 DN  ->  LSF sigma 0.692 px, preset 0.693 (gauss fit 0.605)
+  edge           roi [248, 4, 72, 72]     r=0.73  angle  +5.0 deg  contrast   99 DN  ->  LSF sigma 0.635 px, preset 0.639 (gauss fit 0.581)
+  edge           roi [248, 168, 72, 72]   r=0.73  angle  +5.0 deg  contrast   96 DN  ->  LSF sigma 0.720 px, preset 0.721 (gauss fit 0.579)
+  psf_sigma_center_px = 0.6345  (median of 4 edges at r<=0.30)  (sim uses 0.65)
+  psf_sigma_corner_px = 0.6458  (median of 8 edges at r>=0.67)  (sim uses 1.1)
+
+[fov]  fov
+  35 bar edges, fit rms 0.296 px (max 0.587), target skew 0.0 deg
+  focal_px_per_rad = 160.58  (sim uses 174.23)   (plain line fit: 160.58)
+  full HFOV 90.51 deg, VFOV 74.45 deg   k1_forward None
+  two-distance fit (0.35 m and 0.7 m, pupil offset cancelled):
+  focal_px_per_rad = 171.93  (sim uses 174.23)   full HFOV 86.59 deg
+  implied entrance pupil +25 mm from where the tape was read; more than about +-30 mm means a measuring mistake, not optics
+
+[ae_step]  72 frames at 12.99 fps, 3 usable steps
+  frame   12: u0 -2.35, 3 pts, damping 0.247
+  frame   36: u0 -2.32, 3 pts, damping 0.247
+  frame   60: u0 -2.32, 3 pts, damping 0.247
+  ae_damping = 0.2471 (spread 0.0003)  (sim uses 0.25)
+
+[banding]  120 frames from banding/
+  depth at the predicted 268-row period: 0.0793  (sim uses 0.08)
+  control fit at 37 rows (noise floor) : 0.006
+  strongest period in a 60-700 row sweep: 268 rows (explains 100% of the row ripple; 268 rows explains 100%)
+
+[lux ladder]  scene_light anchor, render mean 165.0 DN
+        22 lux    58.6 DN  sigma  4.33 DN  ->  total gain  8.35x ->  scene_light 0.0436
+       400 lux    60.8 DN  sigma  1.47 DN  ->  total gain  0.98x ->  scene_light 0.3728
+
+[blur]
+  roi [92, 82, 140, 80]: smear 1.983 px -> exposure 3.793 ms (model-kernel convention 3.275 ms)
+  exposure_time_ms = 3.793 (122.1 lines of 340)  (sim uses 4.26)
+
+=== what to change in camera_model.py ===
+  ae_damping             measured 0.2471       sim 0.25        (sim uses 0.25)
+  banding_depth          measured 0.0793       sim 0.08        (sim uses 0.08)
+  dead_px_frac           measured 0.00019697   sim 1e-05       (sim uses 1e-05: 19.7x off)
+  dsnu_sigma_dn          measured 0.4022       sim 0.4         (sim uses 0.4)
+  focal_px_per_rad       measured 171.93       sim 174.23      (sim uses 174.23)
+  prnu_sigma             measured 0.00789      sim 0.008       (sim uses 0.008)
+  psf_sigma_center_px    measured 0.6345       sim 0.65        (sim uses 0.65)
+  psf_sigma_corner_px    measured 0.6458       sim 1.1         (sim uses 1.1)
+  vignette_a2            measured 0.2375       sim 0.22        (sim uses 0.22)
+  vignette_a4            measured 0.0839       sim 0.1         (sim uses 0.1)
+
+  try it in the simulator without editing any file:
+    CRAZYSIM_SENSOR_PRESET=himax_typical \
+    CRAZYSIM_SENSOR_OVERRIDES='{"dsnu_sigma_dn": 0.4022, "vignette_a2": 0.2375, "vignette_a4": 0.0839, "dead_px_frac": 0.00019697, "prnu_sigma": 0.00789, "psf_sigma_center_px": 0.6345, "psf_sigma_corner_px": 0.6458, "focal_px_per_rad": 171.93, "ae_damping": 0.2471, "banding_depth": 0.0793}' \
+    ./run_sim_headless.sh --camera --scene scenes/moving/scene_person.xml
+
+=== selftest: injected vs recovered ===
+quantity                      injected   recovered     tol   result
+psf_sigma_center_px               0.65      0.6345      8%   ok px
+psf_sigma_corner_px               0.65      0.6458     15%   ok px
+  (as LSF variance)            0.41889      0.4573     12%   ok px^2
+vignette_a2                       0.22      0.2375     10%   ok 
+vignette_a4                        0.1      0.0839     30%   ok 
+prnu_sigma (ladder)              0.008     0.00789     20%   ok 
+prnu_sigma (flat)                0.008     0.00943     35%   ok 
+dsnu_sigma_dn (ladder)             0.4      0.5559     40%   ok DN@1x
+dsnu_sigma_dn (dark)               0.4      0.4022     25%   ok DN@1x
+dark total gain                     24       23.54     15%   ok x
+dead_px_frac                    0.0002  0.00019697     25%   ok clusters/px
+ae_damping                        0.25      0.2471     25%   ok 
+banding_depth                     0.08      0.0793     20%   ok 
+banding period                     268         268     25%   ok rows
+focal_px_per_rad (1 dist)       160.53      160.58      2%   ok px/rad
+focal_px_per_rad (2 dist)          172      171.93      2%   ok px/rad
+entrance pupil offset            0.025      0.0248     20%   ok m
+e_per_dn_1x                         29       27.87     25%   ok e-/DN
+flat total gain                 1.0013           1     40%   ok x
+dim-room total gain             8.4916        8.35     15%   ok x
+bright-room total gain               1        0.98     15%   ok x
+dim-room scene_light             0.045      0.0436     20%   ok 
+motion smear L                  1.5591       1.628     15%   ok px
+capped lens -> refuses DSNU         nan         nan      0%   ok 
+
+24/24 recovered inside tolerance
+~/Downloads/drone/trainenv/bin/python  selftest  19.03s user 7.63s system 140% cpu 18.956 total

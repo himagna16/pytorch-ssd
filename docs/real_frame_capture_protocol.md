@@ -238,15 +238,42 @@ clip, then summaries by distance, bearing, light and subject, and writes
 - **size**: shown as the most common bucket vs the expected one, from `--person-height`
   (default 1.7 m). It is rough: 2.5 m sits right on a bucket edge, so read the ±1 column.
 
-Synthetic check (Sep 10, **680** rendered sim frames): mirror PASS, 0 false
-tracks, bin accuracy 96% (100% within ±1). A left-right flipped copy of the same frames is
-correctly reported as MIRRORED.
+Synthetic check (**re-derived 2026-09-14**, 680 rendered sim frames): mirror PASS,
+0 false tracks, bin accuracy 96% (100% within ±1). A left-right flipped copy of the
+same frames is correctly reported as MIRRORED.
 
-*(This line said "660 rendered sim frames" until 2026-09-12, when it was changed to
-680. **The 680 is second-hand and UNVERIFIED — nobody re-counted the frames.** The
-change was applied on a reported correction, not on a recount. No artifact on disk
-supports either number: grepping `EXPERIMENTS.md`, `DECISIONS.md`, `docs/progress/`,
-`docs/sim_results/` and `docs/eval_results/` for the Sep 10 synthetic check returns
-nothing, and this line is the only place the count appears. Re-deriving it needs a
-simulator run. Treat the exact count as unconfirmed; the rest of the line — PASS,
-0 false tracks, 96% / 100% — is unchanged and equally unre-verified this round.)*
+*(This line said "660 rendered sim frames" until 2026-09-12, then "680" on a
+second-hand correction that nobody had re-counted. On 2026-09-14 it was re-derived
+by running `tools/real_frames/test_score_real_frames.py --real --real-frames 40`,
+which renders 15 person clips + 2 empty clips x 40 frames = **680 frames** with the
+legacy `scenes/scene_person.xml` and scores them with the real
+`successor_qat_ep3_eval.pth`: `LEFT frames with bin < 4: 100% of 240; RIGHT frames
+with bin > 4: 100% of 240 -> PASS | bin acc 96% (+-1 100%), bearing err +0.6 deg,
+false tracks 0, n=680`, and the flipped copy `0% of 240; 0% of 240 -> MIRRORED`.
+That legacy scene still has the pre-Sep-12 `reflectance="0.2"` mirror floor; its
+size accuracy comes out at 52% (±1: 100%), consistent with the size-head inflation
+recorded in `docs/eval_results/2026-09-12-distance/`. The bins and the verdicts do
+not depend on the floor.
+Record: `docs/eval_results/2026-09-14-lab-rehearsal/`.)*
+
+**What the champion does on the protocol's own geometry, rendered through the
+Himax sensor model** (2026-09-14, same record — `s15_static_offset` person at
+1.5 / 2.5 / 3.5 m x 0 / ±10 / ±25°, 30 frames per clip, `himax_typical` preset,
+served by the mock streamer and captured with the commands in this document):
+
+- MIRROR CHECK `100% of 180; 100% of 180 -> PASS`; flipped copy `0% / 0% -> MIRRORED`;
+  the three empty-room clips alone `-> NO DATA`.
+- **vis acc 100% at every distance.** Mean confidence 0.99-1.00 at 1.5 m, 0.81-0.98
+  at 2.5 m, 0.69-0.97 at 3.5 m. The two weakest clips are 3.5 m at ±25° (0.69 and
+  0.71), where the follower's 0.75 confirmation bar holds only 37% / 83% of frames —
+  so a real person at 3.5 m in a corner of the view may read as "seen" but not
+  "tracked". That is expected, not a fault.
+- bin acc 97% (±1: 100%); the only misses are at 1.5 m / −25°, where the model
+  splits bins 1 and 2 — still the correct side.
+- **The dog at 2.5 m / 0° confirms a FALSE TRACK**: mean confidence 0.82 (range
+  0.70-0.85, 29 of 30 frames above the 0.75 bar), so the EMPTY / NO-PERSON line reads
+  `confirmed (false) tracks = 1 -> FALSE TRACKS: the drone would move`. This is the
+  champion's known pet weakness (`docs/eval_results/2026-09-13-champion-threshold/`),
+  measured on a still frame. If the real `plush`/`pet` clip prints the same, **it is a
+  model finding to write on the log sheet, not a capture problem** — the empty-room
+  clips must still be 0.

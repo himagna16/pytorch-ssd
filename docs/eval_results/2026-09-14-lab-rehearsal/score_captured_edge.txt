@@ -1,0 +1,32 @@
+# +-8 deg is the scorer's --mirror-min-bearing boundary: the person is one third of a bin off centre
+$ score_real_frames.py captured_edge
+
+model successor_qat_ep3_eval.pth | 120 frames in 4 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+p01/room/take1                    2.5    -8   1   30  0.98   100%    93%      1      3 3:30                 100%  100%    +0.6    2/1   
+p01/room/take1                    2.5     8   1   30  0.91   100%    93%      1      5 5:30                 100%  100%    +0.5    2/1   
+p01/room/take1                    3.5    -8   1   30  0.95   100%    93%      1      3 3:30                 100%  100%    +1.2    1/1   
+p01/room/take1                    3.5     8   1   30  0.90   100%    90%      1      5 5:30                 100%  100%    +0.5    1/1   
+
+by dist:
+             2.5: n=  60  vis acc  100%  track   93%  bin acc  100% (+-1  100%)  bearing err  +0.6 (|err| 0.6)  size acc   10% (+-1 100%)
+             3.5: n=  60  vis acc  100%  track   92%  bin acc  100% (+-1  100%)  bearing err  +0.9 (|err| 0.9)  size acc  100% (+-1 100%)
+
+by bearing:
+            -8.0: n=  60  vis acc  100%  track   93%  bin acc  100% (+-1  100%)  bearing err  +0.9 (|err| 0.9)  size acc   50% (+-1 100%)
+             8.0: n=  60  vis acc  100%  track   92%  bin acc  100% (+-1  100%)  bearing err  +0.5 (|err| 0.5)  size acc   60% (+-1 100%)
+
+by light:
+            room: n= 120  vis acc  100%  track   92%  bin acc  100% (+-1  100%)  bearing err  +0.7 (|err| 0.7)  size acc   55% (+-1 100%)
+
+by subject:
+             p01: n= 120  vis acc  100%  track   92%  bin acc  100% (+-1  100%)  bearing err  +0.7 (|err| 0.7)  size acc   55% (+-1 100%)
+
+EMPTY / NO-PERSON clips: 0 clips, 0 frames, confirmed (false) tracks = 0  -> NONE RECORDED: this says nothing yet. Record the empty room and the stuffed animal (vis0).
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 60; RIGHT frames with bin > 4: 100% of 60  -> PASS
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: captured_edge/scores.csv
+summary JSON:  captured_edge/scores.json

@@ -1,0 +1,161 @@
+{
+  "preset": "himax_typical",
+  "frames_per_clip": 30,
+  "clips": {
+    "person_d1.5_b0": {
+      "scene": "s15_static_offset",
+      "dist_m": 1.5,
+      "bearing_deg": 0.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=1.5 m bearing=0 deg, preset himax_typical"
+    },
+    "person_d1.5_b-10": {
+      "scene": "s15_static_offset",
+      "dist_m": 1.5,
+      "bearing_deg": -10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=1.5 m bearing=-10 deg, preset himax_typical"
+    },
+    "person_d1.5_b10": {
+      "scene": "s15_static_offset",
+      "dist_m": 1.5,
+      "bearing_deg": 10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=1.5 m bearing=10 deg, preset himax_typical"
+    },
+    "person_d1.5_b-25": {
+      "scene": "s15_static_offset",
+      "dist_m": 1.5,
+      "bearing_deg": -25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=1.5 m bearing=-25 deg, preset himax_typical"
+    },
+    "person_d1.5_b25": {
+      "scene": "s15_static_offset",
+      "dist_m": 1.5,
+      "bearing_deg": 25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=1.5 m bearing=25 deg, preset himax_typical"
+    },
+    "person_d2.5_b0": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": 0.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=0 deg, preset himax_typical"
+    },
+    "person_d2.5_b-10": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": -10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=-10 deg, preset himax_typical"
+    },
+    "person_d2.5_b10": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": 10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=10 deg, preset himax_typical"
+    },
+    "person_d2.5_b-25": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": -25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=-25 deg, preset himax_typical"
+    },
+    "person_d2.5_b25": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": 25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=25 deg, preset himax_typical"
+    },
+    "person_d3.5_b0": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": 0.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=0 deg, preset himax_typical"
+    },
+    "person_d3.5_b-10": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": -10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=-10 deg, preset himax_typical"
+    },
+    "person_d3.5_b10": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": 10.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=10 deg, preset himax_typical"
+    },
+    "person_d3.5_b-25": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": -25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=-25 deg, preset himax_typical"
+    },
+    "person_d3.5_b25": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": 25.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=25 deg, preset himax_typical"
+    },
+    "empty_take1": {
+      "scene": "s02_control_empty",
+      "vis": 0,
+      "n": 30,
+      "view": "origin, straight down the room"
+    },
+    "empty_take2": {
+      "scene": "s02_control_empty",
+      "vis": 0,
+      "n": 30,
+      "view": "1 m in, 3 m left, facing the far wall"
+    },
+    "empty_take3": {
+      "scene": "s02_control_empty",
+      "vis": 0,
+      "n": 30,
+      "view": "2 m in, yawed 30 deg left towards the corner"
+    },
+    "pet_dog_d2.5_b0": {
+      "scene": "s03_pets_only",
+      "vis": 0,
+      "n": 30,
+      "dist_m": 2.5,
+      "bearing_deg": 0.0,
+      "dog_xy": [
+        2.6,
+        -1.3
+      ],
+      "camera_xy": [
+        0.10000000000000009,
+        -1.3
+      ],
+      "cat_bearing_deg": 46.3,
+      "note": "cat is outside the 42.9 deg raw half-FOV, so only the dog is in frame"
+    }
+  }
+}

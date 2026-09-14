@@ -1,0 +1,85 @@
+
+generated folders kept in /var/folders/t1/qkz58by56t72yrf1frb1j5h00000gn/T/score_rehearsal_krld5fed
+
+[PASS] filename parsing (good, garbled, unlabelled)
+        good/garbled/unlabelled all handled
+[PASS] bearing -> x -> bin geometry (hand-checked)
+        7 bearings match hand-computed x and bin; left<4<right
+[PASS] expected size bucket from distance
+        1.5/2.5/3.5 m -> 0.81/0.49/0.35 -> buckets 3/1/1
+[PASS] split_runs splits a re-recorded clip
+        frame numbers restarting -> 2 runs
+[PASS] follower_track reproduces the 3-frame confirmation rule
+        confirm at 3 frames >=0.75, drop below 0.45, re-confirm: 2 starts; 0.72 x 4 confirms only at 0.70
+[PASS] the scorer's default follower rule is the shipped one: enter 0.75, exit 0.45, 3 frames
+        scores.json follower = (0.75, 0.45, 3)
+[PASS] MIRROR CHECK = PASS on a correct folder (+ bins, size, no false tracks)
+        MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 36; RIGHT fram | bin acc 100%, 0 false tracks
+[PASS] MIRROR CHECK = MIRRORED on a left-right flipped copy  <-- the safety one
+        MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 0% of 36; RIGHT frames with bin > 4: 0% of 3
+[PASS] MIRROR CHECK = MIRRORED from the protocol's 2-clip mirror folder, flipped
+        two-clip mirror folder: upright -> PASS, flipped -> MIRRORED (+ thin/empty warnings)
+[PASS] MIRROR CHECK = FAIL when the marks/labels disagree with the image
+        MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 0% of 36; RIGHT frames with bin > 4: 100% of
+[PASS] MIRROR CHECK = NO DATA when the model sees nobody
+        blind model and person-free frames both -> NO DATA
+[PASS] ONE mark only is NO DATA both ways; one side + a second mark still works
+        one mark -> NO DATA either way; one side + a b0 clip -> PASS / MIRRORED as before
+[PASS] a DEAD model is never MIRRORED and never PASS  <-- the safety one
+        15 dead-model runs (5 stuck bins x 3 folders) -> NO DATA, never MIRRORED
+[PASS] a merely NOISY model is WEAK, not 'check labels and FOV'
+        86%/86% -> WEAK (not a mirror, not the tape, not a PASS)
+[PASS] sides that genuinely DISAGREE still point at the marks and the FOV
+        LEFT 100% / RIGHT 0% -> FAIL that names the marks and the FOV
+[PASS] a folder with ONE side never says 'the two sides disagree'
+        one LEFT side at ~50% -> FAIL naming that side, mirror not ruled out, no phantom 2nd side
+[PASS] both sides near chance is NOT reported as the sides disagreeing
+        50%/50% -> FAIL 'near chance', not 'sides disagree'
+[PASS] the bearing convention is printed under EVERY verdict (double-negative blind spot)
+        convention + 'two wrongs cancel' printed under PASS, MIRRORED and NO DATA
+[PASS] empty folder and missing folder fail cleanly
+        empty -> 'no labelled frames'; missing -> 'frames folder does not exist: /var/folders/t1/qkz58by56t72yr'
+[PASS] frames with missing or garbled labels are reported, not crashed on
+        1 unlabelled skipped with a note, 2 bearing-less clips flagged, mirror still PASS
+[PASS] a corrupt/truncated image does not kill the run
+        2 corrupt frames skipped + 1 macOS ._ sidecar ignored; the rest scored
+[PASS] a folder mixing RAW (.png) and JPEG (.jpg) clips is called out
+        6 JPEG frames flagged (protocol: raw only)
+[PASS] a colour (Bayer) camera read as gray is caught, and mono frames are not
+        mosaic 63 DN -> warned; mono 0.46 DN -> quiet (threshold 3.0 DN)
+[PASS] false tracks on a no-person clip are counted and shouted about
+        1 false track reported for a always-on model, 0 for a quiet one
+[PASS] scores.csv and scores.json have the documented columns and every frame
+        CSV 102 rows x 22 documented columns; JSON keys all present
+[PASS] --full-hfov changes the crop FOV the way the protocol says
+        --full-hfov 86 on a 324x244 frame -> crop 70.2 deg
+[PASS] clips re-recorded without --take are split into runs, not merged
+        two recordings with the same labels scored as run1/run2
+[PASS] a wrong --ckpt or --unstable-root says so instead of a traceback
+        missing checkpoint and wrong --unstable-root both exit with a plain message
+[PASS] a read-only folder still prints the verdict
+        verdict printed, failed write reported, --csv/--json recovers
+[PASS] subfolders (one per capture folder) are scored together
+        3 clips across 2 subfolders, one scores.csv at the top
+[PASS] the QAT training checkpoint is refused with advice, not a state_dict dump
+        6 plain lines, names the _eval copy, no traceback
+[PASS] a bearing outside the crop is excluded, not voted with
+        b45 excluded and reported both times; one mark left -> NO DATA, b-25/b25 -> PASS
+[PASS] a bearing label past +-90 deg cannot vote (tan() wraps round)
+        b170/b-95 have no expected bin; 6 b170 frames excluded, verdict stays PASS
+[PASS] --mirror-min-bearing 0 is refused (a b0 frame is on neither side)
+        refused with a one-line reason instead of counting b0 on both sides
+[PASS] a centre-stuck model is NO DATA, not a bogus 'image looks flipped'
+        centre-stuck model -> NO DATA with the reason; a real flip still -> MIRRORED
+[PASS] real model: checkpoint present
+        /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth (264850 bytes)
+[PASS] real MuJoCo render + real checkpoint -> PASS
+        MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 240; RIGHT frames with bin > 4: 100% of 240  -> PASS | bin acc 96% (+-1 100%), bearing err +0.6 deg, false tracks 0, n=680, bayer 0.20 DN
+[PASS] protocol command line runs and prints a verdict
+        rc=0 | MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 240; RIGHT frames with bin >
+[PASS] real MuJoCo render + real checkpoint -> MIRRORED
+        MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 0% of 240; RIGHT frames with bin > 4: 0% of 240  -> MIRRORED: image looks fl
+
+39/39 checks passed
+~/Downloads/drone/trainenv/bin/python  --real --real-frames 40 --keep  47.37s user 31.56s system 211% cpu 37.323 total
+exit=0

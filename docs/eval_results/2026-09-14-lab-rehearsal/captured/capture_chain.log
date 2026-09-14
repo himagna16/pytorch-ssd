@@ -1,0 +1,174 @@
+
+=== person_d1.5_b0
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 1.5 --bearing 0 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d1.5_b0_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d1.5_b0_vis1_subj-p01_light-room_take1_f00030_t1789393057.736.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== person_d1.5_b-10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 1.5 --bearing -10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d1.5_b-10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~14.9 fps
+    saved captured/p01/d1.5_b-10_vis1_subj-p01_light-room_take1_f00030_t1789393060.345.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== person_d1.5_b10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 1.5 --bearing 10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d1.5_b10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d1.5_b10_vis1_subj-p01_light-room_take1_f00030_t1789393062.975.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d1.5_b-25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 1.5 --bearing -25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d1.5_b-25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d1.5_b-25_vis1_subj-p01_light-room_take1_f00030_t1789393065.607.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d1.5_b25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 1.5 --bearing 25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d1.5_b25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d1.5_b25_vis1_subj-p01_light-room_take1_f00030_t1789393068.221.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d2.5_b0
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing 0 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b0_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d2.5_b0_vis1_subj-p01_light-room_take1_f00030_t1789393070.839.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d2.5_b-10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing -10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b-10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d2.5_b-10_vis1_subj-p01_light-room_take1_f00030_t1789393073.474.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== person_d2.5_b10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing 10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d2.5_b10_vis1_subj-p01_light-room_take1_f00030_t1789393076.173.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d2.5_b-25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing -25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b-25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d2.5_b-25_vis1_subj-p01_light-room_take1_f00030_t1789393078.885.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d2.5_b25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing 25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d2.5_b25_vis1_subj-p01_light-room_take1_f00030_t1789393081.349.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== person_d3.5_b0
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 3.5 --bearing 0 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d3.5_b0_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d3.5_b0_vis1_subj-p01_light-room_take1_f00030_t1789393083.977.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d3.5_b-10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 3.5 --bearing -10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d3.5_b-10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d3.5_b-10_vis1_subj-p01_light-room_take1_f00030_t1789393086.649.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== person_d3.5_b10
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 3.5 --bearing 10 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d3.5_b10_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d3.5_b10_vis1_subj-p01_light-room_take1_f00030_t1789393089.281.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d3.5_b-25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 3.5 --bearing -25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d3.5_b-25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d3.5_b-25_vis1_subj-p01_light-room_take1_f00030_t1789393091.780.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== person_d3.5_b25
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 3.5 --bearing 25 --vis 1 --subject p01 --light room --out captured/p01
+    connected to tcp://127.0.0.1:5151  labels: d3.5_b25_vis1_subj-p01_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/p01
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/p01/d3.5_b25_vis1_subj-p01_light-room_take1_f00030_t1789393094.411.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== empty_take1
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --vis 0 --subject empty --light room --take 1 --out captured/empty
+    connected to tcp://127.0.0.1:5151  labels: vis0_subj-empty_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/empty
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/empty/vis0_subj-empty_light-room_take1_f00030_t1789393097.111.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== empty_take2
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --vis 0 --subject empty --light room --take 2 --out captured/empty
+    connected to tcp://127.0.0.1:5151  labels: vis0_subj-empty_light-room_take2
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/empty
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/empty/vis0_subj-empty_light-room_take2_f00030_t1789393099.732.png  (324x244 depth=1 fmt=0, stream ~15.3 fps)
+[terminal 1] client went away
+
+=== empty_take3
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --vis 0 --subject empty --light room --take 3 --out captured/empty
+    connected to tcp://127.0.0.1:5151  labels: vis0_subj-empty_light-room_take3
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/empty
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/empty/vis0_subj-empty_light-room_take3_f00030_t1789393102.242.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+=== pet_dog_d2.5_b0
+[terminal 1] mock AI-deck streaming on tcp://127.0.0.1:5151
+[terminal 2] $ /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5151 --seconds 2 --every 1 --dist 2.5 --bearing 0 --vis 0 --subject pet --light room --out captured/pet
+    note: --vis 0 with a distance/bearing; they are saved but scoring treats the clip as empty
+    connected to tcp://127.0.0.1:5151  labels: d2.5_b0_vis0_subj-pet_light-room_take1
+    saving to /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-lab-rehearsal/captured/pet
+    done: 30 saved, 30 received, 0 undecodable, 0 cut short, 2.0 s, ~15.0 fps
+    saved captured/pet/d2.5_b0_vis0_subj-pet_light-room_take1_f00030_t1789393104.727.png  (324x244 depth=1 fmt=0, stream ~15.4 fps)
+[terminal 1] client went away
+
+done: 0 failure(s)

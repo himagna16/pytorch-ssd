@@ -1,0 +1,26 @@
+$ score_real_frames.py captured/empty
+
+model successor_qat_ep3_eval.pth | 90 frames in 3 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+empty/room/take1                    -     -   0   30  0.33   100%     0%      0      - 4:30                    -     -       -    0/-   
+empty/room/take2                    -     -   0   30  0.19   100%     0%      0      - 4:30                    -     -       -    0/-   
+empty/room/take3                    -     -   0   30  0.21   100%     0%      0      - 4:30                    -     -       -    0/-   
+
+by dist:
+
+by bearing:
+
+by light:
+            room: n=  90  vis acc  100%  track    0%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+
+by subject:
+           empty: n=  90  vis acc  100%  track    0%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+
+EMPTY / NO-PERSON clips: 3 clips, 90 frames, confirmed (false) tracks = 0, frames with conf >= 0.5: 0, max conf 0.39  -> OK
+MIRROR CHECK: no detected person frames with |bearing| >= 8 deg  -> NO DATA (the model saw nobody, or no clip is off-center): stop and report
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: captured/empty/scores.csv
+summary JSON:  captured/empty/scores.json

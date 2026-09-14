@@ -1,0 +1,20 @@
+# person_d2.5_b0
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_lowlight/person_d2.5_b0 --port 5152 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5152 --seconds 2 --every 1 --dist 2.5 --bearing 0 --vis 1 --subject p01 --light room --out captured_lowlight/p01
+
+# person_d2.5_b-10
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_lowlight/person_d2.5_b-10 --port 5152 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5152 --seconds 2 --every 1 --dist 2.5 --bearing -10 --vis 1 --subject p01 --light room --out captured_lowlight/p01
+
+# person_d2.5_b10
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_lowlight/person_d2.5_b10 --port 5152 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5152 --seconds 2 --every 1 --dist 2.5 --bearing 10 --vis 1 --subject p01 --light room --out captured_lowlight/p01
+
+# person_d2.5_b-25
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_lowlight/person_d2.5_b-25 --port 5152 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5152 --seconds 2 --every 1 --dist 2.5 --bearing -25 --vis 1 --subject p01 --light room --out captured_lowlight/p01
+
+# person_d2.5_b25
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/real_frames/mock_streamer.py --frames rendered_lowlight/person_d2.5_b25 --port 5152 --once --fps 15 &
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/cpx_grab.py --host 127.0.0.1 --port 5152 --seconds 2 --every 1 --dist 2.5 --bearing 25 --vis 1 --subject p01 --light room --out captured_lowlight/p01
+

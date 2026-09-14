@@ -1,0 +1,48 @@
+
+model successor_qat_ep3_eval.pth | 102 frames in 17 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+empty/room/take1                    -     -   0    6  0.46   100%     0%      0      - 4:6                     -     -       -    0/-   
+empty/room/take2                    -     -   0    6  0.46   100%     0%      0      - 4:6                     -     -       -    0/-   
+p01/room/take4                    1.5   -25   1    6  0.17     0%     0%      0      1 1:5 4:1               83%   83%   +14.6    0/3   
+p01/room/take2                    1.5   -10   1    6  0.05     0%     0%      0      3 0:3 3:2 6:1           33%   33%    +6.4    0/3   
+p01/room/take1                    1.5     0   1    6  0.04     0%     0%      0      4 0:2 3:1 6:3            0%   17%    +0.4    0/3   
+p01/room/take3                    1.5    10   1    6  0.03     0%     0%      0      5 6:6                    0%  100%    -5.1    0/3   
+p01/room/take5                    1.5    25   1    6  0.11     0%     0%      0      7 4:6                    0%    0%   -25.2    0/3   
+p01/room/take9                    2.5   -25   1    6  0.18     0%     0%      0      1 0:2 1:4               67%  100%   +17.2    0/1   
+p01/room/take7                    2.5   -10   1    6  0.17     0%     0%      0      3 2:4 3:2               33%  100%    +1.2    0/1   
+p01/room/take6                    2.5     0   1    6  0.15     0%     0%      0      4 3:1 4:5               83%  100%    -1.0    0/1   
+p01/room/take8                    2.5    10   1    6  0.17     0%     0%      0      5 5:6                  100%  100%    -6.6    0/1   
+p01/room/take10                   2.5    25   1    6  0.16     0%     0%      0      7 8:6                    0%  100%   -17.9    0/1   
+p01/room/take14                   3.5   -25   1    6  0.26     0%     0%      0      1 1:6                  100%  100%   +12.4    0/1   
+p01/room/take12                   3.5   -10   1    6  0.35     0%     0%      0      3 3:6                  100%  100%    +3.1    0/1   
+p01/room/take11                   3.5     0   1    6  0.36     0%     0%      0      4 4:6                  100%  100%    -0.8    0/1   
+p01/room/take13                   3.5    10   1    6  0.33     0%     0%      0      5 5:6                  100%  100%    -3.4    0/1   
+p01/room/take15                   3.5    25   1    6  0.40     0%     0%      0      7 7:6                  100%  100%   -13.9    0/1   
+
+by dist:
+             1.5: n=  30  vis acc    0%  track    0%  bin acc   23% (+-1   47%)  bearing err  -1.8 (|err| 10.5)  size acc    0% (+-1 0%)
+             2.5: n=  30  vis acc    0%  track    0%  bin acc   57% (+-1  100%)  bearing err  -1.4 (|err| 8.9)  size acc    0% (+-1 100%)
+             3.5: n=  30  vis acc    0%  track    0%  bin acc  100% (+-1  100%)  bearing err  -0.5 (|err| 6.7)  size acc    0% (+-1 100%)
+
+by bearing:
+           -25.0: n=  18  vis acc    0%  track    0%  bin acc   83% (+-1   94%)  bearing err +14.7 (|err| 14.7)  size acc    0% (+-1 67%)
+           -10.0: n=  18  vis acc    0%  track    0%  bin acc   56% (+-1   78%)  bearing err  +3.6 (|err| 3.6)  size acc    0% (+-1 67%)
+             0.0: n=  18  vis acc    0%  track    0%  bin acc   61% (+-1   72%)  bearing err  -0.5 (|err| 1.1)  size acc    0% (+-1 67%)
+            10.0: n=  18  vis acc    0%  track    0%  bin acc   67% (+-1  100%)  bearing err  -5.1 (|err| 5.1)  size acc    0% (+-1 67%)
+            25.0: n=  18  vis acc    0%  track    0%  bin acc   33% (+-1   67%)  bearing err -19.0 (|err| 19.0)  size acc    0% (+-1 67%)
+
+by light:
+            room: n= 102  vis acc   12%  track    0%  bin acc   60% (+-1   82%)  bearing err  -1.2 (|err| 8.7)  size acc    0% (+-1 67%)
+
+by subject:
+           empty: n=  12  vis acc  100%  track    0%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+             p01: n=  90  vis acc    0%  track    0%  bin acc   60% (+-1   82%)  bearing err  -1.2 (|err| 8.7)  size acc    0% (+-1 67%)
+
+EMPTY / NO-PERSON clips: 2 clips, 12 frames, confirmed (false) tracks = 0, frames with conf >= 0.5: 0, max conf 0.47  -> OK
+MIRROR CHECK: no detected person frames with |bearing| >= 8 deg  -> NO DATA (the model saw nobody, or no clip is off-center): stop and report
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: crude_pil_frames_rescore/scores.csv
+summary JSON:  crude_pil_frames_rescore/scores.json

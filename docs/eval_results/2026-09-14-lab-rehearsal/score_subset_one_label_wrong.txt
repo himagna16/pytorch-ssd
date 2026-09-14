@@ -1,0 +1,30 @@
+# folder: the correct d2.5 b-25 clip + a clip whose pixels show the person on the LEFT but whose label says b25 (one side mislabelled / floor mark wrong)
+$ score_real_frames.py subsets/one_label_wrong
+
+model successor_qat_ep3_eval.pth | 60 frames in 2 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+p01/room/take1                    2.5   -25   1   30  0.87   100%    93%      1      1 1:30                 100%  100%    +1.9    2/1   
+p01/room/take1                    2.5    25   1   30  0.83   100%    93%      1      7 1:30                   0%    0%   -48.2    2/1   
+
+by dist:
+             2.5: n=  60  vis acc  100%  track   93%  bin acc   50% (+-1   50%)  bearing err -23.1 (|err| 25.1)  size acc    0% (+-1 100%)
+
+by bearing:
+           -25.0: n=  30  vis acc  100%  track   93%  bin acc  100% (+-1  100%)  bearing err  +1.9 (|err| 1.9)  size acc    0% (+-1 100%)
+            25.0: n=  30  vis acc  100%  track   93%  bin acc    0% (+-1    0%)  bearing err -48.2 (|err| 48.2)  size acc    0% (+-1 100%)
+
+by light:
+            room: n=  60  vis acc  100%  track   93%  bin acc   50% (+-1   50%)  bearing err -23.1 (|err| 25.1)  size acc    0% (+-1 100%)
+
+by subject:
+             p01: n=  60  vis acc  100%  track   93%  bin acc   50% (+-1   50%)  bearing err -23.1 (|err| 25.1)  size acc    0% (+-1 100%)
+
+EMPTY / NO-PERSON clips: 0 clips, 0 frames, confirmed (false) tracks = 0  -> NONE RECORDED: this says nothing yet. Record the empty room and the stuffed animal (vis0).
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 100% of 30; RIGHT frames with bin > 4: 0% of 30  -> FAIL: x-bin 1 for every labelled position - NOT a mirror
+  ^ the x head answers bin 1 for every target bin [1, 7] while its confidence still move(s), so the network is running. Two things do this and neither is a mirror: the person actually stood in the same spot for every clip and the bearing labels / floor marks are wrong, or the x head alone is stuck. Check a frame against its label first, then --ckpt.
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: subsets/one_label_wrong/scores.csv
+summary JSON:  subsets/one_label_wrong/scores.json

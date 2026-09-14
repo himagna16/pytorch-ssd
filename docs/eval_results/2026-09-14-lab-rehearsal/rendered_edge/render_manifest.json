@@ -1,0 +1,38 @@
+{
+  "preset": "himax_typical",
+  "frames_per_clip": 30,
+  "clips": {
+    "person_d2.5_b-8": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": -8.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=-8 deg, preset himax_typical"
+    },
+    "person_d2.5_b8": {
+      "scene": "s15_static_offset",
+      "dist_m": 2.5,
+      "bearing_deg": 8.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=2.5 m bearing=8 deg, preset himax_typical"
+    },
+    "person_d3.5_b-8": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": -8.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=-8 deg, preset himax_typical"
+    },
+    "person_d3.5_b8": {
+      "scene": "s15_static_offset",
+      "dist_m": 3.5,
+      "bearing_deg": 8.0,
+      "vis": 1,
+      "n": 30,
+      "banner": "s15_static_offset rendered at d=3.5 m bearing=8 deg, preset himax_typical"
+    }
+  }
+}

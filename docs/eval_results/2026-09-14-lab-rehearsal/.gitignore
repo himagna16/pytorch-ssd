@@ -1,0 +1,4 @@
+# Rendered and captured frames are regenerable from scripts/ and are not evidence
+# in themselves; the scores, clip records and logs are. 2,262 PNGs, 82 MB, stay
+# out of history. Figures a reader needs belong at top level and are tracked.
+*.png
