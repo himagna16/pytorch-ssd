@@ -1,0 +1,3 @@
+40dd318c25ac7942afeee84bca1e1f919a05e389e0532c6d38596237699234f7  tools/crazysim_macos/scenes_v2/s03_pets_only/scene.xml
+ad1caece08d55feb52a1c5fa7f317ebb4ba343f2e5e06a46225337025d9cec76  tools/crazysim_macos/scenes_v2/s01_control_moving/scene.xml
+reflectance="0"

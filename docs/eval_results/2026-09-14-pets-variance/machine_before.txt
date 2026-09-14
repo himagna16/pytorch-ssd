@@ -1,0 +1,10 @@
+2026-09-14T17:51:16Z
+12:51  up 12 days, 12:25, 1 user, load averages: 3.89 4.12 4.39
+Mac16,8
+12
+ %CPU COMM
+ 68.5 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+ 38.3 /Applications/Claude.app/Contents/Frameworks/Claude Helper.app/Contents/MacOS/Claude Helper
+ 24.3 /Applications/Wispr Flow.app/Contents/Frameworks/Wispr Flow Helper (Renderer).app/Contents/MacOS/Wispr Flow Helper (Renderer)
+ 15.6 /System/Applications/Messages.app/Contents/MacOS/Messages
+ 15.5 /Applications/Claude.app/Contents/Frameworks/Claude Helper (Renderer).app/Contents/MacOS/Claude Helper (Renderer)

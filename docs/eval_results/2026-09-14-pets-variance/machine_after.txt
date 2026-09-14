@@ -1,0 +1,7 @@
+2026-09-14T18:10:51Z
+13:10  up 12 days, 12:44, 1 user, load averages: 5.44 7.10 6.06
+ %CPU COMM
+ 51.8 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+ 26.5 /Applications/Wispr Flow.app/Contents/Frameworks/Wispr Flow Helper (Renderer).app/Contents/MacOS/Wispr Flow Helper (Renderer)
+ 23.2 /System/Applications/Messages.app/Contents/MacOS/Messages
+ 16.6 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared

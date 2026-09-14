@@ -1,0 +1,20 @@
+{
+  "cell_id": "F.pets__ships",
+  "scene": "s03_pets_only",
+  "scene_class": "F",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 6,
+  "attempt": 1,
+  "duration_s": 35,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s03_pets_only",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/runs/F.pets__ships__r6a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/runs/F.pets__ships__r6a1/truth.csv",
+  "sensor_seed": 1006,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core"
+}

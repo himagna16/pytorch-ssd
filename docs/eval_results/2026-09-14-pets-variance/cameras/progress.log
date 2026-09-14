@@ -1,0 +1,20 @@
+[13:05:06] acceptance2 suite=cameras cells=2 repeats=2 flights=4 out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/cameras
+[13:05:06] flight 1/4  B.moving__delta_lowlight  repeat 1 attempt 1  (s01_control_moving, float/himax_low_light/full, 50s)
+[13:06:14]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 14.799, "requested_hz": 0.0, "min_step_gap_ms": 45.6, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:06:14] flight 2/4  B.moving__delta_lowlight  repeat 2 attempt 1  (s01_control_moving, float/himax_low_light/full, 50s)
+[13:07:20]   -> VALID
+      VALID   {"sim_wall_ratio": 0.985, "achieved_hz": 14.798, "requested_hz": 0.0, "min_step_gap_ms": 43.2, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:07:20] flight 3/4  B.moving__delta_bayer  repeat 1 attempt 1  (s01_control_moving, float/himax_color_bayer/full, 50s)
+[13:08:27]   -> VALID
+      VALID   {"sim_wall_ratio": 0.993, "achieved_hz": 15.066, "requested_hz": 0.0, "min_step_gap_ms": 22.6, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:08:27] flight 4/4  B.moving__delta_bayer  repeat 2 attempt 1  (s01_control_moving, float/himax_color_bayer/full, 50s)
+[13:09:34]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 15.061, "requested_hz": 0.0, "min_step_gap_ms": 22.1, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:09:34] all flights done in 4 min; scoring
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/cameras/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/cameras/scoreboard.md
+suite verdict: FAIL  {'pass': 0, 'fail': 2, 'invalid': 0, 'characterised': 0}
+  FAIL           B.moving__delta_bayer   failed: M1_tracking_fraction,M10_uncertain_fraction_present
+  FAIL           B.moving__delta_lowlight   failed: M10_uncertain_fraction_present
+[13:09:35] artifacts: /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/cameras

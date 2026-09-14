@@ -1,0 +1,1 @@
+launch 2026-09-14T17:51:16Z: ./run_acceptance2.sh --out /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance --only 'F\.pets' --repeats 16 --lock /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/sim.harness.lock

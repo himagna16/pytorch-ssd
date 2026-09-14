@@ -1,0 +1,55 @@
+[12:51:16] acceptance2 suite=core cells=1 repeats=16 flights=16 out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance
+[12:51:16] flight 1/16  F.pets__ships  repeat 1 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:52:08]   -> VALID
+      VALID   {"sim_wall_ratio": 0.98, "achieved_hz": 6.423, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[12:52:08] flight 2/16  F.pets__ships  repeat 2 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:53:00]   -> VALID
+      VALID   {"sim_wall_ratio": 0.988, "achieved_hz": 6.415, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:53:00] flight 3/16  F.pets__ships  repeat 3 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:53:52]   -> VALID
+      VALID   {"sim_wall_ratio": 0.974, "achieved_hz": 6.426, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[12:53:52] flight 4/16  F.pets__ships  repeat 4 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:54:44]   -> VALID
+      VALID   {"sim_wall_ratio": 0.987, "achieved_hz": 6.437, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:54:44] flight 5/16  F.pets__ships  repeat 5 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:55:35]   -> VALID
+      VALID   {"sim_wall_ratio": 0.987, "achieved_hz": 6.426, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:55:35] flight 6/16  F.pets__ships  repeat 6 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:56:27]   -> VALID
+      VALID   {"sim_wall_ratio": 0.988, "achieved_hz": 6.427, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:56:27] flight 7/16  F.pets__ships  repeat 7 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:57:19]   -> VALID
+      VALID   {"sim_wall_ratio": 0.984, "achieved_hz": 6.428, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[12:57:19] flight 8/16  F.pets__ships  repeat 8 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:58:11]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 6.431, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:58:11] flight 9/16  F.pets__ships  repeat 9 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:59:03]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 6.43, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[12:59:03] flight 10/16  F.pets__ships  repeat 10 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[12:59:54]   -> VALID
+      VALID   {"sim_wall_ratio": 0.985, "achieved_hz": 6.426, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[12:59:54] flight 11/16  F.pets__ships  repeat 11 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:00:46]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 6.427, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:00:46] flight 12/16  F.pets__ships  repeat 12 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:01:38]   -> VALID
+      VALID   {"sim_wall_ratio": 0.992, "achieved_hz": 6.431, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:01:38] flight 13/16  F.pets__ships  repeat 13 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:02:30]   -> VALID
+      VALID   {"sim_wall_ratio": 0.986, "achieved_hz": 6.428, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.84, "truth_covers_window": true}
+[13:02:30] flight 14/16  F.pets__ships  repeat 14 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:03:22]   -> VALID
+      VALID   {"sim_wall_ratio": 0.989, "achieved_hz": 6.425, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:03:22] flight 15/16  F.pets__ships  repeat 15 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:04:13]   -> VALID
+      VALID   {"sim_wall_ratio": 0.995, "achieved_hz": 6.435, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:04:13] flight 16/16  F.pets__ships  repeat 16 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[13:05:05]   -> VALID
+      VALID   {"sim_wall_ratio": 0.991, "achieved_hz": 6.423, "requested_hz": 6.5, "min_step_gap_ms": 153.9, "torn_fraction": 0.0, "z_max": 0.85, "truth_covers_window": true}
+[13:05:05] all flights done in 13 min; scoring
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance/scoreboard.md
+suite verdict: FAIL  {'pass': 0, 'fail': 1, 'invalid': 0, 'characterised': 0}
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m
+[13:05:06] artifacts: /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-pets-variance
