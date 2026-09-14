@@ -1,0 +1,9 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold/scoreboards/t080_suite/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold/scoreboards/t080_suite/scoreboard.md
+suite verdict: FAIL  {'pass': 4, 'fail': 1, 'invalid': 0, 'characterised': 1}
+  PASS           A.static__ships
+  PASS           B.moving__ships
+  PASS           C.empty__ships
+  FAIL           D.occlusion__ships   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__ships
+  CHARACTERISED  F.pets__ships

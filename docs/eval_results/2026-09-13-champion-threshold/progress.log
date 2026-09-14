@@ -1,0 +1,197 @@
+[19:52:52] latch-threshold suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold/plan.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold scenes=/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 start=1
+[19:52:52]   model = /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx (eps 0.0002009823510888964) -- the champion, in every flight
+[19:52:52] flight 1/96  t080  C.empty__ships  r2 a1  (block 1 slot 1, enter 0.8 cf 3, load1 3.49)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.999  6.419 Hz  track 0.0  gap_max 158.9  upset False  load1 3.48  
+[19:53:44] flight 2/96  t070cf4  C.empty__ships  r2 a1  (block 1 slot 2, enter 0.7 cf 4, load1 3.48)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.999  6.426 Hz  track 0.0  gap_max 158.9  upset False  load1 3.94  
+[19:54:36] flight 3/96  t070  C.empty__ships  r2 a1  (block 1 slot 3, enter 0.7 cf 3, load1 3.94)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.998  6.42 Hz  track 0.0  gap_max 158.8  upset False  load1 3.56  
+[19:55:28] flight 4/96  t075  C.empty__ships  r2 a1  (block 1 slot 4, enter 0.75 cf 3, load1 3.56)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.999  6.426 Hz  track 0.0  gap_max 158.9  upset False  load1 3.87  
+[19:56:20] flight 5/96  t075  F.pets__ships  r3 a1  (block 2 slot 1, enter 0.75 cf 3, load1 3.87)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.422 Hz  track 0.053  gap_max 158.8  upset False  load1 6.36  
+[19:57:11] flight 6/96  t080  F.pets__ships  r3 a1  (block 2 slot 2, enter 0.8 cf 3, load1 6.36)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.999  6.368 Hz  track 0.041  gap_max 163.6  upset False  load1 6.67  
+[19:58:03] flight 7/96  t070cf4  F.pets__ships  r3 a1  (block 2 slot 3, enter 0.7 cf 4, load1 6.67)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.997  6.349 Hz  track 0.035  gap_max 163.7  upset False  load1 6.18  
+[19:58:55] flight 8/96  t070  F.pets__ships  r3 a1  (block 2 slot 4, enter 0.7 cf 3, load1 6.18)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.362 Hz  track 0.129  gap_max 163.6  upset False  load1 4.96  
+[19:59:47] flight 9/96  t070  A.static__ships  r1 a1  (block 3 slot 1, enter 0.7 cf 3, load1 4.96)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 1.0  6.417 Hz  track 0.991  gap_max 158.9  upset False  load1 5.72  
+[20:00:49] flight 10/96  t075  A.static__ships  r1 a1  (block 3 slot 2, enter 0.75 cf 3, load1 5.72)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.425 Hz  track 0.991  gap_max 158.8  upset False  load1 4.36  
+[20:01:51] flight 11/96  t080  A.static__ships  r1 a1  (block 3 slot 3, enter 0.8 cf 3, load1 5.29)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.425 Hz  track 0.792  gap_max 177.6  upset False  load1 4.63  
+[20:02:52] flight 12/96  t070cf4  A.static__ships  r1 a1  (block 3 slot 4, enter 0.7 cf 4, load1 4.63)
+  -> NORUN  floor 0.0  enter 0.7/cf4  disc None  sim/wall None  None Hz  track None  gap_max None  upset None  load1 3.05  exit 142
+[20:05:16] flight 12/96  t070cf4  A.static__ships  r1 a2  (block 3 slot 4, enter 0.7 cf 4, load1 2.96)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.996  6.434 Hz  track 0.986  gap_max 158.8  upset False  load1 3.64  
+[20:06:18] flight 13/96  t070  E.furniture__ships  r1 a1  (block 4 slot 1, enter 0.7 cf 3, load1 3.64)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.997  6.429 Hz  track 0.0  gap_max 158.8  upset False  load1 3.33  
+[20:07:09] flight 14/96  t075  E.furniture__ships  r1 a1  (block 4 slot 2, enter 0.75 cf 3, load1 3.33)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.996  6.426 Hz  track 0.0  gap_max 158.6  upset False  load1 2.74  
+[20:08:01] flight 15/96  t080  E.furniture__ships  r1 a1  (block 4 slot 3, enter 0.8 cf 3, load1 2.74)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.998  6.421 Hz  track 0.0  gap_max 158.9  upset False  load1 3.01  
+[20:08:53] flight 16/96  t070cf4  E.furniture__ships  r1 a1  (block 4 slot 4, enter 0.7 cf 4, load1 3.01)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 1.0  6.428 Hz  track 0.0  gap_max 158.8  upset False  load1 3.44  
+[20:09:45] flight 17/96  t080  F.pets__ships  r4 a1  (block 5 slot 1, enter 0.8 cf 3, load1 3.44)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.421 Hz  track 0.047  gap_max 158.8  upset False  load1 2.58  
+[20:10:37] flight 18/96  t070cf4  F.pets__ships  r4 a1  (block 5 slot 2, enter 0.7 cf 4, load1 2.58)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.992  6.396 Hz  track 0.122  gap_max 162.6  upset False  load1 4.33  
+[20:11:28] flight 19/96  t070  F.pets__ships  r4 a1  (block 5 slot 3, enter 0.7 cf 3, load1 4.33)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.33 Hz  track 0.179  gap_max 163.8  upset False  load1 4.85  
+[20:12:20] flight 20/96  t075  F.pets__ships  r4 a1  (block 5 slot 4, enter 0.75 cf 3, load1 4.85)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 1.0  6.361 Hz  track 0.02  gap_max 163.7  upset False  load1 4.10  
+[20:13:12] flight 21/96  t070cf4  C.empty__ships  r4 a1  (block 6 slot 1, enter 0.7 cf 4, load1 4.10)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.998  6.347 Hz  track 0.0  gap_max 163.6  upset False  load1 4.09  
+[20:14:04] flight 22/96  t070  C.empty__ships  r4 a1  (block 6 slot 2, enter 0.7 cf 3, load1 4.09)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.998  6.365 Hz  track 0.0  gap_max 162.9  upset False  load1 4.24  
+[20:14:56] flight 23/96  t075  C.empty__ships  r4 a1  (block 6 slot 3, enter 0.75 cf 3, load1 4.24)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 1.0  6.354 Hz  track 0.0  gap_max 163.8  upset False  load1 3.51  
+[20:15:47] flight 24/96  t080  C.empty__ships  r4 a1  (block 6 slot 4, enter 0.8 cf 3, load1 3.51)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.997  6.345 Hz  track 0.0  gap_max 163.9  upset False  load1 4.13  
+[20:16:39] flight 25/96  t075  E.furniture__ships  r2 a1  (block 7 slot 1, enter 0.75 cf 3, load1 4.13)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.997  6.359 Hz  track 0.0  gap_max 163.7  upset False  load1 2.72  
+[20:17:31] flight 26/96  t080  E.furniture__ships  r2 a1  (block 7 slot 2, enter 0.8 cf 3, load1 3.62)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.999  6.345 Hz  track 0.0  gap_max 163.7  upset False  load1 3.72  
+[20:18:23] flight 27/96  t070cf4  E.furniture__ships  r2 a1  (block 7 slot 3, enter 0.7 cf 4, load1 3.72)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.998  6.363 Hz  track 0.0  gap_max 163.5  upset False  load1 3.10  
+[20:19:15] flight 28/96  t070  E.furniture__ships  r2 a1  (block 7 slot 4, enter 0.7 cf 3, load1 3.10)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.996  6.361 Hz  track 0.0  gap_max 163.8  upset False  load1 2.60  
+[20:20:06] flight 29/96  t070cf4  F.pets__ships  r2 a1  (block 8 slot 1, enter 0.7 cf 4, load1 2.60)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.996  6.359 Hz  track 0.042  gap_max 163.7  upset False  load1 3.01  
+[20:20:58] flight 30/96  t070  F.pets__ships  r2 a1  (block 8 slot 2, enter 0.7 cf 3, load1 3.01)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.361 Hz  track 0.305  gap_max 163.6  upset False  load1 3.63  
+[20:21:50] flight 31/96  t075  F.pets__ships  r2 a1  (block 8 slot 3, enter 0.75 cf 3, load1 3.63)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 1.0  6.354 Hz  track 0.041  gap_max 181.2  upset False  load1 3.07  
+[20:22:42] flight 32/96  t080  F.pets__ships  r2 a1  (block 8 slot 4, enter 0.8 cf 3, load1 3.07)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.352 Hz  track 0.015  gap_max 163.6  upset False  load1 3.79  
+[20:23:34] flight 33/96  t070cf4  D.occlusion__ships  r2 a1  (block 9 slot 1, enter 0.7 cf 4, load1 3.79)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.364 Hz  track 0.644  gap_max 163.9  upset False  load1 3.61  
+[20:24:50] flight 34/96  t070  D.occlusion__ships  r2 a1  (block 9 slot 2, enter 0.7 cf 3, load1 3.61)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.353 Hz  track 0.397  gap_max 163.8  upset False  load1 2.37  
+[20:26:07] flight 35/96  t075  D.occlusion__ships  r2 a1  (block 9 slot 3, enter 0.75 cf 3, load1 2.37)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.346 Hz  track 0.515  gap_max 163.8  upset False  load1 2.58  
+[20:27:24] flight 36/96  t080  D.occlusion__ships  r2 a1  (block 9 slot 4, enter 0.8 cf 3, load1 2.58)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.354 Hz  track 0.641  gap_max 163.8  upset False  load1 3.26  
+[20:28:41] flight 37/96  t080  E.furniture__ships  r4 a1  (block 10 slot 1, enter 0.8 cf 3, load1 3.26)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.998  6.365 Hz  track 0.0  gap_max 163.8  upset False  load1 3.17  
+[20:29:32] flight 38/96  t070cf4  E.furniture__ships  r4 a1  (block 10 slot 2, enter 0.7 cf 4, load1 3.17)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.999  6.374 Hz  track 0.0  gap_max 163.8  upset False  load1 2.69  
+[20:30:24] flight 39/96  t070  E.furniture__ships  r4 a1  (block 10 slot 3, enter 0.7 cf 3, load1 2.69)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.989  6.297 Hz  track 0.0  gap_max 333.3  upset False  load1 3.25  
+[20:31:16] flight 40/96  t075  E.furniture__ships  r4 a1  (block 10 slot 4, enter 0.75 cf 3, load1 3.25)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.995  6.352 Hz  track 0.0  gap_max 163.7  upset False  load1 4.11  
+[20:32:08] flight 41/96  t070  C.empty__ships  r3 a1  (block 11 slot 1, enter 0.7 cf 3, load1 4.11)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.997  6.352 Hz  track 0.0  gap_max 163.8  upset False  load1 3.75  
+[20:33:00] flight 42/96  t075  C.empty__ships  r3 a1  (block 11 slot 2, enter 0.75 cf 3, load1 3.75)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.997  6.36 Hz  track 0.0  gap_max 163.7  upset False  load1 3.46  
+[20:33:52] flight 43/96  t080  C.empty__ships  r3 a1  (block 11 slot 3, enter 0.8 cf 3, load1 3.46)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.999  6.374 Hz  track 0.0  gap_max 163.5  upset False  load1 3.98  
+[20:34:44] flight 44/96  t070cf4  C.empty__ships  r3 a1  (block 11 slot 4, enter 0.7 cf 4, load1 3.98)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.999  6.363 Hz  track 0.0  gap_max 163.7  upset False  load1 3.60  
+[20:35:35] flight 45/96  t070  F.pets__ships  r1 a1  (block 12 slot 1, enter 0.7 cf 3, load1 3.60)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.999  6.356 Hz  track 0.163  gap_max 163.8  upset False  load1 3.48  
+[20:36:27] flight 46/96  t075  F.pets__ships  r1 a1  (block 12 slot 2, enter 0.75 cf 3, load1 4.64)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.995  6.34 Hz  track 0.029  gap_max 163.8  upset False  load1 3.08  
+[20:37:19] flight 47/96  t080  F.pets__ships  r1 a1  (block 12 slot 3, enter 0.8 cf 3, load1 3.08)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.999  6.365 Hz  track 0.03  gap_max 163.5  upset False  load1 3.83  
+[20:38:11] flight 48/96  t070cf4  F.pets__ships  r1 a1  (block 12 slot 4, enter 0.7 cf 4, load1 3.83)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.347 Hz  track 0.104  gap_max 163.6  upset False  load1 2.39  
+[20:39:03] flight 49/96  t070  D.occlusion__ships  r4 a1  (block 13 slot 1, enter 0.7 cf 3, load1 2.39)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.346 Hz  track 0.402  gap_max 163.8  upset False  load1 2.15  
+[20:40:20] flight 50/96  t075  D.occlusion__ships  r4 a1  (block 13 slot 2, enter 0.75 cf 3, load1 2.15)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.345 Hz  track 0.447  gap_max 163.8  upset False  load1 2.15  
+[20:41:36] flight 51/96  t080  D.occlusion__ships  r4 a1  (block 13 slot 3, enter 0.8 cf 3, load1 2.15)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.359 Hz  track 0.484  gap_max 163.8  upset False  load1 2.81  
+[20:42:53] flight 52/96  t070cf4  D.occlusion__ships  r4 a1  (block 13 slot 4, enter 0.7 cf 4, load1 2.81)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.997  6.35 Hz  track 0.444  gap_max 163.8  upset False  load1 2.71  
+[20:44:10] flight 53/96  t075  B.moving__ships  r4 a1  (block 14 slot 1, enter 0.75 cf 3, load1 2.71)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.997  6.425 Hz  track 0.992  gap_max 158.8  upset False  load1 3.83  
+[20:45:17] flight 54/96  t080  B.moving__ships  r4 a1  (block 14 slot 2, enter 0.8 cf 3, load1 3.83)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.999  6.422 Hz  track 0.992  gap_max 158.8  upset False  load1 3.35  
+[20:46:24] flight 55/96  t070cf4  B.moving__ships  r4 a1  (block 14 slot 3, enter 0.7 cf 4, load1 3.35)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.424 Hz  track 0.967  gap_max 158.9  upset False  load1 3.38  
+[20:47:30] flight 56/96  t070  B.moving__ships  r4 a1  (block 14 slot 4, enter 0.7 cf 3, load1 3.38)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.425 Hz  track 0.992  gap_max 158.8  upset False  load1 2.97  
+[20:48:37] flight 57/96  t075  A.static__ships  r4 a1  (block 15 slot 1, enter 0.75 cf 3, load1 2.97)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.997  6.418 Hz  track 0.991  gap_max 158.8  upset False  load1 3.54  
+[20:49:39] flight 58/96  t080  A.static__ships  r4 a1  (block 15 slot 2, enter 0.8 cf 3, load1 3.54)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.997  6.375 Hz  track 0.823  gap_max 163.8  upset False  load1 4.53  
+[20:50:41] flight 59/96  t070cf4  A.static__ships  r4 a1  (block 15 slot 3, enter 0.7 cf 4, load1 4.53)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.371 Hz  track 0.939  gap_max 163.9  upset False  load1 4.19  
+[20:51:43] flight 60/96  t070  A.static__ships  r4 a1  (block 15 slot 4, enter 0.7 cf 3, load1 4.19)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.348 Hz  track 0.919  gap_max 163.8  upset False  load1 3.16  
+[20:52:44] flight 61/96  t080  B.moving__ships  r2 a1  (block 16 slot 1, enter 0.8 cf 3, load1 3.16)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.351 Hz  track 0.991  gap_max 183.9  upset False  load1 3.35  
+[20:53:51] flight 62/96  t070cf4  B.moving__ships  r2 a1  (block 16 slot 2, enter 0.7 cf 4, load1 3.35)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.368 Hz  track 0.987  gap_max 163.8  upset False  load1 2.90  
+[20:54:58] flight 63/96  t070  B.moving__ships  r2 a1  (block 16 slot 3, enter 0.7 cf 3, load1 2.90)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.366 Hz  track 0.992  gap_max 163.6  upset False  load1 4.63  
+[20:56:05] flight 64/96  t075  B.moving__ships  r2 a1  (block 16 slot 4, enter 0.75 cf 3, load1 4.63)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 1.0  6.359 Hz  track 0.992  gap_max 163.9  upset False  load1 3.30  
+[20:57:12] flight 65/96  t075  D.occlusion__ships  r1 a1  (block 17 slot 1, enter 0.75 cf 3, load1 3.30)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.359 Hz  track 0.195  gap_max 163.5  upset False  load1 2.74  
+[20:58:29] flight 66/96  t080  D.occlusion__ships  r1 a1  (block 17 slot 2, enter 0.8 cf 3, load1 2.74)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.36 Hz  track 0.411  gap_max 163.8  upset False  load1 3.15  
+[20:59:45] flight 67/96  t070cf4  D.occlusion__ships  r1 a1  (block 17 slot 3, enter 0.7 cf 4, load1 3.15)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.996  6.352 Hz  track 0.505  gap_max 163.8  upset False  load1 3.14  
+[21:01:02] flight 68/96  t070  D.occlusion__ships  r1 a1  (block 17 slot 4, enter 0.7 cf 3, load1 3.14)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 1.0  6.359 Hz  track 0.523  gap_max 163.7  upset False  load1 3.22  
+[21:02:19] flight 69/96  t070cf4  B.moving__ships  r1 a1  (block 18 slot 1, enter 0.7 cf 4, load1 3.22)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.999  6.358 Hz  track 0.964  gap_max 163.7  upset False  load1 2.72  
+[21:03:26] flight 70/96  t070  B.moving__ships  r1 a1  (block 18 slot 2, enter 0.7 cf 3, load1 2.72)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.358 Hz  track 0.991  gap_max 163.5  upset False  load1 3.48  
+[21:04:33] flight 71/96  t075  B.moving__ships  r1 a1  (block 18 slot 3, enter 0.75 cf 3, load1 3.48)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.999  6.35 Hz  track 0.991  gap_max 163.8  upset False  load1 2.74  
+[21:05:39] flight 72/96  t080  B.moving__ships  r1 a1  (block 18 slot 4, enter 0.8 cf 3, load1 2.74)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.357 Hz  track 0.885  gap_max 163.7  upset False  load1 2.26  
+[21:06:46] flight 73/96  t070cf4  E.furniture__ships  r3 a1  (block 19 slot 1, enter 0.7 cf 4, load1 2.26)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 1.0  6.362 Hz  track 0.0  gap_max 163.6  upset False  load1 2.65  
+[21:07:38] flight 74/96  t070  E.furniture__ships  r3 a1  (block 19 slot 2, enter 0.7 cf 3, load1 2.65)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 1.0  6.362 Hz  track 0.0  gap_max 163.8  upset False  load1 2.97  
+[21:08:30] flight 75/96  t075  E.furniture__ships  r3 a1  (block 19 slot 3, enter 0.75 cf 3, load1 2.97)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 1.0  6.368 Hz  track 0.0  gap_max 163.6  upset False  load1 2.61  
+[21:09:22] flight 76/96  t080  E.furniture__ships  r3 a1  (block 19 slot 4, enter 0.8 cf 3, load1 2.61)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.999  6.372 Hz  track 0.0  gap_max 163.7  upset False  load1 2.55  
+[21:10:13] flight 77/96  t080  A.static__ships  r2 a1  (block 20 slot 1, enter 0.8 cf 3, load1 2.55)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.348 Hz  track 0.938  gap_max 163.8  upset False  load1 2.07  
+[21:11:15] flight 78/96  t070cf4  A.static__ships  r2 a1  (block 20 slot 2, enter 0.7 cf 4, load1 2.07)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.346 Hz  track 0.986  gap_max 163.6  upset False  load1 3.04  
+[21:12:17] flight 79/96  t070  A.static__ships  r2 a1  (block 20 slot 3, enter 0.7 cf 3, load1 3.04)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.369 Hz  track 0.949  gap_max 163.7  upset False  load1 2.89  
+[21:13:19] flight 80/96  t075  A.static__ships  r2 a1  (block 20 slot 4, enter 0.75 cf 3, load1 2.74)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.359 Hz  track 0.959  gap_max 163.9  upset False  load1 3.20  
+[21:14:21] flight 81/96  t080  D.occlusion__ships  r3 a1  (block 21 slot 1, enter 0.8 cf 3, load1 3.20)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.998  6.36 Hz  track 0.448  gap_max 163.8  upset False  load1 3.29  
+[21:15:38] flight 82/96  t070cf4  D.occlusion__ships  r3 a1  (block 21 slot 2, enter 0.7 cf 4, load1 3.29)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.997  6.367 Hz  track 0.398  gap_max 163.8  upset False  load1 2.33  
+[21:16:54] flight 83/96  t070  D.occlusion__ships  r3 a1  (block 21 slot 3, enter 0.7 cf 3, load1 2.33)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.363 Hz  track 0.73  gap_max 163.7  upset False  load1 2.40  
+[21:18:11] flight 84/96  t075  D.occlusion__ships  r3 a1  (block 21 slot 4, enter 0.75 cf 3, load1 2.40)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.994  6.419 Hz  track 0.56  gap_max 163.8  upset False  load1 2.69  
+[21:19:28] flight 85/96  t075  C.empty__ships  r1 a1  (block 22 slot 1, enter 0.75 cf 3, load1 2.69)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc False  sim/wall 0.999  6.425 Hz  track 0.0  gap_max 158.6  upset False  load1 2.35  
+[21:20:20] flight 86/96  t080  C.empty__ships  r1 a1  (block 22 slot 2, enter 0.8 cf 3, load1 2.35)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc False  sim/wall 0.997  6.419 Hz  track 0.0  gap_max 158.5  upset False  load1 3.23  
+[21:21:12] flight 87/96  t070cf4  C.empty__ships  r1 a1  (block 22 slot 3, enter 0.7 cf 4, load1 3.23)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc False  sim/wall 0.998  6.423 Hz  track 0.0  gap_max 158.8  upset False  load1 3.72  
+[21:22:03] flight 88/96  t070  C.empty__ships  r1 a1  (block 22 slot 4, enter 0.7 cf 3, load1 3.72)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc False  sim/wall 0.99  6.419 Hz  track 0.0  gap_max 178.9  upset False  load1 3.73  
+[21:22:55] flight 89/96  t070cf4  A.static__ships  r3 a1  (block 23 slot 1, enter 0.7 cf 4, load1 3.73)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.998  6.421 Hz  track 0.986  gap_max 158.8  upset False  load1 3.52  
+[21:23:57] flight 90/96  t070  A.static__ships  r3 a1  (block 23 slot 2, enter 0.7 cf 3, load1 3.52)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.998  6.427 Hz  track 0.991  gap_max 158.6  upset False  load1 3.41  
+[21:24:59] flight 91/96  t075  A.static__ships  r3 a1  (block 23 slot 3, enter 0.75 cf 3, load1 3.41)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.998  6.423 Hz  track 0.991  gap_max 158.8  upset False  load1 4.02  
+[21:26:01] flight 92/96  t080  A.static__ships  r3 a1  (block 23 slot 4, enter 0.8 cf 3, load1 4.02)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.997  6.419 Hz  track 0.833  gap_max 158.8  upset False  load1 3.72  
+[21:27:02] flight 93/96  t070  B.moving__ships  r3 a1  (block 24 slot 1, enter 0.7 cf 3, load1 3.72)
+  -> VALID  floor 0.0  enter 0.7/cf3  disc True  sim/wall 0.997  6.419 Hz  track 0.992  gap_max 158.9  upset False  load1 4.20  
+[21:28:09] flight 94/96  t075  B.moving__ships  r3 a1  (block 24 slot 2, enter 0.75 cf 3, load1 4.20)
+  -> VALID  floor 0.0  enter 0.75/cf3  disc True  sim/wall 0.995  6.426 Hz  track 0.992  gap_max 158.8  upset False  load1 4.20  
+[21:29:16] flight 95/96  t080  B.moving__ships  r3 a1  (block 24 slot 3, enter 0.8 cf 3, load1 4.20)
+  -> VALID  floor 0.0  enter 0.8/cf3  disc True  sim/wall 0.982  6.388 Hz  track 0.819  gap_max 163.6  upset False  load1 5.54  
+[21:30:23] flight 96/96  t070cf4  B.moving__ships  r3 a1  (block 24 slot 4, enter 0.7 cf 4, load1 5.54)
+  -> VALID  floor 0.0  enter 0.7/cf4  disc True  sim/wall 0.992  6.35 Hz  track 0.987  gap_max 163.6  upset False  load1 4.62  
+[21:31:30] ALL FLIGHTS DONE in 98 min

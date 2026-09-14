@@ -1,0 +1,110 @@
+LATCH-THRESHOLD SWEEP - closed loop, one model (the champion), four latch rules
+======================================================================================
+
+Nothing here was measured on hardware. Every frame is rendered and the 'chip'
+network runs under onnxruntime on a laptop, not on a GAP8.
+
+-- validity --
+   flight records: 97
+   t070     valid flights: 24 / 24
+   t075     valid flights: 24 / 24
+   t080     valid flights: 24 / 24
+   t070cf4  valid flights: 24 / 24
+   floor all matte (xml and manifest 0.0): True
+   distinct ONNX flown: 1  distinct eps: 1
+   latch rule replay-verified on 96 flights; 64 discriminating, 32 ambiguous
+   ambiguous by cell (nothing ever crossed the band there): {'C.empty__ships': 16, 'E.furniture__ships': 16}
+   distinct (vis_enter, confirm_frames) actually flown: [[0.7, 3], [0.7, 4], [0.75, 3], [0.8, 3]]
+
+-- realised balance --
+   repeat vs flight order: pearson 0.0  spearman 0.0
+   mean flight order per config: {'t070': 48.5, 't075': 48.5, 't080': 48.5, 't070cf4': 48.5}
+   Latin square exact per cell (each config in each slot once): True
+
+-- machine health --
+   load1 before: min 2.07 median 3.38 max 6.67
+   sim_wall_ratio: min 0.982 median 0.998
+   step_gap_ms.max: median 163.7 worst 333.3
+   attitude upsets: 0 flights (|pitch| max 9.083 deg, |roll| max 0.676 deg, pz min 0.789 m)
+   torn frames, whole session: 0
+
+======================================================================================
+THE PET GATE - F.pets__ships, hard gate M6 drift < 0.5 m on the worst repeat
+======================================================================================
+   config    worst drift   median   gate ff eps med     ff eps all track med
+   t070            1.369    0.863   FAIL       4.50   [4, 5, 5, 3]     0.171
+   t075            0.376    0.299   PASS       1.50   [2, 1, 2, 1]     0.035
+   t080            0.382    0.237   PASS       1.00   [1, 1, 1, 2]     0.035
+   t070cf4         0.586    0.490   FAIL       3.00   [4, 2, 2, 4]     0.073
+
+======================================================================================
+THE COST - A.static and B.moving (recall axis)
+======================================================================================
+  A.static__ships
+   config    trk|in-view  M1 track t1st latch n latched  hdg err settled d   drift
+   t070           0.9698    0.9700       0.31 4/4           3.65     0.346   1.528
+   t075           0.9906    0.9910       0.31 4/4           4.32     0.334   1.446
+   t080           0.8279    0.8280       0.39 4/4           4.60     0.357   1.513
+   t070cf4        0.9857    0.9860       0.47 4/4           4.08     0.304   1.558
+
+  B.moving__ships
+   config    trk|in-view  M1 track t1st latch n latched  hdg err settled d   drift
+   t070           0.9919    0.9920       0.31 4/4           3.14     0.525   1.013
+   t075           0.9918    0.9920       0.32 4/4           3.18     0.529   0.981
+   t080           0.9382    0.9380       0.70 4/4           3.35     0.521   1.044
+   t070cf4        0.9771    0.9770       0.47 4/4           3.25     0.548   0.950
+
+======================================================================================
+THE OTHER SAFETY CELLS - C.empty and E.furniture (hard: 0 episodes, 0 tracking, drift < 0.10)
+======================================================================================
+  C.empty__ships
+   t070      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t075      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t080      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t070cf4   drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+
+  E.furniture__ships
+   t070      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t075      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t080      drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+   t070cf4   drift worst   0.000  episodes worst 0  tracking worst 0.0000  -> PASS
+
+======================================================================================
+D.occlusion__ships - FLAGGED UNRELIABLE, reported but not treated as evidence
+======================================================================================
+   This cell did not reproduce across sessions under identical config (the
+   champion's own relatch was 1.24-1.41 s in one session and 4.09-9.10 s in
+   another). Read the spread, not the point estimate.
+   config    relatch med                        all relatch trk|in-view unrecov
+   t070            2.428       [3.754, 9.563, 1.101, 0.309]      0.5213 [False, False, False, True]
+   t075            4.021       [3.462, 4.581, 3.258, 9.639]      0.4810 [True, False, False, False]
+   t080            5.646       [7.094, 1.579, 5.482, 5.809]      0.4657 [False, True, False, False]
+   t070cf4         3.780          [3.918, 1.42, None, 3.78]      0.5133 [False, False, True, False]
+
+======================================================================================
+MATCHED-BLOCK DELTAS vs the shipped 0.70/3 arm (same cell, same repeat, same noise draw)
+======================================================================================
+  t075 minus t070
+   A.static__ships      n=4  d_drift  -0.097  d_ffeps   0.00  d_trk|inview   0.0051  d_t1stlatch   -0.00
+   B.moving__ships      n=4  d_drift  -0.037  d_ffeps   0.00  d_trk|inview   0.0001  d_t1stlatch    0.00
+   C.empty__ships       n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   D.occlusion__ships   n=4  d_drift   0.095  d_ffeps   0.00  d_trk|inview  -0.1213  d_t1stlatch    1.03
+   E.furniture__ships   n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   F.pets__ships        n=4  d_drift  -0.637  d_ffeps  -2.50  d_trk|inview      -    d_t1stlatch   -0.00
+
+  t080 minus t070
+   A.static__ships      n=4  d_drift  -0.004  d_ffeps   0.00  d_trk|inview  -0.1268  d_t1stlatch    0.08
+   B.moving__ships      n=4  d_drift   0.041  d_ffeps   0.00  d_trk|inview  -0.0534  d_t1stlatch    0.39
+   C.empty__ships       n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   D.occlusion__ships   n=4  d_drift   0.113  d_ffeps   0.00  d_trk|inview  -0.0741  d_t1stlatch    0.47
+   E.furniture__ships   n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   F.pets__ships        n=4  d_drift  -0.653  d_ffeps  -3.50  d_trk|inview      -    d_t1stlatch    2.81
+
+  t070cf4 minus t070
+   A.static__ships      n=4  d_drift   0.022  d_ffeps   0.00  d_trk|inview   0.0077  d_t1stlatch    0.15
+   B.moving__ships      n=4  d_drift  -0.009  d_ffeps   0.00  d_trk|inview  -0.0147  d_t1stlatch    0.16
+   C.empty__ships       n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   D.occlusion__ships   n=4  d_drift  -0.027  d_ffeps   0.00  d_trk|inview  -0.0465  d_t1stlatch    0.94
+   E.furniture__ships   n=4  d_drift   0.000  d_ffeps   0.00  d_trk|inview      -    d_t1stlatch     -  
+   F.pets__ships        n=4  d_drift  -0.370  d_ffeps  -1.50  d_trk|inview      -    d_t1stlatch   -0.01
+

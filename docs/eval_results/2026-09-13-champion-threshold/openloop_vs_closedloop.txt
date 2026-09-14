@@ -1,0 +1,35 @@
+OPEN LOOP vs CLOSED LOOP - how much the re-scoring lead missed by
+====================================================================================
+
+open-loop  = the arm's latch rule replayed over THIS session's own t070 frames
+closed-loop= the same rule actually flown, same cell, same repeat, same noise seed
+'absent'   = fraction of no-person frames latched (the false-alarm axis)
+'in view'  = fraction of person-in-view frames latched (the recall axis)
+
+-- t075 --
+   cell                    n open absent closed absent open inview closed inview
+   A.static__ships         4        -             -         0.9698        0.9906
+   B.moving__ships         4        -             -         0.9916        0.9918
+   C.empty__ships          4      0.0000        0.0000        -             -   
+   D.occlusion__ships      4      0.0000        0.0000      0.5132        0.4810
+   E.furniture__ships      4      0.0000        0.0000        -             -   
+   F.pets__ships           4      0.0735        0.0351        -             -   
+
+-- t080 --
+   cell                    n open absent closed absent open inview closed inview
+   A.static__ships         4        -             -         0.9507        0.8279
+   B.moving__ships         4        -             -         0.9816        0.9381
+   C.empty__ships          4      0.0000        0.0000        -             -   
+   D.occlusion__ships      4      0.0000          -         0.4716        0.4656
+   E.furniture__ships      4      0.0000        0.0000        -             -   
+   F.pets__ships           4      0.0102        0.0354        -             -   
+
+-- t070cf4 --
+   cell                    n open absent closed absent open inview closed inview
+   A.static__ships         4        -             -         0.9624        0.9857
+   B.moving__ships         4        -             -         0.9878        0.9772
+   C.empty__ships          4      0.0000        0.0000        -             -   
+   D.occlusion__ships      4      0.0000        0.0000      0.4884        0.5133
+   E.furniture__ships      4      0.0000        0.0000        -             -   
+   F.pets__ships           4      0.0967        0.0732        -             -   
+

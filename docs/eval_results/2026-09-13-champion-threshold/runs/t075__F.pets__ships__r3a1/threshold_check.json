@@ -1,0 +1,31 @@
+{
+  "config": "t075",
+  "vis_enter": 0.75,
+  "confirm_frames": 3,
+  "vis_exit": 0.45,
+  "frames_compared": 150,
+  "discriminating": true,
+  "also_consistent_with": [],
+  "replay": {
+    "t070": {
+      "n": 150,
+      "streak_mismatch": 44,
+      "tracking_mismatch": 75
+    },
+    "t075": {
+      "n": 150,
+      "streak_mismatch": 0,
+      "tracking_mismatch": 0
+    },
+    "t080": {
+      "n": 150,
+      "streak_mismatch": 18,
+      "tracking_mismatch": 8
+    },
+    "t070cf4": {
+      "n": 150,
+      "streak_mismatch": 44,
+      "tracking_mismatch": 46
+    }
+  }
+}

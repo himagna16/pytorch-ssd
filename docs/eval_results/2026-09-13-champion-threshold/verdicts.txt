@@ -1,0 +1,19 @@
+PER-CELL VERDICTS, the repo's own unmodified scoreboard.py, one suite per latch config
+====================================================================================
+(each suite = the same champion ONNX, 24 flights, 6 cells x 4 repeats)
+
+cell                   t070 (shipped) t075           t080           t070cf4       
+A.static__ships        PASS           PASS           PASS           PASS          
+B.moving__ships        PASS           PASS           PASS           PASS          
+C.empty__ships         PASS           PASS           PASS           PASS          
+D.occlusion__ships     FAIL           FAIL           FAIL           FAIL          
+E.furniture__ships     PASS           PASS           PASS           PASS          
+F.pets__ships          FAIL           CHARACTERISED  CHARACTERISED  FAIL          
+
+t070 suite verdict: suite verdict: FAIL  {'pass': 4, 'fail': 2, 'invalid': 0, 'characterised': 0}
+t075 suite verdict: suite verdict: FAIL  {'pass': 4, 'fail': 1, 'invalid': 0, 'characterised': 1}
+t080 suite verdict: suite verdict: FAIL  {'pass': 4, 'fail': 1, 'invalid': 0, 'characterised': 1}
+t070cf4 suite verdict: suite verdict: FAIL  {'pass': 4, 'fail': 2, 'invalid': 0, 'characterised': 0}
+
+D.occlusion FAILs in ALL FOUR arms, including the shipped 0.70. It is the cell
+flagged as not reproducing across sessions and is NOT treated as evidence here.

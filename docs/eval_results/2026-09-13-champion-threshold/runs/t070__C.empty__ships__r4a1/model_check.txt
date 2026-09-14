@@ -1,0 +1,1 @@
+MODEL_OK onnx=/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx eps=0.0002009823510888964 sha1=d90555c8462b6dd6c3432d184b427d4d3e653fda

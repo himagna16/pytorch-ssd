@@ -1,0 +1,230 @@
+{
+  "seed": 20260913,
+  "n_flights": 96,
+  "n_blocks": 24,
+  "configs": {
+    "t070": {
+      "vis_enter": 0.7,
+      "confirm_frames": 3,
+      "vis_exit": 0.45
+    },
+    "t075": {
+      "vis_enter": 0.75,
+      "confirm_frames": 3,
+      "vis_exit": 0.45
+    },
+    "t080": {
+      "vis_enter": 0.8,
+      "confirm_frames": 3,
+      "vis_exit": 0.45
+    },
+    "t070cf4": {
+      "vis_enter": 0.7,
+      "confirm_frames": 4,
+      "vis_exit": 0.45
+    }
+  },
+  "corr_repeat_vs_flight_order_pearson": 0.0,
+  "corr_repeat_vs_flight_order_spearman": 0.0,
+  "corr_repeat_vs_block_position_pearson": 0.0,
+  "corr_repeat_vs_block_position_spearman": 0.0,
+  "same_cell_adjacent_blocks": 0,
+  "mean_flight_order": {
+    "t070": 48.5,
+    "t075": 48.5,
+    "t080": 48.5,
+    "t070cf4": 48.5
+  },
+  "slot_counts_overall": {
+    "t070": {
+      "1": 6,
+      "2": 6,
+      "3": 6,
+      "4": 6
+    },
+    "t075": {
+      "1": 6,
+      "2": 6,
+      "3": 6,
+      "4": 6
+    },
+    "t080": {
+      "1": 6,
+      "2": 6,
+      "3": 6,
+      "4": 6
+    },
+    "t070cf4": {
+      "1": 6,
+      "2": 6,
+      "3": 6,
+      "4": 6
+    }
+  },
+  "slot_counts_per_cell": {
+    "A.static__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "B.moving__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "C.empty__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "D.occlusion__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "E.furniture__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "F.pets__ships": {
+      "t070": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t075": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t080": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "t070cf4": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  "corr_repeat_vs_order_per_config": {
+    "t070": 0.005368,
+    "t075": 0.005377,
+    "t080": -0.005368,
+    "t070cf4": -0.005405
+  },
+  "latin_square_exact_per_cell": true,
+  "slot_balance_exact_overall": true
+}

@@ -1,0 +1,924 @@
+{
+  "per_flight": [
+    {
+      "arm": "t075",
+      "cell": "A.static__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9906542056074766,
+      "closedloop_latched_in_view": 0.990521327014218,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9906542056074766
+    },
+    {
+      "arm": "t075",
+      "cell": "A.static__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9489795918367347,
+      "closedloop_latched_in_view": 0.9591836734693877,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9489795918367347
+    },
+    {
+      "arm": "t075",
+      "cell": "A.static__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9907407407407407,
+      "closedloop_latched_in_view": 0.9907407407407407,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9907407407407407
+    },
+    {
+      "arm": "t075",
+      "cell": "A.static__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.7272727272727273,
+      "closedloop_latched_in_view": 0.9906542056074766,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9186602870813397
+    },
+    {
+      "arm": "t075",
+      "cell": "B.moving__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.991304347826087,
+      "closedloop_latched_in_view": 0.9914529914529915,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.991304347826087
+    },
+    {
+      "arm": "t075",
+      "cell": "B.moving__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9795081967213115,
+      "closedloop_latched_in_view": 0.9916317991631799,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9918032786885246
+    },
+    {
+      "arm": "t075",
+      "cell": "B.moving__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9919354838709677,
+      "closedloop_latched_in_view": 0.9919028340080972,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919354838709677
+    },
+    {
+      "arm": "t075",
+      "cell": "B.moving__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9919028340080972,
+      "closedloop_latched_in_view": 0.9919678714859438,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919028340080972
+    },
+    {
+      "arm": "t075",
+      "cell": "C.empty__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "C.empty__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "C.empty__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "C.empty__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "D.occlusion__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": 0.52,
+      "closedloop_latched_in_view": 0.23076923076923078,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.5233333333333333
+    },
+    {
+      "arm": "t075",
+      "cell": "D.occlusion__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.38741721854304634,
+      "closedloop_latched_in_view": 0.5150501672240803,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.3973509933774834
+    },
+    {
+      "arm": "t075",
+      "cell": "D.occlusion__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.63,
+      "closedloop_latched_in_view": 0.5597269624573379,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.73
+    },
+    {
+      "arm": "t075",
+      "cell": "D.occlusion__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.5064377682403434,
+      "closedloop_latched_in_view": 0.4470198675496689,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": 0.51931330472103
+    },
+    {
+      "arm": "t075",
+      "cell": "E.furniture__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "E.furniture__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "E.furniture__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "E.furniture__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "F.pets__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.05185185185185185,
+      "closedloop_latched_absent": 0.02877697841726619,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.16296296296296298,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "F.pets__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.02127659574468085,
+      "closedloop_latched_absent": 0.041379310344827586,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.3049645390070922,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "F.pets__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.09523809523809523,
+      "closedloop_latched_absent": 0.05333333333333334,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.1292517006802721,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t075",
+      "cell": "F.pets__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.14285714285714285,
+      "closedloop_latched_absent": 0.02027027027027027,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.17857142857142858,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "A.static__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9626168224299065,
+      "closedloop_latched_in_view": 0.7916666666666666,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9906542056074766
+    },
+    {
+      "arm": "t080",
+      "cell": "A.static__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9387755102040817,
+      "closedloop_latched_in_view": 0.9375,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9489795918367347
+    },
+    {
+      "arm": "t080",
+      "cell": "A.static__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9907407407407407,
+      "closedloop_latched_in_view": 0.8325358851674641,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9907407407407407
+    },
+    {
+      "arm": "t080",
+      "cell": "A.static__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.722488038277512,
+      "closedloop_latched_in_view": 0.8232558139534883,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9186602870813397
+    },
+    {
+      "arm": "t080",
+      "cell": "B.moving__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9608695652173913,
+      "closedloop_latched_in_view": 0.8847736625514403,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.991304347826087
+    },
+    {
+      "arm": "t080",
+      "cell": "B.moving__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9713114754098361,
+      "closedloop_latched_in_view": 0.9914529914529915,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9918032786885246
+    },
+    {
+      "arm": "t080",
+      "cell": "B.moving__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9919354838709677,
+      "closedloop_latched_in_view": 0.8189300411522634,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919354838709677
+    },
+    {
+      "arm": "t080",
+      "cell": "B.moving__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9919028340080972,
+      "closedloop_latched_in_view": 0.9918367346938776,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919028340080972
+    },
+    {
+      "arm": "t080",
+      "cell": "C.empty__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "C.empty__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "C.empty__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "C.empty__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "D.occlusion__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.43666666666666665,
+      "closedloop_latched_in_view": 0.4105960264900662,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.5233333333333333
+    },
+    {
+      "arm": "t080",
+      "cell": "D.occlusion__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.3841059602649007,
+      "closedloop_latched_in_view": 0.6411960132890365,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.3973509933774834
+    },
+    {
+      "arm": "t080",
+      "cell": "D.occlusion__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.6266666666666667,
+      "closedloop_latched_in_view": 0.44755244755244755,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.73
+    },
+    {
+      "arm": "t080",
+      "cell": "D.occlusion__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.5064377682403434,
+      "closedloop_latched_in_view": 0.48366013071895425,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": 0.51931330472103
+    },
+    {
+      "arm": "t080",
+      "cell": "E.furniture__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "E.furniture__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "E.furniture__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "E.furniture__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "F.pets__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.044444444444444446,
+      "closedloop_latched_absent": 0.030303030303030304,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.16296296296296298,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "F.pets__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.014705882352941176,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.3049645390070922,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "F.pets__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.02040816326530612,
+      "closedloop_latched_absent": 0.04054054054054054,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.1292517006802721,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t080",
+      "cell": "F.pets__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0472972972972973,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.17857142857142858,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "A.static__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.985981308411215,
+      "closedloop_latched_in_view": 0.9858490566037735,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9906542056074766
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "A.static__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9387755102040817,
+      "closedloop_latched_in_view": 0.9855769230769231,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9489795918367347
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "A.static__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9861111111111112,
+      "closedloop_latched_in_view": 0.986046511627907,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9907407407407407
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "A.static__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9090909090909091,
+      "closedloop_latched_in_view": 0.9386792452830188,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9186602870813397
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "B.moving__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9869565217391304,
+      "closedloop_latched_in_view": 0.9644444444444444,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.991304347826087
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "B.moving__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9877049180327869,
+      "closedloop_latched_in_view": 0.9873949579831933,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9918032786885246
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "B.moving__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9879032258064516,
+      "closedloop_latched_in_view": 0.9872340425531915,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919354838709677
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "B.moving__ships",
+      "repeat": 4,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.9878542510121457,
+      "closedloop_latched_in_view": 0.9670781893004116,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.9919028340080972
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "C.empty__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "C.empty__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "C.empty__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "C.empty__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "D.occlusion__ships",
+      "repeat": 1,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.5133333333333333,
+      "closedloop_latched_in_view": 0.5050505050505051,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.5233333333333333
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "D.occlusion__ships",
+      "repeat": 2,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.3841059602649007,
+      "closedloop_latched_in_view": 0.643598615916955,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.3973509933774834
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "D.occlusion__ships",
+      "repeat": 3,
+      "openloop_latched_absent": null,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": 0.6333333333333333,
+      "closedloop_latched_in_view": 0.521551724137931,
+      "t070_latched_absent": null,
+      "t070_latched_in_view": 0.73
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "D.occlusion__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": null,
+      "openloop_latched_in_view": 0.463519313304721,
+      "closedloop_latched_in_view": 0.4444444444444444,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": 0.51931330472103
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "E.furniture__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "E.furniture__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "E.furniture__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "E.furniture__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.0,
+      "closedloop_latched_absent": 0.0,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.0,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "F.pets__ships",
+      "repeat": 1,
+      "openloop_latched_absent": 0.11851851851851852,
+      "closedloop_latched_absent": 0.1044776119402985,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.16296296296296298,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "F.pets__ships",
+      "repeat": 2,
+      "openloop_latched_absent": 0.07092198581560284,
+      "closedloop_latched_absent": 0.04195804195804196,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.3049645390070922,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "F.pets__ships",
+      "repeat": 3,
+      "openloop_latched_absent": 0.07482993197278912,
+      "closedloop_latched_absent": 0.034722222222222224,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.1292517006802721,
+      "t070_latched_in_view": null
+    },
+    {
+      "arm": "t070cf4",
+      "cell": "F.pets__ships",
+      "repeat": 4,
+      "openloop_latched_absent": 0.15714285714285714,
+      "closedloop_latched_absent": 0.12162162162162163,
+      "openloop_latched_in_view": null,
+      "closedloop_latched_in_view": null,
+      "t070_latched_absent": 0.17857142857142858,
+      "t070_latched_in_view": null
+    }
+  ],
+  "aggregate": {
+    "t075|A.static__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9698,
+      "closedloop_in_view_med": 0.9906
+    },
+    "t075|B.moving__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9916,
+      "closedloop_in_view_med": 0.9918
+    },
+    "t075|C.empty__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t075|D.occlusion__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": 0.5132,
+      "closedloop_in_view_med": 0.481
+    },
+    "t075|E.furniture__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t075|F.pets__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0735,
+      "closedloop_absent_med": 0.0351,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t080|A.static__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9507,
+      "closedloop_in_view_med": 0.8279
+    },
+    "t080|B.moving__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9816,
+      "closedloop_in_view_med": 0.9381
+    },
+    "t080|C.empty__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t080|D.occlusion__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.4716,
+      "closedloop_in_view_med": 0.4656
+    },
+    "t080|E.furniture__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t080|F.pets__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0102,
+      "closedloop_absent_med": 0.0354,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t070cf4|A.static__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9624,
+      "closedloop_in_view_med": 0.9857
+    },
+    "t070cf4|B.moving__ships": {
+      "n": 4,
+      "openloop_absent_med": null,
+      "closedloop_absent_med": null,
+      "openloop_in_view_med": 0.9878,
+      "closedloop_in_view_med": 0.9772
+    },
+    "t070cf4|C.empty__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t070cf4|D.occlusion__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": 0.4884,
+      "closedloop_in_view_med": 0.5133
+    },
+    "t070cf4|E.furniture__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0,
+      "closedloop_absent_med": 0.0,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    },
+    "t070cf4|F.pets__ships": {
+      "n": 4,
+      "openloop_absent_med": 0.0967,
+      "closedloop_absent_med": 0.0732,
+      "openloop_in_view_med": null,
+      "closedloop_in_view_med": null
+    }
+  }
+}

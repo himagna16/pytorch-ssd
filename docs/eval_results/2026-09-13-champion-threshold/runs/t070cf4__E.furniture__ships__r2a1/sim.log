@@ -1,0 +1,19 @@
+Mac host IP from container: 192.168.65.254
+[crazysim] Model type  : cf2x_T350
+[crazysim] Num agents  : 1
+[crazysim] rpm2thrust  : (0.0, -7.167227176573658e-07, 2.9401303690194613e-10)
+[crazysim] rpm2torque  : (0.0, 5.815894847811497e-10, 1.331813874166509e-12)
+[crazysim] tau_up/down : 0.0881 / 0.0881 s
+[crazysim] max_rpm     : 25992
+[crazysim] mass       : 0.0379 kg
+[crazysim] diaginertia: (1.68e-05, 1.68e-05, 2.98e-05)
+[crazysim] features   : camera
+[camera_model] preset=himax_typical seed=1002 324x244 info=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold/runs/t070cf4__E.furniture__ships__r2a1/camera_model.json
+[camera_model] UNMEASURED parameters in use: psf_sigma_center_px, psf_sigma_corner_px, vignette_a2, vignette_a4, prnu_sigma, dsnu_sigma_dn, dead_px_frac, ae_damping, scene_light
+[crazysim] truth log -> /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-champion-threshold/runs/t070cf4__E.furniture__ships__r2a1/truth.csv (multi: subj_clut_chair,subj_clut_couch,subj_clut_plant,subj_clut_tv)
+[crazysim] Agent 0: camera frames → udp://127.0.0.1:5200
+[crazysim] Agent 0: fw_port=19950  cflib_port=19850
+[crazysim] Agent 0: waiting for firmware on port 19950 ...
+[crazysim] Agent 0: firmware connected from ('127.0.0.1', 56861)
+Headless sim up. cflib URI: udp://127.0.0.1:19850   (Ctrl-C to stop)
+Terminated: 15             wait $SIM

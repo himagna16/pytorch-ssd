@@ -1,0 +1,1 @@
+THRESH_OK config=t070 enter=0.7 confirm=3 exit=0.45 frames=135 discriminating=False also_consistent_with=t075,t080,t070cf4

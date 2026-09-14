@@ -1,0 +1,1 @@
+THRESH_OK config=t080 enter=0.8 confirm=3 exit=0.45 frames=243 discriminating=True also_consistent_with=none
