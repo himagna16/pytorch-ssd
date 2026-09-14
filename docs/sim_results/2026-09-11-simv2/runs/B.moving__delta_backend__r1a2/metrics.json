@@ -51,7 +51,7 @@
     "M7_size_window_dist_mean_m": 2.761,
     "M7_size_geom_mean": 0.441,
     "M7_size_decoded_mean": 0.615,
-    "M7_size_overread_ratio": 1.394,
+    "M7_decoded_over_geom_ratio": 1.394,
     "M7_dist_final_m": 2.789,
     "M7_reached_hold": true,
     "M7_d_hold_target_m": 1.942,

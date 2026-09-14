@@ -1,7 +1,7 @@
-# Simulator scoreboard - core suite - 12 Sep 2026
+# Simulator scoreboard - core-rescore suite - start time not recorded
 
 **Overall: FAIL.** 7 of 14 checks FAILED (7 passed, 0 measured-only, 0 unusable).
-Flights: 37 attempted, 36 valid, 1 invalid, 36 scored (14 cells). Total time: 32 min.
+Flights: 37 attempted, 36 valid, 1 invalid, 36 scored (14 cells). Total time: not recorded.
 
 Two setups appear in the table. **ships-as** is what the real drone will be: the chip's own integer network, the realistic camera model, and the chip's 6.5 Hz speed. **proven** is the laptop model on a clean camera at full speed - the setup every September baseline was measured in, so it says whether a problem is new or just the cost of realism.
 

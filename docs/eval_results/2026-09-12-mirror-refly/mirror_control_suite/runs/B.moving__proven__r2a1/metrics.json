@@ -1,5 +1,5 @@
 {
-  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__proven__r2a1",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__proven__r2a1",
   "cell": {
     "cell_id": "B.moving__proven",
     "scene": "s01_control_moving",

@@ -30,7 +30,7 @@
       "speed": "chip",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__ships__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__ships__r1a1",
           "cell": {
             "cell_id": "A.static__ships",
             "scene": "s15_static_offset",
@@ -82,7 +82,7 @@
             "M7_size_window_dist_mean_m": 3.199,
             "M7_size_geom_mean": 0.38,
             "M7_size_decoded_mean": 0.611,
-            "M7_size_overread_ratio": 1.609,
+            "M7_decoded_over_geom_ratio": 1.609,
             "M7_dist_final_m": 3.103,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -260,7 +260,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__ships__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__ships__r2a1",
           "cell": {
             "cell_id": "A.static__ships",
             "scene": "s15_static_offset",
@@ -312,7 +312,7 @@
             "M7_size_window_dist_mean_m": 2.961,
             "M7_size_geom_mean": 0.412,
             "M7_size_decoded_mean": 0.604,
-            "M7_size_overread_ratio": 1.466,
+            "M7_decoded_over_geom_ratio": 1.466,
             "M7_dist_final_m": 2.982,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -490,7 +490,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__ships__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__ships__r3a1",
           "cell": {
             "cell_id": "A.static__ships",
             "scene": "s15_static_offset",
@@ -542,7 +542,7 @@
             "M7_size_window_dist_mean_m": 2.938,
             "M7_size_geom_mean": 0.414,
             "M7_size_decoded_mean": 0.598,
-            "M7_size_overread_ratio": 1.447,
+            "M7_decoded_over_geom_ratio": 1.447,
             "M7_dist_final_m": 2.869,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -997,7 +997,7 @@
             0.598
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.466,
           "min": 1.447,
           "max": 1.609,
@@ -1081,7 +1081,7 @@
       "speed": "chip",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__ships__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__ships__r1a1",
           "cell": {
             "cell_id": "B.moving__ships",
             "scene": "s01_control_moving",
@@ -1133,7 +1133,7 @@
             "M7_size_window_dist_mean_m": 3.274,
             "M7_size_geom_mean": 0.371,
             "M7_size_decoded_mean": 0.634,
-            "M7_size_overread_ratio": 1.707,
+            "M7_decoded_over_geom_ratio": 1.707,
             "M7_dist_final_m": 3.353,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -1311,7 +1311,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__ships__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__ships__r2a1",
           "cell": {
             "cell_id": "B.moving__ships",
             "scene": "s01_control_moving",
@@ -1363,7 +1363,7 @@
             "M7_size_window_dist_mean_m": 3.013,
             "M7_size_geom_mean": 0.405,
             "M7_size_decoded_mean": 0.634,
-            "M7_size_overread_ratio": 1.565,
+            "M7_decoded_over_geom_ratio": 1.565,
             "M7_dist_final_m": 3.275,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -1541,7 +1541,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__ships__r3a2",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__ships__r3a2",
           "cell": {
             "cell_id": "B.moving__ships",
             "scene": "s01_control_moving",
@@ -1595,7 +1595,7 @@
             "M7_size_window_dist_mean_m": 3.124,
             "M7_size_geom_mean": 0.389,
             "M7_size_decoded_mean": 0.125,
-            "M7_size_overread_ratio": 0.321,
+            "M7_decoded_over_geom_ratio": 0.321,
             "M7_dist_final_m": 3.22,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -1918,7 +1918,7 @@
             0.634
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.636,
           "min": 1.565,
           "max": 1.707,
@@ -2013,7 +2013,7 @@
       "speed": "full",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a2",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__proven__r1a2",
           "cell": {
             "cell_id": "A.static__proven",
             "scene": "s15_static_offset",
@@ -2065,7 +2065,7 @@
             "M7_size_window_dist_mean_m": 2.84,
             "M7_size_geom_mean": 0.429,
             "M7_size_decoded_mean": 0.591,
-            "M7_size_overread_ratio": 1.38,
+            "M7_decoded_over_geom_ratio": 1.38,
             "M7_dist_final_m": 2.782,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -2242,7 +2242,7 @@
           "attempt": 2
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__proven__r2a1",
           "cell": {
             "cell_id": "A.static__proven",
             "scene": "s15_static_offset",
@@ -2294,7 +2294,7 @@
             "M7_size_window_dist_mean_m": 2.498,
             "M7_size_geom_mean": 0.491,
             "M7_size_decoded_mean": 0.609,
-            "M7_size_overread_ratio": 1.241,
+            "M7_decoded_over_geom_ratio": 1.241,
             "M7_dist_final_m": 2.269,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -2471,7 +2471,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__proven__r3a1",
           "cell": {
             "cell_id": "A.static__proven",
             "scene": "s15_static_offset",
@@ -2523,7 +2523,7 @@
             "M7_size_window_dist_mean_m": 2.651,
             "M7_size_geom_mean": 0.462,
             "M7_size_decoded_mean": 0.609,
-            "M7_size_overread_ratio": 1.319,
+            "M7_decoded_over_geom_ratio": 1.319,
             "M7_dist_final_m": 2.254,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -2974,7 +2974,7 @@
             0.609
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.319,
           "min": 1.241,
           "max": 1.38,
@@ -3071,7 +3071,7 @@
       "speed": "full",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__proven__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__proven__r1a1",
           "cell": {
             "cell_id": "B.moving__proven",
             "scene": "s01_control_moving",
@@ -3123,7 +3123,7 @@
             "M7_size_window_dist_mean_m": 2.605,
             "M7_size_geom_mean": 0.469,
             "M7_size_decoded_mean": 0.61,
-            "M7_size_overread_ratio": 1.301,
+            "M7_decoded_over_geom_ratio": 1.301,
             "M7_dist_final_m": 2.616,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -3300,7 +3300,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__proven__r2a2",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__proven__r2a2",
           "cell": {
             "cell_id": "B.moving__proven",
             "scene": "s01_control_moving",
@@ -3352,7 +3352,7 @@
             "M7_size_window_dist_mean_m": 2.664,
             "M7_size_geom_mean": 0.457,
             "M7_size_decoded_mean": 0.608,
-            "M7_size_overread_ratio": 1.329,
+            "M7_decoded_over_geom_ratio": 1.329,
             "M7_dist_final_m": 2.603,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -3529,7 +3529,7 @@
           "attempt": 2
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__proven__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__proven__r3a1",
           "cell": {
             "cell_id": "B.moving__proven",
             "scene": "s01_control_moving",
@@ -3581,7 +3581,7 @@
             "M7_size_window_dist_mean_m": 2.696,
             "M7_size_geom_mean": 0.452,
             "M7_size_decoded_mean": 0.609,
-            "M7_size_overread_ratio": 1.346,
+            "M7_decoded_over_geom_ratio": 1.346,
             "M7_dist_final_m": 2.73,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -4032,7 +4032,7 @@
             0.609
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.329,
           "min": 1.301,
           "max": 1.346,
@@ -4129,7 +4129,7 @@
       "speed": "full",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_backend__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_backend__r1a1",
           "cell": {
             "cell_id": "B.moving__delta_backend",
             "scene": "s01_control_moving",
@@ -4181,7 +4181,7 @@
             "M7_size_window_dist_mean_m": 2.819,
             "M7_size_geom_mean": 0.431,
             "M7_size_decoded_mean": 0.61,
-            "M7_size_overread_ratio": 1.414,
+            "M7_decoded_over_geom_ratio": 1.414,
             "M7_dist_final_m": 2.832,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -4359,7 +4359,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_backend__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_backend__r2a1",
           "cell": {
             "cell_id": "B.moving__delta_backend",
             "scene": "s01_control_moving",
@@ -4411,7 +4411,7 @@
             "M7_size_window_dist_mean_m": 2.846,
             "M7_size_geom_mean": 0.428,
             "M7_size_decoded_mean": 0.615,
-            "M7_size_overread_ratio": 1.438,
+            "M7_decoded_over_geom_ratio": 1.438,
             "M7_dist_final_m": 2.856,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -4589,7 +4589,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_backend__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_backend__r3a1",
           "cell": {
             "cell_id": "B.moving__delta_backend",
             "scene": "s01_control_moving",
@@ -4641,7 +4641,7 @@
             "M7_size_window_dist_mean_m": 2.73,
             "M7_size_geom_mean": 0.446,
             "M7_size_decoded_mean": 0.614,
-            "M7_size_overread_ratio": 1.377,
+            "M7_decoded_over_geom_ratio": 1.377,
             "M7_dist_final_m": 2.774,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -5096,7 +5096,7 @@
             0.614
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.414,
           "min": 1.377,
           "max": 1.438,
@@ -5180,7 +5180,7 @@
       "speed": "full",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_camera__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_camera__r1a1",
           "cell": {
             "cell_id": "B.moving__delta_camera",
             "scene": "s01_control_moving",
@@ -5232,7 +5232,7 @@
             "M7_size_window_dist_mean_m": 3.041,
             "M7_size_geom_mean": 0.399,
             "M7_size_decoded_mean": 0.625,
-            "M7_size_overread_ratio": 1.565,
+            "M7_decoded_over_geom_ratio": 1.565,
             "M7_dist_final_m": 2.972,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -5409,7 +5409,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_camera__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_camera__r2a1",
           "cell": {
             "cell_id": "B.moving__delta_camera",
             "scene": "s01_control_moving",
@@ -5461,7 +5461,7 @@
             "M7_size_window_dist_mean_m": 3.015,
             "M7_size_geom_mean": 0.403,
             "M7_size_decoded_mean": 0.624,
-            "M7_size_overread_ratio": 1.55,
+            "M7_decoded_over_geom_ratio": 1.55,
             "M7_dist_final_m": 2.936,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -5638,7 +5638,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_camera__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_camera__r3a1",
           "cell": {
             "cell_id": "B.moving__delta_camera",
             "scene": "s01_control_moving",
@@ -5690,7 +5690,7 @@
             "M7_size_window_dist_mean_m": 2.81,
             "M7_size_geom_mean": 0.434,
             "M7_size_decoded_mean": 0.612,
-            "M7_size_overread_ratio": 1.411,
+            "M7_decoded_over_geom_ratio": 1.411,
             "M7_dist_final_m": 2.782,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -6144,7 +6144,7 @@
             0.612
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.55,
           "min": 1.411,
           "max": 1.565,
@@ -6228,7 +6228,7 @@
       "speed": "chip",
       "runs": [
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_speed__r1a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_speed__r1a1",
           "cell": {
             "cell_id": "B.moving__delta_speed",
             "scene": "s01_control_moving",
@@ -6280,7 +6280,7 @@
             "M7_size_window_dist_mean_m": 2.659,
             "M7_size_geom_mean": 0.459,
             "M7_size_decoded_mean": 0.607,
-            "M7_size_overread_ratio": 1.322,
+            "M7_decoded_over_geom_ratio": 1.322,
             "M7_dist_final_m": 2.626,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -6457,7 +6457,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_speed__r2a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_speed__r2a1",
           "cell": {
             "cell_id": "B.moving__delta_speed",
             "scene": "s01_control_moving",
@@ -6509,7 +6509,7 @@
             "M7_size_window_dist_mean_m": 2.759,
             "M7_size_geom_mean": 0.441,
             "M7_size_decoded_mean": 0.61,
-            "M7_size_overread_ratio": 1.384,
+            "M7_decoded_over_geom_ratio": 1.384,
             "M7_dist_final_m": 2.757,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -6686,7 +6686,7 @@
           "attempt": 1
         },
         {
-          "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_speed__r3a1",
+          "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_speed__r3a1",
           "cell": {
             "cell_id": "B.moving__delta_speed",
             "scene": "s01_control_moving",
@@ -6738,7 +6738,7 @@
             "M7_size_window_dist_mean_m": 2.627,
             "M7_size_geom_mean": 0.466,
             "M7_size_decoded_mean": 0.6,
-            "M7_size_overread_ratio": 1.288,
+            "M7_decoded_over_geom_ratio": 1.288,
             "M7_dist_final_m": 2.444,
             "M7_reached_hold": true,
             "M7_d_hold_target_m": 1.942,
@@ -7189,7 +7189,7 @@
             0.6
           ]
         },
-        "M7_size_overread_ratio": {
+        "M7_decoded_over_geom_ratio": {
           "median": 1.322,
           "min": 1.288,
           "max": 1.384,

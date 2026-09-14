@@ -339,6 +339,12 @@ fix does not help the himax configuration.
 
 ### `M7_size_overread_ratio`, for completeness
 
+> *Renamed 2026-09-14.* The metric is now `M7_decoded_over_geom_ratio` in every
+> stored record and scoreboard in this folder, values unchanged; the scorer was
+> renamed on 2026-09-12 (`4a47db7`) and the stored records were migrated so this
+> folder re-scores byte-identically again. The text below keeps the old name as
+> it was written.
+
 `A.static__proven` 1.304 → **0.964**, `B.moving__delta_speed` 1.369 → **1.014**,
 `B.moving__delta_backend` 1.397 → **1.033**. As the root-cause report's §5
 showed, this metric is algebraically `≈ d / 1.942` and measures the distance,

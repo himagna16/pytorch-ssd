@@ -1,5 +1,5 @@
 {
-  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/A.static__proven__r1a1",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/A.static__proven__r1a1",
   "cell": {
     "cell_id": "A.static__proven",
     "scene": "s15_static_offset",

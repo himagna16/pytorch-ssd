@@ -1,5 +1,5 @@
 {
-  "run_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/mirror_refly/control_mirror/runs/B.moving__delta_backend__r3a1",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-12-mirror-refly/mirror_control_suite/runs/B.moving__delta_backend__r3a1",
   "cell": {
     "cell_id": "B.moving__delta_backend",
     "scene": "s01_control_moving",
@@ -51,7 +51,7 @@
     "M7_size_window_dist_mean_m": 2.73,
     "M7_size_geom_mean": 0.446,
     "M7_size_decoded_mean": 0.614,
-    "M7_size_overread_ratio": 1.377,
+    "M7_decoded_over_geom_ratio": 1.377,
     "M7_dist_final_m": 2.774,
     "M7_reached_hold": true,
     "M7_d_hold_target_m": 1.942,
