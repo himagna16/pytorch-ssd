@@ -24,7 +24,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Probe: 0.692 at 2.0 m, 0.964 at 3.0 m."
+      "note": "Probe: 0.692 at 2.0 m, 0.964 at 3.0 m. MATTE 2026-09-14: was 0.692 at 2.0 m, 0.964 at 3.0 m (mirrored floor, 0.70 bar). Matte single-subject float/clean 0.461 at 2.0 m, 0.730 at 3.0 m (ladder 1.5/2.0/2.5/3.0/3.5 m: 0.298/0.461/0.163/0.730/0.563); chip/clean 0.549 / 0.749; float/himax 0.250 / 0.332; chip/himax 0.380 / 0.545. At its scene placement (3.0 m) it is now BELOW the 0.75 bar on every probe (it would have cleared the old 0.70 on float/clean and chip/clean only). Whole-scene preview at the drone start: 0.589. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes] VERIFIER 2026-09-14: the 0.730 above is placement-dependent - it is the cutout at x = 3.5 with the camera at x = 0.5. At this scene's DECLARED placement (x = 3.0, camera at the origin) the same 3.0 m range reads 0.560 float/clean, 0.462 chip/clean, 0.449 float/himax (5 draws), 0.520 chip/himax; sweep at 3.0 m range for subject x = 3.0/3.5/4.0/4.5/5.0: 0.560/0.729/0.583/0.655/0.681 float/clean. Whole-scene at the start reproduces 0.589 float/clean (chip 0.479, himax 0.399/0.464). Below the 0.75 bar on every probe at its placement, by 0.19-0.30, not 'just under'. [verifier probes: docs/eval_results/2026-09-14-scene-notes/probes/verifier/]"
     },
     {
       "name": "subj_teddy_low",
@@ -41,7 +41,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Probe: 0.419/0.748/0.683 - straddles the [0.45, 0.70) boundary band."
+      "note": "Probe: 0.419/0.748/0.683 - straddles the [0.45, 0.70) boundary band. MATTE 2026-09-14: was 0.419/0.748/0.683 at 1.5/2.5/3.5 m (mirrored floor). Matte single-subject float/clean 0.213/0.279/0.309, chip/clean 0.257/0.193/0.243, float/himax 0.343/0.180/0.325, chip/himax 0.368/0.214/0.393. PREMISE BROKEN for this subject: it no longer reaches the [0.45, 0.75) boundary band at any probed range on any probe, so 'should chatter around the boundary' will not happen. Recommendation (not made): if a boundary-band dummy is wanted, this cutout cannot supply it; the tall dummy at 3.0 m (0.730 float/clean, just under 0.75) is the nearest boundary-band object in the scene. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. VERIFIER 2026-09-14: teddy numbers reproduce (0.213/0.278/0.313 float/clean). The 'tall dummy at 3.0 m (0.730, just under 0.75)' fallback quotes a different placement; at its declared position the tall dummy reads 0.560 float/clean (0.46 chip, 0.45 himax), i.e. inside [0.45, 0.75) on float/clean only, not near the bar. [verifier probes: docs/eval_results/2026-09-14-scene-notes/probes/verifier/]"
     }
   ],
   "expected_behaviour": {
@@ -74,7 +74,7 @@
   "prediction": {
     "model": "champion",
     "outcome": "fails",
-    "rationale": "T1 renders 0.964 at 3.0 m; T2 should chatter around the boundary."
+    "rationale": "T1 renders 0.964 at 3.0 m; T2 should chatter around the boundary. MATTE 2026-09-14: 'T1 renders 0.964 at 3.0 m' -> 0.730 float/clean (0.749 chip, 0.33-0.55 himax), i.e. below the 0.75 bar; 'T2 chatters around the boundary' -> T2 is 0.18-0.39 everywhere. The static probe no longer supports the pre-registered 'fails'; treat it as contested until re-flown on the matte floor. Outcome left as registered. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. VERIFIER 2026-09-14: T1 at its declared placement reads 0.560 float/clean (not 0.730; see note), so the static gap to the 0.75 bar is larger than stated. Conclusion unchanged: 'fails' is unsupported by the static probe, treat as contested until re-flown. [verifier probes: docs/eval_results/2026-09-14-scene-notes/probes/verifier/]"
   },
   "limitations": [
     "COCO val2017 has no mannequin category. A human-scale teddy is the closest subject that could be built AND verified (human-shaped, human-sized, not a person, measured at 0.964 here). The P=1.00 mannequin figure in the Aug 28 error anatomy came from gallery inspection, not a labelled slice."

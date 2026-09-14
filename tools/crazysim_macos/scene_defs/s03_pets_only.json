@@ -27,7 +27,7 @@
         "amp_m": 0.5,
         "period_s": 26.0
       },
-      "note": "Probe: person confidence 0.999/0.995/0.976 at 1.5/2.5/3.5 m."
+      "note": "Probe: person confidence 0.999/0.995/0.976 at 1.5/2.5/3.5 m. MATTE 2026-09-14: was 0.999/0.995/0.976 at 1.5/2.5/3.5 m on the mirrored floor (0.70 bar). Matte single-subject: float/clean 0.926/0.869/0.526, chip/clean 0.781/0.660/0.536, float/himax 0.797/0.820/0.363, chip/himax 0.697/0.780/0.454. Above the 0.75 bar at 1.5-2.5 m on float/clean, below it at 3.5 m on every probe. Whole-scene preview at the drone start (dog 2.72 m, cat 2.38 m, both in view): 0.656. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
     },
     {
       "name": "subj_cat",
@@ -44,7 +44,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Probe: 0.944/0.971/0.751 at 1.5/2.5/3.5 m."
+      "note": "Probe: 0.944/0.971/0.751 at 1.5/2.5/3.5 m. MATTE 2026-09-14: was 0.944/0.971/0.751 at 1.5/2.5/3.5 m (mirrored floor, 0.70 bar). Matte single-subject: float/clean 0.390/0.687/0.300, chip/clean 0.527/0.501/0.246, float/himax 0.454/0.317/0.309, chip/himax 0.517/0.392/0.382 - below both bars at every probed range. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13."
     }
   ],
   "expected_behaviour": {
@@ -82,6 +82,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "fails",
-    "rationale": "The dog renders at 0.976-0.999, so three consecutive frames clear the 0.7 enter threshold almost immediately and the follower confirms and steers. A red s03 is the finding, not a blocker."
+    "rationale": "The dog renders at 0.976-0.999, so three consecutive frames clear the 0.7 enter threshold almost immediately and the follower confirms and steers. A red s03 is the finding, not a blocker. MATTE 2026-09-14: 'renders at 0.976-0.999' was measured on the mirrored floor; matte the dog reads 0.53-0.93 by range (see subject note), so 'clears the bar almost immediately' is no longer supported by the static probe at the dog's 2.7 m start range (0.656 whole-scene). The flight-level finding stands on its own evidence: docs/eval_results/2026-09-14-baseline-075 (2 of 4 fresh repeats at 0.75 exceed the pet gate). Premise (never chase an animal) holds; the pre-registered 'fails' is weaker than this rationale implies. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13."
   }
 }

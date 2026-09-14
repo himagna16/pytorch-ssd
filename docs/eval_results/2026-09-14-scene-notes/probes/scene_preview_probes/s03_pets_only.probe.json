@@ -1,0 +1,117 @@
+{
+ "model": "successor_qat_ep3_eval.pth",
+ "preview_t_s": 6.5,
+ "scripted_qpos_applied": [
+  {
+   "subject": "subj_dog",
+   "joint": "sway_subj_dog",
+   "q_m": 0.5
+  }
+ ],
+ "subject_positions_from": "mj_forward at preview_t_s (not the manifest's p0)",
+ "camera_positions": [
+  {
+   "cam_x": 0.0,
+   "frame_mean_dn": 147.7,
+   "frame_saturated_fraction": 0.2723,
+   "subjects": {
+    "subj_dog": {
+     "pos_xy": [
+      2.6,
+      -0.8
+     ],
+     "range_m": 2.72,
+     "bearing_deg": -17.1,
+     "half_width_deg": 4.4,
+     "in_model_fov": true
+    },
+    "subj_cat": {
+     "pos_xy": [
+      2.2,
+      0.9
+     ],
+     "range_m": 2.38,
+     "bearing_deg": 22.2,
+     "half_width_deg": 2.5,
+     "in_model_fov": true
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.656,
+    "x_bin_index": 6,
+    "x_value": 0.444,
+    "size_bucket_index": 0,
+    "size_value": 0.125
+   }
+  },
+  {
+   "cam_x": 0.8,
+   "frame_mean_dn": 164.7,
+   "frame_saturated_fraction": 0.3045,
+   "subjects": {
+    "subj_dog": {
+     "pos_xy": [
+      2.6,
+      -0.8
+     ],
+     "range_m": 1.97,
+     "bearing_deg": -24.0,
+     "half_width_deg": 6.1,
+     "in_model_fov": true
+    },
+    "subj_cat": {
+     "pos_xy": [
+      2.2,
+      0.9
+     ],
+     "range_m": 1.66,
+     "bearing_deg": 32.7,
+     "half_width_deg": 3.5,
+     "in_model_fov": false
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.574,
+    "x_bin_index": 7,
+    "x_value": 0.667,
+    "size_bucket_index": 0,
+    "size_value": 0.125
+   }
+  },
+  {
+   "cam_x": 1.6,
+   "frame_mean_dn": 179.1,
+   "frame_saturated_fraction": 0.3277,
+   "subjects": {
+    "subj_dog": {
+     "pos_xy": [
+      2.6,
+      -0.8
+     ],
+     "range_m": 1.28,
+     "bearing_deg": -38.7,
+     "half_width_deg": 9.3,
+     "in_model_fov": false
+    },
+    "subj_cat": {
+     "pos_xy": [
+      2.2,
+      0.9
+     ],
+     "range_m": 1.08,
+     "bearing_deg": 56.3,
+     "half_width_deg": 5.4,
+     "in_model_fov": false
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.385,
+    "x_bin_index": 2,
+    "x_value": -0.444,
+    "size_bucket_index": 0,
+    "size_value": 0.125
+   }
+  }
+ ],
+ "note": "Offline renders from the drone's eye line (y=0, z=0.8, facing +x) with every scripted subject placed at its declared law's value at preview_t_s. Scene-drift detector: a rebuilt scene that renders differently changes these."
+}

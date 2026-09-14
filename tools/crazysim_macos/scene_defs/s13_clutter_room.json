@@ -43,7 +43,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Probe: 0.888/0.413/0.674 - will sometimes cross the enter threshold."
+      "note": "Probe: 0.888/0.413/0.674 - will sometimes cross the enter threshold. MATTE 2026-09-14: was 0.888/0.413/0.674 at 1.5/2.5/3.5 m (mirrored floor, 0.70 bar). Matte single-subject float/clean 0.643/0.263/0.338, chip/clean 0.611/0.232/0.319, float/himax 0.480/0.228/0.255, chip/himax 0.599/0.223/0.394 - below both bars at every probed range on every probe, so 'will sometimes cross the enter threshold' is no longer supported by the static probe. In the built scene the chair is outside the model FOV from all three preview positions. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
     },
     {
       "name": "subj_clut_couch",
@@ -170,6 +170,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "contested",
-    "rationale": "The chair measured 0.413-0.888 depending on range."
+    "rationale": "The chair measured 0.413-0.888 depending on range. MATTE 2026-09-14: 'chair measured 0.413-0.888' -> 0.263-0.643 float/clean (max 0.643 at 1.5 m). The chair is no longer near-threshold; the basin-capture gate is still meaningful but is not stressed by this object. Whole-scene preview at the drone start (person 3.62 m): 0.988. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13."
   }
 }

@@ -1,7 +1,7 @@
 {
   "scene_id": "s12_dim_room",
   "title": "Dim room",
-  "purpose": "Geometry identical to s01, lighting dim but still informative. Tests dim-ROOM perception: the render keeps real tonal structure (~43 DN mean, ~89 distinct levels) and the low-light physics comes from the sensor model, not from throwing the frame away.",
+  "purpose": "Geometry identical to s01, lighting dim but still informative. Tests dim-ROOM perception: the render keeps real tonal structure (~43 DN mean, ~89 distinct levels) and the low-light physics comes from the sensor model, not from throwing the frame away. MATTE 2026-09-14: '~89 distinct levels' holds (89 at every probed range). '~43 DN mean' is the 1.0 m tile (43.4 DN); the frame reads 38.5 DN at 2.0 m and 34.6 DN at the declared 3.0 m. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13.",
   "lighting": "dim",
   "preview_cam_x": [
     0.0,
@@ -59,7 +59,7 @@
   "prediction": {
     "model": "champion",
     "outcome": "unknown",
-    "rationale": "Genuinely open. The frame now carries structure the model can use, but subject-vs-background contrast is only about +0.6 DN under flat dim light, so this leans on shape and texture rather than brightness. Pre-registered as unknown rather than guessed; it has not been flown."
+    "rationale": "Genuinely open. The frame now carries structure the model can use, but subject-vs-background contrast is only about +0.6 DN under flat dim light, so this leans on shape and texture rather than brightness. Pre-registered as unknown rather than guessed; it has not been flown. MATTE 2026-09-14: 'subject-vs-background contrast only about +0.6 DN' was measured at the closest tile; matte 2026-09-14 by segmentation: -0.3 DN at 1.0 m, +5.6 DN at 2.0 m, +9.4 DN at 3.0 m (the panel sits at 43.5 DN while the background darkens with range). Static probe, dim light: float/clean 0.961/0.998/0.995 at 3.0/2.0/1.0 m, chip/clean 0.940/0.998/0.987 (0.75 gate passes at all three), himax at 3.0 m 0.990 float / 0.979 chip; single-subject float/clean 0.939-0.998 over 2.0-3.5 m. The static probe is comfortably above the 0.75 bar; the prediction stays 'unknown' only because the scene is unflown and not in the CORE matrix (carried caveat: the dark-frame version was retired, see limitations). Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
   },
   "limitations": [
     "REDEFINED. This scene used to be a near-black DARK FRAME test (render mean 1.15 DN, max 2, three distinct grey levels in the whole frame, subject contrast -0.5 DN). That carried no recoverable information: because the renderer quantises to 8 bits before camera_model.py runs, himax_typical could only amplify quantisation (mean 25 DN at the 340-line/8x/3.00x ceiling) and himax_low_light returned mean 5 DN. It could not test dim-room perception.",

@@ -89,6 +89,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "contested",
-    "rationale": "The network emits one bearing and has no identity, so no target can be named a priori; the manifest names a policy instead."
+    "rationale": "The network emits one bearing and has no identity, so no target can be named a priori; the manifest names a policy instead. MATTE 2026-09-14: no numeric claims. Matte whole-scene preview 0.961/0.916/0.927 at cam x 0/1/2 m (both people in view at 3.6 m and 2.7 m; both outside the model FOV at cam x 2). Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
   }
 }

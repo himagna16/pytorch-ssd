@@ -24,7 +24,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Same cutout and placement as in s13. Probe there: 0.888/0.413/0.674 by range - the one object here that can cross the 0.70 enter threshold."
+      "note": "Same cutout and placement as in s13. Probe there: 0.888/0.413/0.674 by range - the one object here that can cross the 0.70 enter threshold. MATTE 2026-09-14: was 0.888/0.413/0.674 (mirrored floor, 0.70 bar). Matte single-subject float/clean 0.643/0.263/0.338 at 1.5/2.5/3.5 m, chip/clean 0.611/0.232/0.319, float/himax 0.480/0.228/0.255, chip/himax 0.599/0.223/0.394 - below both bars everywhere, so this is no longer 'the one object that can cross the enter threshold'. Whole-scene preview (chair outside the model FOV at all three cams): 0.525/0.126/0.351. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
     },
     {
       "name": "subj_clut_couch",
@@ -156,6 +156,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "probably passes",
-    "rationale": "None of these objects is person-shaped, and the empty-room baseline never confirmed. The chair is the risk: it probed at 0.888 from close range in s13, so a single sustained look at it from ~1.5 m could clear 0.70 three frames running. That is exactly what this cell is for."
+    "rationale": "None of these objects is person-shaped, and the empty-room baseline never confirmed. The chair is the risk: it probed at 0.888 from close range in s13, so a single sustained look at it from ~1.5 m could clear 0.70 three frames running. That is exactly what this cell is for. MATTE 2026-09-14: 'probed at 0.888 from close range ... could clear 0.70 three frames running' -> 0.643 at 1.5 m float/clean (0.611 chip), below the 0.75 bar; the named risk is weaker on the matte floor. The zero-false-follow purpose is unchanged. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13."
   }
 }

@@ -29,7 +29,7 @@
         "t_start_s": 22.0,
         "max_m": 5.0
       },
-      "note": "Leaves the model's FOV (|y| <= 3.2*tan35 = 2.24 m) at about t = 24.5 s."
+      "note": "Leaves the model's FOV (|y| <= 3.2*tan35 = 2.24 m) at about t = 24.5 s. MATTE 2026-09-14: the FOV bound 3.2*tan35 = 2.24 m is arithmetic and does not depend on the floor - holds."
     },
     {
       "name": "subj_dummy_tall",
@@ -46,7 +46,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Probe: 0.964 at 3.0 m."
+      "note": "Probe: 0.964 at 3.0 m. MATTE 2026-09-14: was 0.964 at 3.0 m (mirrored floor, 0.70 bar). Matte single-subject at 3.0 m: 0.730 float/clean, 0.749 chip/clean, 0.332 float/himax, 0.545 chip/himax - BELOW the shipped 0.75 bar on every probe (it would have cleared the old 0.70 on the clean paths). Whole-scene preview at t = 23 s with the person still in view: 0.886 at the drone start. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes] VERIFIER 2026-09-14: 0.730 is the cutout at x = 3.5 with the camera at x = 0.5, not this scene's placement. In this scene's own scene.xml after the person has left the FOV (t = 26 s and 28 s, person at y = 3.6/5.0, dummy at (3.2, -0.6), camera at the origin) the frame reads 0.498 float/clean, 0.434 chip/clean, 0.577 float/himax (5 draws 0.566-0.610), 0.517 chip/himax - below the 0.75 bar by 0.17-0.32 on every path. [verifier probes: docs/eval_results/2026-09-14-scene-notes/probes/verifier/]"
     }
   ],
   "expected_behaviour": {
@@ -74,7 +74,7 @@
   "prediction": {
     "model": "champion",
     "outcome": "fails by construction",
-    "rationale": "T1 renders 0.964, so after the person exits the dummy supplies three consecutive frames above 0.7 and the follower re-confirms on it. The acceptance bar for s14 is DOCUMENTATION: report the substitution latency and record that the current architecture, which has no target identity, cannot prevent it."
+    "rationale": "T1 renders 0.964, so after the person exits the dummy supplies three consecutive frames above 0.7 and the follower re-confirms on it. The acceptance bar for s14 is DOCUMENTATION: report the substitution latency and record that the current architecture, which has no target identity, cannot prevent it. MATTE 2026-09-14: 'T1 renders 0.964, so ... three consecutive frames above 0.7' -> T1 reads 0.730 float/clean at 3.0 m against a 0.75 bar, so the static probe no longer supports 'fails by construction'; whether the track transfers is now contested. The documentation purpose (substitution latency, no identity in the architecture) is unchanged. Outcome left as registered; recommend re-registering after a matte flight. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. VERIFIER 2026-09-14: in the built scene with the person gone the dummy reads 0.498 float / 0.434 chip / 0.577 himax (see note), so the static probe points AWAY from substitution rather than 'just under' the bar; 'fails by construction' remains unsupported and the outcome stays contested pending a matte flight. [verifier probes: docs/eval_results/2026-09-14-scene-notes/probes/verifier/]"
   },
   "limitations": [
     "This scene cannot pass. It measures an architectural gap; it does not close it."

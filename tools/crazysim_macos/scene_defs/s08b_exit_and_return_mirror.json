@@ -51,6 +51,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "probably passes",
-    "rationale": "Mirror of s08."
+    "rationale": "Mirror of s08. MATTE 2026-09-14: no numeric claims (mirror of s08's 1.40 m FOV arithmetic, which holds). Matte whole-scene preview at t = 20 s: 0.967/0.968/0.837 at 2.0/1.5/1.0 m. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
   }
 }

@@ -24,7 +24,7 @@
       "motion": {
         "type": "static"
       },
-      "note": "Same COCO cutout, same height and same position as scenes/static_offset, which run_acceptance.sh builds with --person-x 3.5 --person-y -1.0."
+      "note": "Same COCO cutout, same height and same position as scenes/static_offset, which run_acceptance.sh builds with --person-x 3.5 --person-y -1.0. MATTE 2026-09-14: geometry unchanged. The '1.1 deg / closed to 2.3 m' baseline in purpose is a Sep 10 flight on the mirrored floor and is NOT re-derived here. Matte whole-scene preview: 0.906 at 3.64 m, 0.845 at 2.69 m (cam x 2 puts the person outside the model FOV: 0.319). Same person cutout as s01, whose single-subject matte numbers (1.000/0.992/0.975 at 2.0/3.0/3.5 m float/clean) apply. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
     }
   ],
   "expected_behaviour": {

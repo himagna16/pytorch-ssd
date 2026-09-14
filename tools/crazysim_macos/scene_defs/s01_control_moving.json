@@ -64,6 +64,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "passes",
-    "rationale": "Same geometry as the published moving baseline."
+    "rationale": "Same geometry as the published moving baseline. MATTE 2026-09-14: no probe-number claims here; the '2.7 deg / 99.6%' baseline in purpose is a Sep 10 flight on the mirrored floor and is NOT re-derived here (matte flights live in docs/eval_results/2026-09-13-matte-baseline and 2026-09-14-baseline-075). Static matte probe of this person: whole-scene preview 0.980/1.000/0.996 at 3.0/2.0/1.0 m; single-subject float/clean 1.000/0.992/0.975 at 2.0/3.0/3.5 m, chip/clean 0.998/0.973/0.946, himax at 3.0 m 0.964 float / 0.943 chip - above the 0.75 bar everywhere. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
   }
 }

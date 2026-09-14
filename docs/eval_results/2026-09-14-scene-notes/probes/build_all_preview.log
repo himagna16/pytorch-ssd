@@ -1,0 +1,94 @@
+loading annotations into memory...
+Done (t=0.18s)
+creating index...
+index created!
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s01_control_moving  (1 subject(s), lighting default, floor reflectance 0)
+  preview at t = 5.0 s
+  cam x +0.00: mean 145.4 DN  conf 0.980  x +0.00  size 0.375
+  cam x +1.00: mean 162.5 DN  conf 1.000  x +0.00  size 0.625
+  cam x +2.00: mean 180.3 DN  conf 0.996  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s02_control_empty  (1 subject(s), lighting default, floor reflectance 0)
+  preview at t = 0.0 s
+  cam x +0.00: mean 146.3 DN  conf 0.303  x -0.89  size 0.125
+  cam x +1.00: mean 163.8 DN  conf 0.340  x -0.44  size 0.125
+  cam x +2.00: mean 180.5 DN  conf 0.423  x -0.44  size 0.125
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s03_pets_only  (2 subject(s), lighting default, floor reflectance 0)
+  preview at t = 6.5 s
+  cam x +0.00: mean 147.7 DN  conf 0.656  x +0.44  size 0.125
+  cam x +0.80: mean 164.7 DN  conf 0.574  x +0.67  size 0.125
+  cam x +1.60: mean 179.1 DN  conf 0.385  x -0.44  size 0.125
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s04_dummies_only  (2 subject(s), lighting default, floor reflectance 0)
+  preview at t = 0.0 s
+  cam x +0.00: mean 148.7 DN  conf 0.589  x +0.00  size 0.125
+  cam x +1.00: mean 167.8 DN  conf 0.403  x +0.00  size 0.375
+  cam x +2.00: mean 191.3 DN  conf 0.306  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s05_person_plus_pet  (2 subject(s), lighting default, floor reflectance 0)
+  preview at t = 6.0 s
+  cam x +0.00: mean 146.1 DN  conf 0.968  x -0.44  size 0.375
+  cam x +1.00: mean 164.0 DN  conf 0.776  x -0.44  size 0.625
+  cam x +2.00: mean 175.8 DN  conf 0.797  x -0.89  size 0.375
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s06_two_people  (2 subject(s), lighting default, floor reflectance 0)
+  preview at t = 5.5 s
+  cam x +0.00: mean 142.9 DN  conf 0.961  x -0.44  size 0.375
+  cam x +1.00: mean 157.9 DN  conf 0.916  x -0.44  size 0.625
+  cam x +2.00: mean 167.4 DN  conf 0.927  x -0.89  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s06b_two_people_one_leaves  (2 subject(s), lighting default, floor reflectance 0, 1 scripted drive(s))
+  preview at t = 5.5 s
+  cam x +0.00: mean 142.7 DN  conf 0.928  x -0.44  size 0.375
+  cam x +1.00: mean 157.8 DN  conf 0.923  x -0.44  size 0.375
+  cam x +2.00: mean 167.6 DN  conf 0.950  x -0.89  size 0.625
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s07_occlusion_reappear  (1 subject(s), lighting default, floor reflectance 0)
+  preview at t = 6.0 s
+  cam x +0.00: mean 156.9 DN  conf 0.940  x +0.00  size 0.375
+  cam x +1.00: mean 183.8 DN  conf 0.985  x +0.00  size 0.375
+  cam x +2.00: mean 177.3 DN  conf 0.999  x +0.00  size 0.625
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s08_exit_and_return  (1 subject(s), lighting default, floor reflectance 0, 1 scripted drive(s))
+  preview at t = 20.0 s
+  cam x +0.00: mean 145.3 DN  conf 0.999  x +0.22  size 0.625
+  cam x +0.50: mean 158.4 DN  conf 0.973  x +0.22  size 0.875
+  cam x +1.00: mean 169.4 DN  conf 0.974  x +0.22  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s08b_exit_and_return_mirror  (1 subject(s), lighting default, floor reflectance 0, 1 scripted drive(s))
+  preview at t = 20.0 s
+  cam x +0.00: mean 145.4 DN  conf 0.967  x +0.00  size 0.625
+  cam x +0.50: mean 158.5 DN  conf 0.968  x +0.00  size 0.875
+  cam x +1.00: mean 169.5 DN  conf 0.837  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s09_far_person  (1 subject(s), lighting default, floor reflectance 0, 1 scripted drive(s))
+  preview at t = 0.0 s
+  cam x +0.00: mean 145.7 DN  conf 0.701  x +0.00  size 0.125
+  cam x +1.00: mean 163.1 DN  conf 0.728  x +0.00  size 0.125
+  cam x +2.00: mean 179.3 DN  conf 0.975  x +0.00  size 0.375
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s10_near_threshold_person  (1 subject(s), lighting default, floor reflectance 0)
+  preview at t = 4.5 s
+  cam x +0.00: mean 144.9 DN  conf 0.461  x +0.00  size 0.875
+  cam x +0.30: mean 151.1 DN  conf 0.498  x +0.00  size 0.875
+  cam x +0.60: mean 148.9 DN  conf 0.691  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s11_backlit_person  (1 subject(s), lighting backlit, floor reflectance 0)
+  preview at t = 5.0 s
+  cam x +0.00: mean 103.0 DN  conf 0.381  x +0.00  size 0.125
+  cam x +1.00: mean 114.8 DN  conf 0.717  x +0.00  size 0.625
+  cam x +2.00: mean 105.9 DN  conf 0.984  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s12_dim_room  (1 subject(s), lighting dim, floor reflectance 0)
+  preview at t = 5.0 s
+  cam x +0.00: mean  34.6 DN  conf 0.961  x +0.00  size 0.375
+  cam x +1.00: mean  38.5 DN  conf 0.998  x +0.00  size 0.625
+  cam x +2.00: mean  43.4 DN  conf 0.995  x +0.00  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s13_clutter_room  (5 subject(s), lighting default, floor reflectance 0)
+  preview at t = 5.5 s
+  cam x +0.00: mean 150.9 DN  conf 0.988  x -0.22  size 0.375
+  cam x +1.00: mean 166.9 DN  conf 0.690  x -0.22  size 0.375
+  cam x +2.00: mean 174.6 DN  conf 0.999  x -0.22  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s14_target_substitution  (2 subject(s), lighting default, floor reflectance 0, 1 scripted drive(s))
+  preview at t = 23.0 s
+  cam x +0.00: mean 144.8 DN  conf 0.886  x -0.44  size 0.375
+  cam x +1.00: mean 162.5 DN  conf 0.444  x -0.44  size 0.625
+  cam x +2.00: mean 181.2 DN  conf 0.728  x -0.89  size 0.875
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s15_static_offset  (1 subject(s), lighting default, floor reflectance 0)
+  preview at t = 0.0 s
+  cam x +0.00: mean 145.0 DN  conf 0.906  x +0.44  size 0.375
+  cam x +1.00: mean 161.8 DN  conf 0.845  x +0.67  size 0.375
+  cam x +2.00: mean 176.8 DN  conf 0.319  x +0.89  size 0.125
+built /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s16_furniture_only  (4 subject(s), lighting default, floor reflectance 0)
+  preview at t = 0.0 s
+  cam x +0.00: mean 151.8 DN  conf 0.525  x -0.89  size 0.125
+  cam x +1.00: mean 168.1 DN  conf 0.126  x +0.89  size 0.125
+  cam x +2.00: mean 176.7 DN  conf 0.351  x +0.89  size 0.125

@@ -1,0 +1,57 @@
+ckpt /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth True
+loading annotations into memory...
+Done (t=0.14s)
+creating index...
+index created!
+chip ok {'backend': 'chip', 'onnx': '/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx', 'eps': 0.0002009823510888964, 'shadow': 'none', 'read
+
+== SINGLE s10_near_threshold_person/subj_person_target h=1.75 coco={'img_id': 42102, 'ann_id': 1728930} lighting=default manifest.floor_reflectance=0.0
+  r=1.25 subj@(3.50,0.00) cam_x=2.25 px=234 | float/clean 0.386 | chip/clean 0.265 gate=0 | himax(agent cfg 2x/20 seeds1234,1235) float 0.548[0.559, 0.537] chip 0.532[0.534, 0.531] | himax(3x/30 seeds7-9) float 0.522[0.525, 0.495, 0.546] chip 0.534[0.549, 0.505, 0.548] | {'mean_dn': 176.4, 'levels': 251, 'subj_minus_bg_dn': -29.8}
+  r=1.50 subj@(3.50,0.00) cam_x=2.00 px=204 | float/clean 0.450 | chip/clean 0.486 gate=0 | himax(agent cfg 2x/20 seeds1234,1235) float 0.753[0.775, 0.731] chip 0.708[0.726, 0.69] | himax(3x/30 seeds7-9) float 0.737[0.732, 0.735, 0.743] chip 0.736[0.764, 0.681, 0.762] | {'mean_dn': 173.0, 'levels': 250, 'subj_minus_bg_dn': -17.4}
+  r=1.75 subj@(3.50,0.00) cam_x=1.75 px=175 | float/clean 0.346 | chip/clean 0.314 gate=0 | {'mean_dn': 169.7, 'levels': 249, 'subj_minus_bg_dn': -12.0}
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px=122 | float/clean 0.550 | chip/clean 0.251 gate=0 | {'mean_dn': 160.7, 'levels': 247, 'subj_minus_bg_dn': 0.2}
+  r=3.00 subj@(3.50,0.00) cam_x=0.50 px=102 | float/clean 0.443 | chip/clean 0.405 gate=0 | {'mean_dn': 154.2, 'levels': 245, 'subj_minus_bg_dn': 6.4}
+  r=3.25 subj@(3.50,0.00) cam_x=0.25 px= 94 | float/clean 0.896 | chip/clean 0.603 gate=0 | himax(agent cfg 2x/20 seeds1234,1235) float 0.806[0.785, 0.828] chip 0.729[0.72, 0.738] | himax(3x/30 seeds7-9) float 0.810[0.791, 0.806, 0.833] chip 0.727[0.704, 0.722, 0.754] | {'mean_dn': 149.2, 'levels': 243, 'subj_minus_bg_dn': 13.6}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 87 | float/clean 0.821 | chip/clean 0.674 gate=0 | {'mean_dn': 144.5, 'levels': 244, 'subj_minus_bg_dn': 14.0}
+
+== SINGLE s04_dummies_only/subj_dummy_tall h=1.5 coco={'img_id': 253433, 'ann_id': 1159335} lighting=default manifest.floor_reflectance=0.0
+  r=2.00 subj@(3.00,0.00) cam_x=1.00 px=131 | float/clean 0.414 | chip/clean 0.371 gate=0 | {'mean_dn': 165.5, 'levels': 244, 'subj_minus_bg_dn': 43.9}
+  r=3.00 subj@(3.00,0.00) cam_x=0.00 px= 88 | float/clean 0.560 | chip/clean 0.462 gate=0 | himax(agent cfg 2x/20 seeds1234,1235) float 0.444[0.431, 0.456] chip 0.522[0.505, 0.54] | himax(3x/30 seeds7-9) float 0.446[0.424, 0.439, 0.474] chip 0.529[0.492, 0.514, 0.582] | {'mean_dn': 146.4, 'levels': 242, 'subj_minus_bg_dn': 61.2}
+
+== SINGLE s04_dummies_only/subj_teddy_low h=0.8 coco={'img_id': 409268, 'ann_id': 1160351} lighting=default manifest.floor_reflectance=0.0
+  r=1.50 subj@(3.50,0.00) cam_x=2.00 px= 93 | float/clean 0.213 | chip/clean 0.257 gate=0 | {'mean_dn': 187.1, 'levels': 199, 'subj_minus_bg_dn': 40.8}
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px= 56 | float/clean 0.278 | chip/clean 0.199 gate=0 | himax(agent cfg 2x/20 seeds1234,1235) float 0.180[0.178, 0.183] chip 0.211[0.213, 0.21] | himax(3x/30 seeds7-9) float 0.187[0.18, 0.192, 0.189] chip 0.233[0.23, 0.238, 0.232] | {'mean_dn': 165.8, 'levels': 186, 'subj_minus_bg_dn': 62.7}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 40 | float/clean 0.313 | chip/clean 0.248 gate=0 | {'mean_dn': 147.1, 'levels': 169, 'subj_minus_bg_dn': 82.3}
+
+== SINGLE s03_pets_only/subj_dog h=0.65 coco={'img_id': 297830, 'ann_id': 11206} lighting=default manifest.floor_reflectance=0.0
+  r=1.50 subj@(3.50,0.00) cam_x=2.00 px= 76 | float/clean 0.926 | chip/clean 0.781 gate=1 | {'mean_dn': 183.8, 'levels': 245, 'subj_minus_bg_dn': -8.4}
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px= 46 | float/clean 0.868 | chip/clean 0.662 gate=0 | {'mean_dn': 164.7, 'levels': 239, 'subj_minus_bg_dn': 14.1}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 33 | float/clean 0.528 | chip/clean 0.551 gate=0 | {'mean_dn': 146.5, 'levels': 225, 'subj_minus_bg_dn': 32.0}
+
+== SINGLE s03_pets_only/subj_cat h=0.4 coco={'img_id': 131938, 'ann_id': 50735} lighting=default manifest.floor_reflectance=0.0
+  r=1.50 subj@(3.50,0.00) cam_x=2.00 px= 47 | float/clean 0.390 | chip/clean 0.527 gate=0 | {'mean_dn': 181.8, 'levels': 196, 'subj_minus_bg_dn': -3.1}
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px= 28 | float/clean 0.687 | chip/clean 0.512 gate=0 | {'mean_dn': 164.3, 'levels': 178, 'subj_minus_bg_dn': 15.1}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 20 | float/clean 0.303 | chip/clean 0.260 gate=0 | {'mean_dn': 146.5, 'levels': 156, 'subj_minus_bg_dn': 34.2}
+
+== SINGLE s13_clutter_room/subj_clut_chair h=0.95 coco={'img_id': 446522, 'ann_id': 382375} lighting=default manifest.floor_reflectance=0.0
+  r=1.50 subj@(3.50,0.00) cam_x=2.00 px=110 | float/clean 0.643 | chip/clean 0.611 gate=0 | {'mean_dn': 185.4, 'levels': 219, 'subj_minus_bg_dn': 11.3}
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px= 66 | float/clean 0.263 | chip/clean 0.227 gate=0 | {'mean_dn': 165.0, 'levels': 205, 'subj_minus_bg_dn': 32.8}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 47 | float/clean 0.341 | chip/clean 0.328 gate=0 | {'mean_dn': 146.6, 'levels': 196, 'subj_minus_bg_dn': 51.2}
+
+== SINGLE s05_person_plus_pet/subj_pet_distractor h=0.65 coco={'img_id': 297830, 'ann_id': 11206} lighting=default manifest.floor_reflectance=0.0
+  r=2.50 subj@(3.50,0.00) cam_x=1.00 px= 46 | float/clean 0.868 | chip/clean 0.662 gate=0 | {'mean_dn': 164.7, 'levels': 239, 'subj_minus_bg_dn': 14.1}
+  r=3.00 subj@(3.50,0.00) cam_x=0.50 px= 38 | float/clean 0.651 | chip/clean 0.658 gate=0 | {'mean_dn': 157.0, 'levels': 235, 'subj_minus_bg_dn': 20.3}
+  r=3.50 subj@(3.50,0.00) cam_x=0.00 px= 33 | float/clean 0.528 | chip/clean 0.551 gate=0 | {'mean_dn': 146.5, 'levels': 225, 'subj_minus_bg_dn': 32.0}
+
+== WALKIN s09_far_person/subj_person_target manifest.floor_reflectance=0.0 built_at=2026-09-14T16:06:12Z
+  drive: {'joint': 'drive_subj_person_target', 'body': 'subj_person_target', 'axis': 'x', 'q0': 0.0, 'v': -0.25, 't_start': 18.0, 'lo': -2.9000000000000004, 'hi': None}
+  r=6.90 subj@(6.90,0.00) cam_x=0.00 px= 43 | float/clean 0.701 | chip/clean 0.801 gate=1 | himax(agent cfg 2x/20 seeds1234,1235) float 0.786[0.801, 0.771] chip 0.744[0.716, 0.772] | himax(3x/30 seeds7-9) float 0.772[0.749, 0.781, 0.786] chip 0.720[0.682, 0.756, 0.721] | {'mean_dn': 145.7, 'levels': 216, 'subj_minus_bg_dn': 45.5}
+  r=6.50 subj@(6.50,0.00) cam_x=0.00 px= 45 | float/clean 0.654 | chip/clean 0.768 gate=1 | {'mean_dn': 145.7, 'levels': 230, 'subj_minus_bg_dn': 47.6}
+  r=6.00 subj@(6.00,0.00) cam_x=0.00 px= 49 | float/clean 0.731 | chip/clean 0.693 gate=0 | {'mean_dn': 145.7, 'levels': 223, 'subj_minus_bg_dn': 43.4}
+  r=5.50 subj@(5.50,0.00) cam_x=0.00 px= 54 | float/clean 0.866 | chip/clean 0.890 gate=1 | {'mean_dn': 145.6, 'levels': 232, 'subj_minus_bg_dn': 44.5}
+
+== PATH s12_dim_room/subj_person manifest.floor_reflectance=0.0 built_at=2026-09-14T16:06:12Z
+  r=3.00 subj@(3.00,-0.00) cam_x=0.00 px= 99 | float/clean 0.961 | chip/clean 0.940 gate=1 | {'mean_dn': 34.6, 'levels': 89, 'subj_minus_bg_dn': 9.4}
+  r=2.00 subj@(3.00,-0.00) cam_x=1.00 px=149 | float/clean 0.998 | chip/clean 0.998 gate=1 | {'mean_dn': 38.5, 'levels': 89, 'subj_minus_bg_dn': 5.6}
+  r=1.00 subj@(3.00,-0.00) cam_x=2.00 px=244 | float/clean 0.995 | chip/clean 0.987 gate=1 | {'mean_dn': 43.4, 'levels': 89, 'subj_minus_bg_dn': -0.3}
+done in 4s

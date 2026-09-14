@@ -74,6 +74,6 @@
   "prediction": {
     "model": "champion",
     "outcome": "probably passes",
-    "rationale": "Re-confirmation after visibility loss is implemented; this is its first flight-level test."
+    "rationale": "Re-confirmation after visibility loss is implemented; this is its first flight-level test. MATTE 2026-09-14: no numeric claims. Matte whole-scene preview (t = 6 s, person at 3.5 m) 0.940/0.985/0.999 at cam x 0/1/2 m. The partition geometry is unchanged. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
   }
 }

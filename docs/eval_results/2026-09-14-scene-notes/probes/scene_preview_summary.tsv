@@ -1,0 +1,54 @@
+s01_control_moving	t=5.0	cam_x=+0.00	conf=0.980	size=0.375	mean=145.4DN	person@3.00m
+s01_control_moving	t=5.0	cam_x=+1.00	conf=1.000	size=0.625	mean=162.5DN	person@2.00m
+s01_control_moving	t=5.0	cam_x=+2.00	conf=0.996	size=0.875	mean=180.3DN	person@1.00m
+s02_control_empty	t=0.0	cam_x=+0.00	conf=0.303	size=0.125	mean=146.3DN	person@2.50m(OUT)
+s02_control_empty	t=0.0	cam_x=+1.00	conf=0.340	size=0.125	mean=163.8DN	person@3.50m(OUT)
+s02_control_empty	t=0.0	cam_x=+2.00	conf=0.423	size=0.125	mean=180.5DN	person@4.50m(OUT)
+s03_pets_only	t=6.5	cam_x=+0.00	conf=0.656	size=0.125	mean=147.7DN	dog@2.72m cat@2.38m
+s03_pets_only	t=6.5	cam_x=+0.80	conf=0.574	size=0.125	mean=164.7DN	dog@1.97m cat@1.66m(OUT)
+s03_pets_only	t=6.5	cam_x=+1.60	conf=0.385	size=0.125	mean=179.1DN	dog@1.28m(OUT) cat@1.08m(OUT)
+s04_dummies_only	t=0.0	cam_x=+0.00	conf=0.589	size=0.125	mean=148.7DN	dummy_tall@3.00m teddy_low@2.78m(OUT)
+s04_dummies_only	t=0.0	cam_x=+1.00	conf=0.403	size=0.375	mean=167.8DN	dummy_tall@2.00m teddy_low@1.98m(OUT)
+s04_dummies_only	t=0.0	cam_x=+2.00	conf=0.306	size=0.875	mean=191.3DN	dummy_tall@1.00m teddy_low@1.46m(OUT)
+s05_person_plus_pet	t=6.0	cam_x=+0.00	conf=0.968	size=0.375	mean=146.1DN	person_target@3.32m pet_distractor@2.73m
+s05_person_plus_pet	t=6.0	cam_x=+1.00	conf=0.776	size=0.625	mean=164.0DN	person_target@2.38m pet_distractor@1.91m(OUT)
+s05_person_plus_pet	t=6.0	cam_x=+2.00	conf=0.797	size=0.375	mean=175.8DN	person_target@1.50m(OUT) pet_distractor@1.36m(OUT)
+s06_two_people	t=5.5	cam_x=+0.00	conf=0.961	size=0.375	mean=142.9DN	person_a@3.64m person_b@3.60m
+s06_two_people	t=5.5	cam_x=+1.00	conf=0.916	size=0.625	mean=157.9DN	person_a@2.69m person_b@2.63m
+s06_two_people	t=5.5	cam_x=+2.00	conf=0.927	size=0.875	mean=167.4DN	person_a@1.80m(OUT) person_b@1.71m(OUT)
+s06b_two_people_one_leaves	t=5.5	cam_x=+0.00	conf=0.928	size=0.375	mean=142.7DN	person_a@3.64m person_b@3.64m
+s06b_two_people_one_leaves	t=5.5	cam_x=+1.00	conf=0.923	size=0.375	mean=157.8DN	person_a@2.69m person_b@2.69m
+s06b_two_people_one_leaves	t=5.5	cam_x=+2.00	conf=0.950	size=0.625	mean=167.6DN	person_a@1.80m(OUT) person_b@1.80m(OUT)
+s07_occlusion_reappear	t=6.0	cam_x=+0.00	conf=0.940	size=0.375	mean=156.9DN	person_target@3.50m
+s07_occlusion_reappear	t=6.0	cam_x=+1.00	conf=0.985	size=0.375	mean=183.8DN	person_target@2.50m
+s07_occlusion_reappear	t=6.0	cam_x=+2.00	conf=0.999	size=0.625	mean=177.3DN	person_target@1.50m
+s08_exit_and_return	t=20.0	cam_x=+0.00	conf=0.999	size=0.625	mean=145.3DN	person_target@2.00m
+s08_exit_and_return	t=20.0	cam_x=+0.50	conf=0.973	size=0.875	mean=158.4DN	person_target@1.50m
+s08_exit_and_return	t=20.0	cam_x=+1.00	conf=0.974	size=0.875	mean=169.4DN	person_target@1.00m
+s08b_exit_and_return_mirror	t=20.0	cam_x=+0.00	conf=0.967	size=0.625	mean=145.4DN	person_target@2.00m
+s08b_exit_and_return_mirror	t=20.0	cam_x=+0.50	conf=0.968	size=0.875	mean=158.5DN	person_target@1.50m
+s08b_exit_and_return_mirror	t=20.0	cam_x=+1.00	conf=0.837	size=0.875	mean=169.5DN	person_target@1.00m
+s09_far_person	t=0.0	cam_x=+0.00	conf=0.701	size=0.125	mean=145.7DN	person_target@6.90m
+s09_far_person	t=0.0	cam_x=+1.00	conf=0.728	size=0.125	mean=163.1DN	person_target@5.90m
+s09_far_person	t=0.0	cam_x=+2.00	conf=0.975	size=0.375	mean=179.3DN	person_target@4.90m
+s10_near_threshold_person	t=4.5	cam_x=+0.00	conf=0.461	size=0.875	mean=144.9DN	person_target@1.50m
+s10_near_threshold_person	t=4.5	cam_x=+0.30	conf=0.498	size=0.875	mean=151.1DN	person_target@1.20m
+s10_near_threshold_person	t=4.5	cam_x=+0.60	conf=0.691	size=0.875	mean=148.9DN	person_target@0.90m
+s11_backlit_person	t=5.0	cam_x=+0.00	conf=0.381	size=0.125	mean=103.0DN	person@3.00m
+s11_backlit_person	t=5.0	cam_x=+1.00	conf=0.717	size=0.625	mean=114.8DN	person@2.00m
+s11_backlit_person	t=5.0	cam_x=+2.00	conf=0.984	size=0.875	mean=105.9DN	person@1.00m
+s12_dim_room	t=5.0	cam_x=+0.00	conf=0.961	size=0.375	mean=34.6DN	person@3.00m
+s12_dim_room	t=5.0	cam_x=+1.00	conf=0.998	size=0.625	mean=38.5DN	person@2.00m
+s12_dim_room	t=5.0	cam_x=+2.00	conf=0.995	size=0.875	mean=43.4DN	person@1.00m
+s13_clutter_room	t=5.5	cam_x=+0.00	conf=0.988	size=0.375	mean=150.9DN	person_target@3.62m clut_chair@2.73m(OUT) clut_couch@3.55m(OUT) clut_plant@2.16m(OUT) clut_tv@4.92m
+s13_clutter_room	t=5.5	cam_x=+1.00	conf=0.690	size=0.375	mean=166.9DN	person_target@2.63m clut_chair@1.91m(OUT) clut_couch@2.76m(OUT) clut_plant@1.44m(OUT) clut_tv@4.03m
+s13_clutter_room	t=5.5	cam_x=+2.00	conf=0.999	size=0.875	mean=174.6DN	person_target@1.65m clut_chair@1.36m(OUT) clut_couch@2.15m(OUT) clut_plant@1.22m(OUT) clut_tv@3.20m(OUT)
+s14_target_substitution	t=23.0	cam_x=+0.00	conf=0.886	size=0.375	mean=144.8DN	person_target@3.32m dummy_tall@3.26m
+s14_target_substitution	t=23.0	cam_x=+1.00	conf=0.444	size=0.625	mean=162.5DN	person_target@2.38m dummy_tall@2.28m
+s14_target_substitution	t=23.0	cam_x=+2.00	conf=0.728	size=0.875	mean=181.2DN	person_target@1.50m(OUT) dummy_tall@1.34m(OUT)
+s15_static_offset	t=0.0	cam_x=+0.00	conf=0.906	size=0.375	mean=145.0DN	person_target@3.64m
+s15_static_offset	t=0.0	cam_x=+1.00	conf=0.845	size=0.375	mean=161.8DN	person_target@2.69m
+s15_static_offset	t=0.0	cam_x=+2.00	conf=0.319	size=0.125	mean=176.8DN	person_target@1.80m(OUT)
+s16_furniture_only	t=0.0	cam_x=+0.00	conf=0.525	size=0.125	mean=151.8DN	clut_chair@2.73m(OUT) clut_couch@3.55m(OUT) clut_plant@2.16m(OUT) clut_tv@4.92m
+s16_furniture_only	t=0.0	cam_x=+1.00	conf=0.126	size=0.125	mean=168.1DN	clut_chair@1.91m(OUT) clut_couch@2.76m(OUT) clut_plant@1.44m(OUT) clut_tv@4.03m
+s16_furniture_only	t=0.0	cam_x=+2.00	conf=0.351	size=0.125	mean=176.7DN	clut_chair@1.36m(OUT) clut_couch@2.15m(OUT) clut_plant@1.22m(OUT) clut_tv@3.20m(OUT)

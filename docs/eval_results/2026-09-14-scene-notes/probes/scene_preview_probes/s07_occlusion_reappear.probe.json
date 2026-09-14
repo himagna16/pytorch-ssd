@@ -1,0 +1,87 @@
+{
+ "model": "successor_qat_ep3_eval.pth",
+ "preview_t_s": 6.0,
+ "scripted_qpos_applied": [
+  {
+   "subject": "subj_person_target",
+   "joint": "sway_subj_person_target",
+   "q_m": 1.6
+  }
+ ],
+ "subject_positions_from": "mj_forward at preview_t_s (not the manifest's p0)",
+ "camera_positions": [
+  {
+   "cam_x": 0.0,
+   "frame_mean_dn": 156.9,
+   "frame_saturated_fraction": 0.2595,
+   "subjects": {
+    "subj_person_target": {
+     "pos_xy": [
+      3.5,
+      -0.0
+     ],
+     "range_m": 3.5,
+     "bearing_deg": -0.0,
+     "half_width_deg": 5.3,
+     "in_model_fov": true
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.94,
+    "x_bin_index": 4,
+    "x_value": 0.0,
+    "size_bucket_index": 1,
+    "size_value": 0.375
+   }
+  },
+  {
+   "cam_x": 1.0,
+   "frame_mean_dn": 183.8,
+   "frame_saturated_fraction": 0.2508,
+   "subjects": {
+    "subj_person_target": {
+     "pos_xy": [
+      3.5,
+      -0.0
+     ],
+     "range_m": 2.5,
+     "bearing_deg": -0.0,
+     "half_width_deg": 7.4,
+     "in_model_fov": true
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.985,
+    "x_bin_index": 4,
+    "x_value": 0.0,
+    "size_bucket_index": 1,
+    "size_value": 0.375
+   }
+  },
+  {
+   "cam_x": 2.0,
+   "frame_mean_dn": 177.3,
+   "frame_saturated_fraction": 0.2292,
+   "subjects": {
+    "subj_person_target": {
+     "pos_xy": [
+      3.5,
+      -0.0
+     ],
+     "range_m": 1.5,
+     "bearing_deg": -0.0,
+     "half_width_deg": 12.2,
+     "in_model_fov": true
+    }
+   },
+   "model": {
+    "visibility_confidence": 0.999,
+    "x_bin_index": 4,
+    "x_value": 0.0,
+    "size_bucket_index": 2,
+    "size_value": 0.625
+   }
+  }
+ ],
+ "note": "Offline renders from the drone's eye line (y=0, z=0.8, facing +x) with every scripted subject placed at its declared law's value at preview_t_s. Scene-drift detector: a rebuilt scene that renders differently changes these."
+}

@@ -29,7 +29,7 @@
         "t_start_s": 18.0,
         "max_m": 2.5
       },
-      "note": "Starts at y=-2.5 so the crossing happens after takeoff; in the model's FOV only while |y| <= 2.0*tan35 = 1.40 m."
+      "note": "Starts at y=-2.5 so the crossing happens after takeoff; in the model's FOV only while |y| <= 2.0*tan35 = 1.40 m. MATTE 2026-09-14: the FOV bound 2.0*tan35 = 1.40 m is arithmetic and does not depend on the floor - holds. Matte whole-scene preview at t = 20 s: 0.999/0.973/0.974 at 2.0/1.5/1.0 m. Bar: these notes were written against --vis-enter 0.70 on the 20%-reflective floor; 0.75 ships since 2026-09-13. [probe key: float/clean = champion float net via build_scene.py --preview preprocessing; chip = firmware preprocess + model_id_dory.onnx; himax = himax_typical camera, mean of 2 draws; single-subject probe = this cutout alone, static, straight ahead, camera on the eye line; full tables in docs/eval_results/2026-09-14-scene-notes]"
     }
   ],
   "expected_behaviour": {
