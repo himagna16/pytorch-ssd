@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Now the top open defect.** The champion drifts 0.97 m toward a dog against a 0.5 m limit, and false-alarms on pets and mannequins on 30% of frames. Cheapest possible fix is being flown now: raising the confirmation threshold, which on paper costs no accuracy at 0.75 and about 2% at 0.80 while removing the false alarms entirely | Finish the threshold flights. If configuration is not enough, fine-tune the champion against pets and mannequins, which needs Grace's preserve-QAT-alphas work to survive release || Confuser with QAT and hard-negative mining (3 epochs) | Sai | Epoch 2 passes the chip gates, but on the chip it matches the plain confuser: the release discards the learned QAT ranges | Implement the preserve-QAT-ranges release option (Grace's design) |
+| Making the champion safer around pets | Sai | **Fixed in simulation, for free.** The drone only locks on after three confident frames in a row; raising the confidence needed from 0.70 to 0.75 makes the pet case pass its half-metre limit on all four flights (worst drift 0.38 m, from 1.37 m) with no loss on people. 96 flights, four rules compared in one session. The paper estimate had pointed at 0.80, which in flight costs 12 points of accuracy on a standing person, so flying it changed the answer | Carry 0.75 into every copy of the rule: the host follower, the scorer, the chip emulator, the firmware contract, the C decoder and the GAP8 app, on a branch with a pull request because it is a shared contract. In progress now |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,22 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-13 (evening).** Flew the cheap fix for the champion's pet problem
+  rather than trusting the paper estimate, and the paper estimate was wrong. 96
+  flights compared four confirmation rules in one session. Raising the confidence
+  the drone needs before it locks on, from 0.70 to 0.75, makes the pet case pass
+  its safety limit on all four flights with no measurable loss on people. The
+  estimate had favoured 0.80; in flight that costs 12 points of accuracy on a
+  standing person, and in one flight the drone spent five seconds failing to
+  notice a person directly in front of it. Requiring four frames instead of
+  three does not work either. Also caught and corrected a mistake of my own: the
+  false-alarm figures I had written into the decision log were a pooled average
+  across three scenes, two of which are zero, not the pet scene itself. The same
+  threshold lives in several places, including the firmware that runs on the
+  drone, and all of them are being changed together on a branch so the
+  simulator and the real drone cannot end up confirming targets at different
+  bars.
 
 - **2026-09-13.** The team met over dinner (David and the other members; Prof.
   Mok was not there) and **chose the champion model.** The deciding evidence was
