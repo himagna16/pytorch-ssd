@@ -29,7 +29,18 @@ Newest entries at the top. Never delete entries — supersede them.
   1.369 m) with no measurable recall cost; 0.80 also passes the gate but costs
   12 points of tracking on a standing person; a 4-consecutive-frame rule at
   0.70 fails 2 of 4. The open-loop lead pointed at 0.80 and was wrong.
-  Adopt 0.75.** Evidence: `docs/eval_results/2026-09-13-champion-threshold/`; (b) if configuration is not enough,
+  Adopt 0.75.** Evidence: `docs/eval_results/2026-09-13-champion-threshold/`. *[Corrected 2026-09-14: a
+  fresh 56-flight suite at the shipped 0.75 default
+  (`docs/eval_results/2026-09-14-baseline-075/`) put the pet cell at 0.706 /
+  0.734 / 0.461 / 0.342 m, two of four repeats over the 0.5 m gate, on the same
+  scene, model and sensor seeds as the sweep. "Passes the pet gate 4 of 4" is
+  withdrawn; four seeded repeats did not pin the outcome. 0.75 stays, being
+  strictly better than 0.70 on every pet measure at no cost on people, and the
+  pet fix moves to (b). Also corrected: the M10 gate's band is [0.45, vis_enter),
+  so the higher bar widens it by construction; the three B.moving cells that
+  fail only on M10 still fail with unchanged confidence traces. OPEN:
+  re-calibrate M10's provisional line for 0.75 or make it report-only until
+  then.]* (b) if configuration is not enough,
   hard-negative fine-tune the champion on pets and mannequins, which is the
   confuser's recipe applied to the model we keep; (c) Grace's
   `--preserve-qat-alphas`, which is what would let such a fine-tune keep its

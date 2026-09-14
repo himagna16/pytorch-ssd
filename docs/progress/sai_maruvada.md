@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Done and merged (Sep 14).** Raising the confirmation bar from 0.70 to 0.75 makes the pet case pass its half-metre limit on every flight with no cost on people. Carried into every copy of the rule, including the firmware on the drone, as one reviewed change; every test suite passes together and a smoke flight at the new default confirmed it end to end | Confirm on real hardware at the lab session |
+| Making the champion safer around pets | Sai | **Improved and merged, not fixed (Sep 14).** Raising the confirmation bar from 0.70 to 0.75 is better on every pet measure and costs nothing on people, and it is now in every copy of the rule including the firmware. But I had reported it as passing the half-metre limit on the strength of four flights, and a fresh 56-flight run at the shipped setting put the pet case at 0.71, 0.73, 0.46 and 0.34 m, two of four over the limit. Four repeats were not enough to call it, and I should not have | The remaining fix is in training, not settings: fine-tune the champion against pets and mannequins, which needs Grace's preserve-QAT-alphas work to survive release. The lab session tests the current 0.75 as it is |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,24 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14 (afternoon).** Flew the full 14-case suite at the setting that
+  now ships, 56 flights, so the lab has a reference flown at the real
+  configuration. It corrected me. Yesterday I reported that the higher
+  confirmation bar fixed the pet problem, on the strength of four flights that
+  all passed. Four fresh flights at the same setting, same scene, same model,
+  same random seeds, gave 0.71, 0.73, 0.46 and 0.34 m against a 0.5 m limit: two
+  of four fail. The change stays, because it is better than before on every pet
+  measure and costs nothing on people, but "fixed" is withdrawn and recorded as
+  such. The lesson is about evidence, not the drone: four repeats were not enough
+  to call a pass, and the random seed does not pin what the drone does in the
+  loop. A second prediction of mine was also backwards: one scoring gate measures
+  the share of frames in the "uncertain" band, and raising the bar widens that
+  band by definition, so three cases still fail it for a reason unrelated to the
+  drone's behaviour. Flagged for the team as a gate to re-calibrate. Everything
+  else held: safety cases clean, no upsets in 56 flights, people tracked as
+  before. The real fix for pets is now a training job, which depends on Grace's
+  work.
 
 - **2026-09-14 (later).** Rehearsed the lab measurement chain end to end, the
   way the operator will run it next week, with the real champion network on
