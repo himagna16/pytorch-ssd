@@ -1,0 +1,9 @@
+scoreboard.py at re-score time: 0faade4b78ba973f...  (committed baseline was scored by 00a2a950...)
+re-scored 2026-09-14T14:09:59Z in /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rescore070 (56 run dirs copied from 2026-09-13-stability/data/matte_suite/runs + 2026-09-13-matte-baseline/runs)
+
+committed: /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-13-matte-baseline/scoreboards/scoreboard_matte14.json
+re-scored: /private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/rescore070/scoreboard.json
+suite verdict committed/re-scored: FAIL / FAIL
+counts committed/re-scored:        {'pass': 9, 'fail': 5, 'invalid': 0, 'characterised': 0} / {'pass': 9, 'fail': 5, 'invalid': 0, 'characterised': 0}
+compared 14 cells, 125 gate lines, 56 runs: 0 difference(s)
+exit 0

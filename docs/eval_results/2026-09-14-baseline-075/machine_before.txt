@@ -1,0 +1,13 @@
+date: 2026-09-14T14:03:57Z
+git HEAD: 4339b5c Progress record: lab chain rehearsed with the real model; metric-key debt paid
+git status tools/: 0 entries
+ 9:03  up 12 days,  8:37, 1 user, load averages: 5.96 5.28 5.28
+Apple M4 Pro
+12
+25769803776
+sim processes: none
+docker: aideck Up 3 days;
+/dev/disk3s5   460Gi   363Gi    68Gi    85%    3.5M  718M    0%   /System/Volumes/Data
+follow_person.py --vis-enter default line:
+245:    ap.add_argument("--vis-enter", type=float, default=0.75)
+trainenv onnxruntime: none (chip backend runs chip_infer_server.py under doryenv: 1.19.2)

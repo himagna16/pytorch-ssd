@@ -1,0 +1,217 @@
+==============================================================================================================
+1. VERDICTS  --  0.70 matte baseline (Sep 12, committed)  vs  0.75 reference baseline (this run)
+==============================================================================================================
+cell                     0.70   0.75   change           n   n  failed gates 0.70  ->  failed gates 0.75
+A.static__ships          PASS   PASS   same             4   4  -  ->  -
+B.moving__ships          PASS   PASS   same             4   4  -  ->  -
+C.empty__ships           PASS   PASS   same             4   4  -  ->  -
+D.occlusion__ships       PASS   FAIL   PASS -> FAIL     4   4  -  ->  M9_gt_visible_to_relatch_s
+E.furniture__ships       PASS   PASS   same             4   4  -  ->  -
+F.pets__ships            FAIL   FAIL   same             4   4  M6_max_horizontal_drift_m  ->  M6_max_horizontal_drift_m
+A.static__proven         PASS   PASS   same             4   4  -  ->  -
+B.moving__proven         FAIL   FAIL   same             4   4  M10_uncertain_fraction_present  ->  M10_uncertain_fraction_present
+C.empty__proven          PASS   PASS   same             4   4  -  ->  -
+D.occlusion__proven      FAIL   FAIL   same             4   4  M9_gt_visible_to_relatch_s  ->  M9_gt_visible_to_relatch_s
+E.furniture__proven      PASS   PASS   same             4   4  -  ->  -
+B.moving__delta_backend  FAIL   FAIL   same             4   4  M1_tracking_fraction,M10_uncertain_fraction_present  ->  M1_tracking_fraction,M10_uncertain_fraction_present
+B.moving__delta_camera   PASS   PASS   same             4   4  -  ->  -
+B.moving__delta_speed    FAIL   FAIL   same             4   4  M10_uncertain_fraction_present  ->  M10_uncertain_fraction_present
+
+  0.70: 9 PASS / 5 FAIL      0.75: 8 PASS / 6 FAIL      verdict changes: 1
+    D.occlusion__ships: PASS -> FAIL
+
+==============================================================================================================
+2. EVERY GATE THAT MOVED, PER CELL   (value = the scoreboard's aggregate: worst repeat for hard gates, median otherwise)
+==============================================================================================================
+
+--- A.static__ships   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present          0.101     0.2278  <= 0.15      REPORT_ONLY  REPORT_ONLY   WORSE
+    M1_tracking_fraction                     0.99     0.9905  >= 0.9       REPORT_ONLY  REPORT_ONLY   better
+    M2_heading_err_max_deg                      4       4.05  <= 12        PASS         PASS          WORSE
+    M2_heading_err_mean_deg                 3.335      2.985  <= 8         REPORT_ONLY  REPORT_ONLY   better
+    M3_centered_fraction_while_tracking     0.9785      0.981  >= 0         REPORT_ONLY  REPORT_ONLY   better
+    M7_dist_err_settled_mean_m             0.4055      0.397  <= 0.75      PASS         PASS          better
+
+--- B.moving__ships   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.0595     0.1079  <= 0.15      REPORT_ONLY  REPORT_ONLY   WORSE
+    M11_yaw_reversals_per_min                4.77       4.74  <= 24        REPORT_ONLY  REPORT_ONLY   better
+    M1_tracking_fraction                    0.986      0.992  >= 0.9       REPORT_ONLY  REPORT_ONLY   better
+    M2_heading_err_max_deg                   9.28      9.425  <= 14        PASS         PASS          WORSE
+    M2_heading_err_mean_deg                 3.255       3.32  <= 10        REPORT_ONLY  REPORT_ONLY   WORSE
+    M3_centered_fraction_while_tracking      0.974     0.9775  >= 0         REPORT_ONLY  REPORT_ONLY   better
+    M7_dist_err_settled_mean_m              0.526     0.5145  <= 0.75      PASS         PASS          better
+
+--- C.empty__ships   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_conf_max_absent                    0.4985     0.4975  <= 0.75      REPORT_ONLY  REPORT_ONLY   better (threshold 0.7 -> 0.75)
+
+--- D.occlusion__ships   (PASS -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M1_tracking_fraction                   0.6405      0.472  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M2_heading_err_mean_deg                  4.65       7.24  <= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M9_gt_halfvisible_to_relatch_s          2.108      3.061  <= 1.5       REPORT_ONLY  REPORT_ONLY   WORSE
+    M9_gt_visible_to_relatch_s              1.329       2.75  <= 1.5       PASS         FAIL          WORSE PASS->FAIL
+    M9_reconfirm_latency_s                 0.3125     0.3195  <= 1.5       REPORT_ONLY  REPORT_ONLY   WORSE
+    M9_track_outage_s                       11.92      13.65  >= 0         REPORT_ONLY  REPORT_ONLY   better
+
+--- E.furniture__ships   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_conf_max_absent                    0.4355     0.4425  <= 0.75      REPORT_ONLY  REPORT_ONLY   WORSE (threshold 0.7 -> 0.75)
+
+--- F.pets__ships   (FAIL -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_conf_max_absent                    0.8745      0.882  >= 0         REPORT_ONLY  REPORT_ONLY   better
+    M1_tracking_fraction                    0.137     0.0925  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M6_max_horizontal_drift_m               0.927      0.734  < 0.5        FAIL         FAIL          better
+    M8_false_follow_episodes                  5.5          3  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M8_false_follow_total_s                  2.35       1.55  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M8_max_drift_during_episode_m          0.0915      0.043  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M8_t_first_false_follow_s                 1.1      1.555  >= 0         REPORT_ONLY  REPORT_ONLY   better
+
+--- A.static__proven   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.0063     0.0172  <= 0.05      PASS         PASS          WORSE
+    M2_heading_err_max_deg                   1.76      1.765  <= 12        PASS         PASS          WORSE
+    M2_heading_err_mean_deg                   0.9        1.3  <= 4         PASS         PASS          WORSE
+    M3_centered_fraction_while_tracking     0.9865     0.9855  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M7_dist_err_settled_mean_m               0.11      0.173  <= 0.75      PASS         PASS          WORSE
+
+--- B.moving__proven   (FAIL -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.0599     0.0875  <= 0.05      FAIL         FAIL          WORSE
+    M11_yaw_reversals_per_min                4.72      4.785  <= 24        REPORT_ONLY  REPORT_ONLY   WORSE
+    M1_tracking_fraction                   0.9885      0.982  >= 0.95      PASS         PASS          WORSE
+    M2_heading_err_max_deg                   8.45      8.835  <= 14        PASS         PASS          WORSE
+    M2_heading_err_mean_deg                 3.055       3.05  <= 6         PASS         PASS          better
+    M3_centered_fraction_while_tracking      0.984      0.979  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M7_dist_err_settled_mean_m              0.246     0.2825  <= 0.75      PASS         PASS          WORSE
+
+--- C.empty__proven   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_conf_max_absent                      0.51     0.5095  <= 0.75      REPORT_ONLY  REPORT_ONLY   better (threshold 0.7 -> 0.75)
+
+--- D.occlusion__proven   (FAIL -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M1_tracking_fraction                   0.8695     0.8785  >= 0         REPORT_ONLY  REPORT_ONLY   better
+    M2_heading_err_mean_deg                 3.285       3.32  <= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M9_gt_halfvisible_to_relatch_s           3.24      2.182  <= 1         REPORT_ONLY  REPORT_ONLY   better
+    M9_gt_visible_to_relatch_s               3.24      2.182  <= 1         FAIL         FAIL          better
+    M9_reconfirm_latency_s                 0.4105      2.013  <= 1         REPORT_ONLY  REPORT_ONLY   WORSE
+    M9_track_outage_s                        3.24      2.182  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+
+--- E.furniture__proven   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_conf_max_absent                     0.464     0.4895  <= 0.75      REPORT_ONLY  REPORT_ONLY   WORSE (threshold 0.7 -> 0.75)
+
+--- B.moving__delta_backend   (FAIL -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.1071     0.1703  <= 0.05      FAIL         FAIL          WORSE
+    M11_yaw_reversals_per_min                4.69       4.85  <= 24        REPORT_ONLY  REPORT_ONLY   WORSE
+    M1_tracking_fraction                   0.9235      0.917  >= 0.95      FAIL         FAIL          WORSE
+    M2_heading_err_max_deg                  8.855      7.475  <= 14        PASS         PASS          better
+    M2_heading_err_mean_deg                   2.8       3.26  <= 6         PASS         PASS          WORSE
+    M3_centered_fraction_while_tracking      0.985      0.974  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M7_dist_err_settled_mean_m              0.264      0.305  <= 0.75      PASS         PASS          WORSE
+
+--- B.moving__delta_camera   (PASS -> PASS)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.0073     0.0268  <= 0.15      REPORT_ONLY  REPORT_ONLY   WORSE
+    M11_yaw_reversals_per_min               4.725      4.865  <= 24        REPORT_ONLY  REPORT_ONLY   WORSE
+    M2_heading_err_max_deg                  9.515      9.285  <= 14        PASS         PASS          better
+    M2_heading_err_mean_deg                  3.16        3.3  <= 8         REPORT_ONLY  REPORT_ONLY   WORSE
+    M3_centered_fraction_while_tracking      0.986      0.979  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M7_dist_err_settled_mean_m              0.443      0.424  <= 0.75      PASS         PASS          better
+
+--- B.moving__delta_speed   (FAIL -> FAIL)
+    gate                                     0.70       0.75  rule         0.70         0.75          note
+    M10_uncertain_fraction_present         0.0725     0.1074  <= 0.05      FAIL         FAIL          WORSE
+    M11_yaw_reversals_per_min                4.74       4.82  <= 24        REPORT_ONLY  REPORT_ONLY   WORSE
+    M1_tracking_fraction                    0.969      0.979  >= 0.93      PASS         PASS          better
+    M2_heading_err_max_deg                   10.6       9.24  <= 14        PASS         PASS          better
+    M2_heading_err_mean_deg                  3.03       3.17  <= 8         PASS         PASS          WORSE
+    M3_centered_fraction_while_tracking     0.9825      0.975  >= 0         REPORT_ONLY  REPORT_ONLY   WORSE
+    M7_dist_err_settled_mean_m             0.2585       0.27  <= 0.75      PASS         PASS          WORSE
+
+==============================================================================================================
+3. F.pets__ships -- M6 max horizontal drift per repeat, gate < 0.5 m on the WORST repeat
+==============================================================================================================
+  0.70 matte baseline    drift per repeat [(1, 0.927), (2, 0.408), (3, 0.802), (4, 0.574)]  worst 0.927  median 0.688  gate: FAIL
+                         episodes [6, 4, 5, 6]  tracked [0.193, 0.079, 0.181, 0.093]  first false-follow s [1.1, 1.1, 0.63, 1.41]  conf max absent [0.918, 0.825, 0.884, 0.865]
+  0.75 this run          drift per repeat [(1, 0.706), (2, 0.734), (3, 0.461), (4, 0.342)]  worst 0.734  median 0.584  gate: FAIL
+                         episodes [3, 4, 3, 3]  tracked [0.131, 0.133, 0.054, 0.047]  first false-follow s [1.4, 0.94, 1.71, 1.87]  conf max absent [0.892, 0.9, 0.872, 0.848]
+  reference points: threshold sweep 0.75 arm worst 0.376 m (0.162/0.309/0.289/0.376); post-merge smoke flight 0.484 m (commit b1a0108)
+
+==============================================================================================================
+4. B.moving cells that FAILED at 0.70 only on M10_uncertain_fraction_present (band [vis_exit, vis_enter), <= 0.05 median)
+==============================================================================================================
+  NOTE: the scorer's band is [0.45, vis_enter). At 0.75 the band is WIDER than at 0.70, so on an identical
+  confidence trace the fraction can only stay or rise. See reband_m10.txt for the same traces re-banded.
+  B.moving__proven         0.70  M10 median  0.0599 FAIL  (rule <= 0.05, kind gated)  per repeat [0.0497, 0.0842, 0.0511, 0.0687]   M1 0.9885 PASS   verdict FAIL
+  B.moving__proven         0.75  M10 median  0.0875 FAIL  (rule <= 0.05, kind gated)  per repeat [0.0747, 0.0957, 0.097, 0.0793]   M1 0.982 PASS   verdict FAIL
+  B.moving__delta_speed    0.70  M10 median  0.0725 FAIL  (rule <= 0.05, kind gated)  per repeat [0.041, 0.0844, 0.0843, 0.0607]   M1 0.969 PASS   verdict FAIL
+  B.moving__delta_speed    0.75  M10 median  0.1074 FAIL  (rule <= 0.05, kind gated)  per repeat [0.0875, 0.1369, 0.0958, 0.1191]   M1 0.979 PASS   verdict FAIL
+  B.moving__delta_backend  0.70  M10 median  0.1071 FAIL  (rule <= 0.05, kind gated)  per repeat [0.1045, 0.1136, 0.0788, 0.1097]   M1 0.9235 FAIL   verdict FAIL
+  B.moving__delta_backend  0.75  M10 median  0.1703 FAIL  (rule <= 0.05, kind gated)  per repeat [0.1564, 0.1797, 0.1641, 0.1765]   M1 0.917 FAIL   verdict FAIL
+  B.moving__ships          0.70  M10 median  0.0595 REPORT_ONLY (rule <= 0.15, kind provisional)  per repeat [0.0456, 0.0574, 0.0823, 0.0617]   M1 0.986 REPORT_ONLY   verdict PASS
+  B.moving__ships          0.75  M10 median  0.1079 REPORT_ONLY (rule <= 0.15, kind provisional)  per repeat [0.1025, 0.0816, 0.1134, 0.1538]   M1 0.992 REPORT_ONLY   verdict PASS
+  B.moving__delta_camera   0.70  M10 median  0.0073 REPORT_ONLY (rule <= 0.15, kind provisional)  per repeat [0.0041, 0.0125, 0.0036, 0.0105]   M1 0.996 REPORT_ONLY   verdict PASS
+  B.moving__delta_camera   0.75  M10 median  0.0268 REPORT_ONLY (rule <= 0.15, kind provisional)  per repeat [0.0211, 0.029, 0.0276, 0.0261]   M1 0.996 REPORT_ONLY   verdict PASS
+
+==============================================================================================================
+5. D.occlusion -- M9 relatch per repeat (UNRELIABLE across sessions; reported, not used for any conclusion)
+==============================================================================================================
+  D.occlusion__ships     0.70  M9 median   1.329 PASS  (rule <= 1.5)  per repeat [1.247, 1.412, 1.411, 1.24]  tracked [0.686, 0.65, 0.631, 0.554]  verdict PASS
+  D.occlusion__ships     0.75  M9 median    2.75 FAIL  (rule <= 1.5)  per repeat [3.603, 1.897, 0.62, 9.076]  tracked [0.488, 0.694, 0.378, 0.456]  verdict FAIL
+  D.occlusion__proven    0.70  M9 median    3.24 FAIL  (rule <= 1.0)  per repeat [2.641, 3.507, 2.974, 4.313]  tracked [0.88, 0.89, 0.851, 0.859]  verdict FAIL
+  D.occlusion__proven    0.75  M9 median   2.182 FAIL  (rule <= 1.0)  per repeat [2.501, 1.796, 5.428, 1.863]  tracked [0.876, 0.894, 0.838, 0.881]  verdict FAIL
+
+==============================================================================================================
+6. EVERYTHING THAT GOT WORSE AT 0.75 (by the gate's own operator; 45 gate lines)
+==============================================================================================================
+  A.static__proven         M10_uncertain_fraction_present     gated            0.0063 -> 0.0172    (rule <= 0.05)  PASS -> PASS
+  A.static__proven         M2_heading_err_max_deg             gated              1.76 -> 1.765     (rule <= 12)  PASS -> PASS
+  A.static__proven         M2_heading_err_mean_deg            gated               0.9 -> 1.3       (rule <= 4)  PASS -> PASS
+  A.static__proven         M3_centered_fraction_while_tracking report           0.9865 -> 0.9855    (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  A.static__proven         M7_dist_err_settled_mean_m         gated              0.11 -> 0.173     (rule <= 0.75)  PASS -> PASS
+  A.static__ships          M10_uncertain_fraction_present     provisional       0.101 -> 0.2278    (rule <= 0.15)  REPORT_ONLY -> REPORT_ONLY
+  A.static__ships          M2_heading_err_max_deg             gated                 4 -> 4.05      (rule <= 12)  PASS -> PASS
+  B.moving__delta_backend  M10_uncertain_fraction_present     gated            0.1071 -> 0.1703    (rule <= 0.05)  FAIL -> FAIL  <-- verdict-relevant
+  B.moving__delta_backend  M11_yaw_reversals_per_min          provisional        4.69 -> 4.85      (rule <= 24)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_backend  M1_tracking_fraction               gated            0.9235 -> 0.917     (rule >= 0.95)  FAIL -> FAIL  <-- verdict-relevant
+  B.moving__delta_backend  M2_heading_err_mean_deg            gated               2.8 -> 3.26      (rule <= 6)  PASS -> PASS
+  B.moving__delta_backend  M3_centered_fraction_while_tracking report            0.985 -> 0.974     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_backend  M7_dist_err_settled_mean_m         gated             0.264 -> 0.305     (rule <= 0.75)  PASS -> PASS
+  B.moving__delta_camera   M10_uncertain_fraction_present     provisional      0.0073 -> 0.0268    (rule <= 0.15)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_camera   M11_yaw_reversals_per_min          provisional       4.725 -> 4.865     (rule <= 24)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_camera   M2_heading_err_mean_deg            provisional        3.16 -> 3.3       (rule <= 8)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_camera   M3_centered_fraction_while_tracking report            0.986 -> 0.979     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_speed    M10_uncertain_fraction_present     gated            0.0725 -> 0.1074    (rule <= 0.05)  FAIL -> FAIL  <-- verdict-relevant
+  B.moving__delta_speed    M11_yaw_reversals_per_min          provisional        4.74 -> 4.82      (rule <= 24)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_speed    M2_heading_err_mean_deg            gated              3.03 -> 3.17      (rule <= 8)  PASS -> PASS
+  B.moving__delta_speed    M3_centered_fraction_while_tracking report           0.9825 -> 0.975     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__delta_speed    M7_dist_err_settled_mean_m         gated            0.2585 -> 0.27      (rule <= 0.75)  PASS -> PASS
+  B.moving__proven         M10_uncertain_fraction_present     gated            0.0599 -> 0.0875    (rule <= 0.05)  FAIL -> FAIL  <-- verdict-relevant
+  B.moving__proven         M11_yaw_reversals_per_min          provisional        4.72 -> 4.785     (rule <= 24)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__proven         M1_tracking_fraction               gated            0.9885 -> 0.982     (rule >= 0.95)  PASS -> PASS
+  B.moving__proven         M2_heading_err_max_deg             gated              8.45 -> 8.835     (rule <= 14)  PASS -> PASS
+  B.moving__proven         M3_centered_fraction_while_tracking report            0.984 -> 0.979     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__proven         M7_dist_err_settled_mean_m         gated             0.246 -> 0.2825    (rule <= 0.75)  PASS -> PASS
+  B.moving__ships          M10_uncertain_fraction_present     provisional      0.0595 -> 0.1079    (rule <= 0.15)  REPORT_ONLY -> REPORT_ONLY
+  B.moving__ships          M2_heading_err_max_deg             gated              9.28 -> 9.425     (rule <= 14)  PASS -> PASS
+  B.moving__ships          M2_heading_err_mean_deg            provisional       3.255 -> 3.32      (rule <= 10)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__proven      M2_heading_err_mean_deg            report            3.285 -> 3.32      (rule <= 0)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__proven      M9_reconfirm_latency_s             report           0.4105 -> 2.013     (rule <= 1)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__proven      M9_track_outage_s                  report             3.24 -> 2.182     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__ships       M1_tracking_fraction               report           0.6405 -> 0.472     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__ships       M2_heading_err_mean_deg            report             4.65 -> 7.24      (rule <= 0)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__ships       M9_gt_halfvisible_to_relatch_s     provisional       2.108 -> 3.061     (rule <= 1.5)  REPORT_ONLY -> REPORT_ONLY
+  D.occlusion__ships       M9_gt_visible_to_relatch_s         gated             1.329 -> 2.75      (rule <= 1.5)  PASS -> FAIL  <-- verdict-relevant
+  D.occlusion__ships       M9_reconfirm_latency_s             report           0.3125 -> 0.3195    (rule <= 1.5)  REPORT_ONLY -> REPORT_ONLY
+  E.furniture__proven      M10_conf_max_absent                report            0.464 -> 0.4895    (rule <= 0.75)  REPORT_ONLY -> REPORT_ONLY
+  E.furniture__ships       M10_conf_max_absent                report           0.4355 -> 0.4425    (rule <= 0.75)  REPORT_ONLY -> REPORT_ONLY
+  F.pets__ships            M1_tracking_fraction               characterised     0.137 -> 0.0925    (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  F.pets__ships            M8_false_follow_episodes           characterised       5.5 -> 3         (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  F.pets__ships            M8_false_follow_total_s            characterised      2.35 -> 1.55      (rule >= 0)  REPORT_ONLY -> REPORT_ONLY
+  F.pets__ships            M8_max_drift_during_episode_m      characterised    0.0915 -> 0.043     (rule >= 0)  REPORT_ONLY -> REPORT_ONLY

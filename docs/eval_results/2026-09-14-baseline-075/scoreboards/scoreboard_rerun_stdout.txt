@@ -1,0 +1,17 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/scoreboard.md
+suite verdict: FAIL  {'pass': 8, 'fail': 6, 'invalid': 0, 'characterised': 0}
+  PASS           A.static__ships
+  PASS           B.moving__ships
+  PASS           C.empty__ships
+  FAIL           D.occlusion__ships   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__ships
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m
+  PASS           A.static__proven
+  FAIL           B.moving__proven   failed: M10_uncertain_fraction_present
+  PASS           C.empty__proven
+  FAIL           D.occlusion__proven   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__proven
+  FAIL           B.moving__delta_backend   failed: M1_tracking_fraction,M10_uncertain_fraction_present
+  PASS           B.moving__delta_camera
+  FAIL           B.moving__delta_speed   failed: M10_uncertain_fraction_present

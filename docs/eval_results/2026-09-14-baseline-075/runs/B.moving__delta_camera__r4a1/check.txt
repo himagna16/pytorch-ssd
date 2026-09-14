@@ -1,0 +1,1 @@
+VALID   {"sim_wall_ratio": 1.0, "achieved_hz": 12.706, "requested_hz": 0.0, "min_step_gap_ms": 52.7, "torn_fraction": 0.0, "z_max": 0.86, "truth_covers_window": true}

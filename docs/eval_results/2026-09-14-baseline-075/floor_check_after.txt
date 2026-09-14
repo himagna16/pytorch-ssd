@@ -1,0 +1,6 @@
+s15_static_offset        manifest=0.0  xml=reflectance="0" 
+s01_control_moving       manifest=0.0  xml=reflectance="0" 
+s02_control_empty        manifest=0.0  xml=reflectance="0" 
+s07_occlusion_reappear   manifest=0.0  xml=reflectance="0" 
+s16_furniture_only       manifest=0.0  xml=reflectance="0" 
+s03_pets_only            manifest=0.0  xml=reflectance="0" 

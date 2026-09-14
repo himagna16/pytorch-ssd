@@ -1,0 +1,132 @@
+[09:08:45] acceptance2 suite=core cells=14 repeats=4 flights=56 out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075
+[09:08:45] flight 1/56  A.static__ships  repeat 1 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[09:09:47]   -> VALID
+[09:09:47] flight 2/56  A.static__ships  repeat 2 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[09:10:49]   -> VALID
+[09:10:49] flight 3/56  A.static__ships  repeat 3 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[09:11:50]   -> VALID
+[09:11:50] flight 4/56  A.static__ships  repeat 4 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[09:12:52]   -> VALID
+[09:12:52] flight 5/56  B.moving__ships  repeat 1 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[09:13:59]   -> VALID
+[09:13:59] flight 6/56  B.moving__ships  repeat 2 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[09:15:06]   -> VALID
+[09:15:06] flight 7/56  B.moving__ships  repeat 3 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[09:16:13]   -> VALID
+[09:16:13] flight 8/56  B.moving__ships  repeat 4 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[09:17:19]   -> VALID
+[09:17:19] flight 9/56  C.empty__ships  repeat 1 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[09:18:11]   -> VALID
+[09:18:11] flight 10/56  C.empty__ships  repeat 2 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[09:19:03]   -> VALID
+[09:19:03] flight 11/56  C.empty__ships  repeat 3 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[09:19:55]   -> VALID
+[09:19:55] flight 12/56  C.empty__ships  repeat 4 attempt 1  (s02_control_empty, chip/himax_typical/chip, 35s)
+[09:20:46]   -> VALID
+[09:20:47] flight 13/56  D.occlusion__ships  repeat 1 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[09:22:03]   -> VALID
+[09:22:03] flight 14/56  D.occlusion__ships  repeat 2 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[09:23:20]   -> VALID
+[09:23:20] flight 15/56  D.occlusion__ships  repeat 3 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[09:24:37]   -> VALID
+[09:24:37] flight 16/56  D.occlusion__ships  repeat 4 attempt 1  (s07_occlusion_reappear, chip/himax_typical/chip, 60s)
+[09:25:54]   -> VALID
+[09:25:54] flight 17/56  E.furniture__ships  repeat 1 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[09:26:45]   -> VALID
+[09:26:45] flight 18/56  E.furniture__ships  repeat 2 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[09:27:37]   -> VALID
+[09:27:37] flight 19/56  E.furniture__ships  repeat 3 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[09:28:29]   -> VALID
+[09:28:29] flight 20/56  E.furniture__ships  repeat 4 attempt 1  (s16_furniture_only, chip/himax_typical/chip, 35s)
+[09:29:21]   -> VALID
+[09:29:21] flight 21/56  F.pets__ships  repeat 1 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[09:30:12]   -> VALID
+[09:30:12] flight 22/56  F.pets__ships  repeat 2 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[09:31:04]   -> VALID
+[09:31:04] flight 23/56  F.pets__ships  repeat 3 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[09:31:56]   -> VALID
+[09:31:56] flight 24/56  F.pets__ships  repeat 4 attempt 1  (s03_pets_only, chip/himax_typical/chip, 35s)
+[09:32:48]   -> VALID
+[09:32:48] flight 25/56  A.static__proven  repeat 1 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[09:33:50]   -> VALID
+[09:33:50] flight 26/56  A.static__proven  repeat 2 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[09:34:52]   -> VALID
+[09:34:52] flight 27/56  A.static__proven  repeat 3 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[09:35:54]   -> VALID
+[09:35:54] flight 28/56  A.static__proven  repeat 4 attempt 1  (s15_static_offset, float/clean/full, 45s)
+[09:36:56]   -> VALID
+[09:36:56] flight 29/56  B.moving__proven  repeat 1 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[09:38:03]   -> VALID
+[09:38:03] flight 30/56  B.moving__proven  repeat 2 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[09:39:10]   -> VALID
+[09:39:10] flight 31/56  B.moving__proven  repeat 3 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[09:40:18]   -> VALID
+[09:40:18] flight 32/56  B.moving__proven  repeat 4 attempt 1  (s01_control_moving, float/clean/full, 50s)
+[09:41:25]   -> VALID
+[09:41:25] flight 33/56  C.empty__proven  repeat 1 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[09:42:17]   -> VALID
+[09:42:17] flight 34/56  C.empty__proven  repeat 2 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[09:43:09]   -> VALID
+[09:43:09] flight 35/56  C.empty__proven  repeat 3 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[09:44:01]   -> VALID
+[09:44:01] flight 36/56  C.empty__proven  repeat 4 attempt 1  (s02_control_empty, float/clean/full, 35s)
+[09:44:53]   -> VALID
+[09:44:53] flight 37/56  D.occlusion__proven  repeat 1 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[09:46:10]   -> VALID
+[09:46:10] flight 38/56  D.occlusion__proven  repeat 2 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[09:47:27]   -> VALID
+[09:47:27] flight 39/56  D.occlusion__proven  repeat 3 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[09:48:44]   -> VALID
+[09:48:44] flight 40/56  D.occlusion__proven  repeat 4 attempt 1  (s07_occlusion_reappear, float/clean/full, 60s)
+[09:50:01]   -> VALID
+[09:50:01] flight 41/56  E.furniture__proven  repeat 1 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[09:50:53]   -> VALID
+[09:50:53] flight 42/56  E.furniture__proven  repeat 2 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[09:51:45]   -> VALID
+[09:51:45] flight 43/56  E.furniture__proven  repeat 3 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[09:52:37]   -> VALID
+[09:52:37] flight 44/56  E.furniture__proven  repeat 4 attempt 1  (s16_furniture_only, float/clean/full, 35s)
+[09:53:29]   -> VALID
+[09:53:29] flight 45/56  B.moving__delta_speed  repeat 1 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[09:54:37]   -> VALID
+[09:54:37] flight 46/56  B.moving__delta_speed  repeat 2 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[09:55:44]   -> VALID
+[09:55:44] flight 47/56  B.moving__delta_speed  repeat 3 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[09:56:51]   -> VALID
+[09:56:51] flight 48/56  B.moving__delta_speed  repeat 4 attempt 1  (s01_control_moving, float/clean/chip, 50s)
+[09:57:58]   -> VALID
+[09:57:58] flight 49/56  B.moving__delta_camera  repeat 1 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[09:59:05]   -> VALID
+[09:59:05] flight 50/56  B.moving__delta_camera  repeat 2 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[10:00:12]   -> VALID
+[10:00:12] flight 51/56  B.moving__delta_camera  repeat 3 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[10:01:19]   -> VALID
+[10:01:19] flight 52/56  B.moving__delta_camera  repeat 4 attempt 1  (s01_control_moving, float/himax_typical/full, 50s)
+[10:02:26]   -> VALID
+[10:02:26] flight 53/56  B.moving__delta_backend  repeat 1 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[10:03:33]   -> VALID
+[10:03:33] flight 54/56  B.moving__delta_backend  repeat 2 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[10:04:40]   -> VALID
+[10:04:40] flight 55/56  B.moving__delta_backend  repeat 3 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[10:05:46]   -> VALID
+[10:05:46] flight 56/56  B.moving__delta_backend  repeat 4 attempt 1  (s01_control_moving, chip/clean/full, 50s)
+[10:06:53]   -> VALID
+[10:06:53] all flights done in 58 min; scoring
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/scoreboard.md
+suite verdict: FAIL  {'pass': 8, 'fail': 6, 'invalid': 0, 'characterised': 0}
+  PASS           A.static__ships
+  PASS           B.moving__ships
+  PASS           C.empty__ships
+  FAIL           D.occlusion__ships   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__ships
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m
+  PASS           A.static__proven
+  FAIL           B.moving__proven   failed: M10_uncertain_fraction_present
+  PASS           C.empty__proven
+  FAIL           D.occlusion__proven   failed: M9_gt_visible_to_relatch_s
+  PASS           E.furniture__proven
+  FAIL           B.moving__delta_backend   failed: M1_tracking_fraction,M10_uncertain_fraction_present
+  PASS           B.moving__delta_camera
+  FAIL           B.moving__delta_speed   failed: M10_uncertain_fraction_present
+[10:06:54] artifacts: /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075

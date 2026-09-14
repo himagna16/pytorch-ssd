@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.static__ships",
+  "scene": "s15_static_offset",
+  "scene_class": "A",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 2,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2/s15_static_offset",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/runs/A.static__ships__r2a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-baseline-075/runs/A.static__ships__r2a1/truth.csv",
+  "sensor_seed": 1002,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "core"
+}
