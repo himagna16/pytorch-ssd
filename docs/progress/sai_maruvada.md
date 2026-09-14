@@ -49,7 +49,7 @@ processor. In the first three weeks I:
 | Simulator: chip latency and saved frames | Sai | Done Sep 12: reviewed and committed | None |
 | Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2. **One correction Sep 12:** the suite's explanation of the distance failure was wrong and is withdrawn - see the row below and docs/eval_results/2026-09-12-distance | Fix the simulator's reflective floor and the size decode, then re-fly the distance cells (see the distance-keeping row); team uses the pet result to pick champion vs confuser |
 | Flashing the champion app onto a real AI-deck | Sai | **Blocked:** the GAP8 build tooling (`aideck-gap8-examples/tools/build/`) is missing on this Mac, so nothing can be flashed yet | Restore the toolchain and write a flash runbook before the lab session |
-| Rehearsing the real-frame capture before the lab | Sai | In progress: the capture tool has never run against a real byte stream, so a mock streamer is being built to rehearse it | Prove capture + scoring end to end at home |
+| Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 
@@ -135,6 +135,24 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14 (later).** Rehearsed the lab measurement chain end to end, the
+  way the operator will run it next week, with the real champion network on
+  realistic rendered frames rather than the stand-in models used until now. The
+  left/right mirror check, which decides whether the drone would steer the wrong
+  way toward a person, gave the correct verdict in every direction and a second
+  agent reproduced each one from a fresh shell. The real network sees a rendered
+  person at every distance; an earlier "0% detection" scare was the crude test
+  drawings, not the model. The test path that exercises this with the real
+  network had never been run before today; it passes 39 of 39. One thing the
+  operator must expect: a plush toy or pet registers as a false track at the new
+  threshold, and the protocol now says to record it rather than be surprised.
+  Typing every command exactly as written turned up seven documentation
+  mistakes, fixed. Also paid a debt of my own: two evidence folders scored
+  before a metric was renamed no longer reproduced their own numbers; migrated
+  the stored records so they do again, values untouched. A full 14-case suite is
+  now flying at the shipped 0.75 setting to give the lab a reference flown at
+  the configuration that actually ships.
 
 - **2026-09-14.** Merged the threshold change (pull request #2 on the team fork)
   after checking it: the new bar is live in every copy of the rule, and the
