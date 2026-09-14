@@ -3,6 +3,28 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-14 (late)** — **Do not ship an exit-bar change.** Sweeping the
+  follower's release threshold (0.45 shipped, 0.55, 0.65; enter fixed at 0.75;
+  27 interleaved flights) does NOT close the pet gate: all three arms fail, worst
+  repeats 0.998 / 0.691 / 0.682 m against 0.5 m. 0.55 points the right way but is
+  not callable at n=7 (Wilcoxon p=0.219). 0.65 is rejected outright: it is worse
+  than 0.55 on pets and costs people badly — on a walking person, losses go
+  0 → 2 → 6 and tracking 0.9915 → 0.9405 → 0.8635 across the arms, because the
+  enter bar stays 0.75 so every drop costs a full re-confirm cycle. Pointing and
+  station-keeping are unaffected. **The pet fix is therefore a TRAINING job**
+  (hard-negative fine-tune, needing Grace's `--preserve-qat-alphas`), not a
+  configuration one; config is now exhausted on both thresholds.
+
+- **2026-09-14 (late), methodological, and it constrains how we read our own
+  numbers** — The pet cell drifts BETWEEN SESSIONS by about as much as the
+  effects we chase. An identical 0.45 configuration scored 11 of 16 in the
+  afternoon and 2 of 7 in the evening: same scene hash, same floor, same
+  thresholds, same seed rule, same tool hashes (Mann-Whitney p=0.089). RULE
+  ADOPTED: compare this cell only WITHIN one interleaved session; never quote a
+  pet pass rate from one session as the rate. The afternoon's 69% is one
+  session's value. Within-session interleaved designs remain sound — this is why
+  every comparison since Sep 12 has used them.
+
 - **2026-09-14 (evening)** — The pet gate at the shipped 0.75 is a **weighted
   coin, not a pass**: 11 of 16 fresh flights under 0.5 m, 95% interval
   [0.41, 0.89]; pooled over 24 flights, 17 pass. Scored as the suite scores it

@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Measured properly (Sep 14): at the shipped 0.75 the pet limit is a weighted coin.** Sixteen fresh flights: 11 pass, 5 fail, with a 95% range of roughly 40% to 90% per flight, so as the suite scores it the case fails about three times in four. Every flight locks onto the dog within a couple of seconds; what decides pass or fail is whether the lock lets go, and that is governed by a second setting, the release bar, that nobody has swept. The seed that fixes the camera noise does not fix the outcome | Sweep the release bar next; it is cheap and it is the mechanism. Training remains the fix if that is not enough |
+| Making the champion safer around pets | Sai | **Settings are exhausted; the fix is retraining.** Both of the drone's two thresholds have now been swept in flight. Raising the lock-on bar helped but does not reliably clear the limit; raising the let-go bar does not close it either, and at the higher value it makes the drone drop a walking person six times where it previously never lost them. Pointing and distance-keeping are untouched throughout | Fine-tune the model against pets and mannequins. That needs Grace's preserve-QAT-alphas work for the gains to survive release, so it is the thing to unblock |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,21 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14 (late).** Swept the drone's second threshold, the one that decides
+  when it lets go of something it is following. This was the lead from the
+  earlier run, and the answer is no: it does not close the pet problem at any
+  value tested, and turning it up hurts. At the highest setting the drone dropped
+  a walking person six times across two flights, where at the shipped setting it
+  never lost them once, because every drop then costs a full re-acquisition. So
+  both settings are now exhausted in flight and the remaining fix is retraining
+  the model against pets, which depends on Grace's work. The more important
+  finding is about our own measurements: the same configuration scored 11 of 16
+  in the afternoon and 2 of 7 in the evening, on the same scene with the same
+  seeds. This test case drifts between sessions by as much as the effects we are
+  chasing, so from now on it is only compared within a single interleaved run,
+  and the afternoon's 69% is one session's number rather than the rate. That also
+  means I should not have offered it as a rate.
 
 - **2026-09-14 (evening).** Used a spare hour to answer the question I got
   wrong this morning properly. Sixteen fresh pet flights at the shipped
