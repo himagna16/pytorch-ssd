@@ -214,9 +214,12 @@ Each candidate was re-released with a 576-image evaluation pack (rep16 plus
 
 This agrees with the unbiased 1,000-image check (95.9 / 93.0 / 94.9%). The
 confuser's earlier 88.5% came from a 96-image pack and was noise. All three
-chip networks are cleared; which one ships is a team decision between the
-champion's recall and the confuser models' 3x lower pet/mannequin false
-alarms. Releases: `logs/plain_follow_eval576_*` on `successor-release`.
+chip networks are cleared. **Decided 2026-09-13: the champion ships** — the
+head-to-head flight comparison found the confuser cannot follow a person at all
+(0.000 tracking on a standing subject), which the still-image recall gap of
+0.683 vs 0.511 badly understated, because confirmation needs three consecutive
+frames above threshold and a slightly less confident model almost never strings
+three together. See `docs/eval_results/2026-09-13-champion-vs-confuser/`. Releases: `logs/plain_follow_eval576_*` on `successor-release`.
 
 ## Sep 11, 2026 — Unbiased float-vs-chip check on 1,000 random images (Sai)
 

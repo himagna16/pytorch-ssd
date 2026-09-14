@@ -114,8 +114,8 @@ makes.** Today's plan assumes nobody decided, and takes the 10-minute cut.
   law cannot reach 1.94 m at all — its floor is 2.43 m by construction. **Do not
   retrain or re-tune the size head**, and do not spend lab minutes on this.
   M4's frames are still the right way to check the size head against reality later.
-- **Champion vs confuser comparison.** That is a pending team decision, and as noted it
-  needs no hardware at all once M4 is done.
+- **Champion vs confuser comparison.** **Settled 2026-09-13: the champion ships.**
+  Nothing in this session depends on it, and no lab minutes should go to it.
 - **Tuning `k_yaw`, the follower, or any controller gain.**
 - **Recording a demo video for Prof. Mok.** The simulator demo already exists.
 - **Installing anything.** Joining the deck's WiFi access point takes the laptop off the

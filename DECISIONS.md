@@ -3,6 +3,34 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-13** — **The team ships the CHAMPION.** Decided at the team dinner
+  (Sai, David and the other members; Prof. Mok not present). The deciding
+  evidence is the first head-to-head flight comparison, 48 flights interleaved in
+  one session, `docs/eval_results/2026-09-13-champion-vs-confuser/`: the confuser
+  fixes the pet problem (0.215 m drift, passes the 0.5 m gate, zero false-follow
+  episodes) and **cannot follow a person** — 0.000 tracking on a standing subject
+  across four flights, and it fails heading and distance on both person cells.
+  Re-scoring every threshold from 0.45 to 0.80 showed the champion at its own
+  operating point beats the confuser at every threshold on both axes at once, so
+  the gap is not a tuning artefact. Rejected: shipping the confuser, and shipping
+  neither pending a joint QAT+confuser run, because the champion is already
+  deployable and the confuser's deficit is not a configuration problem.
+
+  **This makes the champion's pet false-alarm rate the project's top open defect**
+  (0.974 m drift against a 0.5 m gate; 30.2% per-frame on pets and mannequins).
+  Order of attack, cheapest first: (a) raise the follower's confirmation
+  threshold — open-loop re-scoring says 0.75 costs no recall and cuts false
+  alarms 2.5x, and 0.80 costs about 2% recall for zero, and this needs no
+  retraining, re-export or new release; (b) if configuration is not enough,
+  hard-negative fine-tune the champion on pets and mannequins, which is the
+  confuser's recipe applied to the model we keep; (c) Grace's
+  `--preserve-qat-alphas`, which is what would let such a fine-tune keep its
+  learned ranges through the release instead of having them recalibrated away.
+
+  Caveat recorded with the decision: the threshold figures above are open-loop
+  re-scoring of frames flown at 0.70, so they are a lead and are being settled in
+  closed loop now.
+
 - **2026-09-12** — The published cause of the distance failure is WITHDRAWN. The
   Sep 11 suite's "the size head over-reads by 1.6-1.8x" is wrong: the MuJoCo
   groundplane material carries `reflectance="0.2"`, a 20% mirror, so the renderer
