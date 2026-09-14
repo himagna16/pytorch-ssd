@@ -288,12 +288,32 @@ def t_split(tmp):
 
 @check("follower_track reproduces the 3-frame confirmation rule")
 def t_track(tmp):
-    starts, flags = S.follower_track([0.8, 0.8, 0.8, 0.8, 0.1, 0.9, 0.9, 0.9], 0.7, 0.45, 3)
+    starts, flags = S.follower_track([0.8, 0.8, 0.8, 0.8, 0.1, 0.9, 0.9, 0.9], 0.75, 0.45, 3)
     need(flags == [False, False, True, True, False, False, False, True], f"flags {flags}")
     need(starts == 2, f"starts {starts}, want 2")
-    starts, _ = S.follower_track([0.8, 0.8, 0.6, 0.8, 0.8], 0.7, 0.45, 3)
+    starts, _ = S.follower_track([0.8, 0.8, 0.6, 0.8, 0.8], 0.75, 0.45, 3)
     need(starts == 0, f"two short bursts must not confirm a track, got {starts} starts")
-    return "confirm at 3 frames >=0.7, drop below 0.45, re-confirm: 2 starts"
+    # the bar is strict: 0.72 confirmed at the old 0.70 default and must not at 0.75
+    starts, _ = S.follower_track([0.72, 0.72, 0.72, 0.72], 0.75, 0.45, 3)
+    need(starts == 0, f"0.72 x 4 must not confirm at enter 0.75, got {starts} starts")
+    starts, _ = S.follower_track([0.72, 0.72, 0.72, 0.72], 0.70, 0.45, 3)
+    need(starts == 1, f"0.72 x 4 confirms at enter 0.70 (control), got {starts} starts")
+    return "confirm at 3 frames >=0.75, drop below 0.45, re-confirm: 2 starts; 0.72 x 4 confirms only at 0.70"
+
+
+@check("the scorer's default follower rule is the shipped one: enter 0.75, exit 0.45, 3 frames")
+def t_default_rule(tmp):
+    # follow_person.py --vis-enter moved 0.70 -> 0.75 on 2026-09-13; this scorer
+    # replays the same rule and must ship the same default, or its track% and
+    # false-track counts describe a follower that no longer exists
+    d = tmp / "defaults"
+    write_clip(d, 2.5, -25, 1, n=2, take=1, seed=21)
+    write_clip(d, 2.5, 25, 1, n=2, take=2, seed=22)
+    code, out, js = run_scorer([d])
+    need(js is not None and "follower" in js, "scores.json has no 'follower' block")
+    got = (js["follower"]["enter"], js["follower"]["exit"], js["follower"]["confirm_frames"])
+    need(got == (0.75, 0.45, 3), f"default follower rule {got}, want (0.75, 0.45, 3)")
+    return f"scores.json follower = {got}"
 
 
 @check("MIRROR CHECK = PASS on a correct folder (+ bins, size, no false tracks)")

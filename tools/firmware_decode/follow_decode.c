@@ -6,7 +6,7 @@ int32_t follow_raw_thresh(double p, double eps_out) {
 }
 
 void follow_vis_cfg_default(follow_vis_cfg_t *cfg, double eps_out) {
-    cfg->enter_raw = follow_raw_thresh(0.7, eps_out);
+    cfg->enter_raw = follow_raw_thresh(0.75, eps_out);
     cfg->exit_raw = follow_raw_thresh(0.45, eps_out);
     cfg->confirm_frames = 3;
 }

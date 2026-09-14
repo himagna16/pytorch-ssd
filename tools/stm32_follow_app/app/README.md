@@ -132,6 +132,12 @@ packet still shows up as late (a 1 s hold measured as ~1000 ms).
 
 ## Results in CrazySim (Sep 11, 2026)
 
+**Bar note (2026-09-13).** These flights used the GAP8 emulator at the bar of the time,
+`{4216, -998, 3}` (enter p >= 0.70). The team then moved the enter bar to p >= 0.75
+(`{5467, -998, 3}` for the champion; `docs/firmware_contract.md`, change note). Nothing
+below has been re-flown at 0.75; the "p >= 0.7" in the empty-room row is the bar that
+flight ran at, not the current one.
+
 Eight flights, each on a fresh headless sim with the follow-app firmware, the person's true
 position logged, and `gap8_emulator.py` as the AI deck (every new camera frame, ~14.9 Hz,
 unless noted). The host only took off and set `followapp.enable`; all steering, hovering and

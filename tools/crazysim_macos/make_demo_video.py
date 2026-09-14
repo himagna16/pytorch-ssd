@@ -2,7 +2,8 @@
 """Render a demo video of one follower flight from its logs (no screen recording).
 
 Left: the drone's camera frame with the model's view (the square it crops),
-the chosen x-bin, a confidence bar with the 0.70 start / 0.45 stop lines,
+the chosen x-bin, a confidence bar with the start / stop lines (0.75 / 0.45 as
+flown - read from the run's summary.json, 0.70 for a run older than 2026-09-13),
 and the follower's state (FOLLOWING / HOVER / LANDING). Right: a top-down
 map with the drone, its heading and camera view, the person's TRUE position
 from the simulator's truth log, and both trails.
@@ -22,7 +23,19 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Polygon
 
-VIS_ENTER, VIS_EXIT, CONFIRM = 0.7, 0.45, 3      # follow_person.py defaults
+# follow_person.py's confirmation rule. The follower writes the rule it flew into
+# summary.json (from 2026-09-13; enter bar 0.75). A run without those keys was
+# flown by the older follower, whose default was 0.70 - so the fallback is 0.70,
+# not the current default, or the streak replay below would not match the log.
+LEGACY_VIS_ENTER, LEGACY_VIS_EXIT, LEGACY_CONFIRM = 0.70, 0.45, 3
+
+
+def latch_rule(summ):
+    """(vis_enter, vis_exit, confirm_frames) the run was flown at."""
+    keys = ("vis_enter", "vis_exit", "confirm_frames")
+    if all(summ.get(k) is not None for k in keys):
+        return float(summ["vis_enter"]), float(summ["vis_exit"]), int(summ["confirm_frames"])
+    return LEGACY_VIS_ENTER, LEGACY_VIS_EXIT, LEGACY_CONFIRM
 HALF_FOV = 35.0                                  # model sees the centre square: fovy 70 deg
 TITLES = {"moving": "Person swaying side to side (±1.2 m, 20 s period)",
           "static": "Person standing 3.5 m out, 1 m to the right",
@@ -62,6 +75,7 @@ def main():
     a = ap.parse_args()
 
     st, rows, summ = load(a.run)
+    VIS_ENTER, VIS_EXIT, CONFIRM = latch_rule(summ)
     truth = np.loadtxt(a.truth or a.run / "truth.csv", delimiter=",", ndmin=2)
     n = len(st["t"])
     t = st["t"]
@@ -126,8 +140,9 @@ def main():
     axb.set_xticks([0, 0.25, 0.5, 0.75, 1.0]); axb.tick_params(labelsize=8)
     bar = axb.add_patch(Rectangle((0, 0.1), 0, 0.8, color=GREEN))
     axb.axvline(VIS_ENTER, color="k", lw=2); axb.axvline(VIS_EXIT, color="k", lw=1.5, ls="--")
-    axb.text(VIS_ENTER, 1.08, "0.70 start (3 frames in a row)", fontsize=8, ha="center", va="bottom")
-    axb.text(VIS_EXIT, 1.08, "0.45 stop", fontsize=8, ha="center", va="bottom")
+    axb.text(VIS_ENTER, 1.08, f"{VIS_ENTER:.2f} start ({CONFIRM} frames in a row)", fontsize=8, ha="center",
+             va="bottom")
+    axb.text(VIS_EXIT, 1.08, f"{VIS_EXIT:.2f} stop", fontsize=8, ha="center", va="bottom")
     axb.set_xlabel("model's person confidence", fontsize=9, labelpad=1)
     conf_txt = fig.text(0.02, 0.265, "", fontsize=11, family="monospace")
     cmd_txt = fig.text(0.02, 0.085, "", fontsize=11, family="monospace")
@@ -204,7 +219,7 @@ def main():
             sub = "person confirmed: turning toward them" + (", moving closer" if vx > 0.01 else "")
         else:
             state, col = "HOVER", ORANGE
-            sub = (f"checking a possible person: {min(streak[i], CONFIRM)}/{CONFIRM} frames ≥ 0.70"
+            sub = (f"checking a possible person: {min(streak[i], CONFIRM)}/{CONFIRM} frames ≥ {VIS_ENTER:.2f}"
                    if streak[i] else "no person confirmed: holding still")
         frozen = state in ("HOVER", "LANDING", "LANDED") and (s_row is not None or tt > t_end_ctrl + 0.05) \
             and summ.get("end_reason") == "stale-land"

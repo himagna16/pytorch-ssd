@@ -53,7 +53,9 @@ extern "C" {
 
 /* Byte 16: bit flags. Test bits; never compare the byte with 1. */
 #define FOLLOW_TRK_CONFIRMED      0x01u /* bit 0: confirmed target (rule 3) */
-#define FOLLOW_TRK_FRAME_VISIBLE  0x02u /* bit 1: this frame's p >= 0.7 (rule 4) */
+#define FOLLOW_TRK_FRAME_VISIBLE  0x02u /* bit 1: this frame's p >= the GAP8 enter bar (rule 4):
+                                           p >= 0.75 since 2026-09-13, raw v[9] >= 5467 for the
+                                           champion (was 0.7 / 4216); docs/firmware_contract.md */
 #define FOLLOW_TRK_RESERVED_MASK  0xFCu /* bits 2..7: sent as 0 */
 
 /* Rule 0 window: a ring of this many 1-bucket minima (10 x 1 s by default). */

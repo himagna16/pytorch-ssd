@@ -14,9 +14,9 @@ independent review6 safety simulator driving the compiled C through ctypes.
 | `follow_controller.h/.c` | the controller: parse/validate, rule 0 clock-offset window, rules 1-4, control law |
 | `tests/test_follow_controller.c` | C unit tests (30313 checks): parse, validation, layout vs the GAP8 header, wrap, each rule at its boundary, the rule 0 latency floor, rule 4 duplicates, control law |
 | `tests/app_host_test.c`, `tests/app_stubs/` | the Crazyflie app's state machine (`app/src/follow_app.c`) on the host against stub firmware headers: enable edge, `armMinZ`, priority relaxed on every exit from DONE (6810 checks) |
-| `tests/safety_sim_review6_c.py` | copy of `docs/firmware_integration/safety_sim/safety_sim_review6.py` plus an STM32 variant that calls the C code (`c6`/`c6w`) |
+| `tests/safety_sim_review6_c.py` | copy of `docs/firmware_integration/safety_sim/safety_sim_review6.py` plus an STM32 variant that calls the C code (`c6`/`c6w`). Its GAP8 model draws synthetic `p` values and counts them at `ENTER` = 0.75 (the adopted bar, 2026-09-13; the original moved with it). `FOLLOW_SIM_ENTER=0.7` reproduces the review6-era bar the committed logs were produced at; the py_v6 statistics the regression check compares were identical at both bars on the sim-quick set, and P1-P3 held at both |
 | `tests/ctl_shim.c`, `tests/fp_shim.c` | ctypes shims: the controller, and the GAP8's `inc/follow_packet.h` (the simulator's `libfp`) |
-| `tests/vendor/` | `follow_packet.h` copied verbatim from branch `champion-core8-integration` (commit 0623a7d) + the constants it needs from `app_config.h` |
+| `tests/vendor/` | `follow_packet.h` copied verbatim from branch `champion-core8-integration` (commit ff876bd, the 2026-09-13 enter-bar commit; bundle head fc42eb9 leaves it unchanged) + the constants it needs from `app_config.h` (unchanged between 0623a7d and ff876bd, checked constant by constant). It is kept byte-identical to the firmware header on purpose (`diff` it against the firmware's `inc/follow_packet.h`) and carries no threshold constant; its comments now say the 0.75 bar. Re-vendor rather than edit |
 | `tests/run_sim_all.sh`, `tests/summarize_results.py`, `tests/diag_rule0_phase.py` | full simulator run, summary/regression check, rule-0 bucket-phase diagnostic |
 | `tests/results/` | output of the full run (`SUMMARY.txt` first) |
 
@@ -51,7 +51,10 @@ follow_ctl_step(&ctl, now_us, &out);                       /* every 10 ms -> mod
   bits 2-7 clear, and when bit 0 is set, `x_center` in [-1, 1] and `size_center` in [0, 1] (NaN/inf
   rejected). Fields are decoded byte by byte, little-endian, so the module does not depend on struct
   packing. A rejected packet changes nothing except restarting the rule 4 count.
-- **Tracking byte**: only bits are tested. Bit 0 = confirmed (rule 3), bit 1 = this frame's p >= 0.7 (rule 4).
+- **Tracking byte**: only bits are tested. Bit 0 = confirmed (rule 3), bit 1 = this frame's p >= the
+  GAP8 enter bar (rule 4): p >= 0.75 since 2026-09-13 (raw `v[9] >= 5467` for the champion; it was
+  0.7 / 4216). The STM32 never sees the bar itself, only the bit, so this module has no threshold
+  constant; `docs/firmware_contract.md` is where the number lives.
 - **Modes**: `WAIT_WARMUP` (not armed: stay on the ground), `HOVER`, `FOLLOW`, `LAND` (latched until
   `follow_ctl_init`). `out.reason` says which rule decided (`hover_stale`, `hover_reconfirm`, ...).
   `target_height_m` is 0.8 in HOVER/FOLLOW and 0 in WAIT_WARMUP/LAND.

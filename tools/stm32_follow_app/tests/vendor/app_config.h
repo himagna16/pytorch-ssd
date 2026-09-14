@@ -1,6 +1,8 @@
 /* Minimal stand-in for the GAP8 app_config.h (branch champion-core8-integration,
- * commit 0623a7d), with only the constants inc/follow_packet.h and the tests
- * use. Values copied verbatim; the compile-time checks are the GAP8's. */
+ * commit ff876bd; these constants are unchanged since 0623a7d), with only the
+ * constants inc/follow_packet.h and the tests use. Values copied verbatim; the
+ * compile-time checks are the GAP8's. The visibility thresholds
+ * (APP_FOLLOW_VIS_*) are deliberately NOT here: the STM32 sees the bit, not the bar. */
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 

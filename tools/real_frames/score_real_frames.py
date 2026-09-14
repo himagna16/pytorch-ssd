@@ -16,8 +16,9 @@ crop, resize to 128x128 (bilinear), divide by 255, float PyTorch on CPU.
 
 What it reports (per clip, then grouped by distance, bearing, light, subject):
   vis acc     fraction of frames where (confidence >= 0.5) matches the label
-  track%      fraction of frames the follower would be TRACKING (3 frames >= 0.7
-              to start, drops below 0.45; same rule as follow_person.py)
+  track%      fraction of frames the follower would be TRACKING (3 frames >= 0.75
+              to start, drops below 0.45; same rule and defaults as
+              follow_person.py - the enter bar was 0.70 until 2026-09-13)
   starts      how many times the follower would confirm a new track (on
               vis0 clips every start is a FALSE track: it should be 0)
   bin acc     argmax x-bin == the bin the labelled bearing should land in
@@ -283,7 +284,8 @@ def main():
     ap.add_argument("--person-height", type=float, default=1.7, help="metres, for the expected size bucket")
     ap.add_argument("--cam-height", type=float, default=0.8, help="camera height above the floor, metres")
     ap.add_argument("--vis-threshold", type=float, default=0.5, help="confidence counted as 'person seen'")
-    ap.add_argument("--vis-enter", type=float, default=0.7)
+    # the follower's shipped rule (follow_person.py --vis-enter 0.75 since 2026-09-13)
+    ap.add_argument("--vis-enter", type=float, default=0.75)
     ap.add_argument("--vis-exit", type=float, default=0.45)
     ap.add_argument("--confirm-frames", type=int, default=3)
     ap.add_argument("--mirror-min-bearing", type=float, default=8.0,

@@ -7,8 +7,10 @@ Pipeline: simulated AI-deck frames (UDP from crazysim.py, default port 5200)
 -> body-frame velocity + yaw-rate setpoints via cflib.
 
 Safety rules (MinHyuk's simulator exit criteria):
-  * no motion unless a target is confirmed (>= 0.7 for 3 consecutive frames;
-    tracking drops below 0.45)
+  * no motion unless a target is confirmed (>= 0.75 for 3 consecutive frames;
+    tracking drops below 0.45). The enter bar was 0.70 until 2026-09-13; the
+    rule actually flown is written into summary.json (vis_enter / vis_exit /
+    confirm_frames) so scoreboard.py never has to guess it
   * target lost -> hover in place
   * frames older than --stale-hover s -> hover; older than --stale-land s -> land
   * any stale-frame hover drops the target: tracking must be re-confirmed
@@ -235,7 +237,12 @@ def main():
     # frames in a row and only once above 0.7. A real person scores ~0.96-1.0
     # every frame. So tracking starts only after --confirm-frames consecutive
     # frames >= --vis-enter, and stops below --vis-exit.
-    ap.add_argument("--vis-enter", type=float, default=0.7)
+    # Enter bar 0.70 -> 0.75 on 2026-09-13: the 96-flight closed-loop sweep in
+    # docs/eval_results/2026-09-13-champion-threshold showed 0.75 passes the pet
+    # gate (worst drift 1.369 m -> 0.376 m) at no measurable recall cost, while
+    # 0.80 costs 12 points of tracking on a standing person. Same bar as the
+    # GAP8 firmware's raw 5467 (= ceil(logit(0.75) / eps_out)).
+    ap.add_argument("--vis-enter", type=float, default=0.75)
     ap.add_argument("--confirm-frames", type=int, default=3)
     ap.add_argument("--vis-exit", type=float, default=0.45)
     ap.add_argument("--stale-hover", type=float, default=0.5)
@@ -475,6 +482,10 @@ def main():
             "z_after_landing": next((round(r["pz"], 2) for r in rows
                                      if r.get("event") == "after-land" and r.get("pz") is not None), None),
             "rate_hz_requested": a.rate_hz, "latency_ms_requested": a.latency_ms,
+            # the confirmation rule this flight actually flew, so scoreboard.py,
+            # make_demo_video.py and demo_scorecard.py read it instead of
+            # assuming a default (a run without these keys was flown at 0.70 x 3)
+            "vis_enter": a.vis_enter, "vis_exit": a.vis_exit, "confirm_frames": a.confirm_frames,
             "backend": getattr(perc, "name", "float"),
             "backend_info": getattr(perc, "info", None),
             "frames_processed": stats["processed"], "frames_dropped": stats["dropped"],

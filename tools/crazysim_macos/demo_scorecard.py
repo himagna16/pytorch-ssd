@@ -69,7 +69,10 @@ L.append(f" Person tracked:          {tracked:5.1f}% of camera frames ({S.get('c
 if scene == "empty":
     L.append(f" Drone moved:             {drift * 100:5.1f} cm sideways, turned {turned:.1f} deg")
     peak = max((f(r, "conf") for r in steps), default=float("nan"))
-    L.append(f" Highest person score:    {peak:5.2f} (needs 0.70 on 3 frames in a row to start)")
+    # the bar this run flew: written by follow_person.py since 2026-09-13 (0.75);
+    # an older run without the keys was flown at 0.70 x 3
+    enter, cf = S.get("vis_enter", 0.70), S.get("confirm_frames", 3)
+    L.append(f" Highest person score:    {peak:5.2f} (needs {enter:.2f} on {cf} frames in a row to start)")
 elif errs:
     L.append(f" Average heading error:   {np.mean(errs):5.1f} deg (worst {max(errs):.1f} deg) vs the person's true position")
 if scene == "freeze":

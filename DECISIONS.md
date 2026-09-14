@@ -40,7 +40,9 @@ Newest entries at the top. Never delete entries — supersede them.
   integer output units) plus the GAP8 packet's p>=0.7 bit. Changing one without
   the others would have the simulator and the drone confirming targets at
   different bars. That is a shared-contract change and goes through a branch
-  and PR, not straight to main.
+  and PR, not straight to main. *[Done on branch `sai/vis-enter-0.75` and
+  firmware commit `ff876bd`: every copy now reads `{5467, -998, 3}` / p >= 0.75;
+  see `docs/firmware_contract.md`, change note 2026-09-13.]*
 
 - **2026-09-12** — The published cause of the distance failure is WITHDRAWN. The
   Sep 11 suite's "the size head over-reads by 1.6-1.8x" is wrong: the MuJoCo

@@ -5,6 +5,18 @@ Repo: `/Users/saimaruvada/Downloads/drone/crazyflie_ssd` (David Liu's wrapper, o
 only (not pushed), based on `main` @ `4a03846`. Nothing has been flashed. The branch
 has been compiled and linked in the `bitcraze/aideck` image; it has never run on silicon.
 
+**2026-09-13 update (commit `ff876bd` on top of `0623a7d`).** The follower's confirmation
+bar was raised from p >= 0.70 (raw 4216) to **p >= 0.75 (raw 5467)**; the exit bar (p < 0.45,
+raw -998) and the 3-consecutive-frame rule are unchanged. Raw value: thr(p) = ceil(ln(p / (1 - p))
+/ eps_out) with the champion's eps_out = 2.009823510888964e-4, so thr(0.75) = ceil(5466.21) = 5467.
+Basis: the 96-flight closed-loop sweep in `docs/eval_results/2026-09-13-champion-threshold/`
+(pet gate FAIL at 0.70, PASS at 0.75 with no measurable recall cost; 0.80 costs 12 points of
+tracking). **Chosen in simulation on one pet scene; no hardware run.** Details: section 2 item 15,
+section 4 (rebuilt images and hashes), risk 9, and `docs/champion_integration.md` "Visibility
+thresholds" on the branch. The bundle head is now `fc42eb9` (`ff876bd` = the bar change and the
+commit the images were built from, plus one docs-only commit `fc42eb9` on top that records that
+the host simulator has already moved to 0.75 / 5467; no source or image change).
+
 ## 1. What the firmware does (end-to-end map)
 
 1. **Build.** The top-level `Makefile` (GAP SDK `pmsis_rules.mk`, `PMSIS_OS=freertos`,
@@ -34,7 +46,7 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
    - `net_runner_run` -> `network_run(arena, arena_bytes, out, 0, 1)`: opens the cluster,
      runs 9 layers on `NUM_CORES` cores, copies 56 bytes to `out`, closes the cluster.
    - `follow_output.c` -> `follow_decode()` (team decoder, verbatim) with thresholds
-     {enter 4216, exit -998, confirm 3}.
+     {enter 5467, exit -998, confirm 3} (p >= 0.75 enter since 2026-09-13; it was 4216 = p >= 0.70).
    - `transport_if_send_follow_result` -> CPX app packet (if enabled).
    - The next capture starts only after the pipeline returns, so the frame rate is
      about `1 / (capture + total)`.
@@ -101,7 +113,7 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
     (a) **Stall then recovery (safety, finding 1).** `pipeline.c` resets the visibility state at
     decode time after any stale gap (> 0.4 s since the newest valid frame, no app packet queued
     for > 0.4 s, or a frame that is itself > 0.4 s old). Tracking then needs 3 fresh frames at
-    p >= 0.7 again, in camera mode and in bench mode. The STM32 mirror rule 4 is in section 3.
+    p >= 0.75 again, in camera mode and in bench mode. The STM32 mirror rule 4 is in section 3.
     (b) **Link latency (safety, finding 2).** The age is stamped immediately before the queue
     attempt. App packets use the new non-blocking `cpxTrySendPacket` / `com_try_write` (`lib/cpx`),
     so at most 2 wait on the GAP8 instead of up to 80. A frame older than 0.4 s is sent with
@@ -131,7 +143,8 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
     about 0.40-0.46 s that starts just after a queue attempt held packet 1 in the com task
     while packet 2 was queued at the start of the stall. The GAP8's queue-attempt gap stayed
     under 0.4 s, but the STM32 received nothing and entered stale hover. The GAP8 hysteresis
-    kept `tracking = 1`, so steering resumed on frames at p in [0.45, 0.7). Now `lib/cpx/src/com.c`
+    kept `tracking = 1`, so steering resumed on frames at p in [0.45, 0.7) (the hysteresis zone at
+    the time; [0.45, 0.75) since 2026-09-13). Now `lib/cpx/src/com.c`
     records, in a critical section in the com task, the finalize time and the frame capture
     time of every app packet it hands to the SPI transfer (`com_app_spi_ages`, exposed as
     `transport_if_spi_ages`). `pipeline.c` also resets the visibility state when no app packet
@@ -139,15 +152,30 @@ has been compiled and linked in the `bitcraze/aideck` image; it has never run on
     existing checks stay. Entries older than 3.0 s are latched off (wrap guard).
     (b) **Packet v6: tracking bit 1 (STM32 enabler, finding 2).** Byte 16 is now bit flags:
     bit 0 = confirmed tracking (unchanged meaning), bit 1 = this frame's visibility confidence
-    >= the enter threshold (p >= 0.7; the decoder's per-frame test `v[9] >= 4216`). Rule 4 now
+    >= the enter threshold (p >= 0.75 since 2026-09-13; the decoder's per-frame test `v[9] >= 5467`). Rule 4 now
     needs 3 consecutive fresh packets with bit 0 AND bit 1 set, so after a stall the GAP8
-    cannot see (inside the ESP32), only p >= 0.7 frames count. (Safety review 7 refined
+    cannot see (inside the ESP32), only p >= 0.75 frames count. (Safety review 7 refined
     this to 3 *distinct* frames - increasing `frame_id`; see rule 4 in section 3.) Version bumped 5 -> 6 so a v5
     parser that tests `tracking != 0` rejects v6 (no STM32 parser exists yet).
     (c) Docs (finding 3): arm following/take-off only after the rule-0 warm-up; a persistent
     latency step > 0.1 s is stale and lands at 3.0 s (fail-safe, by design); com-task
     preemption between the finalize and the SPI transfer shows up as excess latency (rule 0),
     not in the age byte.
+
+15. Enter bar 0.70 -> 0.75 (commit `ff876bd` on top of `0623a7d`, 2026-09-13, listed in section 4):
+    `app_config.h` `APP_FOLLOW_VIS_ENTER_RAW` 4216 -> **5467** (thr(0.75) = ceil(ln(3) /
+    2.009823510888964e-4) = ceil(5466.21)); exit -998 and confirm 3 unchanged. `src/follow_decode.c`
+    `follow_vis_cfg_default()` 0.7 -> 0.75 (the team copy in `pytorch_ssd/tools/firmware_decode/`
+    carries the same change and is byte-identical again; the function is not linked into the
+    firmware, `k_vis_cfg` in `src/follow_output.c` is the only copy of the bar in the binary). Every comment and doc that stated the rule moved with it
+    (`inc/follow_decode.h`, `inc/follow_packet.h`, `inc/follow_output.h`, `inc/transport_if.h`,
+    `src/transport_if.c`, `src/app_main.c`, `docs/champion_integration.md`). Packet v6 bit 1 and STM32
+    rule 4 follow the new bar automatically because they reuse `APP_FOLLOW_VIS_ENTER_RAW`. The
+    rebuilt flight image differs from the `0623a7d` image in **exactly 2 bytes** (offset 0x15170:
+    `78 10` -> `5b 15`, i.e. 4216 -> 5467 in `k_vis_cfg`); the bench golden vector
+    `k_bench_expected[]` is byte-identical (it is the network's output, not the decoder's).
+    Decided from `docs/eval_results/2026-09-13-champion-threshold/README.md` (simulation only, one
+    pet scene, 4 repeats, no hardware run; the exit bar was not swept).
 
 ## 3. Message format sent to the Crazyflie (CPX app packet v6)
 
@@ -156,7 +184,7 @@ little-endian, floats IEEE-754 binary32. Sent once per processed frame, and as a
 no-target packet on each capture timeout or pipeline failure, only when built with
 `APP_ENABLE_CPX_APP_PACKET_TX=1` (**off by default**, because an STM32 without a
 registered app handler has nowhere to deliver it). **v6 (fix round 6)** = the v5 layout with
-byte 16 (`tracking`) as bit flags; bit 1 (this frame's p >= 0.7) is new. **v5 (fix round 5)** =
+byte 16 (`tracking`) as bit flags; bit 1 (this frame's p >= 0.75) is new. **v5 (fix round 5)** =
 the v4 layout plus uint32 `gap8_tx_ms` at byte 24, and the age runs to the SPI transfer. v4 put
 the frame age in **20 ms** units at byte 19. v3 used 10 ms units, which saturated at 2.55 s,
 below the 3.0 s land threshold. v2 had byte 19 reserved. Nothing was deployed with v2 to v5,
@@ -172,7 +200,7 @@ the bit helpers are in `inc/follow_packet.h`.
 | 4 | 4 | frame_id | uint32 camera frame counter (bench: iteration) |
 | 8 | 4 | x_center | float, x-bin center in [-1, 1], left -> right **of the network image**; 0 in no-target packets |
 | 12 | 4 | size_center | float, size-bucket center in [0, 1]; 0 in no-target packets |
-| 16 | 1 | tracking | **bit flags**; test bits, never compare the byte with 1; bits 2-7 reserved (0). **Bit 0** = confirmed target (3 consecutive frames at p >= 0.7, kept until p < 0.45); clear = hover (ignore x/size). **Bit 1** = this frame's visibility confidence >= the enter threshold (p >= 0.7; raw `v[9] >= 4216`, the decoder's own per-frame test); used by rule 4. Whole byte 0 in no-target packets, if the frame was older than 0.4 s at the queue attempt, or if the packet waited more than about 100 ms before its SPI transfer |
+| 16 | 1 | tracking | **bit flags**; test bits, never compare the byte with 1; bits 2-7 reserved (0). **Bit 0** = confirmed target (3 consecutive frames at p >= 0.75, kept until p < 0.45); clear = hover (ignore x/size). **Bit 1** = this frame's visibility confidence >= the enter threshold (p >= 0.75; raw `v[9] >= 5467`, the decoder's own per-frame test; 0.70 / 4216 before 2026-09-13); used by rule 4. Whole byte 0 in no-target packets, if the frame was older than 0.4 s at the queue attempt, or if the packet waited more than about 100 ms before its SPI transfer |
 | 17 | 1 | x_bin | 0..8; `0xFF` = no network result (no-target packet) |
 | 18 | 1 | size_bucket | 0..3; `0xFF` = no network result |
 | 19 | 1 | frame_age_20ms | age of the newest frame with a valid network output, capture completion -> **the packet's SPI transfer** (stamped at the queue attempt, then grown in `com.c` by any wait before the transfer), 20 ms units rounded up. `0..254` = exact (up to 5.08 s). **`255` = saturated**: older than 5.08 s, or no valid frame since GAP8 boot. Once saturated it stays 255 until the next valid frame |
@@ -247,9 +275,9 @@ Every control step (`t_fresh = NONE`, including before the first packet since bo
    and **increasing `frame_id`** (a copy of an already counted packet, e.g. a link retransmit,
    neither counts nor restarts the count; safety review 7),
    `frame_age_20ms * 0.020 <= 0.5` and `e <= 0.1 s` (rule 0). Any other packet (either bit clear,
-   older, 255, stale by rule 0) restarts the count. Bit 1 makes the count use only p >= 0.7
+   older, 255, stale by rule 0) restarts the count. Bit 1 makes the count use only p >= 0.75
    frames: after a stall the GAP8 cannot see (inside the ESP32), the GAP8 hysteresis still reports
-   bit 0 on frames at p in [0.45, 0.7), and without bit 1 those would complete the count. This mirrors the reference follower ("after any stale-hover episode,
+   bit 0 on frames at p in [0.45, 0.75), and without bit 1 those would complete the count. This mirrors the reference follower ("after any stale-hover episode,
    re-confirm with 3 fresh frames") and backs up the GAP8's own re-confirmation (below).
 5. otherwise steer on `x_center` (yaw) and `size_center` (approach).
 
@@ -284,7 +312,7 @@ Every control step (`t_fresh = NONE`, including before the first packet since bo
 The GAP8 sends a **no-target** packet (`tracking = 0`, `x_bin = size_bucket = 0xFF`,
 `vis_raw = INT32_MIN`) on every camera capture timeout (0.5 s) and every pipeline
 failure. It also resets its visibility state, so tracking must be re-confirmed
-(3 frames at p >= 0.7) after any gap. A no-target packet's age still refers to the last
+(3 frames at p >= 0.75) after any gap. A no-target packet's age still refers to the last
 good frame, so `t_fresh` does not move through a gap.
 
 The age is measured on the GAP8 from capture completion to the packet's queue attempt
@@ -297,7 +325,7 @@ which is the only way `t_fresh` can be later than the true frame time.
 followed by recovery fired no gap event, e.g. a blocked console send or a slow `network_run`.
 The visibility state stayed `tracking = 1`, and steering resumed after one fresh frame at
 p >= 0.45. Now `pipeline.c` checks at decode time (after `network_run`) and resets the visibility
-state, so tracking needs 3 fresh frames at p >= 0.7 again, when:
+state, so tracking needs 3 fresh frames at p >= 0.75 again, when:
 - there is no valid frame yet, or the age is saturated (latched);
 - the newest valid frame is older than `APP_FOLLOW_RECONFIRM_GAP_US`. That is 0.4 s,
   100 ms below the STM32 hover threshold, to cover age rounding (<= 20 ms), one control step,
@@ -492,6 +520,28 @@ logs in (local build logs, not in the repo)):
 the link maps. Flight L2 heap left after the 79,056 B frame and a 131,072 B arena:
 427,648 - 79,056 - 131,072 = **217,520 B (about 218 KB)**.
 
+**Rebuild after the enter-bar change (2026-09-13, commit `ff876bd`)**, built with the
+project's own `flash_person_follow_aideck.sh` (`bitcraze/aideck:latest` = digest
+`sha256:038197df…`, `aideck-gap8-examples` at `5fd95ca`, in-container `pip3 install numpy==1.22.3`
+succeeded; `docs/hardware/flash_runbook.md`). Each variant was built twice from a clean build
+and produced the identical sha256:
+
+| variant | make flags | result | L2 static | FC_tcdm | flash image | sha256 (both builds) |
+|---|---|---|---|---|---|---|
+| flight | (defaults) | compiles + links, exit 0 | 96,640 B (18.43%) | 6,600 B (40.28%) | 340,896 B | `261e20d8b03f091a2c18b0beccf46b3397a90a00ad3180c924d413a6099aeb8b` |
+| bench | `APP_BENCH_FIXED_INPUT=1` | compiles + links, exit 0 | 89,920 B (17.15%) | 6,600 B (40.28%) | 340,896 B | `34c4b3bae3322dd04e555fe30b9b658f6480d4e006356aa683523af88ec4f929` |
+
+The flight L2 and FC_tcdm figures equal the fix-round-6 table. The bench L2 reads 89,920 B
+here against 89,912 B in that table: the table was measured on a pre-commit snapshot build,
+and since this bench image differs from the `0623a7d` prebuilt bench image (`7fa0e8be…`) in
+exactly 2 bytes, the committed `0623a7d` bench was already 89,920 B. Only a 4-byte constant in
+`.rodata` changed (`k_vis_cfg` at 0x1c014170 in the flight ELF is now `5b 15 00 00 1a fc ff ff 03 00 00 00`
+= {5467, -998, 3}). The flight image differs from the `0623a7d` flight image
+(`c69e71e7…`) in exactly the 2 bytes at offset 0x15170; the bench image still contains the
+unchanged golden vector `k_bench_expected[]`. Prebuilt copies with these hashes are in
+`aideck-gap8-examples/_prebuilt_champion/` (`champion_flight.img`, `champion_bench.img`,
+`SHA256SUMS`; the previous `0623a7d` images were `c69e71e7…` / `7fa0e8be…`). Nothing was flashed.
+
 **Fix round 6 checks** (host). `docs/firmware_integration/safety_sim/test_follow_packet.c`: 3,000,000 random cases,
 0 failures (fix-round-5 finalize properties with every tracking-byte value, the v6 bit helpers,
 exact recovery of the frame capture time `com.c` records). `docs/firmware_integration/safety_sim/safety_sim_review6.py` (final independent simulator)
@@ -511,6 +561,7 @@ Fix-round-4 host simulation (an earlier simulator, superseded by `docs/firmware_
 under the documented v4 rules, fix round 4 under the v4 rules, and fix round 4 with STM32 rule 4.
 Column meanings:
 - violations: steering resumed after a stale hover without 3 truly fresh frames at p >= 0.7
+  (the enter bar when that simulation ran; 0.75 since 2026-09-13, see item 15 in section 2)
   (P2), or steering on a frame truly older than 0.5 s (P3);
 - land: time from the last valid frame to landing.
 
@@ -547,7 +598,10 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
    `[5247, 5523, 2781, -659, -948, -2089, 3694, -1952, -8464, -2869, 959, 5626, 1227, -7277]`
    exactly (`match=1`) on every logged iteration, `mismatches=0` after 1000 or more iterations, and
    the decode reads `xb=1 sb=1 vis=-2869 trk=0` (x = -0.667, size = 0.375, not visible; this image
-   is a real person the model scores at p = 0.36). The input is `hex/inputs.hex`, the staged
+   is a real person the model scores at p = 0.36). The 2026-09-13 bar change (enter 4216 -> 5467)
+   does not alter this line: -2869 is below both bars, and the golden tensor is the network's
+   output, not the decoder's (host check: `follow_decode()` over it gives trk=0 xb=1 sb=1 under
+   both configurations). The input is `hex/inputs.hex`, the staged
    smoke image of `pytorch_ssd_unstable/logs/plain_follow_prod_qat_final`
    (`input_sets/rep16/01_visible_000000121031.jpg`).
    If `match=0`: rebuild with `CORE=1` and then with `APP_GENERATED_NETWORK_VERBOSE=1`
@@ -654,7 +708,8 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
    nearest-neighbor, while training used an antialiased bilinear resize.
    - Study (`docs/eval_results/2026-09-11-resize/RESULT.md` (team repo)):
      1000 val2017 frames emulated as 324x244 camera frames, using the champion integer ONNX.
-   - Nearest-neighbor **lowered F1 at the 0.7 enter threshold by 0.050 [0.020, 0.079]** and flipped
+   - Nearest-neighbor **lowered F1 at the 0.7 enter threshold by 0.050 [0.020, 0.079]** (0.7 was the bar
+     when the study ran; 0.75 since 2026-09-13) and flipped
      **13% of visibility decisions** (at 0.5). It mostly costs recall.
    - The branch's `preprocess.c` now outputs the rounded mean of the 2x2 camera block starting at
      the old nearest source pixel. That is **within noise of the training resize:
@@ -662,9 +717,24 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
    - The firmware file's host build is byte-identical to the study's Python port on all 1000 frames.
    - Caveats: the camera was idealized (no HM01B0 noise, optics or exposure), and the bench does not
      run `preprocess.c`. Do the live-camera preprocess check in step 5.5.
-9. **Visibility threshold choice.** The branch uses the contract's {4216, -998, 3} (p >= 0.70
-   enter, < 0.45 exit). The release summary's deployment sweep chose p = 0.55 (raw 999) as its
-   best single threshold. The team should decide. It is a one-line change in `app_config.h`.
+9. **Visibility threshold choice — decided 2026-09-13.** The branch now uses {5467, -998, 3}
+   (p >= 0.75 enter, < 0.45 exit, 3 consecutive frames), raised from the contract's {4216, -998, 3}
+   (p >= 0.70). Basis: the 96-flight closed-loop sweep
+   `docs/eval_results/2026-09-13-champion-threshold/README.md`: at 0.70 the pet gate fails on 4 of 4
+   repeats (worst drift 1.369 m against 0.5 m); at 0.75 it passes on 4 of 4 (0.376 m) with no
+   measurable recall cost on a standing or moving person (`A.static` 0.970 -> 0.991, `B.moving`
+   0.992 -> 0.992, first latch 0.31 s); 0.80 buys no extra margin and costs 12 points of `A.static`
+   tracking with a 5 s acquisition stall; 4 consecutive frames at 0.70 still fails. Derivation:
+   thr(p) = ceil(ln(p / (1 - p)) / eps_out), eps_out = 2.009823510888964e-4
+   (`tools/firmware_decode/raw_thresholds.py --eps-out 2.009823510888964e-4 --enter 0.75`). **Caveats:**
+   chosen in the MuJoCo + onnxruntime simulator on one pet scene (`s03_pets_only`, 4 repeats);
+   **no hardware run**; the exit bar was not swept; nothing between 0.70, 0.75 and 0.80 was flown;
+   0.75 reduces pet-chasing (median false-follow episodes 4.5 -> 1.5 per flight), it does not
+   eliminate it. The release summary's p = 0.55 (raw 999) is superseded. The host-side simulator
+   follower moved with it on the same branch (`sai/vis-enter-0.75`): `tools/crazysim_macos/follow_person.py
+   --vis-enter` now defaults to 0.75 and `perception_backends.py` has `VIS_ENTER_RAW = 5467`, so the
+   simulator and the aircraft confirm targets at the same bar (the two confirming at different bars is a
+   mismatch that only shows up in the lab; re-check both values if either side changes again).
 10. **x sign convention.** Unverified until the mirror check (5.5).
 11. **CPX app packets are off by default.** With TX on, app packets no longer block (fix round 4),
     and a packet delayed on the NINA handshake carries that delay in its age (fix round 5).

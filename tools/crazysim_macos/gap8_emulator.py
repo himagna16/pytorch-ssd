@@ -13,10 +13,12 @@ and at the end clears followapp.enable so the app lands. It never steers.
 GAP8 behavior reproduced (branch champion-core8-integration, fix round 6):
   * decoder = tools/firmware_decode/follow_decode.c on the int32 output domain
     (float model output / eps_out, rounded): x-bin and size-bucket argmax;
-    p >= 0.7 (raw >= 4216) on 3 frames in a row confirms, p < 0.45 (raw < -998)
-    loses the target. --selftest checks this port against the C via ctypes.
+    p >= 0.75 (raw >= 5467) on 3 frames in a row confirms, p < 0.45 (raw < -998)
+    loses the target (enter bar raised from 0.70 / raw 4216 on 2026-09-13).
+    --selftest checks this port against the C via ctypes, including that the C
+    default config lands on the same three integers.
   * packet v6 (inc/follow_packet.h): tracking bit 0 = confirmed, bit 1 = this
-    frame p >= 0.7; frame_age_20ms = ceil(age / 20 ms) at the transfer, 255 =
+    frame p >= 0.75; frame_age_20ms = ceil(age / 20 ms) at the transfer, 255 =
     no valid frame / older than 5.08 s; gap8_tx_ms = GAP8 ms clock at the transfer.
   * no-target packets (tracking 0, x_bin = size_bucket = 0xFF, vis_raw =
     INT32_MIN, age of the last good frame) on every 0.5 s camera capture timeout;
@@ -64,9 +66,14 @@ sys.path.insert(0, str(HERE))
 from follow_person import DRONE_ROOT, FrameReceiver, Perception  # noqa: E402
 from perception_backends import add_backend_args, make_perception  # noqa: E402
 
-# GAP8 constants (app_config.h / inc/follow_packet.h on champion-core8-integration 0623a7d)
+# GAP8 constants (app_config.h / inc/follow_packet.h on champion-core8-integration)
 EPS_OUT = 2.00982e-4              # champion QAT output quantum (firmware_contract.md)
-VIS_ENTER_RAW, VIS_EXIT_RAW, CONFIRM_FRAMES = 4216, -998, 3
+# thr(p) = ceil(ln(p / (1 - p)) / eps_out), the C's follow_raw_thresh(): enter
+# p >= 0.75 -> 5467, exit p < 0.45 -> -998 (same integers at the full-precision
+# eps 2.009823510888964e-4). Enter was 0.70 -> 4216 until 2026-09-13. These must
+# match follow_person.py --vis-enter / --vis-exit and perception_backends.py.
+VIS_ENTER_P, VIS_EXIT_P = 0.75, 0.45
+VIS_ENTER_RAW, VIS_EXIT_RAW, CONFIRM_FRAMES = 5467, -998, 3
 AGE_UNIT_US, AGE_SAT = 20000, 255
 RECONFIRM_GAP_S = 0.4             # APP_FOLLOW_RECONFIRM_GAP_US
 CAPTURE_TIMEOUT_S = 0.5           # APP_CAMERA_CAPTURE_TIMEOUT_US
@@ -442,8 +449,11 @@ def selftest():
 
     cfg, st = Cfg(), St()
     fd.follow_vis_cfg_default(ctypes.byref(cfg), ctypes.c_double(EPS_OUT))
+    # the C's default config (follow_vis_cfg_default: 0.75 / 0.45 / 3 at this
+    # eps) must land on exactly the integers this emulator hard-codes
     assert (cfg.enter_raw, cfg.exit_raw, cfg.confirm_frames) == (VIS_ENTER_RAW, VIS_EXIT_RAW, CONFIRM_FRAMES), \
-        (cfg.enter_raw, cfg.exit_raw, cfg.confirm_frames)
+        f"follow_decode.c default cfg {(cfg.enter_raw, cfg.exit_raw, cfg.confirm_frames)} != emulator " \
+        f"{(VIS_ENTER_RAW, VIS_EXIT_RAW, CONFIRM_FRAMES)}: the C rule and this file disagree on the latch bar"
     fd.follow_vis_reset(ctypes.byref(st))
     dec, rng, n = VisDecoder(), np.random.default_rng(7), 0
     for i in range(200000):
@@ -700,6 +710,10 @@ def write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx, perc=N
         "stale_events": stale_events,
         "z_after_landing": round(al["pz"], 2) if al and al.get("pz") is not None else None,
         "rate_hz_requested": a.rate_hz, "infer_ms_requested": a.infer_ms,
+        # the latch rule this run used, in the same keys follow_person.py writes
+        # (a summary.json without them was flown at 0.70 x 3 / raw 4216)
+        "vis_enter": VIS_ENTER_P, "vis_exit": VIS_EXIT_P, "confirm_frames": CONFIRM_FRAMES,
+        "vis_enter_raw": VIS_ENTER_RAW, "vis_exit_raw": VIS_EXIT_RAW,
         # What actually ran, not what was requested: follow_person.py records
         # these too, and without them a chip-in-the-loop run carries no evidence
         # of which ONNX (sha1) and which output quantum the sidecar loaded.

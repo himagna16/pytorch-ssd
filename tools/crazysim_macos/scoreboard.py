@@ -30,6 +30,15 @@ by hysteresis alone (M10), and steer smoothly rather than saw about the right
 heading (M11). Thresholds and their justifications are in GATE_BASIS below;
 every gate carries its basis into the JSON, because a threshold that cannot say
 where it came from is a threshold someone will quietly "tidy up" later.
+
+THE LATCH BAR IS READ FROM THE FLIGHT, NOT FROM THIS FILE. M10's uncertain band
+[vis_exit, vis_enter) and the M10_conf_max_absent line depend on the follower's
+confirmation rule. Since 2026-09-13 follow_person.py writes the rule it actually
+flew (vis_enter / vis_exit / confirm_frames) into summary.json and the scorer
+takes it from there. A summary.json without those keys came from an older
+follower, whose only default was 0.70 x 3 / 0.45, so the fallback is 0.70 - NOT
+the current default - and every evidence folder scored before the change
+re-scores to the same bytes (see latch_rule()).
 """
 import argparse
 import csv
@@ -51,8 +60,20 @@ CROP_FOV_DEG = 70.0                   # square centre crop of a 244-tall render,
 TAN_HALF_FOV = math.tan(math.radians(CROP_FOV_DEG / 2))     # 0.70021
 TARGET_SIZE = 0.625                   # follow_person.py --target-size, bucket-2 centre
 SIZE_EDGES = (0.25, 0.5, 0.75)        # utils/follow_task.py SIZE_BUCKET4_EDGES
-VIS_ENTER, VIS_EXIT = 0.70, 0.45      # follow_person.py --vis-enter / --vis-exit
-CONFIRM_FRAMES = 3
+# follow_person.py --vis-enter / --vis-exit / --confirm-frames as they were BEFORE
+# the follower started recording them in summary.json (2026-09-13). These are
+# fallbacks for runs whose summary.json has no latch fields, and they must stay
+# at the values those runs were flown at. The shipped default moved to 0.75 on
+# 2026-09-13 (docs/eval_results/2026-09-13-champion-threshold); do not move
+# these with it, or every committed scoreboard re-scores to different numbers.
+LEGACY_VIS_ENTER, LEGACY_VIS_EXIT = 0.70, 0.45
+LEGACY_CONFIRM_FRAMES = 3
+# Old names, kept for the committed analysis scripts that import them
+# (docs/eval_results/2026-09-13-champion-vs-confuser/scripts/{threshold_sensitivity,analyze}.py
+# read SB.VIS_ENTER / SB.VIS_EXIT / SB.CONFIRM_FRAMES). Their committed outputs
+# were computed at 0.70 x 3, so these alias the legacy values, not the shipped
+# 0.75. New code reads the rule from the flight via latch_rule() instead.
+VIS_ENTER, VIS_EXIT, CONFIRM_FRAMES = LEGACY_VIS_ENTER, LEGACY_VIS_EXIT, LEGACY_CONFIRM_FRAMES
 STALE_HOVER_S, STALE_LAND_S = 0.5, 3.0
 YAW_MAX_DEG = 40.0
 SETTLE_S = 3.0                        # analyze_follow.py convention
@@ -179,6 +200,23 @@ def fnum(row, key):
         return float(row[key])
     except (KeyError, ValueError, TypeError):
         return float("nan")
+
+
+def latch_rule(summary):
+    """The confirmation rule this flight was flown at: (vis_enter, vis_exit, confirm_frames, recorded).
+
+    recorded is True when follow_person.py wrote the rule into summary.json (every
+    flight from 2026-09-13 on). Otherwise the flight predates that and the only
+    rule the follower ever had by default was 0.70 x 3 / exit 0.45. The 0.75 /
+    0.80 / 4-frame arms of the champion-threshold sweep are the one exception -
+    their harness put the arm in cell.json, not summary.json - and the scorer
+    deliberately does not read cell.json for it: those suites were scored and
+    committed at 0.70, and their M10 lines are documented as carrying that label.
+    """
+    keys = ("vis_enter", "vis_exit", "confirm_frames")
+    if all(summary.get(k) is not None for k in keys):
+        return float(summary["vis_enter"]), float(summary["vis_exit"]), int(summary["confirm_frames"]), True
+    return LEGACY_VIS_ENTER, LEGACY_VIS_EXIT, LEGACY_CONFIRM_FRAMES, False
 
 
 def load_run(run_dir):
@@ -353,6 +391,12 @@ def metrics_for_run(cell, summary, rows, truth, manifest):
     size_dec = np.array([fnum(r, "size") for r in flown])   # the decoded size value
     wall = np.array([fnum(r, "wall") for r in flown])
     settled = t - t0 > SETTLE_S
+    vis_enter, vis_exit, confirm_frames, rule_recorded = latch_rule(summary)
+    if rule_recorded:
+        # Only when the flight itself says so: adding this key to a legacy run
+        # would change its metrics.json and scoreboard.json, i.e. rewrite history.
+        m["latch_rule"] = {"vis_enter": vis_enter, "vis_exit": vis_exit,
+                           "confirm_frames": confirm_frames, "source": "summary.json"}
 
     # --- carried-forward metrics ------------------------------------------
     m["M1_tracking_fraction"] = summary.get("tracking_fraction")
@@ -529,7 +573,7 @@ def metrics_for_run(cell, summary, rows, truth, manifest):
             continue                      # never recovered before the flight ended
         k = j + 1                         # first frame with tracking latched again
         # the confirming streak that produced it started 'streak' frames earlier
-        st = int(fnum(flown[k], "streak")) if not math.isnan(fnum(flown[k], "streak")) else CONFIRM_FRAMES
+        st = int(fnum(flown[k], "streak")) if not math.isnan(fnum(flown[k], "streak")) else confirm_frames
         first_good = max(i, k - max(st, 1) + 1)
         # the first actually-nonzero steering command after recovery
         nz = [q for q in range(k, len(trk)) if nonzero_cmd[q]]
@@ -584,7 +628,8 @@ def metrics_for_run(cell, summary, rows, truth, manifest):
                                        and not cell.get("freeze_expected"))
 
     # --- M10 uncertain band -------------------------------------------------
-    band_mask = (conf >= VIS_EXIT) & (conf < VIS_ENTER)
+    # [vis_exit, vis_enter) at the bar THIS flight was flown at (latch_rule above)
+    band_mask = (conf >= vis_exit) & (conf < vis_enter)
     if in_fov.any():
         m["M10_uncertain_fraction_present"] = round(float(np.mean(band_mask[in_fov])), 4)
         m["M10_conf_p05_present"] = round(float(np.percentile(conf[in_fov], 5)), 3)
@@ -643,6 +688,10 @@ def gate(gid, kind, value, op, thr, basis, scored_on="run"):
 def build_gates(cell, m):
     """The gate list for one cell, with the per-speed and per-camera adjustments."""
     cls = cell["scene_class"]
+    # the flight's own latch rule when it recorded one, else the legacy 0.70 x 3
+    lr = m.get("latch_rule") or {}
+    vis_enter = float(lr.get("vis_enter", LEGACY_VIS_ENTER))
+    confirm_frames = int(lr.get("confirm_frames", LEGACY_CONFIRM_FRAMES))
     chip_speed = cell.get("speed") == "chip"
     himax = cell.get("camera") == "himax_typical"
     g = []
@@ -696,7 +745,7 @@ def build_gates(cell, m):
                       GATE_BASIS["M8_zero"]))
         g.append(gate("M6_max_horizontal_drift_m", "hard", m.get("M6_max_horizontal_drift_m"),
                       "<", 0.10, GATE_BASIS["M6_C"]))
-        g.append(gate("M10_conf_max_absent", "report", m.get("M10_conf_max_absent"), "<=", VIS_ENTER,
+        g.append(gate("M10_conf_max_absent", "report", m.get("M10_conf_max_absent"), "<=", vis_enter,
                       "reported: sitting in the band is tolerable, latching out of it is not"))
 
     elif cls == "D":
@@ -718,7 +767,7 @@ def build_gates(cell, m):
         g.append(gate("M9_track_outage_s", "report", m.get("M9_track_outage_s"), ">=", 0.0,
                       GATE_BASIS["M9_outage"]))
         g.append(gate("M9_confirming_frames_used", "report", m.get("M9_confirming_frames_used"),
-                      ">=", CONFIRM_FRAMES, "the re-confirmation rule needs 3 fresh frames"))
+                      ">=", confirm_frames, "the re-confirmation rule needs 3 fresh frames"))
         g.append(gate("M1_tracking_fraction", "report", m.get("M1_tracking_fraction"), ">=", 0.0,
                       "reported: tracking includes the deliberate occlusion"))
         g.append(gate("M2_heading_err_mean_deg", "report", m.get("M2_heading_err_mean_deg"),
@@ -922,8 +971,13 @@ def setup_name(cell):
 def write_markdown(sb, path):
     counts = sb["counts"]
     L = []
-    L.append(f"# Simulator scoreboard - {sb['suite']} suite - "
-             f"{datetime.fromisoformat(sb['started_utc'].rstrip('Z')).strftime('%d %b %Y')}")
+    # suite_meta.json may record started_utc as null (docs/sim_results/2026-09-11-simv2
+    # merges two sweeps and has no single start); scoreboard.json keeps the null
+    # untouched and only this heading needs a fallback, or the scorer cannot be
+    # re-run on that committed folder at all.
+    when = (datetime.fromisoformat(sb["started_utc"].rstrip("Z")).strftime("%d %b %Y")
+            if sb.get("started_utc") else "start time not recorded")
+    L.append(f"# Simulator scoreboard - {sb['suite']} suite - {when}")
     L.append("")
     total = sum(counts.values())
     L.append(f"**Overall: {sb['verdict']}.** {counts['fail']} of {total} checks FAILED "
@@ -935,7 +989,8 @@ def write_markdown(sb, path):
     # but not scored. Say all of it.
     L.append(f"Flights: {fc.get('attempted', 0)} attempted, {fc.get('valid', 0)} valid, "
              f"{fc.get('invalid', 0)} invalid, {fc.get('scored', 0)} scored "
-             f"({len(sb['cells'])} cells). Total time: {sb['duration_s']/60:.0f} min.")
+             f"({len(sb['cells'])} cells). Total time: "
+             + (f"{sb['duration_s']/60:.0f} min." if sb.get("duration_s") is not None else "not recorded."))
     unscored = [a for c in sb["cells"] for a in c.get("attempts", [])
                 if a.get("valid") and not a.get("scored")]
     if unscored:

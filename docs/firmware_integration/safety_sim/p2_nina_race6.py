@@ -2,7 +2,8 @@
 the committed fix-round-6 GAP8 model ("fix6" in safety_sim_review6.py), plus:
   * a triggered variant: the NINA stall starts exactly delta after a queue attempt (delta in 1 us .. 59 ms);
   * an ESP32-internal stall sweep (GAP8 cannot see it; STM32-dependent: v5 vs v6 rule 4).
-Scenario: p = 0.95 before the stall, 0.6 (hysteresis zone [0.45, 0.7)) from the stall end on, so any
+Scenario: p = 0.95 before the stall, 0.6 (hysteresis zone [0.45, 0.75); it was [0.45, 0.7) before
+2026-09-13) from the stall end on, so any
 resume after the stale hover is a P2 violation."""
 import random
 import sys

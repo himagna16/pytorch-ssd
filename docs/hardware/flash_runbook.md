@@ -210,22 +210,28 @@ Flash command:
 shasum -a 256 ~/Downloads/drone/crazyflie_ssd/BUILD/GAP8_V2/GCC_RISCV_FREERTOS/target.board.devices.flash.img
 ```
 
-Expected for the flight build at commit `0623a7d`:
+Expected for the flight build at commit `ff876bd` (the 2026-09-13 enter-bar change,
+`APP_FOLLOW_VIS_ENTER_RAW` 4216 -> 5467; bundle head `fc42eb9` is a docs-only commit on
+top of it and builds the same image):
 
 ```
-c69e71e76431fa6bec3ea1abd690f3d9440bf3fcd8ca020a1d801795c5a3ef67
+261e20d8b03f091a2c18b0beccf46b3397a90a00ad3180c924d413a6099aeb8b
 ```
 
-The build is reproducible — this exact hash was produced three times in a row
-from clean builds, and a fourth time from a separate copy of the source tree.
-A different hash means the source changed, not that the build is flaky.
+The build is reproducible — the `ff876bd` image was built twice from clean builds with
+this identical hash (`docs/firmware_integration/HANDOFF.md`, section 4), and the earlier
+`0623a7d` image (`c69e71e76431fa6bec3ea1abd690f3d9440bf3fcd8ca020a1d801795c5a3ef67`,
+superseded 2026-09-13; it differs from the new one in exactly the 2 bytes of the enter
+threshold) was produced three times in a row from clean builds, and a fourth time from a
+separate copy of the source tree. A different hash means the source changed, not that
+the build is flaky.
 
 ### 3a. Build variants
 
 ```bash
 # on-hardware self-test build (fixed image, no camera) - see §5
 bash ./flash_person_follow_aideck.sh radio://0/80/2M/E7E7E7E7E7 APP_BENCH_FIXED_INPUT=1
-# expected sha256: 7fa0e8befdaa900ba678b60f5fa152abca6d95642cb5eb4ae1019bd3c78ddb7a
+# expected sha256: 34c4b3bae3322dd04e555fe30b9b658f6480d4e006356aa683523af88ec4f929  (ff876bd; was 7fa0e8be… at 0623a7d)
 
 # quiet build - startup and errors only, no per-frame spam
 bash ./flash_person_follow_aideck.sh radio://0/80/2M/E7E7E7E7E7 APP_DEBUG=0
@@ -424,15 +430,19 @@ Prebuilt, hash-checked images are already on disk:
 
 ```
 ~/Downloads/drone/aideck-gap8-examples/_prebuilt_champion/
-  champion_flight.img   c69e71e76431fa6bec3ea1abd690f3d9440bf3fcd8ca020a1d801795c5a3ef67
-  champion_bench.img    7fa0e8befdaa900ba678b60f5fa152abca6d95642cb5eb4ae1019bd3c78ddb7a
+  champion_flight.img   261e20d8b03f091a2c18b0beccf46b3397a90a00ad3180c924d413a6099aeb8b
+  champion_bench.img    34c4b3bae3322dd04e555fe30b9b658f6480d4e006356aa683523af88ec4f929
   SHA256SUMS
   cpx_console.py
 ```
 
-Both were built from `crazyflie_ssd` at commit `0623a7d`
-("Fix round 6: SPI-based re-confirmation, packet v6 tracking bit 1"), which is
-the same commit as the head of `docs/firmware_integration/champion-core8-integration.bundle`.
+Both were built from `crazyflie_ssd` at commit `ff876bd`
+("Raise the follower's enter bar to p >= 0.75 (raw 4216 -> 5467)", 2026-09-13). The head of
+`docs/firmware_integration/champion-core8-integration.bundle` is `fc42eb9`, a docs-only commit
+on top of `ff876bd` that builds the same bytes. The previous images, built from `0623a7d`
+("Fix round 6: SPI-based re-confirmation, packet v6 tracking bit 1"), were
+`c69e71e7…` (flight) and `7fa0e8be…` (bench); they confirm targets at p >= 0.70 and must not be
+flashed for the lab.
 
 Flash them directly — skip Docker entirely:
 
@@ -479,7 +489,8 @@ Add `APP_BENCH_FIXED_INPUT=1` to the `make` line for the bench build.
 This was run on 2026-09-12 with `--network none` (no network at all). It exited
 0 and produced a flash image with sha256
 `c69e71e76431fa6bec3ea1abd690f3d9440bf3fcd8ca020a1d801795c5a3ef67` —
-**byte-identical to the online build.** So this is a safe substitute, not a
+**byte-identical to the online build.** (That was the `0623a7d` image; the offline path was
+not re-run for `ff876bd`, whose online hash is `261e20d8…` above.) So this is a safe substitute, not a
 degraded one.
 
 Order of preference in the lab: normal script → this offline command → the

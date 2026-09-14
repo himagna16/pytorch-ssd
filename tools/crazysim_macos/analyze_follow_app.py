@@ -13,7 +13,7 @@ commanded vs measured yaw rate (firmware convention: + = counter-clockwise), and
 true heading error to the person (--truth CSV from the patched crazysim.py, or a
 static --person X Y).
 Camera freeze: hover and land delays after the last good frame, and the
-re-confirmation after the freeze (GAP8 bit 0 needs 3 frames at p >= 0.7, then the
+re-confirmation after the freeze (GAP8 bit 0 needs 3 frames at p >= 0.75, then the
 STM32 needs 3 packets with bits 0+1).
 Link stall/delay/drop: packets stale by rule 0, when the app stopped steering, and
 how many fresh packets it took to resume.

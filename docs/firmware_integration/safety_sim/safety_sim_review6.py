@@ -1,5 +1,12 @@
 """Independent review sim of fix round 6 (commit 0623a7d), copy of fw_review5/safety_sim_review5.py.
 
+2026-09-13: ENTER raised 0.7 -> 0.75 to match the shipped firmware bar (crazyflie_ssd app_config.h
+  APP_FOLLOW_VIS_ENTER_RAW 5467 = ceil(logit(0.75)/eps_out); decision and evidence in pytorch_ssd
+  docs/eval_results/2026-09-13-champion-threshold/README.md, simulation only, no hardware run).
+  Everything under logs/ was produced with ENTER = 0.7 and has NOT been re-run at 0.75. The
+  properties P1-P3 and the G-checks are stated relative to ENTER, and the scripted scenarios use
+  p = 0.95 (above both bars) and p = 0.6 (inside the hysteresis zone of both), or random draws.
+
 NEW in review6
   fw="fix6": fix5 PLUS (a) the com.c SPI record: in the com task, at the finalize (after the NINA
     handshake returned, just before the SPI transfer) the C helper follow_packet_frame_ref_us is
@@ -16,7 +23,7 @@ NEW in review6
   STM32 "v6": v5 (rule 0 + rule 4) with rule 3 = bit 0 clear -> hover and rule 4 counting only fresh
     packets with bit 0 AND bit 1 set. "v5"/"v4+r4" count bit 0 only (an STM32 that ignores bit 1);
     "v4" has no rule 4 at all (pure GAP8 guarantee for P2).
-  New GAP8-level checks: G4 bit1 => frame p >= 0.7 and frame <= 0.4 s old at the queue attempt;
+  New GAP8-level checks: G4 bit1 => frame p >= ENTER (0.75) and frame <= 0.4 s old at the queue attempt;
     G5 reserved bits 2..7 == 0; G6 bit1 after finalize => wait <= 100 ms and true age at SPI <= 0.5 s;
     G7 com.c record frame_us == the frame's capture_end (exact recovery), have_frame=0 for age 255.
 
@@ -45,7 +52,7 @@ NEW in review5
     G3 tracking 1 => true frame age at SPI <= 0.5 s (0.4 s attempt bound + 0.1 s wait bound)
 Truth properties (as review4):
   P1 land <= last valid frame + 3.0 s + one step + small link delay (TOL_L)
-  P2 steering resumes after a stale-hover step only after 3 consecutive fresh p>=0.7 frames
+  P2 steering resumes after a stale-hover step only after 3 consecutive fresh p>=ENTER (0.75) frames
   P3 never steer on a frame truly older than 0.5 s (+ step + TOL_L)
 """
 import ctypes
@@ -59,7 +66,7 @@ UNIT, SAT = 20000, 255
 HOVER, LAND, STEP = 500_000, 3_000_000, 10_000
 RECONF = 400_000
 TX_MAX_WAIT = 100_000
-ENTER, EXIT, CONFIRM = 0.7, 0.45, 3
+ENTER, EXIT, CONFIRM = 0.75, 0.45, 3   # enter raised 0.7 -> 0.75 on 2026-09-13; logs/ were produced at 0.7
 CAP, INF, TIMEOUT = 30_000, 30_000, 500_000
 POST = 50            # decode + packet build, us
 XFER_HS = 100        # NINA handshake when the link is up

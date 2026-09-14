@@ -397,7 +397,7 @@ static void test_rule4(void)
   CHECK(sim_rx(&s, T, 3 * MS, 3, 2, 0.3f, 0.5f, NULL) == FOLLOW_RX_OK);
   T += 600 * MS;                                   /* silence: stale hover */
   sim_step(&s, T); CHECK(s.o.reason == FOLLOW_REASON_HOVER_STALE);
-  /* 3, 3, then bit 0 only (hysteresis p in [0.45, 0.7)) -> restart */
+  /* 3, 3, then bit 0 only (hysteresis p in [0.45, 0.75)) -> restart */
   sim_rx(&s, T + 10 * MS, 3 * MS, 3, 2, 0.3f, 0.5f, &inf); CHECK(inf.counted && inf.reconfirm_count == 1);
   sim_step(&s, T + 10 * MS); CHECK_MODE(s.o, FOLLOW_MODE_HOVER, FOLLOW_REASON_HOVER_RECONFIRM);
   sim_rx(&s, T + 20 * MS, 3 * MS, 3, 2, 0.3f, 0.5f, &inf); CHECK(inf.reconfirm_count == 2);
