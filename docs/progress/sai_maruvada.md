@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Improved and merged, not fixed (Sep 14).** Raising the confirmation bar from 0.70 to 0.75 is better on every pet measure and costs nothing on people, and it is now in every copy of the rule including the firmware. But I had reported it as passing the half-metre limit on the strength of four flights, and a fresh 56-flight run at the shipped setting put the pet case at 0.71, 0.73, 0.46 and 0.34 m, two of four over the limit. Four repeats were not enough to call it, and I should not have | The remaining fix is in training, not settings: fine-tune the champion against pets and mannequins, which needs Grace's preserve-QAT-alphas work to survive release. The lab session tests the current 0.75 as it is |
+| Making the champion safer around pets | Sai | **Measured properly (Sep 14): at the shipped 0.75 the pet limit is a weighted coin.** Sixteen fresh flights: 11 pass, 5 fail, with a 95% range of roughly 40% to 90% per flight, so as the suite scores it the case fails about three times in four. Every flight locks onto the dog within a couple of seconds; what decides pass or fail is whether the lock lets go, and that is governed by a second setting, the release bar, that nobody has swept. The seed that fixes the camera noise does not fix the outcome | Sweep the release bar next; it is cheap and it is the mechanism. Training remains the fix if that is not enough |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,21 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14 (evening).** Used a spare hour to answer the question I got
+  wrong this morning properly. Sixteen fresh pet flights at the shipped
+  setting: 11 pass the half-metre limit and 5 fail, a per-flight pass rate of
+  about 69% with a wide range, so it is a weighted coin rather than a pass or a
+  fail, and every number was re-derived independently from the raw flight logs.
+  The useful part is the mechanism. Every flight locks onto the dog within a
+  couple of seconds at almost identical confidence; nothing before that moment
+  separates the good flights from the bad. What differs is whether the lock lets
+  go, and that is controlled by a second threshold, the release bar, that the
+  earlier sweep never touched. That is the cheap next experiment. Also gave the
+  two camera settings that had never been flown their first verdicts: low light
+  is fine, colour Bayer genuinely hurts tracking. Found a quirk in my own scorer
+  along the way, which grades any non-standard camera against the strictest
+  bar; flagged, not fixed.
 
 - **2026-09-14 (afternoon).** Flew the full 14-case suite at the setting that
   now ships, 56 flights, so the lab has a reference flown at the real

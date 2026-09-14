@@ -3,6 +3,21 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-14 (evening)** — The pet gate at the shipped 0.75 is a **weighted
+  coin, not a pass**: 11 of 16 fresh flights under 0.5 m, 95% interval
+  [0.41, 0.89]; pooled over 24 flights, 17 pass. Scored as the suite scores it
+  (worst of four repeats) the cell fails about three times in four. The
+  threshold stays. What decides each flight is whether the latch on the dog
+  *persists*, and the latch is released by the exit bar (0.45), which nobody
+  has swept. OPEN, cheapest next step: sweep `--vis-exit` (0.55 / 0.65) on the
+  pet and person cells before any training work. Also decided: the two
+  never-flown camera presets now have verdicts — low light is fine (its only
+  failed gate is a scorer classification quirk plus the known 0.75 M10 cost);
+  **colour Bayer degrades tracking** to 0.855 and is a real sensor-model effect.
+  OPEN: scoreboard.py:696 applies the strict clean-camera gates to any camera
+  that is not himax_typical, which mis-grades low light; fix or document.
+  Evidence: `docs/eval_results/2026-09-14-pets-variance/`.
+
 - **2026-09-13** — **The team ships the CHAMPION.** Decided at the team dinner
   (Sai, David and the other members; Prof. Mok not present). The deciding
   evidence is the first head-to-head flight comparison, 48 flights interleaved in
