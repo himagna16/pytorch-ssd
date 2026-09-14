@@ -1,0 +1,41 @@
+{
+  "0.45": {
+    "tracking_mean": 0.9915,
+    "tracking": [
+      0.992,
+      0.991
+    ],
+    "losses": 0,
+    "reacq": 0,
+    "time_lost_s": 0.0,
+    "hdg_mean": 3.385,
+    "hdg_max": 9.14,
+    "dist_err": 0.5375000000000001
+  },
+  "0.55": {
+    "tracking_mean": 0.9405,
+    "tracking": [
+      0.915,
+      0.966
+    ],
+    "losses": 2,
+    "reacq": 2,
+    "time_lost_s": 4.09,
+    "hdg_mean": 3.26,
+    "hdg_max": 8.55,
+    "dist_err": 0.5535000000000001
+  },
+  "0.65": {
+    "tracking_mean": 0.8634999999999999,
+    "tracking": [
+      0.951,
+      0.776
+    ],
+    "losses": 6,
+    "reacq": 5,
+    "time_lost_s": 10.06,
+    "hdg_mean": 3.78,
+    "hdg_max": 9.65,
+    "dist_err": 0.5665
+  }
+}

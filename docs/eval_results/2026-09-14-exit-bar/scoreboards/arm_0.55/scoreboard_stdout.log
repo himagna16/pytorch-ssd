@@ -1,0 +1,5 @@
+scoreboards/arm_0.55/scoreboard.json
+scoreboards/arm_0.55/scoreboard.md
+suite verdict: FAIL  {'pass': 1, 'fail': 1, 'invalid': 0, 'characterised': 0}
+  PASS           B.moving__ships
+  FAIL           F.pets__ships   failed: M6_max_horizontal_drift_m

@@ -1,0 +1,4 @@
+# order	vis_exit	cell	scene	class	backend	camera	speed	dur	repeat	block
+25	0.45	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	7	7
+26	0.55	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	7	7
+27	0.65	F.pets__ships	s03_pets_only	F	chip	himax_typical	chip	35	7	7

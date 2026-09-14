@@ -1,0 +1,6 @@
+15:33  up 12 days, 15:07, 1 user, load averages: 3.66 4.16 4.47
+
+aideck_fw6_review
+aideck_fw5_review
+aideck
+(docker names above, blank = none)

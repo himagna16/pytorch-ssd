@@ -1,0 +1,2 @@
+launched_utc=2026-09-14T20:08:05Z
+bash scripts/fly_plan_exit.sh /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar/plan.tsv /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 1 1789418186

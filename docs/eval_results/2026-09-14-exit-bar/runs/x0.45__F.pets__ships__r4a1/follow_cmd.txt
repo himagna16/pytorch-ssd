@@ -1,0 +1,1 @@
+/Users/saimaruvada/Downloads/drone/trainenv/bin/python follow_person.py --duration 35 --out /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar/runs/x0.45__F.pets__ships__r4a1 --backend chip --rate-hz 6.5 --latency-ms 153 --vis-enter 0.75 --confirm-frames 3 --vis-exit 0.45

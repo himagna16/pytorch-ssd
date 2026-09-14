@@ -1,0 +1,58 @@
+[15:08:05] exit-bar suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar/plan.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar scenes=/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 start=1 stop_epoch=1789418186
+[15:08:05] flight 1/24  vis_exit 0.45  F.pets__ships  r3 a1  (block 1, seed 1003, load1 3.74)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.432 Hz  track 0.075  gap_max 158.8  upset False  load1 4.66  
+[15:08:57] flight 2/24  vis_exit 0.55  F.pets__ships  r5 a1  (block 1, seed 1005, load1 4.66)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.996  6.364 Hz  track 0.082  gap_max 163.9  upset False  load1 6.05  
+[15:09:49] flight 3/24  vis_exit 0.65  F.pets__ships  r1 a1  (block 1, seed 1001, load1 6.05)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.995  6.371 Hz  track 0.095  gap_max 163.8  upset False  load1 5.40  
+[15:10:41] flight 4/24  vis_exit 0.45  F.pets__ships  r6 a1  (block 2, seed 1006, load1 5.40)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.993  6.364 Hz  track 0.042  gap_max 163.8  upset False  load1 5.73  
+[15:11:33] flight 5/24  vis_exit 0.55  F.pets__ships  r2 a1  (block 2, seed 1002, load1 5.73)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.993  6.363 Hz  track 0.114  gap_max 163.8  upset False  load1 5.15  
+[15:12:25] flight 6/24  vis_exit 0.65  F.pets__ships  r4 a1  (block 2, seed 1004, load1 5.15)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.995  6.364 Hz  track 0.037  gap_max 163.8  upset False  load1 5.02  
+[15:13:17] flight 7/24  vis_exit 0.45  F.pets__ships  r1 a1  (block 3, seed 1001, load1 5.10)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.994  6.365 Hz  track 0.034  gap_max 163.5  upset False  load1 5.50  
+[15:14:09] flight 8/24  vis_exit 0.55  F.pets__ships  r4 a1  (block 3, seed 1004, load1 5.50)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.994  6.357 Hz  track 0.113  gap_max 163.6  upset False  load1 7.07  
+[15:15:00] flight 9/24  vis_exit 0.65  F.pets__ships  r6 a1  (block 3, seed 1006, load1 7.07)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.998  6.377 Hz  track 0.081  gap_max 163.6  upset False  load1 5.41  
+[15:15:52] flight 10/24  vis_exit 0.45  F.pets__ships  r4 a1  (block 4, seed 1004, load1 5.41)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.995  6.346 Hz  track 0.049  gap_max 163.7  upset False  load1 4.94  
+[15:16:44] flight 11/24  vis_exit 0.55  F.pets__ships  r6 a1  (block 4, seed 1006, load1 4.94)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.997  6.351 Hz  track 0.046  gap_max 163.7  upset False  load1 4.67  
+[15:17:36] flight 12/24  vis_exit 0.65  F.pets__ships  r2 a1  (block 4, seed 1002, load1 4.67)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.993  6.35 Hz  track 0.051  gap_max 183.9  upset False  load1 4.47  
+[15:18:28] flight 13/24  vis_exit 0.45  F.pets__ships  r2 a1  (block 5, seed 1002, load1 4.47)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.993  6.37 Hz  track 0.146  gap_max 163.9  upset False  load1 3.78  
+[15:19:20] flight 14/24  vis_exit 0.55  F.pets__ships  r3 a1  (block 5, seed 1003, load1 3.78)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.993  6.362 Hz  track 0.021  gap_max 163.6  upset False  load1 3.40  
+[15:20:11] flight 15/24  vis_exit 0.65  F.pets__ships  r5 a1  (block 5, seed 1005, load1 3.40)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.994  6.375 Hz  track 0.029  gap_max 163.8  upset False  load1 3.87  
+[15:21:03] flight 16/24  vis_exit 0.45  F.pets__ships  r5 a1  (block 6, seed 1005, load1 3.87)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.995  6.365 Hz  track 0.186  gap_max 163.5  upset False  load1 3.63  
+[15:21:55] flight 17/24  vis_exit 0.55  F.pets__ships  r1 a1  (block 6, seed 1001, load1 3.63)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.998  6.364 Hz  track 0.034  gap_max 163.4  upset False  load1 4.12  
+[15:22:47] flight 18/24  vis_exit 0.65  F.pets__ships  r3 a1  (block 6, seed 1003, load1 4.12)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.997  6.377 Hz  track 0.035  gap_max 163.6  upset False  load1 4.36  
+[15:23:38] flight 19/24  vis_exit 0.45  B.moving__ships  r2 a1  (block 1, seed 1002, load1 4.36)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.995  6.374 Hz  track 0.991  gap_max 163.7  upset False  load1 3.99  
+[15:24:45] flight 20/24  vis_exit 0.55  B.moving__ships  r1 a1  (block 1, seed 1001, load1 3.99)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.997  6.367 Hz  track 0.915  gap_max 163.9  upset False  load1 4.09  
+[15:25:52] flight 21/24  vis_exit 0.65  B.moving__ships  r2 a1  (block 1, seed 1002, load1 4.09)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.995  6.367 Hz  track 0.776  gap_max 163.7  upset False  load1 3.69  
+[15:26:59] flight 22/24  vis_exit 0.45  B.moving__ships  r1 a1  (block 2, seed 1001, load1 3.69)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.995  6.359 Hz  track 0.992  gap_max 163.8  upset False  load1 4.53  
+[15:28:05] flight 23/24  vis_exit 0.55  B.moving__ships  r2 a1  (block 2, seed 1002, load1 4.53)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.995  6.364 Hz  track 0.966  gap_max 163.6  upset False  load1 4.23  
+[15:29:12] flight 24/24  vis_exit 0.65  B.moving__ships  r1 a1  (block 2, seed 1001, load1 5.01)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.981  6.323 Hz  track 0.951  gap_max 217.6  upset False  load1 4.52  
+[15:30:19] ALL FLIGHTS DONE in 22 min
+[15:30:45] exit-bar suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar/plan_extra.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-14-exit-bar scenes=/Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scenes_v2 start=1 stop_epoch=1789418186
+[15:30:45] flight 25/3  vis_exit 0.45  F.pets__ships  r7 a1  (block 7, seed 1007, load1 3.78)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.994  6.367 Hz  track 0.18  gap_max 163.8  upset False  load1 4.45  
+[15:31:36] flight 26/3  vis_exit 0.55  F.pets__ships  r7 a1  (block 7, seed 1007, load1 4.45)
+  -> VALID  floor 0.0  enter 0.75 exit 0.55 cf 3  sim/wall 0.992  6.357 Hz  track 0.052  gap_max 163.5  upset False  load1 4.23  
+[15:32:28] flight 27/3  vis_exit 0.65  F.pets__ships  r7 a1  (block 7, seed 1007, load1 4.23)
+  -> VALID  floor 0.0  enter 0.75 exit 0.65 cf 3  sim/wall 0.996  6.362 Hz  track 0.11  gap_max 163.8  upset False  load1 3.69  
+[15:33:20] ALL FLIGHTS DONE in 2 min
