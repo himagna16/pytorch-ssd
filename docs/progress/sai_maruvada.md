@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 12, 2026
-**Last updated:** 2026-09-12
+**Period covered:** Aug 24 to Sep 14, 2026
+**Last updated:** 2026-09-14
 
 ## Summary
 
@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Fixed in simulation, for free.** The drone only locks on after three confident frames in a row; raising the confidence needed from 0.70 to 0.75 makes the pet case pass its half-metre limit on all four flights (worst drift 0.38 m, from 1.37 m) with no loss on people. 96 flights, four rules compared in one session. The paper estimate had pointed at 0.80, which in flight costs 12 points of accuracy on a standing person, so flying it changed the answer | Carry 0.75 into every copy of the rule: the host follower, the scorer, the chip emulator, the firmware contract, the C decoder and the GAP8 app, on a branch with a pull request because it is a shared contract. In progress now |
+| Making the champion safer around pets | Sai | **Done and merged (Sep 14).** Raising the confirmation bar from 0.70 to 0.75 makes the pet case pass its half-metre limit on every flight with no cost on people. Carried into every copy of the rule, including the firmware on the drone, as one reviewed change; every test suite passes together and a smoke flight at the new default confirmed it end to end | Confirm on real hardware at the lab session |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -135,6 +135,17 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14.** Merged the threshold change (pull request #2 on the team fork)
+  after checking it: the new bar is live in every copy of the rule, and the
+  mirrored branch is in step. Wrote to Grace with three things: the team's
+  choice of the champion; that the confuser release which failed a gate on the
+  96-image pack passes on the 608-image pack, so that failure was small-sample
+  noise and not her model; and that the firmware contract row her export work
+  targets has changed. Her preserve-QAT-alphas work is now the next thing that
+  unblocks, since it is what would let a future fine-tune of the champion keep
+  its gains through release. Still nothing on real hardware; the lab session
+  with MinHyuk is next week.
 
 - **2026-09-13 (evening).** Flew the cheap fix for the champion's pet problem
   rather than trusting the paper estimate, and the paper estimate was wrong. 96
