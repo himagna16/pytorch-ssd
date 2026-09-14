@@ -33,7 +33,8 @@ Returned dict (same keys both backends, so callers need no branches):
     visibility_confidence, visibility_logit, x_value, x_bin_index,
     size_value, size_bucket_index, x_soft, raw (the 14 outputs as float logits)
 The chip backend adds: raw_i32, vis_gate (the firmware's own integer
-visibility test, raw[9] >= 4216) and infer_ms.
+visibility test, raw[9] >= 5467, i.e. p >= 0.75 at the champion's eps_out) and
+infer_ms.
 
 raw_i32 is onnxruntime's reproduction of the chip's integer output domain, NOT
 a bit-exact copy of what the GAP8 computes. ORT evaluates model_id_dory.onnx in
@@ -69,8 +70,11 @@ NET_W = NET_H = 128
 N_OUT = 14
 RESP_FMT = "<14i d"
 RESP_LEN = struct.calcsize(RESP_FMT)
-# app_config.h on champion-core8-integration, for this model's eps.
-VIS_ENTER_RAW = 4216
+# app_config.h on champion-core8-integration, for this model's eps:
+# ceil(ln(0.75 / 0.25) / 2.009823510888964e-4) = 5467 (tools/firmware_decode/
+# raw_thresholds.py). Was 4216 (p >= 0.70) until 2026-09-13; must equal the
+# enter bar in follow_person.py (--vis-enter 0.75) and gap8_emulator.py.
+VIS_ENTER_RAW = 5467
 XBIN9_CENTERS = np.array([-1.0 + (2 * i + 1) / 9.0 for i in range(9)], np.float64)
 
 

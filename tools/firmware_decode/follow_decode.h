@@ -34,7 +34,8 @@ typedef struct {
  * "v[9] >= follow_raw_thresh(p, eps)" is exactly "sigmoid(v[9]*eps) >= p",
  * and "v[9] < follow_raw_thresh(p, eps)" is exactly "sigmoid(v[9]*eps) < p". */
 int32_t follow_raw_thresh(double p, double eps_out);
-/* Team rule: count at p >= 0.7, confirm after 3 consecutive frames, lost below 0.45. */
+/* Team rule (enter raised 0.70 -> 0.75 on 2026-09-13): count at p >= 0.75, confirm after
+ * 3 consecutive frames, lost below 0.45. */
 void follow_vis_cfg_default(follow_vis_cfg_t *cfg, double eps_out);
 void follow_vis_reset(follow_vis_state_t *st);
 /* First index of the maximum (same tie rule as torch.argmax). */

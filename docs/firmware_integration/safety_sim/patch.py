@@ -26,7 +26,7 @@ NEW in review6
   STM32 "v6": v5 (rule 0 + rule 4) with rule 3 = bit 0 clear -> hover and rule 4 counting only fresh
     packets with bit 0 AND bit 1 set. "v5"/"v4+r4" count bit 0 only (an STM32 that ignores bit 1);
     "v4" has no rule 4 at all (pure GAP8 guarantee for P2).
-  New GAP8-level checks: G4 bit1 => frame p >= 0.7 and frame <= 0.4 s old at the queue attempt;
+  New GAP8-level checks: G4 bit1 => frame p >= ENTER (0.75) and frame <= 0.4 s old at the queue attempt;
     G5 reserved bits 2..7 == 0; G6 bit1 after finalize => wait <= 100 ms and true age at SPI <= 0.5 s;
     G7 com.c record frame_us == the frame's capture_end (exact recovery), have_frame=0 for age 255.
 

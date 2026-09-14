@@ -69,7 +69,7 @@ int main(void){
   follow_packet_t h; memset(&h,0,sizeof h); h.frame_age_20ms=2; h.tracking=3; h.gap8_tx_ms=follow_packet_age_ref_us(1000,2);
   { uint32_t c=0; CHECK(follow_packet_frame_ref_us(&h,&c)==1 && c==1000u); }
   follow_packet_finalize_at_tx(&h,1000+25000+300,9); CHECK(h.frame_age_20ms==2 && h.tracking==3);
-  /* hysteresis frame (confirmed, p < 0.7) must not count for rule 4 */
+  /* hysteresis frame (confirmed, p < 0.75, the enter bar since 2026-09-13) must not count for rule 4 */
   follow_packet_t y; memset(&y,0,sizeof y); y.tracking=follow_packet_tracking_byte(1,0);
   CHECK(follow_packet_is_confirmed(&y) && !follow_packet_counts_for_reconfirm(&y));
   printf("cases=%lu failures=%lu\n",n,fail); return fail!=0;

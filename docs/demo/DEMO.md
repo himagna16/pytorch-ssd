@@ -54,7 +54,7 @@ Type `./demo.sh` and press Enter.
 
 **0:35, the drone takes off and hovers.**
 > "It does not move until it is sure. It needs three frames in a row at
-> confidence 0.7 or higher before it starts following."
+> confidence 0.75 or higher before it starts following."
 
 **0:45, the drone turns to follow (about 40 s).** You can drag in the window to rotate the view.
 > "Now it is following. The person moves 1.2 meters each way. The drone turns
@@ -154,9 +154,10 @@ the control loop and the safety rules, not how well the model sees in real
 light. Real AI-deck frames are the next step; the capture protocol is written.
 
 **What stops it from chasing something that isn't a person?**
-It needs three frames in a row at 0.7 confidence before it moves. In the
+It needs three frames in a row at 0.75 confidence before it moves (the bar
+was 0.70 until 2026-09-13; `follow_person.py` now defaults to 0.75). In the
 empty room it never started. Honestly the margin is thin there: the highest
-score was 0.64, against the 0.7 it needs.
+score was 0.64, against the 0.7 it needed when that flight ran (0.75 now).
 
 **What's next?**
 Real camera frames from the AI-deck with the motors off, the

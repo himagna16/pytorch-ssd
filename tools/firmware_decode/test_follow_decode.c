@@ -72,9 +72,19 @@ static void test_state_machine(void) {
 static void test_thresholds(void) {
     follow_vis_cfg_t cfg;
     follow_vis_cfg_default(&cfg, 0.01);
-    CHECK(cfg.enter_raw == 85, "enter_raw %d (want ceil(0.8473/0.01)=85)", (int)cfg.enter_raw);
+    /* The enter bar moved 0.7 -> 0.75 on 2026-09-13 (DECISIONS.md; the closed-loop pet-gate
+     * sweep in docs/eval_results/2026-09-13-champion-threshold). At eps 0.01 that is
+     * ceil(ln(3)/0.01) = ceil(109.86) = 110; the old expectation was ceil(84.73) = 85. */
+    CHECK(cfg.enter_raw == 110, "enter_raw %d (want ceil(1.0986/0.01)=110)", (int)cfg.enter_raw);
     CHECK(cfg.exit_raw == -20, "exit_raw %d (want ceil(-0.2007/0.01)=-20)", (int)cfg.exit_raw);
     CHECK(cfg.confirm_frames == 3, "confirm_frames %d", cfg.confirm_frames);
+    /* The shipped constants (docs/firmware_contract.md): the QAT champion's eps_out. These are
+     * the numbers the GAP8 bakes in (APP_FOLLOW_VIS_*_RAW) and the GAP8 emulator asserts; if
+     * this check ever moves, every copy of the bar must move with it. */
+    follow_vis_cfg_default(&cfg, 2.009823510888964e-4);
+    CHECK(cfg.enter_raw == 5467, "champion enter_raw %d (want ceil(ln 3 / eps_out) = 5467)", (int)cfg.enter_raw);
+    CHECK(cfg.exit_raw == -998, "champion exit_raw %d (want -998)", (int)cfg.exit_raw);
+    CHECK(follow_raw_thresh(0.7, 2.009823510888964e-4) == 4216, "the superseded 0.7 bar must still map to 4216");
 }
 
 static int run_file(const char *path) {

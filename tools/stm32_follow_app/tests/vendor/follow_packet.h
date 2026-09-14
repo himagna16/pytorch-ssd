@@ -41,12 +41,12 @@ typedef char follow_packet_size_must_be_28[(sizeof(follow_packet_t) == 28u) ? 1 
 /* Byte 16 (tracking), v6 (fix round 6). Bits 2..7 are reserved and sent as 0.
  * The STM32 must test bits; never compare the byte with 1.
  *   bit 0 CONFIRMED:     the GAP8 visibility state machine is tracking
- *                        (confirmed after 3 consecutive frames at p >= 0.7,
+ *                        (confirmed after 3 consecutive frames at p >= 0.75,
  *                        kept until p < 0.45). Steer only when set (rule 3).
  *   bit 1 FRAME_VISIBLE: THIS frame's visibility confidence is >= the enter
- *                        threshold (p >= 0.7; raw v[9] >= APP_FOLLOW_VIS_ENTER_RAW,
+ *                        threshold (p >= 0.75; raw v[9] >= APP_FOLLOW_VIS_ENTER_RAW,
  *                        the decoder's own per-frame comparison). Lets the STM32
- *                        count only p >= 0.7 frames when it re-confirms after a
+ *                        count only p >= 0.75 frames when it re-confirms after a
  *                        stale hover (rule 4: 3 consecutive fresh packets with
  *                        bit 0 AND bit 1 set).
  * Both bits are 0 in no-target packets, when the frame was older than

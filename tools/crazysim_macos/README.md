@@ -99,8 +99,12 @@ confidence 1.00 at every distance from 1.5 to 3.5 m.
 ```
 
 **Safety rules in the follower**, from MinHyuk's simulator exit criteria:
-no motion unless a person is confirmed (confidence at least 0.7 on 3
-consecutive frames; tracking drops below 0.45);
+no motion unless a person is confirmed (confidence at least 0.75 on 3
+consecutive frames; tracking drops below 0.45 — the enter bar was 0.70 until
+2026-09-13, when the closed-loop sweep in
+`docs/eval_results/2026-09-13-champion-threshold` showed 0.75 passes the pet
+gate at no measurable recall cost; the rule a flight actually used is written
+into its `summary.json`);
 hover when the person is lost; hover if frames are older than 0.5 s and
 land after 3 s; speed capped at 0.3 m/s and yaw at 40 deg/s; approach only
 when the person is roughly centered. After any stale-frame hover the
@@ -253,8 +257,9 @@ unchanged to within 0.1°, tracking within 0.1 pp, no dropped or torn frames in
 either run, and the `clean` flight reproduces the Sep 10 baseline (2.7°, 99.7%)
 exactly, which is what says the comparison is sound. Perception degrades a
 little without mattering: mean confidence 0.980 → 0.962 and the worst frame
-0.748 → 0.787, never once below the 0.7 enter threshold, so the confirmation
-logic is never stressed.
+0.748 → 0.787, never once below the 0.7 enter threshold in force when this was
+flown (raised to 0.75 on 2026-09-13), so the confirmation logic is never
+stressed.
 
 The one real behavioural difference is **distance keeping**: the drone closed to
 2.64 m on `clean` but only 2.98 m on `himax_typical`, because the softer,
@@ -391,7 +396,9 @@ It works where it was calibrated and not much further:
 It never reaches the ~5 DN target away from people and pets, and — the reason it
 stays off — **it changes what the network reports**: on the furniture scene,
 which exists precisely to confirm the drone ignores inanimate objects,
-confidence rose from 0.755 to 0.957 at 2.5 m against a 0.70 latch threshold, and
+confidence rose from 0.755 to 0.957 at 2.5 m against the 0.70 latch threshold
+of the time (0.75 since 2026-09-13; 0.755 sits right on the new bar, so this
+scene would still deserve a re-fly before the option is trusted), and
 on the control scene the size bucket moved 0.625 → 0.375 at 3.5 m, which feeds
 the forward-velocity law and therefore the headline hold-distance metric.
 Turning it on would quietly change the acceptance results it is meant to make
@@ -445,6 +452,12 @@ flies.
 
 `scoreboard.py` is a separate step and reads only what the flights already
 wrote, so it can be re-run after the fact (and was, whenever a threshold moved).
+That includes the follower's confirmation rule: since 2026-09-13
+`follow_person.py` records `vis_enter` / `vis_exit` / `confirm_frames` in
+`summary.json` and the scorer takes the M10 band from there. A `summary.json`
+without those keys came from the older follower, whose only default was 0.70,
+so the scorer falls back to 0.70 — not the current 0.75 — and every evidence
+folder committed before the change re-scores to byte-identical numbers.
 It adds five things `analyze_follow.py` does not measure:
 
 | ID | Measures | Gate |
@@ -452,7 +465,7 @@ It adds five things `analyze_follow.py` does not measure:
 | M7 | distance-keeping error in metres, against the hold distance derived from the camera FOV and the size buckets (1.94 m for a 1.7 m person; the whole 1.62–2.43 m band is the same bucket) | mean error ≤ 0.75 m, final inside the band ±10% |
 | M8 | false follows: confirmations while no person is in view, and how far the drone flew because of one | hard zero on empty/furniture scenes; **characterised, never gated** on pet/teddy scenes |
 | M9 | how long the track was lost, how long the drone stayed unlatched *after the target was genuinely back in view* (a line-of-sight test against the scene's declared occluder boxes, sampled across the target's width), and whether steering resumed before the 3-frame re-confirmation | re-confirmation is a hard boolean; `M9_gt_visible_to_relatch_s` ≤ 1.0 s (1.5 s at chip speed). `M9_reconfirm_latency_s` — the metric once called `M9_reacquire_s` — is **report-only**: it is structurally `2/R` plus a control tick and never measured reacquisition. `M9_track_outage_s` is reported and never gated, because it includes the deliberate occlusion |
-| M10 | fraction of frames in the [0.45, 0.70) band where behaviour is decided by hysteresis alone | ≤ 0.05 clean, ≤ 0.15 on the degraded camera (provisional) |
+| M10 | fraction of frames in the [exit, enter) confidence band where behaviour is decided by hysteresis alone — [0.45, 0.75) for a flight at the shipped rule, [0.45, 0.70) for flights before 2026-09-13 | ≤ 0.05 clean, ≤ 0.15 on the degraded camera (provisional) |
 | M11 | command smoothness: yaw-rate sign reversals per minute, saturation fraction | **provisional, report-only** until calibrated from the first sweep |
 
 Two rules keep the scoreboard honest and are worth knowing before reading one:

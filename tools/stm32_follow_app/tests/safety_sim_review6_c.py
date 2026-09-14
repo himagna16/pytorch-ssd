@@ -8,7 +8,10 @@ Changes to the copied code (everything else is byte-identical to the original):
   * new code below "C CONTROLLER VARIANT": stm32_c(), the "c6" branch in simulate_c(), run_case_c(),
     monte_carlo_c(), forced clock wraps, the __main__ sections, and the GROUND timelines (section
     "groundstep", safety review 7): a link-latency step while the drone waits on the ground, take-off
-    later (T_ARM moved), where the documented v6 rule arms on late frames.
+    later (T_ARM moved), where the documented v6 rule arms on late frames;
+  * ENTER (the GAP8 model's enter bar) is 0.75, the bar adopted on 2026-09-13 (the original moved
+    with it; see the comment at ENTER). FOLLOW_SIM_ENTER in the environment overrides it, e.g.
+    FOLLOW_SIM_ENTER=0.7 reproduces the review6-era bar the committed logs were produced at.
 "c6" = the GAP8 "fix6" model + the C controller with its default take-off gate (arm_require_fresh=1);
 "c6w" = the same C controller with arm_require_fresh=0 (the Python model's take-off: arm at T_ARM
 after the warm-up). Every simulation runs the documented Python "v6" rule, c6 and c6w on the SAME
@@ -34,7 +37,7 @@ NEW in review6
   STM32 "v6": v5 (rule 0 + rule 4) with rule 3 = bit 0 clear -> hover and rule 4 counting only fresh
     packets with bit 0 AND bit 1 set. "v5"/"v4+r4" count bit 0 only (an STM32 that ignores bit 1);
     "v4" has no rule 4 at all (pure GAP8 guarantee for P2).
-  New GAP8-level checks: G4 bit1 => frame p >= 0.7 and frame <= 0.4 s old at the queue attempt;
+  New GAP8-level checks: G4 bit1 => frame p >= ENTER (0.75) and frame <= 0.4 s old at the queue attempt;
     G5 reserved bits 2..7 == 0; G6 bit1 after finalize => wait <= 100 ms and true age at SPI <= 0.5 s;
     G7 com.c record frame_us == the frame's capture_end (exact recovery), have_frame=0 for age 255.
 
@@ -63,7 +66,7 @@ NEW in review5
     G3 tracking 1 => true frame age at SPI <= 0.5 s (0.4 s attempt bound + 0.1 s wait bound)
 Truth properties (as review4):
   P1 land <= last valid frame + 3.0 s + one step + small link delay (TOL_L)
-  P2 steering resumes after a stale-hover step only after 3 consecutive fresh p>=0.7 frames
+  P2 steering resumes after a stale-hover step only after 3 consecutive fresh p>=ENTER (0.75) frames
   P3 never steer on a frame truly older than 0.5 s (+ step + TOL_L)
 """
 import ctypes
@@ -77,7 +80,16 @@ UNIT, SAT = 20000, 255
 HOVER, LAND, STEP = 500_000, 3_000_000, 10_000
 RECONF = 400_000
 TX_MAX_WAIT = 100_000
-ENTER, EXIT, CONFIRM = 0.7, 0.45, 3
+# ENTER is the GAP8 model's enter bar: 0.75 since 2026-09-13 (docs/firmware_contract.md; raw 5467
+# for the champion, was 0.7 / 4216), the same value the original safety_sim_review6.py now uses.
+# The p values in this simulator are synthetic uniform draws, not the network's. The committed
+# review6 logs (docs/firmware_integration/safety_sim/logs, the regression baseline
+# summarize_results.py checks against) were produced at 0.7; the py_v6 statistics that check
+# compares (land ranges, violations, max steered age, never_landed, runs) came out identical at
+# 0.7 and 0.75 on the sim-quick set (22 timelines x 40 runs + MC orig x 100, 2026-09-13).
+# FOLLOW_SIM_ENTER=0.7 in the environment reproduces the old bar.
+ENTER = float(os.environ.get("FOLLOW_SIM_ENTER", "0.75"))
+EXIT, CONFIRM = 0.45, 3
 CAP, INF, TIMEOUT = 30_000, 30_000, 500_000
 POST = 50            # decode + packet build, us
 XFER_HS = 100        # NINA handshake when the link is up

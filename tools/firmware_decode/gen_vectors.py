@@ -5,7 +5,7 @@ and from the simulator follower's confirmation rule (follow_person.py).
 
 Output format (read by test_follow_decode.c):
   EPS <eps_out>
-  V <14 raw ints> <exp_x_bin> <exp_size_bucket> <exp_counts(conf>=0.7)> <exp_lost(conf<0.45)>
+  V <14 raw ints> <exp_x_bin> <exp_size_bucket> <exp_counts(conf>=ENTER)> <exp_lost(conf<EXIT)>
   S <n> <n raw visibility values> <n expected tracking flags>
 """
 import argparse
@@ -17,7 +17,9 @@ from pathlib import Path
 import torch
 
 HEAD = "xbin9_size_bucket4"
-ENTER, EXIT, CONFIRM = 0.7, 0.45, 3
+# The adopted latch rule (2026-09-13). Must equal follow_vis_cfg_default() in follow_decode.c;
+# ENTER was 0.7 until 2026-09-13 (docs/firmware_contract.md, change note).
+ENTER, EXIT, CONFIRM = 0.75, 0.45, 3
 
 
 def follower_states(confs):
