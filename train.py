@@ -145,6 +145,13 @@ def parse_args():
     ap.add_argument("--qat-bits", type=int, default=8)
     ap.add_argument("--qat-calib-batches", type=int, default=16)
     ap.add_argument(
+        "--init-ckpt-drop-qat-alphas",
+        action="store_true",
+        help="Discard a QAT --init-ckpt's learned PACT ranges and keep the "
+        "--qat-calib-batches calibration instead. This was the behaviour before "
+        "2026-09-14; pass it only to reproduce a run recorded under it.",
+    )
+    ap.add_argument(
         "--qat-train-activation-modules",
         type=str,
         default=None,
@@ -799,6 +806,32 @@ def build_model(args):
     )
 
 
+# nemo.transform.quantize_pact() adds these per-module tensors on top of the float
+# model: weight/input ranges on every conv and linear, and the range plus running
+# statistics on every PACT activation. The unwrapped model has none of them, so a
+# QAT checkpoint loaded by load_init_checkpoint() reports every one as unexpected
+# and drops it. enable_quant_aware_finetune() puts them back after wrapping.
+PACT_STATE_SUFFIXES = (
+    ".W_alpha",
+    ".W_beta",
+    ".x_alpha",
+    ".alpha",
+    ".max",
+    ".min",
+    ".running_mean",
+    ".running_var",
+)
+
+
+def dropped_pact_state(state_dict, unexpected_keys) -> dict:
+    """PACT range/statistics tensors the unwrapped model had no home for."""
+    return {
+        key: state_dict[key]
+        for key in unexpected_keys
+        if key.endswith(PACT_STATE_SUFFIXES) and key in state_dict
+    }
+
+
 def load_init_checkpoint(model, ckpt_path: Path, device: torch.device):
     checkpoint = torch.load(ckpt_path, map_location=device)
     state_dict = checkpoint_state_dict(checkpoint)
@@ -819,7 +852,19 @@ def load_init_checkpoint(model, ckpt_path: Path, device: torch.device):
         print(f"  Missing keys (first 10): {missing[:10]}")
     if unexpected:
         print(f"  Unexpected keys (first 10): {unexpected[:10]}")
-    return checkpoint
+    pact_state = dropped_pact_state(state_dict, unexpected)
+    if pact_state:
+        print(
+            f"  Checkpoint is QAT: {len(pact_state)} learned PACT range tensors do not fit "
+            "the unwrapped model"
+        )
+        uncaptured = [key for key in unexpected if key not in pact_state]
+        if uncaptured:
+            print(
+                f"  WARNING: {len(uncaptured)} further dropped keys are not recognised as PACT "
+                f"state and will NOT be restored: {uncaptured[:10]}"
+            )
+    return checkpoint, pact_state
 
 
 def apply_stage4_heads_only_freeze(model) -> None:
@@ -932,8 +977,14 @@ def collect_qat_calib_samples(train_loader, device, max_batches: int):
     return samples
 
 
-def enable_quant_aware_finetune(model, train_loader, device, args):
+def enable_quant_aware_finetune(model, train_loader, device, args, init_pact_state=None):
     if not args.quant_aware_finetune:
+        if init_pact_state:
+            print(
+                f"QAT init checkpoint: DROPPED {len(init_pact_state)} learned PACT range "
+                "tensors -- this run has no --quant-aware-finetune, so there is no "
+                "quantized model to hold them."
+            )
         return model
     if not is_follow_model_type(args.model_type):
         raise ValueError("--quant-aware-finetune is only supported for follow models.")
@@ -973,6 +1024,34 @@ def enable_quant_aware_finetune(model, train_loader, device, args):
         model_q.eval()
         run_activation_calibration(model_q, calib_samples)
         model_q.train()
+
+    # The calibration above is always run, so that this path draws the same batches
+    # from train_loader either way and the epoch-1 shuffle is unchanged. When the
+    # init checkpoint was itself quantized, its learned ranges then replace the
+    # calibrated ones -- the same load export/sweep_fq_ckpt.py --mode qat performs,
+    # and the only way a fine-tune starts from the checkpoint it names.
+    if init_pact_state and not args.init_ckpt_drop_qat_alphas:
+        quantized_keys = set(model_q.state_dict())
+        restorable = {k: v for k, v in init_pact_state.items() if k in quantized_keys}
+        unplaced = sorted(set(init_pact_state) - quantized_keys)
+        model_q.load_state_dict(restorable, strict=False)
+        print(
+            f"QAT init checkpoint: PRESERVED {len(restorable)} learned PACT range tensors, "
+            f"overwriting the {args.qat_calib_batches}-batch calibration."
+        )
+        print("  Training starts from the init checkpoint's own deployed-form behaviour.")
+        print(
+            "  Pass --init-ckpt-drop-qat-alphas to reproduce a run recorded before "
+            "2026-09-14, which re-calibrated from scratch."
+        )
+        if unplaced:
+            print(f"  WARNING: {len(unplaced)} not present in the quantized model: {unplaced[:10]}")
+    elif init_pact_state:
+        print(
+            f"QAT init checkpoint: DROPPED {len(init_pact_state)} learned PACT range tensors "
+            "(--init-ckpt-drop-qat-alphas), keeping the "
+            f"{args.qat_calib_batches}-batch calibration. This is the pre-2026-09-14 behaviour."
+        )
 
     range_reg_modules = (
         tuple(args.qat_train_activation_modules)
@@ -1368,13 +1447,16 @@ def main():
     )
 
     model = build_model(args).to(device)
+    init_pact_state = None
     if args.init_ckpt:
         init_ckpt_path = (repo_root / args.init_ckpt).resolve()
         if not init_ckpt_path.is_file():
             raise FileNotFoundError(f"Init checkpoint not found: {init_ckpt_path}")
-        load_init_checkpoint(model, init_ckpt_path, device)
+        _init_checkpoint, init_pact_state = load_init_checkpoint(model, init_ckpt_path, device)
 
-    model = enable_quant_aware_finetune(model, base_train_loader, device, args)
+    model = enable_quant_aware_finetune(
+        model, base_train_loader, device, args, init_pact_state=init_pact_state
+    )
     if args.stage4_heads_only:
         apply_stage4_heads_only_freeze(model)
     if args.stem_heads_only:
