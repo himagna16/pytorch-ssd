@@ -8,6 +8,26 @@ four sweep flights at 0.75 read 0.162/0.309/0.289/0.376 m (all pass the 0.5 m M6
 and four flights this morning 0.706/0.734/0.461/0.342 (two fail) - same scene, model and sensor seeds.
 "Passes the gate" was withdrawn this morning. Nobody knew the pass rate. This folder measures it.
 
+> **CORRECTION 2026-09-15 — the two camera verdicts below are superseded.**
+> This document reported `B.moving__delta_lowlight` FAIL and
+> `B.moving__delta_bayer` FAIL, and correctly identified the cause: the scorer
+> graded any camera that was not exactly `himax_typical` against the strict
+> clean-camera bar. That is fixed, and with the corrected scorer **both cells now
+> read PASS**.
+>
+> **Read that carefully, because it is uncomfortable.** The Bayer cell still
+> tracks a walking person only **0.855** of the time (0.940 / 0.769 across its two
+> flights), against 0.966-0.996 for every other camera. It now passes because
+> `M1_tracking_fraction` is *report-only* on Himax-family cameras, so breaching it
+> fails nothing. That convention predates this fix — six already-committed cells
+> pass while breaching a report-only line — and changing it would rewrite
+> committed verdicts for a reason unrelated to this defect, so it was left alone.
+>
+> **The measurement stands: the Bayer sensor model genuinely degrades tracking.**
+> The verdict simply no longer says so. Whether a breached report-only line should
+> affect a verdict is a decision for the team, and it is now the most consequential
+> open question in the scoring code.
+
 ## What was flown, exactly
 
 * Harness: `tools/crazysim_macos/run_acceptance2.sh --out <this dir> --only 'F\.pets' --repeats 16 --lock <scratch>/sim.harness.lock`

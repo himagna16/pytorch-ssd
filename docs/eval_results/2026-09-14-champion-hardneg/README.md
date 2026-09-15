@@ -226,6 +226,13 @@ of training data. Measured with `scripts/calib_form_ref.py`:
 ```
 
 So the alpha reset alone costs ~0.0017 F1 and *adds* ~0.019 to the slice FP before a single
+> **Corrected 2026-09-15.** Those two figures were measured on a rep_images-calibrated
+> proxy, not on what `train.py` actually starts from. Measured against the real starting
+> state the cost is **~0.0012 F1 and ~0.010 slice FP**, and the pre-fix starting point
+> moves with the seed. The defect was real either way, and it is now fixed: `train.py`
+> preserves a QAT checkpoint's learned ranges by default. To reproduce the checkpoints
+> archived from THIS run, the recorded command needs `--init-ckpt-drop-qat-alphas`.
+
 gradient step. Part of epoch 1's F1 drop is this reset, not learning. The epoch checkpoints
 themselves do carry learned alphas and are scored with `--mode qat`, so the epoch-vs-champion
 comparison is apples-to-apples in evaluation form — it is the *trajectory's* starting point

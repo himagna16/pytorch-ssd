@@ -23,6 +23,18 @@ flight ran.
 
 ---
 
+> **CORRECTION 2026-09-15 — the verdicts below are superseded by a scorer fix.**
+> `scoreboard.py` was applying the strict clean-camera gates to any camera that
+> was not exactly `himax_typical`, and `M10_uncertain_fraction_present` counts
+> frames in the band `[0.45, vis_enter)`, so raising the confirmation bar to 0.75
+> widened that band by construction and failed cells whose confidence traces had
+> not changed. Both are fixed. Re-scored with the corrected scorer, this suite
+> reads **10 PASS / 4 FAIL** rather than 8 / 6: `B.moving__proven`,
+> `B.moving__delta_speed` and `B.moving__delta_camera` pass, and
+> `B.moving__delta_backend` still fails, on `M1_tracking_fraction` alone. No
+> measurement changed — only which lines are gates. The numbers in this document
+> are all still correct as measured.
+
 ## 0. TL;DR
 
 | claim | verdict |

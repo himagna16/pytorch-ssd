@@ -39,6 +39,22 @@ takes it from there. A summary.json without those keys came from an older
 follower, whose only default was 0.70 x 3 / 0.45, so the fallback is 0.70 - NOT
 the current default - and every evidence folder scored before the change
 re-scores to the same bytes (see latch_rule()).
+
+WHICH BAR A CAMERA IS GRADED ON IS A PROPERTY OF THE FLIGHT, NOT OF A NAME.
+The strict clean-camera gates apply only to a flight that flew no sensor model
+at all; anything that applied one is graded on the degraded-camera bar, whose
+M1 / M2-mean / M10 lines are provisional because no verified degraded baseline
+exists yet. The test is camera_model.json's params.enabled, with the preset
+name as the fallback, so a preset added to camera_model.py later lands on the
+degraded bar without this file being edited (see camera_is_clean()). It used to
+be `camera == "himax_typical"`, which graded every other Himax preset as a clean
+camera - the defect that FAILED B.moving__delta_lowlight on M10 0.0842 while it
+tracked 0.981.
+
+AND THE CLEAN M10 LINE ONLY GRADES THE BAND IT WAS DRAWN AT. M10 counts frames
+in [vis_exit, vis_enter), so the 0.05 line means a different thing at a
+different bar; outside its calibrated band it is reported, not enforced (see
+M10_CLEAN_CALIBRATED_BAND and build_gates()).
 """
 import argparse
 import csv
@@ -74,6 +90,18 @@ LEGACY_CONFIRM_FRAMES = 3
 # were computed at 0.70 x 3, so these alias the legacy values, not the shipped
 # 0.75. New code reads the rule from the flight via latch_rule() instead.
 VIS_ENTER, VIS_EXIT, CONFIRM_FRAMES = LEGACY_VIS_ENTER, LEGACY_VIS_EXIT, LEGACY_CONFIRM_FRAMES
+# THE CLEAN-CAMERA M10 LINE IS ONLY VALID FOR THE BAND IT WAS DRAWN AT.
+# M10_uncertain_fraction_present counts frames in [vis_exit, vis_enter), so the
+# quantity the 0.05 line grades is defined by the follower's latch rule, not by
+# the drone. When the shipped vis_enter went 0.70 -> 0.75 on 2026-09-13 the band
+# widened by construction and three B.moving cells' M10 rose (0.060 -> 0.088,
+# 0.073 -> 0.107, 0.107 -> 0.170) on UNCHANGED confidence traces - re-banding
+# those traces at 0.70 reproduces the old values to within 0.012
+# (docs/eval_results/2026-09-14-baseline-075/reband_m10.txt, README section 5b).
+# The 0.05 line has never been re-derived for any other band, so outside this
+# one the gate is reported, not enforced. Re-deriving it from the same cells it
+# grades would be grading ourselves; see build_gates().
+M10_CLEAN_CALIBRATED_BAND = (LEGACY_VIS_EXIT, LEGACY_VIS_ENTER)   # [0.45, 0.70)
 STALE_HOVER_S, STALE_LAND_S = 0.5, 3.0
 YAW_MAX_DEG = 40.0
 SETTLE_S = 3.0                        # analyze_follow.py convention
@@ -126,6 +154,12 @@ GATE_BASIS = {
     "M9_land_window": "verified baseline lands at 3.0 s exactly",
     "M10_clean": "confidence is 0.96-1.0 on essentially every frame with a real person",
     "M10_himax": "degraded frames are expected to push more frames into the band; provisional",
+    "M10_band_uncalibrated": "the clean-camera 0.05 line was drawn for the band [0.45, 0.70) and has never been "
+                             "re-derived for the band this flight was flown at. M10 counts frames in "
+                             "[vis_exit, vis_enter), so moving either edge changes the reading on an unchanged "
+                             "confidence trace (measured: docs/eval_results/2026-09-14-baseline-075 section 5b, "
+                             "+0.02 to +0.07 per flight for 0.70 -> 0.75). Reported, not enforced, until the line "
+                             "is re-derived at this band from data that is not the data being graded",
     "M11_A": "a stationary target justifies zero legitimate reversals; 8/min allows one correction every 7 s",
     "M11_B": "the 20 s sway legitimately reverses the true bearing 6 times a minute; 24/min is 4x that",
     "M11_sat": "sustained saturation means rate-limited, not tracking - the signature that precedes oscillation",
@@ -685,15 +719,75 @@ def gate(gid, kind, value, op, thr, basis, scored_on="run"):
             "would_pass": res}
 
 
-def build_gates(cell, m):
+def camera_is_clean(cell, run_dir=None):
+    """Did this flight fly a genuinely clean camera - no sensor model at all?
+
+    WHY THIS IS NOT A NAME TEST. The camera bar used to be
+    `cell["camera"] == "himax_typical"`, so every preset except that one literal
+    string was graded on the strict CLEAN bar - including the other Himax
+    presets. Measured consequence: the `B.moving__delta_lowlight` cell
+    (himax_low_light) was FAILED on M10 0.0842 > 0.05 while tracking 0.981 with
+    heading and distance passing, and under the himax_typical bar it has no
+    failed gate at all (docs/eval_results/2026-09-14-pets-variance/README.md,
+    "One scorer fact you need before reading the verdicts"). A Himax preset
+    graded as a clean camera is simply the wrong bar.
+
+    So the question asked here is the physical one - was a sensor model applied
+    to these frames? - and it is answered from what the flight recorded, not
+    from a list of names:
+
+      1. `camera_model.json` next to the flight, written by camera_model.py
+         whenever the model runs: `params.enabled` says it directly.
+      2. Failing that - 24 himax_typical flights in the committed corpus kept
+         no camera_model.json when their folder was trimmed - the preset
+         name, where "clean" is the one preset defined with
+         enabled=False (camera_model.py `_preset_table`) and anything else is
+         a modelled camera.
+
+    A preset added to camera_model.py tomorrow therefore lands on the degraded
+    bar automatically, under either branch, without this file being edited -
+    and the failure direction is the safe one: an unrecognised preset is graded
+    as degraded (provisional, report-only) rather than being handed the strict
+    clean gates it has no baseline for.
+    """
+    rd = run_dir if run_dir is not None else cell.get("run_dir")
+    if rd:
+        cm = Path(rd) / "camera_model.json"
+        if cm.exists():
+            # A camera_model.json that is unreadable OR structurally not what
+            # this expects (a list, a bare string, params as a scalar) must fall
+            # through to the name test, not abort the suite. Syntax errors are
+            # not the only way this file can be wrong, and the whole point of
+            # having a fallback is that the classifier never crashes the scorer.
+            try:
+                doc = json.loads(cm.read_text())
+            except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+                doc = None
+            params = doc.get("params") if isinstance(doc, dict) else None
+            if not isinstance(params, dict):
+                params = {}
+            if "enabled" in params:
+                return not bool(params["enabled"])
+    return (cell.get("camera") or "clean") == "clean"
+
+
+def build_gates(cell, m, run_dir=None):
     """The gate list for one cell, with the per-speed and per-camera adjustments."""
     cls = cell["scene_class"]
     # the flight's own latch rule when it recorded one, else the legacy 0.70 x 3
     lr = m.get("latch_rule") or {}
     vis_enter = float(lr.get("vis_enter", LEGACY_VIS_ENTER))
+    vis_exit = float(lr.get("vis_exit", LEGACY_VIS_EXIT))
     confirm_frames = int(lr.get("confirm_frames", LEGACY_CONFIRM_FRAMES))
     chip_speed = cell.get("speed") == "chip"
-    himax = cell.get("camera") == "himax_typical"
+    # Any camera that actually applied a sensor model is graded on the degraded
+    # bar. This used to read `cell.get("camera") == "himax_typical"`, which sent
+    # every other Himax preset to the strict clean bar. See camera_is_clean().
+    degraded_cam = not camera_is_clean(cell, run_dir)
+    # M10's band is [vis_exit, vis_enter), so the clean 0.05 line only grades the
+    # quantity it was drawn on when the flight flew the band it was drawn at.
+    m10_band_calibrated = (math.isclose(vis_exit, M10_CLEAN_CALIBRATED_BAND[0], abs_tol=1e-9)
+                           and math.isclose(vis_enter, M10_CLEAN_CALIBRATED_BAND[1], abs_tol=1e-9))
     g = []
     # every class: the drone must end up on the floor
     g.append(gate("M5_z_after_landing_m", "hard", m.get("M5_z_after_landing_m"), "<=", 0.10,
@@ -704,7 +798,7 @@ def build_gates(cell, m):
         m2_mean = (4.0 if cls == "A" else 6.0) + (2.0 if chip_speed else 0.0)
         m2_max = 12.0 if cls == "A" else 14.0
         speed_note = "; " + GATE_BASIS["SPEED_RELAX"] if chip_speed else ""
-        if himax:
+        if degraded_cam:
             # relaxed thresholds for the degraded camera have no measured baseline yet
             g.append(gate("M1_tracking_fraction", "provisional", m.get("M1_tracking_fraction"),
                           ">=", 0.90, GATE_BASIS["M1"] + "; " + GATE_BASIS["CAM_RELAX"]))
@@ -719,9 +813,19 @@ def build_gates(cell, m):
                           ">=", m1_thr, GATE_BASIS["M1"] + speed_note, "median"))
             g.append(gate("M2_heading_err_mean_deg", "gated", m.get("M2_heading_err_mean_deg"),
                           "<=", m2_mean, GATE_BASIS["M2_mean_" + cls] + speed_note, "median"))
-            g.append(gate("M10_uncertain_fraction_present", "gated",
+            # Enforced only at the band the 0.05 line was calibrated on; at any
+            # other band the SAME confidence trace reads differently, so the
+            # comparison is not the one the line was drawn for. Reported there
+            # instead of silently re-calibrated: re-deriving the number from the
+            # cells it grades would be grading ourselves, and the scorer is not
+            # the place to decide what the line should become.
+            g.append(gate("M10_uncertain_fraction_present",
+                          "gated" if m10_band_calibrated else "provisional",
                           m.get("M10_uncertain_fraction_present"), "<=", 0.05,
-                          GATE_BASIS["M10_clean"], "median"))
+                          GATE_BASIS["M10_clean"] if m10_band_calibrated
+                          else GATE_BASIS["M10_band_uncalibrated"]
+                               + f" (this flight's band [{vis_exit:g}, {vis_enter:g}))",
+                          "median"))
         g.append(gate("M2_heading_err_max_deg", "gated", m.get("M2_heading_err_max_deg"),
                       "<=", m2_max, GATE_BASIS["M2_max_" + cls], "median"))
         g.append(gate("M7_dist_err_settled_mean_m", "gated", m.get("M7_dist_err_settled_mean_m"),
@@ -1134,7 +1238,10 @@ def main():
         else:
             ok, checks, reasons = validity(cell, summary, rows, truth)
             m, notes = ({}, []) if not rows else metrics_for_run(cell, summary, rows, truth, manifest)
-            gates = build_gates(cell, m) if ok and m and "error" not in m else []
+            # rd, not cell["run_dir"]: cell.json keeps the path the flight was
+            # FLOWN at, so a folder that has been moved or copied must be read
+            # from where it actually is now.
+            gates = build_gates(cell, m, rd) if ok and m and "error" not in m else []
             rec = {"run_dir": str(rd), "cell": cell, "valid": bool(ok), "validity": checks,
                    "invalid_reasons": reasons, "metrics": m, "gates": gates,
                    "repeat": cell.get("repeat"), "attempt": cell.get("attempt")}
