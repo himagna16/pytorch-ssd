@@ -72,6 +72,36 @@ def spearman(a, b):
     return float(np.corrcoef(ra, rb)[0, 1])
 
 
+
+def conf_and_range(rd):
+    """(conf, d_true) per flown frame, computed the way scoreboard.py:445-464 does.
+
+    d_true is the distance from the DRONE (px, py in the follower log) to the
+    TARGET, whose track comes from the truth log interpolated onto the
+    follower's wall clock. An earlier version of this script used hypot(px, py),
+    which is the drone's distance from the origin, and found no frames in band.
+    """
+    cell, summary, rows, truth, manifest = SB.load_run(rd)
+    flown = [r for r in rows if r.get("event", "") == ""]
+    if not flown or truth is None:
+        return None, None
+    sub = SB.target_subject(manifest)
+    if sub is None:
+        return None, None
+    wall = np.array([SB.fnum(r, "wall") for r in flown])
+    px = np.array([SB.fnum(r, "px") for r in flown])
+    py = np.array([SB.fnum(r, "py") for r in flown])
+    conf = np.array([SB.fnum(r, "conf") for r in flown])
+    body = (sub.get("truth") or {}).get("body", sub["name"])
+    if body in truth[2]:
+        bx, by = truth[2][body]
+    else:
+        bx, by = list(truth[2].values())[0]
+    tx = np.interp(wall, truth[0], bx)
+    ty = np.interp(wall, truth[0], by)
+    return conf, np.hypot(tx - px, ty - py)
+
+
 def panel_geom(scene):
     m = json.loads((SCR / "pool_scenes" / scene / "manifest.json").read_text())
     s = m["subjects"][0]
@@ -269,6 +299,81 @@ def main():
                   f"rho(width) {spearman([wid[i] for i in hicl], [lat[i] for i in hicl]):+.3f}")
             print("      If width beat index here, the trend would be the card, not the person.")
     print()
+
+    # ---- width-matched contrast: a natural experiment already in the data ----
+    # Panel width correlates with the index at +0.385, so "only the person
+    # changed" is not strictly true. But three subjects happen to share a panel
+    # width to within 0.006 m while spanning the whole index range, which
+    # separates the two explanations at zero extra cost.
+    print("=" * 92)
+    print("WIDTH-MATCHED CONTRAST: same card size, opposite detectability")
+    print("=" * 92)
+    W_TOL = 0.010
+    for cls, name in (("A", "static"), ("B", "moving")):
+        g = [f for f in flights if f["cls"] == cls and f["subject"] != "control"]
+        if not g:
+            continue
+        subs = {}
+        for f in g:
+            subs.setdefault(f["subject"], []).append(f)
+        info = {k: (v[0]["panel_w_m"], v[0]["index_pct"],
+                    float(np.mean([x["ever_latched"] for x in v])),
+                    float(np.mean([x["M1"] for x in v if x["M1"] is not None])), len(v))
+                for k, v in subs.items()}
+        # the widest matched cluster
+        best = []
+        for k, (w, _, _, _, _) in info.items():
+            grp = [j for j, (w2, *_ ) in info.items() if abs(w2 - w) <= W_TOL]
+            if len(grp) > len(best):
+                best = grp
+        if len(best) < 2:
+            continue
+        idxs = [info[k][1] for k in best]
+        if max(idxs) - min(idxs) < 30:
+            print(f"  {name}: matched group spans only {max(idxs)-min(idxs):.1f} index points, "
+                  f"not informative")
+            continue
+        print(f"  {name}: {len(best)} subjects within {W_TOL:g} m of each other in panel width")
+        print(f"    {'subject':>9}{'width':>9}{'index':>8}{'latch':>8}{'mean M1':>10}{'n':>4}")
+        for k in sorted(best, key=lambda k: info[k][1]):
+            w, i, l, m, n = info[k]
+            print(f"    {k:>9}{w:>9.4f}{i:>8.1f}{l:>8.3f}{m:>10.3f}{n:>4}")
+        print("    Width is held; if latch still tracks the index here, the card is not the cause.")
+        print()
+
+    # ---- range-matched confidence: avoid the collider ----------------------
+    # A latching drone closes to ~2.5 m; a non-latching one sits at its start
+    # range. Comparing per-frame confidence over whole flights therefore
+    # compares different geometry, chosen by the outcome. Restrict to the start
+    # range window every arm occupies.
+    print("=" * 92)
+    print("CONFIDENCE, RANGE-MATCHED (the whole-flight version is a collider:")
+    print("a drone that latches closes in, so it sees the person larger BECAUSE it latched)")
+    print("=" * 92)
+    for cls, name, band in (("A", "static", (3.3, 3.9)), ("B", "moving", (2.9, 3.4))):
+        g = [f for f in flights if f["cls"] == cls]
+        if not g:
+            continue
+        print(f"  {name}, frames with true range in [{band[0]}, {band[1]}] m")
+        print(f"    {'subject':>9}{'index':>8}{'n frames':>10}{'mean conf':>11}{'p05':>8}"
+              f"{'frac >=0.75':>13}")
+        for sname in sorted({f['subject'] for f in g},
+                            key=lambda s: [f for f in g if f['subject'] == s][0]['index_pct']):
+            cc = []
+            for f in [x for x in g if x["subject"] == sname]:
+                conf, d = conf_and_range(OUT / "runs" / f["run"])
+                if conf is None:
+                    continue
+                sel = (d >= band[0]) & (d <= band[1])
+                cc.extend(conf[sel].tolist())
+            if len(cc) < 20:
+                print(f"    {sname:>9}{'':>8}{len(cc):>10}   too few frames in band")
+                continue
+            cc = np.array(cc)
+            idx_ = [f for f in g if f['subject'] == sname][0]['index_pct']
+            print(f"    {sname:>9}{idx_:>8.1f}{len(cc):>10}{cc.mean():>11.3f}"
+                  f"{np.percentile(cc, 5):>8.3f}{float(np.mean(cc >= 0.75)):>13.3f}")
+        print()
 
     json.dump(flights, open(OUT / "tables/flights.json", "w"), indent=1)
     print(f"wrote tables/flights.tsv and tables/flights.json")
