@@ -8,24 +8,30 @@
 
 ## Summary
 
-I joined the team in late August to continue David Liu's honors thesis on
-running a person-detection neural network on the drone's 64 mW GAP8
-processor. In the first three weeks I:
+I joined in late August to carry on David Liu's honors thesis: getting a
+person-detection network to run on the drone's 64 mW GAP8 chip.
 
-- rebuilt the full training and quantization toolchain on macOS and fixed
-  the bugs that kept it from running outside David's machine;
-- trained models that beat David's released model in simulated quantized
-  form (peak F1 0.8008 vs 0.789), and a variant that cuts false alarms on
-  pets and mannequins by 3x;
-- got MinHyuk Park's Crazyflie simulator running on Mac laptops and built a
-  closed-loop person follower that passes all five safety and tracking
-  tests in simulation;
-- found, on Sep 10, that the integer networks we released for the chip
-  ignore their input, withdrew my earlier chip-validation claims, and traced
-  the cause the same day to a platform bug in the DORY code generator on
-  Apple Silicon. After the fix, the QAT champion's chip network passes all
-  five new release checks, including the chip simulator on five images, and
-  it is now the team's validated chip app.
+The first two weeks went into the toolchain and the models. I rebuilt the
+training and quantization environments on macOS, fixing the bugs that had kept
+them tied to David's machine, and trained a model that beats his released one in
+simulated quantized form, 0.8008 against 0.789 peak F1. A second variant cuts
+false alarms on pets and mannequins by about 3x. I also got MinHyuk Park's
+Crazyflie simulator running on Mac laptops and wrote a closed-loop follower that
+passes all five safety and tracking tests there.
+
+On Sep 10 I found that the integer networks we had released for the chip were
+ignoring their input entirely. I withdrew my chip-validation claims that day and
+traced the cause to a platform bug in the DORY code generator on Apple Silicon.
+After the fix the champion's chip network passes all five of the new release
+checks, including the chip simulator on five images, and it is now the team's
+validated app.
+
+Most of the last week went into a different question: does the simulator tell
+the truth? Twice it did not. Its explanation for a distance error was wrong, and
+its person scenes turn out to be built around one unusually easy photograph. Both
+are written up below. The short version is that our tracking figures describe
+that one subject, and the lab session is what will tell us where real people
+fall.
 
 ## Live tracker
 
@@ -87,34 +93,29 @@ release branch since David's handoff, about 9,200 lines added on `main`.
 Repository counts miss teammates' work done outside the repo, listed under
 Team context.
 
-- **Toolchain.** Rebuilt training and NEMO quantization environments on
-  macOS; fixed Linux-only package pins, a numpy/pycocotools ABI conflict, and
-  a NEMO export crash under PyTorch 2.x. Tested and set the team PyTorch
-  version so Grace's Intel Mac could join.
-- **Models and training.** Reimplemented the thesis's bin-head model from
-  its text and replicated its two main claims. Ran the full-COCO training
-  campaign, quantization-aware training, and the targeted confuser
-  retraining.
-- **Evaluation tools.** Drift audit between float and quantized models,
-  threshold sweeps, error analysis, confuser-slice metrics. Showed the
+- Rebuilt the training and NEMO quantization environments on macOS. Fixed
+  Linux-only package pins, a numpy/pycocotools ABI conflict, and a NEMO export
+  crash under PyTorch 2.x. Tested and set the team PyTorch version so Grace's
+  Intel Mac could join.
+- Reimplemented the thesis's bin-head model from its text and replicated its two
+  main claims. Ran the full-COCO training campaign, quantization-aware training,
+  and the targeted confuser retraining.
+- Built the evaluation tools: a drift audit between float and quantized models,
+  threshold sweeps, error analysis, confuser-slice metrics. Showed that the
   16-image drift audit predicts full-set quantization loss.
-- **Deployment pipeline.** Reproduced David's chip-simulator validation and
-  made his release pipeline run on other machines: a containerized legacy
-  export environment plus four further fixes, including a hardcoded path
-  from his machine.
-- **Simulator and closed loop.** Ported CrazySim to Apple Silicon, with the
-  firmware in a small container. Built person scenes from COCO photos, a
-  follower with safety rules, ground-truth logging, and a one-command
-  acceptance suite. Fixed five issues found in testing, including macOS
-  network limits and a steering sign flip.
-- **Debugging the chip network.** Found that our chip networks ignored
-  their input, withdrew the affected claims, and traced the cause to a
-  platform-specific cast in the DORY code generator. Wrote the patch and
-  five permanent release gates that would have caught it.
-- **Team infrastructure.** Team fork and workflow, decision log, setup
-  runbooks that let Grace and Oaj reproduce results on three operating
-  systems, a firmware decode contract with a tested C decoder, and meeting
-  reports.
+- Reproduced David's chip-simulator validation and made his release pipeline run
+  on other machines. That took a containerized legacy export environment and four
+  further fixes, one of them a path hardcoded to his laptop.
+- Ported CrazySim to Apple Silicon with the firmware in a small container, then
+  built person scenes from COCO photos, a follower with safety rules,
+  ground-truth logging, and a one-command acceptance suite. Testing turned up
+  five issues I fixed, including macOS network limits and a steering sign flip.
+- Found that our chip networks ignored their input, withdrew the affected claims,
+  and traced it to a platform-specific cast in the DORY code generator. Wrote the
+  patch and five permanent release gates that would have caught it.
+- Set up the team fork and workflow, the decision log, setup runbooks that let
+  Grace and Oaj reproduce results on three operating systems, a firmware decode
+  contract with a tested C decoder, and the meeting reports.
 
 **Methods note.** I developed this work with AI coding assistance, Claude
 Code, as the project lead encouraged. I directed the experiments, ran and
@@ -138,118 +139,130 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 ## Session log
 
-- **2026-09-15 (overnight).** Spent the night checking whether the simulator
-  predicts reality, and the answer changes what we believe about the drone. Two
-  findings, both measured against real photographs rather than against the
-  simulator itself. First, the simulator **overstates** the pet problem by about
-  three times: a rendered dog is far more detectable than real dogs of the same
-  apparent size, so the drone chasing a dog across the room is a property of a
-  flat cardboard cutout more than a prediction about real animals. Second, and
-  far more important, the person scenes were built around a photograph that sits
-  near the **98th percentile** of how easily this model detects a person. Rebuilt
-  the same scenes around a typical person: **the drone never starts following at
-  all**, in eleven of twelve flights, while the original subject still reproduces
-  99% on the identical rig. The obstacle is the rule that needs three confident
-  frames in a row before locking on; an ordinary person produces scattered
-  confident frames that never form a run. I then tested whether the confirmation
-  threshold we shipped two days ago is to blame, and mostly it is not: for three
-  of four ordinary subjects no threshold would help, because the confidence never
-  comes close. Lowering it back would buy 2.4 seconds of tracking instead of 1.9,
-  with worse pointing. So the setting stays and the real question is the model.
-  Rendered people are harder than real ones, so this brackets the answer from the
-  pessimistic side, and where real people actually fall is exactly what the lab
-  session will tell us. Also fixed a real bug in the training code, which had been
-  silently discarding a model's learned calibration on startup, and two scoring
-  defects.
+Newest first. One entry per working session.
 
-- **2026-09-14 (night).** Took the first real swing at the pet problem by
-  retraining, now that both drone settings are exhausted. Fine-tuned the model
-  we fly for five short rounds, each one teaching it harder on the negatives it
-  currently gets wrong, and measured both things that matter after every round:
-  how well it still finds people, and how often it mistakes a pet or mannequin
-  for one. The false-alarm rate on pets and mannequins fell from 24% to 9% at
-  its best, and to 13% in the round I would actually pick. The cost is real but
-  small: every one of the five rounds finds slightly fewer people than the model
-  we fly, by about half a point of F1. So retraining does move the thing that
-  configuration could not move at all, and it does not cost much - but it is a
-  trade, not a free win, and the team has to decide whether half a point of
-  accuracy is worth a large cut in false alarms. Two honest limits. This is one
+- **2026-09-15 (overnight).** Spent the night on one question: does the
+  simulator predict what the real drone will do? Nobody had checked, and the
+  answer came back twice, in opposite directions. The method was to show the same
+  network a simulated scene and real COCO photographs, sized so the subject looks
+  the same size in both, and compare.
+
+  For pets the simulator makes the problem look about three times worse than it
+  is. A rendered dog is much easier for the model to spot than real dogs are, so
+  the drone chasing a dog across the room says more about a flat cardboard cutout
+  than about real animals.
+
+  The person result is the one that matters. Our two person scenes are built from
+  the same photograph, and that photograph sits near the 98th percentile of how
+  easily this model detects a person. We picked an unusually easy person, by
+  accident, back in August. I rebuilt the same scenes around a typical person and
+  flew them: the drone never started following. Eleven of twelve flights it sat
+  there, while the original photo still scored 99% on the identical rig. The
+  obstacle is the rule that needs three confident frames in a row before locking
+  on. An ordinary person produces confident frames that never line up.
+
+  I then checked whether the confirmation threshold we shipped on Saturday caused
+  this. Mostly it did not. For three of the four ordinary subjects no threshold
+  helps, because the confidence never comes close to any of them. Putting it back
+  to 0.70 buys 2.4 seconds of tracking instead of 1.9 and makes the pointing
+  worse, so the setting stays.
+
+  Rendered cutouts are harder for the model than real people, so this brackets
+  the answer from the pessimistic side. The truth is somewhere between 0% and
+  99%, and I cannot narrow it from a simulator. That is exactly what the lab
+  session is for. Also fixed a real bug in the training code that had been
+  quietly throwing away a model's learned calibration on startup, plus two
+  scoring defects.
+
+- **2026-09-14 (night).** First real swing at the pet problem by retraining,
+  now that both drone settings are exhausted. I fine-tuned the model we fly for
+  five short rounds, each one training it harder on the negatives it currently
+  gets wrong, and after every round measured how well it still finds people and
+  how often it mistakes a pet or mannequin for one. False alarms fell from 24% to
+  9% at best, and 13% in the round I would actually pick. Every round found
+  slightly fewer people than the model we fly, by about half a point of F1.
+
+  So retraining moves something configuration could not move at all, at a cost
+  that is small but real, and the team has to decide whether half a point of
+  accuracy is worth a large cut in false alarms. Two limits on that. It is one
   seeded run, and our own rule says three before quoting a training number; the
   best round's 9% bounced back to 13% the very next round, so I do not trust 9%
-  yet. And none of this is the chip: the release path throws away exactly the
-  calibration this training produces, which is Grace's preserve-QAT-alphas task,
-  and I measured that same effect costing part of the gain at the very start of
-  the run. Full numbers, commands and caveats in
+  yet. And none of this is the chip, because the release path throws away exactly
+  the calibration this training produces. That is Grace's preserve-QAT-alphas
+  task, and I measured the same effect costing part of the gain at the very start
+  of the run. Numbers, commands and caveats in
   docs/eval_results/2026-09-14-champion-hardneg/.
 
   **Correction, added the same night after an independent re-check.** Every
   individual number above reproduces exactly, but the headline comparison was
-  wrong: the false-alarm rate was read at one confidence setting and the
-  accuracy at another, and the drone only runs at one. Compared properly - at
-  equal person-finding ability - the fine-tuned rounds are no safer around pets
-  than the model we already fly, and simply turning the existing model's
-  confidence dial up reproduces almost the entire apparent improvement. That
-  dial is the lever we had already swept in flight and rejected, so this run did
-  not find a new one. The accuracy cost, on the other hand, holds up. The
-  genuinely useful findings survive: the data-mix measurement, and the discovery
-  that the release path's calibration reset costs part of any gain before
-  training even starts. One real lead came out of the re-check: the confuser
-  model *is* measurably safer at equal person-finding, so the effect we want is
-  real - we just have not found a recipe that captures it without wrecking
-  recall. Details in section 0 of
+  wrong. The false-alarm rate was read at one confidence setting and the accuracy
+  at another, and the drone only runs at one setting. Compared properly, at equal
+  person-finding ability, the fine-tuned rounds are no safer around pets than the
+  model we already fly, and turning the existing model's confidence dial up
+  reproduces almost the entire apparent improvement. That dial is the lever we had
+  already swept in flight and rejected, so this run found nothing new. The
+  accuracy cost does hold up.
+
+  Three things survive. The data-mix measurement, the discovery that the release
+  path's calibration reset costs part of any gain before training even starts,
+  and one real lead: the confuser model is measurably safer at equal
+  person-finding ability, so the effect we want is reachable. We just have not
+  found a recipe that captures it without wrecking recall. Details in section 0 of
   docs/eval_results/2026-09-14-champion-hardneg/.
 
-- **2026-09-14 (late).** Swept the drone's second threshold, the one that decides
-  when it lets go of something it is following. This was the lead from the
-  earlier run, and the answer is no: it does not close the pet problem at any
-  value tested, and turning it up hurts. At the highest setting the drone dropped
-  a walking person six times across two flights, where at the shipped setting it
-  never lost them once, because every drop then costs a full re-acquisition. So
-  both settings are now exhausted in flight and the remaining fix is retraining
-  the model against pets, which depends on Grace's work. The more important
-  finding is about our own measurements: the same configuration scored 11 of 16
-  in the afternoon and 2 of 7 in the evening, on the same scene with the same
-  seeds. This test case drifts between sessions by as much as the effects we are
-  chasing, so from now on it is only compared within a single interleaved run,
-  and the afternoon's 69% is one session's number rather than the rate. That also
-  means I should not have offered it as a rate.
+- **2026-09-14 (late).** Swept the drone's second threshold, the one that
+  decides when it lets go of something it is following. This was the lead from
+  the earlier run and the answer is no. It does not close the pet problem at any
+  value I tested, and turning it up hurts: at the highest setting the drone
+  dropped a walking person six times across two flights, where at the shipped
+  setting it never lost them once. Every drop costs a full re-acquisition. Both
+  settings are now exhausted in flight, which leaves retraining, which depends on
+  Grace's work.
 
-- **2026-09-14 (evening).** Used a spare hour to answer the question I got
-  wrong this morning properly. Sixteen fresh pet flights at the shipped
-  setting: 11 pass the half-metre limit and 5 fail, a per-flight pass rate of
-  about 69% with a wide range, so it is a weighted coin rather than a pass or a
-  fail, and every number was re-derived independently from the raw flight logs.
-  The useful part is the mechanism. Every flight locks onto the dog within a
-  couple of seconds at almost identical confidence; nothing before that moment
-  separates the good flights from the bad. What differs is whether the lock lets
-  go, and that is controlled by a second threshold, the release bar, that the
-  earlier sweep never touched. That is the cheap next experiment. Also gave the
-  two camera settings that had never been flown their first verdicts: low light
-  is fine, colour Bayer genuinely hurts tracking. Found a quirk in my own scorer
-  along the way, which grades any non-standard camera against the strictest
-  bar; flagged, not fixed.
+  The bigger finding is about our own measurements. The same configuration scored
+  11 of 16 in the afternoon and 2 of 7 in the evening, same scene, same seeds.
+  This test case drifts between sessions by as much as the effects we are chasing.
+  From now on it only gets compared within a single interleaved run, and the
+  afternoon's 69% is one session's number, not the rate. I should not have offered
+  it as a rate.
+
+- **2026-09-14 (evening).** Used a spare hour to answer properly the question I
+  got wrong this morning. Sixteen fresh pet flights at the shipped setting: 11
+  pass the half-metre limit, 5 fail. That is a per-flight pass rate near 69% with
+  a wide range around it, so the honest description is a weighted coin. Every
+  number was re-derived independently from the raw flight logs.
+
+  The mechanism is worth more than the rate. Every flight locks onto the dog
+  within a couple of seconds at almost identical confidence, and nothing before
+  that moment separates the good flights from the bad. What differs is whether the
+  lock lets go, and a second threshold controls that, one the earlier sweep never
+  touched. Cheap next experiment. Also gave the two camera settings that had never
+  been flown their first verdicts: low light is fine, colour Bayer genuinely hurts
+  tracking. Found a quirk in my own scorer along the way, which grades any
+  non-standard camera against the strictest bar. Flagged, not fixed.
 
 - **2026-09-14 (afternoon).** Flew the full 14-case suite at the setting that
   now ships, 56 flights, so the lab has a reference flown at the real
   configuration. It corrected me. Yesterday I reported that the higher
   confirmation bar fixed the pet problem, on the strength of four flights that
-  all passed. Four fresh flights at the same setting, same scene, same model,
-  same random seeds, gave 0.71, 0.73, 0.46 and 0.34 m against a 0.5 m limit: two
-  of four fail. The change stays, because it is better than before on every pet
-  measure and costs nothing on people, but "fixed" is withdrawn and recorded as
-  such. The lesson is about evidence, not the drone: four repeats were not enough
+  all passed. Four fresh flights at the same setting, same scene, same model, same
+  random seeds, gave 0.71, 0.73, 0.46 and 0.34 m against a 0.5 m limit. Two of
+  four fail.
+
+  The change stays, because it beats the old setting on every pet measure and
+  costs nothing on people, but "fixed" is withdrawn and recorded as withdrawn. The
+  lesson is about evidence and not about the drone: four repeats were not enough
   to call a pass, and the random seed does not pin what the drone does in the
-  loop. A second prediction of mine was also backwards: one scoring gate measures
-  the share of frames in the "uncertain" band, and raising the bar widens that
-  band by definition, so three cases still fail it for a reason unrelated to the
-  drone's behaviour. Flagged for the team as a gate to re-calibrate. Everything
-  else held: safety cases clean, no upsets in 56 flights, people tracked as
-  before. The real fix for pets is now a training job, which depends on Grace's
-  work.
+  loop. A second prediction of mine was backwards too. One scoring gate measures
+  the share of frames in the uncertain band, and raising the bar widens that band
+  by definition, so three cases still fail it for a reason that has nothing to do
+  with the drone's behaviour. Flagged for the team as a gate to re-calibrate.
+  Everything else held: safety cases clean, no upsets in 56 flights, people
+  tracked as before.
 
 - **2026-09-14 (later).** Rehearsed the lab measurement chain end to end, the
   way the operator will run it next week, with the real champion network on
-  realistic rendered frames rather than the stand-in models used until now. The
+  realistic rendered frames instead of the stand-in models used until now. The
   left/right mirror check, which decides whether the drone would steer the wrong
   way toward a person, gave the correct verdict in every direction and a second
   agent reproduced each one from a fresh shell. The real network sees a rendered
@@ -257,7 +270,7 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   drawings, not the model. The test path that exercises this with the real
   network had never been run before today; it passes 39 of 39. One thing the
   operator must expect: a plush toy or pet registers as a false track at the new
-  threshold, and the protocol now says to record it rather than be surprised.
+  threshold, and the protocol now says to write it down.
   Typing every command exactly as written turned up seven documentation
   mistakes, fixed. Also paid a debt of my own: two evidence folders scored
   before a metric was renamed no longer reproduced their own numbers; migrated
@@ -277,7 +290,7 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with MinHyuk is next week.
 
 - **2026-09-13 (evening).** Flew the cheap fix for the champion's pet problem
-  rather than trusting the paper estimate, and the paper estimate was wrong. 96
+  instead of trusting the paper estimate, and the paper estimate was wrong. 96
   flights compared four confirmation rules in one session. Raising the confidence
   the drone needs before it locks on, from 0.70 to 0.75, makes the pet case pass
   its safety limit on all four flights with no measurable loss on people. The
@@ -304,8 +317,7 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   the drone only locks onto something after three confident frames in a row, and
   raising the confidence needed looks, on paper, as though it removes the pet
   false alarms for almost no loss of accuracy. That costs nothing to ship if it
-  works, since it needs no retraining. It is being flown now rather than taken on
-  trust, because the paper version re-scores pictures from flights taken at the
+  works, since it needs no retraining. I am flying it before trusting it, because the paper version re-scores pictures from flights taken at the
   old setting.
 
 - **2026-09-12 (late night).** Flew the two candidate models against each other,
@@ -315,12 +327,12 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   models so neither got an easier machine. The confuser does exactly what it was
   designed to do, and it is not enough: it essentially stops chasing the dog
   (0.22 m of drift against the champion's 0.97 m, and it passes the safety limit
-  the champion fails), but it **does not follow people at all**, tracking a
+  the champion fails), but it does not follow people at all, tracking a
   standing person on 0% of frames across four flights. The obvious objection is
   that I judged it using settings tuned for the other model, so I re-scored every
   frame at thresholds from 0.45 to 0.80: the champion at its normal setting is
   better than the confuser at every setting, on both accuracy and false alarms at
-  once. That bounds the question rather than closing it, because it re-scores
+  once. That bounds the question without closing it, because it re-scores
   frames from flights the confuser never got to steer. Also settled two smaller
   things: there is no close-range detection weakness (the evidence for one was a
   clock bug in my own analysis, now retracted), and a controlled repeat confirmed
@@ -329,15 +341,14 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 - **2026-09-12 (night).** Re-flew the seven test cases that still had no clean
   data, so the team finally has a complete 14-case baseline with no mirror in it.
   28 flights, all valid first time. The overall picture improves from 7 passing
-  and 7 failing to **9 passing and 5 failing**: three cases pass now that the
+  and 7 failing to 9 passing and 5 failing: three cases pass now that the
   distance error is gone. The important one is the pet case, which is the
   evidence the team will use to choose between the two candidate models.
   **Most of the dog-chasing was the mirror.** With a matte floor the drone still
   notices the dog, but lets go almost at once instead of following it across the
   room: it drifts 0.41 to 0.93 m instead of 2.30 and 2.67 m, and stays latched
   for 1.3 to 3.6 seconds instead of about 15. It still fails its half-metre
-  safety limit on three of four flights, so this is much less bad rather than
-  fixed. Two things got worse and I am not burying them: one occlusion case now
+  safety limit on three of four flights, so it is much less bad, not fixed. Two things got worse and I am not burying them: one occlusion case now
   fails because the drone takes 3.2 seconds to re-find the person instead of
   0.5, and part of that may be a genuine weakness at close range, where the
   detector loses a person who fills the frame. That weakness was invisible while
@@ -347,11 +358,11 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 - **2026-09-12 (late evening).** Settled the question the earlier re-fly left open. The
   first run had suggested that removing the simulator's mirrored floor made the
-  drone unstable, which would have made the fix a trade rather than a win. It
+  drone unstable, which would have made the fix a trade instead of a win. It
   did not hold up: a controlled re-run, with the source files locked byte for
   byte across both conditions and the two floors alternated flight by flight,
-  flew 56 flights and found **no upsets in 28 on the matte floor against one in
-  28 on the mirrored floor**. The earlier result was an artefact of running the
+  flew 56 flights and found no upsets in 28 on the matte floor against one in
+  28 on the mirrored floor. The earlier result was an artefact of running the
   experiment on a laptop that had fourteen other jobs on it. The distance
   improvement reproduced in all seven cases. Along the way the run turned up a
   measurement lesson worth keeping: the number we had been using to judge whether
@@ -363,17 +374,16 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   control, so the numbers now ship with the flights behind them.
 
 - **2026-09-12 (evening).** Found that the headline explanation I published this
-  morning was wrong, and corrected the record rather than quietly editing it. The
+  morning was wrong, and corrected the record in place. The
   simulator suite reported that the drone parks about 3 m from the person instead
   of 1.94 m, and I had written that the network's size head "over-reads by
   1.6-1.8x". It does not. The simulator's floor material is 20% reflective - a
   mirror - so the renderer draws each person's reflection hanging below their
   feet and the network reads the two as one object. Measured by rendering every
-  frame twice, once with the person removed, the subject is drawn **1.53x taller
-  than it should be at 2.4 m, rising to 2.01x at 3.8 m** - the same direction and
+  frame twice, once with the person removed, the subject is drawn 1.53x taller than it should be at 2.4 m, rising to 2.01x at 3.8 m - the same direction and
   the same size as the 1.3-1.6x "over-read" I had reported, over the same
   distances, and growing with distance the same way. Tested away from the simulator, on 2,635
-  real COCO photographs with exact ground truth, the size head is **unbiased** -
+  real COCO photographs with exact ground truth, the size head is unbiased -
   if anything it under-reads, never over-reads, and the integer network we
   actually fly puts its bucket boundary at 0.506 where the true answer is 0.500,
   about 1% out. Turning the mirror off in memory, changing nothing else, makes
@@ -399,29 +409,27 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 - **2026-09-12 (afternoon).** Sent Prof. Mok the progress report and a recording
   of the simulator demo. He replied "Great progress, team!" and is asking
-  MinHyuk Park to meet the team in the lab **next week to work with the real
-  hardware** - the project's first hardware session. David Liu replied that it
+  MinHyuk Park to meet the team in the lab next week to work with the real hardware - the project's first hardware session. David Liu replied that it
   is impressive the simulation predicts the AI-deck's behaviour. On research
   credit, Prof. Mok said periodic documentation "will come in handy if the team
   wants to get an official grade for an undergrad research project from UT",
   which supports the idea but does not yet give the registration process, so I
   still need to ask. Started preparing for the hardware session, where the
   honest position is that several things have never touched anything real: the
-  GAP8 build tooling needed to flash our app is **missing** on this Mac, and the
+  GAP8 build tooling needed to flash our app is missing on this Mac, and the
   camera capture tool has never run against an actual byte stream. Both are
   being fixed and rehearsed against substitutes before we go.
 
-- **2026-09-12 (overnight).** Rebuilt the simulator to be realistic instead of
-  convenient, then used it to test the drone we actually intend to fly. Three
-  parts: a model of the real camera sensor (its auto-exposure, 60 fps timing,
-  noise and motion blur), a mode that runs the **real chip network** and the
-  chip's own image preprocessing in the loop rather than the float model, and a
+- **2026-09-12 (overnight).** Rebuilt the simulator so it resembles the real thing, then used it to test the drone we actually intend to fly. Three
+  It now carries a model of the real camera sensor (its auto-exposure, 60 fps timing,
+  noise and motion blur), a mode that runs the real chip network and the
+  chip's own image preprocessing in the loop instead of the float model, and a
   scene suite of 18 scenes built from JSON definitions with full ground truth.
   Added a scorecard of ten measurements with pass/fail limits, and flew a
-  14-case matrix, 37 flights, 36 valid: **7 cases pass, 7 fail.** Findings, all
-  in simulation and none on hardware: the drone **chases a dog** (confirmed in
+  14-case matrix, 37 flights, 36 valid: 7 cases pass, 7 fail. None of this
+  touched hardware. In simulation the drone chases a dog (confirmed in
   0.31 s, drifts 2.3-2.7 m against a 0.5 m limit) and this survives every
-  realism setting; it **does not hold its distance** with the chip network
+  realism setting; it does not hold its distance with the chip network
   (about 3 m instead of 1.94 m, in every chip configuration) - *corrected the
   same evening: the observation holds, but I had blamed the network's size head
   and the cause is the simulator's reflective floor plus an unreachable target;
@@ -429,19 +437,17 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   time, the realistic camera costs 0.32 m of distance error, the chip network
   0.13 m, and the chip's slower frame rate 0.10 m; pointing accuracy and the
   safety rules survive all of it. Also fixed three faults in my own scoring
-  tool: it reported the first failing repeat of a safety limit rather than the
+  tool: it reported the first failing repeat of a safety limit instead of the
   worst one (the pet drift was published as 2.301 m when the worse repeat was
-  2.666 m); re-scoring the published evidence folder **destroyed** it, because
+  2.666 m); re-scoring the published evidence folder destroyed it, because
   flights whose control log is trimmed for size were rewritten as "invalid" -
   it now reads what those flights measured and says so on screen; and the
   folder's own metadata named the wrong sweep. The published evidence now
   re-scores to a byte-identical result twice running. Known and unfixed: on the
   worst frames the sensor model costs 7.27 ms against a 5 ms budget; subjects
   are still flat rectangular cards; nine camera parameters are taken from the
-  datasheet and **not measured**; one far-person scene does not test what it
+  datasheet and not measured; one far-person scene does not test what it
   was meant to.
-
-Newest first. One entry per working session.
 
 - **2026-09-11 (evening).** Sent Prof. Mok the progress report, with a
   contributions list, a note that my part was built with AI coding tools
