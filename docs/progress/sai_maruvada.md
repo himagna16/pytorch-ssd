@@ -199,9 +199,9 @@ Newest first. One entry per working session.
   lying down cost nothing either. The worst case is a person with their head cut
   off, which is the drone-shaped cut. Reporting "partial people are harder" as
   one number averages a real effect with a null one. None of this changes the
-  headline: the simulator still shows the drone never latching where a real whole
-  person is detected on 93% of frames, so the unusually easy cutout is what to
-  fix before the lab, not the field of view.
+  headline: the simulator still shows the drone never latching, while a real
+  whole person falls below the let-go bar on only 7% of frames, so the unusually
+  easy cutout is what to fix before the lab, not the field of view.
 
 - **2026-09-15 (overnight).** Spent the night on one question: does the
   simulator predict what the real drone will do? Nobody had checked, and the
