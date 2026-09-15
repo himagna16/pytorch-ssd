@@ -1,0 +1,81 @@
+==============================================================================
+A. THE INVENTION-FREE PAIR.  The photograph at a framing that needs no
+   invented surround, against the SAME cutout rendered by the simulator to
+   the same apparent size.  This is the only same-image comparison in this
+   directory that is free of a modelling choice - and it lands at 120 px,
+   far outside the 15-52 px the drone actually flies.
+==============================================================================
+
+  dog: photo COCO 297830 at its own centre crop, px128_h 119.9
+     vs  dog_petlevel at 0.5 m, px128_h 119.6
+     arm       photo  render clean       d |  photo+himax  render himax       d
+     float     0.523         0.415  -0.108 |        0.404         0.237  -0.167
+     fq        0.552         0.380  -0.172 |        0.387         0.200  -0.187
+     chip      0.783         0.590  -0.194 |        0.543         0.246  -0.297
+
+  cat: photo COCO 131938 at its own centre crop, px128_h 128.0
+     vs  cat_petlevel at 0.25 m, px128_h 128.0
+     arm       photo  render clean       d |  photo+himax  render himax       d
+     float     0.364         0.431  +0.066 |        0.637         0.491  -0.147
+     fq        0.367         0.422  +0.054 |        0.637         0.404  -0.232
+     chip      0.093         0.306  +0.212 |        0.772         0.315  -0.457
+
+==============================================================================
+B. THE PADDED LADDER, and why it cannot be used to answer the question.
+   To put the photographed dog at a FLOWN apparent size the photograph must
+   be given a surround it does not contain. Three fillings, same picture,
+   same size, same network:
+==============================================================================
+
+  dog, arm fq, photograph through himax (mean of 3 draws)
+   target px128  canvas/photo       edge  symmetric       flat   spread    rendered card
+             15          6.5x      0.093      0.951      0.577    0.858      0.345 (petlevel)
+             20          4.8x      0.146      0.675      0.638    0.530      0.466 (petlevel)
+             25          3.9x      0.117      0.910      0.774    0.793      0.680 (petlevel)
+             30          3.2x      0.081      0.736      0.643    0.655      0.663 (petlevel)
+             35          2.8x      0.261      0.983      0.749    0.722      0.983 (petlevel)
+             40          2.4x      0.206      0.989      0.870    0.783      0.861 (petlevel)
+             45          2.2x      0.253      0.948      0.925    0.695      0.930 (petlevel)
+             50          1.9x      0.106      0.978      0.785    0.871      0.930 (petlevel)
+             60          1.6x      0.358      0.881      0.722    0.524      0.895 (petlevel)
+             80          1.2x      0.301      0.295      0.297    0.007      0.546 (petlevel)
+            100          1.0x      0.132      0.140      0.120    0.020      0.183 (petlevel)
+            120          0.8x      0.514      0.483      0.508    0.031      0.333 (petlevel)
+
+  cat, arm fq, photograph through himax (mean of 3 draws)
+   target px128  canvas/photo       edge  symmetric       flat   spread    rendered card
+             15          7.9x      0.191      0.011      0.645    0.634      0.347 (petlevel)
+             20          5.9x      0.151      0.023      0.452    0.429      0.312 (petlevel)
+             25          4.7x      0.119      0.077      0.702    0.626      0.327 (petlevel)
+             30          3.9x      0.124      0.048      0.379    0.331      0.535 (petlevel)
+             35          3.4x      0.201      0.150      0.714    0.564      0.862 (petlevel)
+             40          3.0x      0.167      0.626      0.506    0.459      0.906 (petlevel)
+             45          2.6x      0.149      0.365      0.381    0.231      0.836 (petlevel)
+             50          2.4x      0.169      0.625      0.391    0.456      0.592 (petlevel)
+             60          2.0x      0.408      0.665      0.784    0.376      0.831 (petlevel)
+             80          1.5x      0.573      0.787      0.506    0.281      0.888 (petlevel)
+            100          1.2x      0.404      0.363      0.254    0.150      0.370 (petlevel)
+            120          1.0x      0.784      0.559      0.721    0.225      0.223 (petlevel)
+
+  The three fillings are the same photograph of the same dog at the same
+  apparent size through the same network. Where they disagree by more than
+  the effect being measured, the padded ladder is measuring the padding.
+
+==============================================================================
+C. IS THE SIM'S CHOICE OF ANIMAL UNUSUAL?  Each source photograph against
+   the distribution of real photographs of the SAME species within +/-15%
+   of its own apparent size (raw photographs, no camera model).
+==============================================================================
+
+  dog COCO 297830, px128_h 119.9; 31 other real dog photographs within +/-15% of that size
+  arm     this photo  peer median     peer p25-p75  percentile  peers >= bar
+  float        0.523        0.279   0.164-0.553            74%         0.161
+  fq           0.552        0.306   0.167-0.545            74%         0.129
+  chip         0.783        0.376   0.268-0.589            81%         0.194
+
+  cat COCO 131938, px128_h 128.0; 27 other real cat photographs within +/-15% of that size
+  arm     this photo  peer median     peer p25-p75  percentile  peers >= bar
+  float        0.364        0.346   0.175-0.604            56%         0.222
+  fq           0.367        0.351   0.204-0.603            56%         0.222
+  chip         0.093        0.342   0.224-0.718            11%         0.259
+wrote figures/same_image_ladder.png

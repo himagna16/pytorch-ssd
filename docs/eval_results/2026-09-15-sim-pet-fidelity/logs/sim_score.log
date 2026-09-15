@@ -1,0 +1,8 @@
+arms: {"float": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth", "head": "xbin9_size_bucket4"}, "fq": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3.pth", "how": "learned QAT alphas, 8 bit"}, "chip": {"backend": "chip", "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_
+  200/1116
+  400/1116
+  600/1116
+  800/1116
+  1000/1116
+cross-check: max |float - build_scene.run_model| = 0.00e+00 over 1116 frames
+wrote tables/sim_pets.csv

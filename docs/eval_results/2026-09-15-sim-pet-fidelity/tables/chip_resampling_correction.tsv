@@ -1,0 +1,11 @@
+section	arm	comparison_set	metric	as_published	resolution_matched	ratio_published	ratio_corrected	note
+2_camera_decomposition	float	dog+cat photos	frac>=0.75	0.1469	0.1306			himax(resample+sensor)=0.105
+2_camera_decomposition	fq	dog+cat photos	frac>=0.75	0.1184	0.1143			himax(resample+sensor)=0.086
+2_camera_decomposition	chip	dog+cat photos	frac>=0.75	0.1143	0.1633			himax(resample+sensor)=0.143
+3_size_standardised_ratio	chip	allpets	frac>=0.75 ratio	0.0391		7.21		sim=0.2821; CI [3.40,26.92]
+3_size_standardised_ratio	chip	allpets	frac>=0.75 ratio		0.0974		2.9	sim=0.2821; CI [1.70,5.42]
+3_size_standardised_ratio	chip	dogs	frac>=0.75 ratio	0.0		inf		sim=0.5111; CI undefined (real rate 0)
+3_size_standardised_ratio	chip	dogs	frac>=0.75 ratio		0.2057		2.48	sim=0.5111; CI [1.08,13.06]
+4_latch_band	float	real pets px22-32	frac>=0.75	0.1111	0.1111			sim(as published) 0.593/0.611/0.574 by arm
+4_latch_band	fq	real pets px22-32	frac>=0.75	0.0926	0.0926			sim(as published) 0.593/0.611/0.574 by arm
+4_latch_band	chip	real pets px22-32	frac>=0.75	0.0741	0.1481			sim(as published) 0.593/0.611/0.574 by arm

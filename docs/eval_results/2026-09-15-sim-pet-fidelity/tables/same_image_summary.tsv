@@ -1,0 +1,85 @@
+block	species	coco_img_id	px128_h	arm	pad_mode	photo	photo_himax	render_clean	render_himax	d_clean	d_himax
+A_invention_free	dog	297830	119.9	float	none	0.5229	0.4043	0.4152	0.237	-0.1077	-0.1673
+A_invention_free	dog	297830	119.9	fq	none	0.5519	0.3869	0.3799	0.1996	-0.172	-0.1873
+A_invention_free	dog	297830	119.9	chip	none	0.7834	0.5429	0.5897	0.2459	-0.1937	-0.297
+A_invention_free	cat	131938	128.0	float	none	0.3644	0.6374	0.4307	0.4908	0.0663	-0.1466
+A_invention_free	cat	131938	128.0	fq	none	0.3673	0.6367	0.4216	0.4042	0.0543	-0.2324
+A_invention_free	cat	131938	128.0	chip	none	0.0935	0.7717	0.3056	0.3152	0.2121	-0.4566
+B_padded	dog	297830	15	fq	edge		0.0928		0.3451		0.2523
+B_padded	dog	297830	15	fq	symmetric		0.9512		0.3451		-0.6061
+B_padded	dog	297830	15	fq	flat		0.5775		0.3451		-0.2324
+B_padded	dog	297830	20	fq	edge		0.1457		0.466		0.3203
+B_padded	dog	297830	20	fq	symmetric		0.6754		0.466		-0.2094
+B_padded	dog	297830	20	fq	flat		0.6382		0.466		-0.1722
+B_padded	dog	297830	25	fq	edge		0.1171		0.6805		0.5634
+B_padded	dog	297830	25	fq	symmetric		0.9102		0.6805		-0.2297
+B_padded	dog	297830	25	fq	flat		0.7737		0.6805		-0.0932
+B_padded	dog	297830	30	fq	edge		0.0808		0.6629		0.5821
+B_padded	dog	297830	30	fq	symmetric		0.7363		0.6629		-0.0734
+B_padded	dog	297830	30	fq	flat		0.643		0.6629		0.0199
+B_padded	dog	297830	35	fq	edge		0.261		0.9834		0.7224
+B_padded	dog	297830	35	fq	symmetric		0.9827		0.9834		0.0007
+B_padded	dog	297830	35	fq	flat		0.7491		0.9834		0.2343
+B_padded	dog	297830	40	fq	edge		0.2061		0.8609		0.6548
+B_padded	dog	297830	40	fq	symmetric		0.9895		0.8609		-0.1286
+B_padded	dog	297830	40	fq	flat		0.8696		0.8609		-0.0087
+B_padded	dog	297830	45	fq	edge		0.2532		0.9303		0.6771
+B_padded	dog	297830	45	fq	symmetric		0.9478		0.9303		-0.0175
+B_padded	dog	297830	45	fq	flat		0.9248		0.9303		0.0055
+B_padded	dog	297830	50	fq	edge		0.1064		0.9303		0.8239
+B_padded	dog	297830	50	fq	symmetric		0.9779		0.9303		-0.0476
+B_padded	dog	297830	50	fq	flat		0.785		0.9303		0.1453
+B_padded	dog	297830	60	fq	edge		0.3578		0.8951		0.5373
+B_padded	dog	297830	60	fq	symmetric		0.8815		0.8951		0.0136
+B_padded	dog	297830	60	fq	flat		0.7216		0.8951		0.1735
+B_padded	dog	297830	80	fq	edge		0.3011		0.5462		0.2451
+B_padded	dog	297830	80	fq	symmetric		0.2945		0.5462		0.2517
+B_padded	dog	297830	80	fq	flat		0.297		0.5462		0.2492
+B_padded	dog	297830	100	fq	edge		0.1325		0.1829		0.0504
+B_padded	dog	297830	100	fq	symmetric		0.1398		0.1829		0.0431
+B_padded	dog	297830	100	fq	flat		0.1198		0.1829		0.0631
+B_padded	dog	297830	120	fq	edge		0.5142		0.3328		-0.1814
+B_padded	dog	297830	120	fq	symmetric		0.4834		0.3328		-0.1506
+B_padded	dog	297830	120	fq	flat		0.508		0.3328		-0.1752
+B_padded	cat	131938	15	fq	edge		0.1911		0.3468		0.1557
+B_padded	cat	131938	15	fq	symmetric		0.011		0.3468		0.3358
+B_padded	cat	131938	15	fq	flat		0.6453		0.3468		-0.2985
+B_padded	cat	131938	20	fq	edge		0.1515		0.3118		0.1603
+B_padded	cat	131938	20	fq	symmetric		0.0228		0.3118		0.289
+B_padded	cat	131938	20	fq	flat		0.4521		0.3118		-0.1403
+B_padded	cat	131938	25	fq	edge		0.1192		0.3274		0.2082
+B_padded	cat	131938	25	fq	symmetric		0.0767		0.3274		0.2507
+B_padded	cat	131938	25	fq	flat		0.7023		0.3274		-0.3749
+B_padded	cat	131938	30	fq	edge		0.1243		0.5351		0.4108
+B_padded	cat	131938	30	fq	symmetric		0.0484		0.5351		0.4867
+B_padded	cat	131938	30	fq	flat		0.3792		0.5351		0.1559
+B_padded	cat	131938	35	fq	edge		0.201		0.8616		0.6606
+B_padded	cat	131938	35	fq	symmetric		0.1502		0.8616		0.7114
+B_padded	cat	131938	35	fq	flat		0.7141		0.8616		0.1475
+B_padded	cat	131938	40	fq	edge		0.1666		0.906		0.7394
+B_padded	cat	131938	40	fq	symmetric		0.6259		0.906		0.2801
+B_padded	cat	131938	40	fq	flat		0.5061		0.906		0.3999
+B_padded	cat	131938	45	fq	edge		0.1492		0.836		0.6868
+B_padded	cat	131938	45	fq	symmetric		0.3651		0.836		0.4709
+B_padded	cat	131938	45	fq	flat		0.3806		0.836		0.4554
+B_padded	cat	131938	50	fq	edge		0.1689		0.5916		0.4227
+B_padded	cat	131938	50	fq	symmetric		0.6254		0.5916		-0.0338
+B_padded	cat	131938	50	fq	flat		0.3915		0.5916		0.2001
+B_padded	cat	131938	60	fq	edge		0.4084		0.8313		0.4229
+B_padded	cat	131938	60	fq	symmetric		0.665		0.8313		0.1663
+B_padded	cat	131938	60	fq	flat		0.7843		0.8313		0.047
+B_padded	cat	131938	80	fq	edge		0.5732		0.8879		0.3147
+B_padded	cat	131938	80	fq	symmetric		0.7868		0.8879		0.1011
+B_padded	cat	131938	80	fq	flat		0.5062		0.8879		0.3817
+B_padded	cat	131938	100	fq	edge		0.4038		0.3703		-0.0335
+B_padded	cat	131938	100	fq	symmetric		0.3629		0.3703		0.0074
+B_padded	cat	131938	100	fq	flat		0.2542		0.3703		0.1161
+B_padded	cat	131938	120	fq	edge		0.784		0.2229		-0.5611
+B_padded	cat	131938	120	fq	symmetric		0.5594		0.2229		-0.3365
+B_padded	cat	131938	120	fq	flat		0.7214		0.2229		-0.4985
+C_peer	dog	297830	119.9	float		0.5229					74.2
+C_peer	dog	297830	119.9	fq		0.5519					74.2
+C_peer	dog	297830	119.9	chip		0.7834					80.6
+C_peer	cat	131938	128.0	float		0.3644					55.6
+C_peer	cat	131938	128.0	fq		0.3673					55.6
+C_peer	cat	131938	128.0	chip		0.0935					11.1

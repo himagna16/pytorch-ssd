@@ -1,0 +1,52 @@
+A. THE CAMERA MODEL'S OWN EFFECT ON REAL PHOTOGRAPHS (dog+cat images only)
+   float  raw photo >=0.75 0.147 (med 0.302, n=245)   through himax >=0.75 0.105 (med 0.339, n=735 = 245 images x3)
+   fq     raw photo >=0.75 0.118 (med 0.321, n=245)   through himax >=0.75 0.086 (med 0.335, n=735 = 245 images x3)
+   chip   raw photo >=0.75 0.114 (med 0.357, n=245)   through himax >=0.75 0.143 (med 0.396, n=735 = 245 images x3)
+
+B. THE WHOLE FLOWN BAND, sim dog, eye line, himax, every dy and seed (1.0-4.0 m)
+   float  dog >=0.75 0.318 (med 0.562, n=195)   cat >=0.75 0.000 (med 0.335, n=195)
+   fq     dog >=0.75 0.354 (med 0.599, n=195)   cat >=0.75 0.000 (med 0.381, n=195)
+   chip   dog >=0.75 0.282 (med 0.583, n=195)   cat >=0.75 0.000 (med 0.412, n=195)
+
+C. THE LATCH BAND the flown cell actually sits in: 2.0-2.75 m = 22-32 px128_h
+   float  SIM 0.783 med, 0.593 >=bar (n=54) | real dog raw 0.512/0.333 (n=6) | real dog himax 0.439/0.167 (n=18) | real any pet raw 0.291/0.111 (n=54)
+   fq     SIM 0.794 med, 0.611 >=bar (n=54) | real dog raw 0.446/0.167 (n=6) | real dog himax 0.392/0.167 (n=18) | real any pet raw 0.327/0.093 (n=54)
+   chip   SIM 0.766 med, 0.574 >=bar (n=54) | real dog raw 0.497/0.000 (n=6) | real dog himax 0.440/0.333 (n=18) | real any pet raw 0.271/0.074 (n=54)
+
+D. REAL SIDE, WHOLE SLICE (n=771), for reference against the published figure
+   float        >=0.45 0.270  >=0.55 0.175  >=0.75 0.082
+   fq           >=0.45 0.239  >=0.55 0.171  >=0.75 0.077
+   chip         >=0.45 0.226  >=0.55 0.147  >=0.75 0.069
+   chip_via244  >=0.45 0.306  >=0.55 0.205  >=0.75 0.096
+
+E. REAL SIDE, only the sizes the drone can see a 0.65 m dog at (14.7-51.9 px)
+   float  all pets >=0.45 0.301 >=0.75 0.098 med 0.289 (n=193)   dogs >=0.75 0.176 med 0.447 (n=17)
+   fq     all pets >=0.45 0.275 >=0.75 0.083 med 0.282 (n=193)   dogs >=0.75 0.118 med 0.397 (n=17)
+   chip   all pets >=0.45 0.249 >=0.75 0.041 med 0.252 (n=193)   dogs >=0.75 0.000 med 0.356 (n=17)
+
+-------------------------------------------------------------------------------
+CORRECTION appended by the second-pass skeptic re-derivation, 2026-09-14.
+This file has no generating script in scripts/. Sections A, C and E above quote
+the CHIP arm on raw COCO photographs, which is NOT resolution-matched to the
+chip arm on rendered frames: firmware_preprocess is nearest-neighbour + a 2x2
+box average with no antialiasing, so it samples a 244-px render almost fully
+and a 480-640-px photograph at stride 3.75. The matched real-side column is
+chip_via244 (a no-op on the sim side). float and fq are unaffected.
+
+  A. dog+cat photos, frac >= 0.75:  chip raw 0.114 -> matched 0.163
+     (the raw -> himax move 0.114 -> 0.143 is +0.049 resampling, -0.020 sensor)
+  C. latch band 22-32 px:           chip real dog   0.000 -> 0.167 (1 of 6)
+                                    chip real pets  0.074 -> 0.148 (8 of 54)
+     and the SIM side of section C is range 2.0-2.75 AND px128_h 22-32, an AND
+     of two filters; by range alone it is 0.533/0.567/0.517, by size alone
+     0.485/0.500/0.470.  n=54 frames is 18 pose clusters.
+  D. whole slice n=771:             chip @0.45 0.226 -> 0.306, @0.75 0.069 -> 0.096
+  E. 14.7-51.9 px:                  chip all pets 0.041 -> 0.104 (n=193)
+                                    chip dogs     0.000 -> 0.176 (n=17)
+
+Size-standardised above-bar ratio, chip arm, cluster-bootstrap 95% CI:
+  vs all real pets   7.21x [3.40, 26.92]  ->  2.90x [1.70, 5.42]
+  vs real dogs only  infinity (real 0.000) ->  2.48x [1.08, 13.06]
+
+Regenerate: nemoenv/bin/python scripts/verify_resampling_chip.py .
+See README section 0a.

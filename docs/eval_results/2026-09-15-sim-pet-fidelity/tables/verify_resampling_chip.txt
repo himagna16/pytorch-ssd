@@ -1,0 +1,97 @@
+==============================================================================
+0. IS chip_via244 THE RIGHT PAIRING?  On the SIM side it must be a no-op,
+   because a rendered frame is already a 244 crop.
+==============================================================================
+   sim float  max |arm - arm_via244| = 0.0000   (n=1116)
+   sim fq     max |arm - arm_via244| = 0.0000   (n=1116)
+   sim chip   max |arm - arm_via244| = 0.0000   (n=1116)
+   -> chip_via244 changes nothing on the sim side, so comparing
+      sim chip against real chip_via244 changes only the REAL side's chain.
+
+==============================================================================
+1. WHOLE SLICE (n=771), one threshold at a time, raw photo vs same photo
+   through the frame's own resampling chain.
+==============================================================================
+   arm     >=0.45 raw   via244  >=0.75 raw   via244  med raw   via244
+   float        0.270    0.261       0.082    0.077    0.271    0.260
+   fq           0.239    0.235       0.077    0.070    0.269    0.260
+   chip         0.226    0.306       0.069    0.096    0.242    0.296
+   float/fq move by <=0.009 at 0.45 and <=0.007 at 0.75; chip moves by
+   +0.080 at 0.45 and +0.027 at 0.75.  'The resampling chain is not a
+   confound' was verified on float and is FALSE on chip.
+
+==============================================================================
+2. DECOMPOSING the raw -> himax change on the 245 dog/cat photographs.
+   real_pets_himax.py already resizes the crop to 244 BEFORE the sensor
+   model, so its arm carries resampling AND sensor. via244 isolates the
+   resampling half.  Fraction >= 0.75 throughout.
+==============================================================================
+   arm     raw photo  +resample  +resample+sensor  resample part  sensor part
+   float       0.147      0.131             0.105         -0.016       -0.026
+   fq          0.118      0.114             0.086         -0.004       -0.029
+   chip        0.114      0.163             0.143         +0.049       -0.020
+   On chip the RESAMPLING moves it +0.049 and the SENSOR -0.020.  README
+   section (b) attributes the whole 0.114 -> 0.143 to the camera model.
+
+==============================================================================
+3. SIZE-STANDARDISED ABOVE-BAR RATIO, sim dog (eye line, himax, 1.0-4.0 m)
+   against real photographs reweighted to the sim's own size mix. Cluster
+   bootstrap (a photo is one cluster, a pose is one cluster), 2000 draws,
+   single 0.75 bar on both sides.
+==============================================================================
+   real set  real chain    sim>=bar  real>=bar   ratio             95% CI
+   allpets   as published    0.2821     0.0391    7.21      [3.40, 26.92]
+   allpets   matched 244     0.2821     0.0974    2.90       [1.70, 5.42]
+   dogs      as published    0.5111     0.0000     inf        [undefined]
+   dogs      matched 244     0.5111     0.2057    2.48      [1.08, 13.06]
+
+==============================================================================
+4. THE LATCH BAND, and how much its headline depends on how it is cut.
+   All three cuts scored at the SAME 0.75 bar; real side always the same
+   photographs at px128_h in [22, 32].
+==============================================================================
+
+   range 2.0-2.75 AND px 22-32 (as published):  n=54 frames, 18 poses
+      float  sim med 0.783  >=0.75 0.593
+      fq     sim med 0.794  >=0.75 0.611
+      chip   sim med 0.766  >=0.75 0.574
+
+   range 2.0-2.75 only:  n=60 frames, 20 poses
+      float  sim med 0.761  >=0.75 0.533
+      fq     sim med 0.773  >=0.75 0.567
+      chip   sim med 0.750  >=0.75 0.517
+
+   px 22-32 only (pulls in 0.35-0.45 m):  n=66 frames, 22 poses
+      float  sim med 0.723  >=0.75 0.485
+      fq     sim med 0.755  >=0.75 0.500
+      chip   sim med 0.736  >=0.75 0.470
+
+   real side at px 22-32: dogs n=6 photos, all pets n=54 photos
+      float  dogs raw 0.333 / matched-244 0.333   all pets raw 0.111 / matched-244 0.111
+      fq     dogs raw 0.167 / matched-244 0.167   all pets raw 0.093 / matched-244 0.093
+      chip   dogs raw 0.000 / matched-244 0.167   all pets raw 0.074 / matched-244 0.148
+
+==============================================================================
+5. THE CAT SAME-IMAGE PAIR IS A TIE.  Both cat_petlevel ranges report
+   px128_h = 128.0 because the panel overflows the crop and the measure
+   saturates; they are NOT the same picture.
+==============================================================================
+
+   cat_petlevel r=0.25 m  px128_h 128.0  geometric 146.24  visible_fraction 0.875  touches_edge 1
+      float  clean 0.4307   himax mean 0.4908
+      fq     clean 0.4216   himax mean 0.4042
+      chip   clean 0.3056   himax mean 0.3152
+
+   cat_petlevel r=0.28 m  px128_h 128.0  geometric 130.57  visible_fraction 0.98  touches_edge 1
+      float  clean 0.1015   himax mean 0.2981
+      fq     clean 0.0950   himax mean 0.2237
+      chip   clean 0.1385   himax mean 0.2642
+
+   photograph 131938 direct: float 0.3644  fq 0.3673  chip 0.0935
+   -> d_clean (render - photo) is +0.05..+0.21 with the 0.25 m render
+      (what README and same_image_summary.tsv quote) and -0.26..+0.05
+      with the 0.28 m render (what same_image.tsv quotes). The sign flips
+      on two of three arms. The cat same-image result is undetermined.
+   The DOG pair is not affected: dog_petlevel r=0.5 m has px128_h 119.61
+      against the photo's 119.91, visible_fraction 1.007, touches_edge 0 -
+      a genuine, unambiguous pair.

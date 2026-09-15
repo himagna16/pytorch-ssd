@@ -1,0 +1,16 @@
+arms: {"float": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth", "head": "xbin9_size_bucket4"}, "fq": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3.pth", "how": "learned QAT alphas, 8 bit"}, "chip": {"backend": "chip", "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_
+  100 images
+  200 images
+  300 images
+  400 images
+  500 images
+  600 images
+  700 images
+n = 771
+  float        FP@0.45 0.270  @0.55 0.175  @0.75 0.082  mean 0.325
+  float_via244 FP@0.45 0.261  @0.55 0.166  @0.75 0.077  mean 0.320
+  fq           FP@0.45 0.239  @0.55 0.171  @0.75 0.077  mean 0.321
+  fq_via244    FP@0.45 0.235  @0.55 0.161  @0.75 0.070  mean 0.316
+  chip         FP@0.45 0.226  @0.55 0.147  @0.75 0.069  mean 0.298
+  chip_via244  FP@0.45 0.306  @0.55 0.205  @0.75 0.096  mean 0.348
+wrote tables/real_pets.csv

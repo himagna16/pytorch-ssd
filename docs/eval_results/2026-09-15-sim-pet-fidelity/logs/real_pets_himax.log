@@ -1,0 +1,10 @@
+arms: {"float": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth", "head": "xbin9_size_bucket4"}, "fq": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3.pth", "how": "learned QAT alphas, 8 bit"}, "chip": {"b
+245 images with subject in ['cat', 'dog']
+  50/245 images
+  100/245 images
+  150/245 images
+  200/245 images
+  float  himax: >=0.45 0.384  >=0.75 0.105  mean 0.401  n=735
+  fq     himax: >=0.45 0.348  >=0.75 0.086  mean 0.390  n=735
+  chip   himax: >=0.45 0.438  >=0.75 0.143  mean 0.444  n=735
+wrote tables/real_pets_himax.csv

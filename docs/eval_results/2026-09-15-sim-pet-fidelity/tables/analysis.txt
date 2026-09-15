@@ -1,0 +1,287 @@
+==============================================================================
+0. WHAT APPARENT SIZES EACH SIDE ACTUALLY COVERS  (px128_h = subject height
+   in the 128x128 network input; the full input is 128 px)
+==============================================================================
+group                          n    min    p25  median    p75    max
+real_raw_allpets             771    0.0   43.6    74.3  103.7  128.0
+real_raw_dog                  93    2.8   56.8    80.7  106.6  128.0
+real_raw_cat                 152    0.0   47.0    78.9   98.2  128.0
+real_himax_dog               279    2.8   56.8    80.7  106.6  128.0
+real_himax_cat               456    0.0   47.0    78.9   98.2  128.0
+sim_dog_eye_clean             65   14.7   18.4    24.1   35.1   51.9
+sim_dog_eye_himax            195   14.7   18.4    24.1   35.1   51.9
+sim_dog_petlevel_clean        23   14.7   23.1    47.2  104.4  128.0
+sim_dog_petlevel_himax       115   14.7   22.0    47.2  109.1  128.0
+sim_cat_eye_clean             65    8.9   11.0    14.7   22.0   32.0
+sim_cat_eye_himax            195    8.9   11.0    14.7   22.0   32.0
+sim_cat_petlevel_clean        25    9.4   14.7    36.7   73.4  128.0
+sim_cat_petlevel_himax       125    9.4   14.7    36.7   73.4  128.0
+
+The flown geometry caps the sim pet's apparent size: the camera flies at 0.8 m
+looking level, the pet stands on the floor, so closing in pushes it out of the
+bottom of the frame. Largest px128_h reachable on the eye line: dog 51.9, cat 32.0.
+Real photographs of the same two animals: dog median 80.7, cat median 78.9 px128_h.
+
+==============================================================================
+1. CONFIDENCE VS APPARENT SIZE, per arm.  med [p25-p75], and the fraction
+   at or above the shipped 0.75 confirmation bar.  n in brackets.
+==============================================================================
+
+--- arm = float ------------------------------------------------------------
+ px128_h bin         real raw allpets             real raw dog        sim dog eye himax
+    8-15               0.27[0.07]n=30            0.34[0.00]n=2           0.35[0.00]n=15
+   15-25               0.31[0.05]n=41            0.20[0.00]n=2           0.43[0.03]n=90
+   25-40               0.31[0.14]n=79            0.53[0.29]n=7           0.80[0.69]n=54
+   40-55               0.28[0.08]n=91           0.28[0.10]n=10           0.79[0.61]n=36
+   55-80              0.27[0.08]n=166           0.34[0.21]n=24                        -
+   80-129             0.24[0.08]n=348           0.32[0.21]n=47                        -
+
+--- arm = fq ------------------------------------------------------------
+ px128_h bin         real raw allpets             real raw dog        sim dog eye himax
+    8-15               0.25[0.07]n=30            0.35[0.00]n=2           0.38[0.00]n=15
+   15-25               0.30[0.07]n=41            0.19[0.00]n=2           0.48[0.07]n=90
+   25-40               0.34[0.10]n=79            0.46[0.14]n=7           0.80[0.72]n=54
+   40-55               0.28[0.08]n=91           0.27[0.10]n=10           0.79[0.67]n=36
+   55-80              0.27[0.06]n=166           0.38[0.17]n=24                        -
+   80-129             0.25[0.08]n=348           0.34[0.17]n=47                        -
+
+--- arm = chip ------------------------------------------------------------
+ px128_h bin         real raw allpets             real raw dog        sim dog eye himax
+    8-15               0.19[0.00]n=30            0.36[0.00]n=2           0.43[0.00]n=15
+   15-25               0.25[0.05]n=41            0.16[0.00]n=2           0.50[0.10]n=90
+   25-40               0.27[0.04]n=79            0.49[0.00]n=7           0.74[0.50]n=54
+   40-55               0.24[0.03]n=91           0.24[0.00]n=10           0.76[0.53]n=36
+   55-80              0.26[0.08]n=166           0.28[0.04]n=24                        -
+   80-129             0.23[0.09]n=348           0.41[0.19]n=47                        -
+
+==============================================================================
+2. THE MATCHED-SIZE GAP.  sim minus real, in the bins where the FLOWN sim
+   geometry and real photographs overlap.  [95% bootstrap CI]
+==============================================================================
+
+--- arm = float ------------------------------------------------------------
+  dog, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.795     0.573   +0.223 [+0.112,+0.576]      0.685       0.143   +0.542 [+0.201,+0.815]
+     40-55         12     10    0.790     0.285   +0.505 [+0.172,+0.636]      0.611       0.000   +0.611 [+0.333,+0.861]
+   bin-average                                    +0.364                                             +0.577
+  dog, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.795     0.526   +0.269 [+0.005,+0.355]      0.685       0.286   +0.399 [-0.011,+0.759]
+     40-55         12     10    0.790     0.282   +0.508 [+0.160,+0.699]      0.611       0.100   +0.511 [+0.161,+0.833]
+   bin-average                                    +0.388                                             +0.455
+  dog, sim clean vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.907     0.526   +0.380 [+0.134,+0.468]      0.778       0.286   +0.492 [+0.095,+0.857]
+     40-55         12     10    0.706     0.282   +0.424 [+0.054,+0.581]      0.250       0.100   +0.150 [-0.200,+0.417]
+   bin-average                                    +0.402                                             +0.321
+  dog vs all pets, sim himax vs raw
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15          5     30    0.347     0.274   +0.073 [-0.141,+0.184]      0.000       0.067   -0.067 [-0.167,+0.000]
+     15-25         30     41    0.430     0.311   +0.119 [-0.029,+0.218]      0.033       0.049   -0.015 [-0.098,+0.076]
+     25-40         18     79    0.795     0.314   +0.481 [+0.331,+0.549]      0.685       0.139   +0.546 [+0.329,+0.734]
+     40-55         12     91    0.790     0.277   +0.513 [+0.403,+0.631]      0.611       0.077   +0.534 [+0.267,+0.801]
+   bin-average                                    +0.297                                             +0.250
+  cat, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.254     0.174   +0.080 [-0.392,+0.167]      0.000       0.111   -0.111 [-0.333,+0.000]
+     15-25         22      6    0.404     0.248   +0.156 [-0.176,+0.298]      0.000       0.000   +0.000 [+0.000,+0.000]
+     25-40         10     12    0.452     0.385   +0.067 [-0.112,+0.239]      0.000       0.083   -0.083 [-0.250,+0.000]
+   bin-average                                    +0.101                                             -0.065
+  cat, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.254     0.200   +0.054 [-0.338,+0.136]      0.000       0.000   +0.000 [+0.000,+0.000]
+     15-25         22      6    0.404     0.345   +0.059 [-0.115,+0.221]      0.000       0.000   +0.000 [+0.000,+0.000]
+     25-40         10     12    0.452     0.429   +0.023 [-0.205,+0.258]      0.000       0.250   -0.250 [-0.500,+0.000]
+   bin-average                                    +0.046                                             -0.083
+
+--- arm = fq ------------------------------------------------------------
+  dog, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.797     0.455   +0.342 [+0.195,+0.653]      0.722       0.143   +0.579 [+0.238,+0.870]
+     40-55         12     10    0.793     0.280   +0.512 [+0.189,+0.642]      0.667       0.000   +0.667 [+0.417,+0.917]
+   bin-average                                    +0.427                                             +0.623
+  dog, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.797     0.459   +0.338 [+0.042,+0.431]      0.722       0.143   +0.579 [+0.201,+0.870]
+     40-55         12     10    0.793     0.271   +0.522 [+0.093,+0.713]      0.667       0.100   +0.567 [+0.233,+0.861]
+   bin-average                                    +0.430                                             +0.573
+  dog, sim clean vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.907     0.459   +0.448 [+0.146,+0.539]      0.778       0.143   +0.635 [+0.270,+0.889]
+     40-55         12     10    0.682     0.271   +0.411 [-0.010,+0.571]      0.250       0.100   +0.150 [-0.150,+0.417]
+   bin-average                                    +0.429                                             +0.392
+  dog vs all pets, sim himax vs raw
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15          5     30    0.382     0.254   +0.128 [-0.049,+0.253]      0.000       0.067   -0.067 [-0.167,+0.000]
+     15-25         30     41    0.484     0.298   +0.185 [+0.035,+0.304]      0.067       0.073   -0.007 [-0.115,+0.098]
+     25-40         18     79    0.797     0.336   +0.461 [+0.385,+0.570]      0.722       0.101   +0.621 [+0.417,+0.819]
+     40-55         12     91    0.793     0.280   +0.513 [+0.426,+0.648]      0.667       0.077   +0.590 [+0.334,+0.834]
+   bin-average                                    +0.322                                             +0.284
+  cat, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.289     0.176   +0.113 [-0.316,+0.197]      0.000       0.000   +0.000 [+0.000,+0.000]
+     15-25         22      6    0.421     0.242   +0.179 [-0.174,+0.321]      0.000       0.000   +0.000 [+0.000,+0.000]
+     25-40         10     12    0.469     0.353   +0.116 [-0.075,+0.243]      0.000       0.000   +0.000 [+0.000,+0.000]
+   bin-average                                    +0.136                                             +0.000
+  cat, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.289     0.214   +0.074 [-0.239,+0.165]      0.000       0.000   +0.000 [+0.000,+0.000]
+     15-25         22      6    0.421     0.347   +0.074 [-0.127,+0.246]      0.000       0.000   +0.000 [+0.000,+0.000]
+     25-40         10     12    0.469     0.422   +0.047 [-0.147,+0.282]      0.000       0.083   -0.083 [-0.250,+0.000]
+   bin-average                                    +0.065                                             -0.028
+
+--- arm = chip ------------------------------------------------------------
+  dog, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.742     0.519   +0.223 [-0.074,+0.502]      0.500       0.286   +0.214 [-0.196,+0.580]
+     40-55         12     10    0.763     0.323   +0.440 [+0.087,+0.593]      0.528       0.100   +0.428 [+0.094,+0.722]
+   bin-average                                    +0.332                                             +0.321
+  dog, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.742     0.485   +0.257 [+0.120,+0.464]      0.500       0.000   +0.500 [+0.278,+0.722]
+     40-55         12     10    0.763     0.243   +0.521 [+0.298,+0.673]      0.528       0.000   +0.528 [+0.278,+0.778]
+   bin-average                                    +0.389                                             +0.514
+  dog, sim clean vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+     25-40         18      7    0.851     0.485   +0.366 [+0.217,+0.578]      0.722       0.000   +0.722 [+0.500,+0.890]
+     40-55         12     10    0.687     0.243   +0.444 [+0.206,+0.557]      0.250       0.000   +0.250 [+0.000,+0.500]
+   bin-average                                    +0.405                                             +0.486
+  dog vs all pets, sim himax vs raw
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15          5     30    0.430     0.188   +0.242 [+0.078,+0.300]      0.000       0.000   +0.000 [+0.000,+0.000]
+     15-25         30     41    0.496     0.252   +0.245 [+0.161,+0.301]      0.100       0.049   +0.051 [-0.064,+0.176]
+     25-40         18     79    0.742     0.266   +0.476 [+0.366,+0.563]      0.500       0.038   +0.462 [+0.234,+0.684]
+     40-55         12     91    0.763     0.242   +0.521 [+0.434,+0.656]      0.528       0.033   +0.495 [+0.245,+0.745]
+   bin-average                                    +0.371                                             +0.252
+  cat, himax both sides
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.338     0.162   +0.176 [-0.299,+0.218]      0.000       0.111   -0.111 [-0.333,+0.000]
+     15-25         22      6    0.470     0.281   +0.189 [-0.165,+0.359]      0.000       0.167   -0.167 [-0.500,+0.000]
+     25-40         10     12    0.433     0.457   -0.024 [-0.127,+0.122]      0.000       0.083   -0.083 [-0.250,+0.000]
+   bin-average                                    +0.114                                             -0.120
+  cat, sim himax vs raw photo
+           bin  n sim n real  med sim  med real             d median  >=bar sim  >=bar real               d frac
+      8-15         33      6    0.338     0.226   +0.111 [-0.121,+0.215]      0.000       0.000   +0.000 [+0.000,+0.000]
+     15-25         22      6    0.470     0.271   +0.199 [-0.294,+0.298]      0.000       0.167   -0.167 [-0.500,+0.000]
+     25-40         10     12    0.433     0.400   +0.033 [-0.044,+0.204]      0.000       0.000   +0.000 [+0.000,+0.000]
+   bin-average                                    +0.114                                             -0.056
+
+==============================================================================
+2b. SIZE-STANDARDISED over the flown band.  The sim's own apparent-size mix
+    (its frames at 1.0-4.0 m) is used to reweight the real photographs, so
+    the two sides are compared with the SAME size mix and the answer cannot
+    be an artefact of which sizes each side happens to contain.
+==============================================================================
+
+  dog vs real dogs, himax both sides
+  arm     sim >=bar  real >=bar (std)   ratio  sim mean  real mean (std)  bins used
+  float       0.656             0.086     7.6     0.763            0.438 25-40,40-55
+  fq          0.700             0.086     8.2     0.776            0.406 25-40,40-55
+  chip        0.511             0.211     2.4     0.741            0.474 25-40,40-55
+
+  dog vs real dogs, raw photos
+  arm     sim >=bar  real >=bar (std)   ratio  sim mean  real mean (std)  bins used
+  float       0.656             0.211     3.1     0.763            0.482 25-40,40-55
+  fq          0.700             0.126     5.6     0.776            0.458 25-40,40-55
+  chip        0.511             0.000     inf     0.741            0.396 25-40,40-55
+
+  dog vs all real pets, raw photos
+  arm     sim >=bar  real >=bar (std)   ratio  sim mean  real mean (std)  bins used
+  float       0.318             0.080     4.0     0.581            0.352 8-15,15-25,25-40,40-55
+  fq          0.354             0.081     4.4     0.615            0.345 8-15,15-25,25-40,40-55
+  chip        0.282             0.039     7.2     0.607            0.303 8-15,15-25,25-40,40-55
+
+  cat vs real cats, himax both sides
+  arm     sim >=bar  real >=bar (std)   ratio  sim mean  real mean (std)  bins used
+  float       0.000             0.069     0.0     0.340            0.326 8-15,15-25,25-40
+  fq          0.000             0.000     inf     0.371            0.316 8-15,15-25,25-40
+  chip        0.000             0.126     0.0     0.407            0.346 8-15,15-25,25-40
+
+  cat vs real cats, raw photos
+  arm     sim >=bar  real >=bar (std)   ratio  sim mean  real mean (std)  bins used
+  float       0.000             0.038     0.0     0.340            0.341 8-15,15-25,25-40
+  fq          0.000             0.013     0.0     0.371            0.335 8-15,15-25,25-40
+  chip        0.000             0.056     0.0     0.407            0.331 8-15,15-25,25-40
+
+==============================================================================
+2c. ROBUSTNESS - subjects that are WHOLLY inside the frame on both sides.
+    A sim pet closer than ~1.15 m is cut off by the bottom of the frame, and
+    a COCO subject can be cut by the centre square crop. Dropping both kinds
+    leaves apparent size meaning the same thing on both sides.
+==============================================================================
+
+  dog, sim himax vs raw photo   (sim frames 174/195, real images 83/93 kept)
+  float    [25-40] d_med +0.269 d_frac +0.399   [40-55] d_med +0.507 d_frac +0.567
+  fq       [25-40] d_med +0.338 d_frac +0.579   [40-55] d_med +0.522 d_frac +0.700
+  chip     [25-40] d_med +0.257 d_frac +0.500   [40-55] d_med +0.548 d_frac +0.667
+
+  dog vs all pets, sim himax vs raw   (sim frames 174/195, real images 689/771 kept)
+  float    [8-15] d_med +0.040 d_frac -0.069   [15-25] d_med +0.097 d_frac -0.017   [25-40] d_med +0.469 d_frac +0.544   [40-55] d_med +0.516 d_frac +0.609
+  fq       [8-15] d_med +0.127 d_frac -0.069   [15-25] d_med +0.153 d_frac -0.008   [25-40] d_med +0.458 d_frac +0.620   [40-55] d_med +0.519 d_frac +0.742
+  chip     [8-15] d_med +0.239 d_frac +0.000   [15-25] d_med +0.245 d_frac +0.050   [25-40] d_med +0.472 d_frac +0.462   [40-55] d_med +0.556 d_frac +0.655
+
+==============================================================================
+3. THE SAME IMAGE BOTH WAYS.  The sim's dog IS COCO val2017 297830/11206
+   and its cat IS 131938/50735 - both of them members of the 771-image
+   confuser slice.  Rendered at the range that reproduces the photograph's
+   own apparent size (camera lowered to the subject's centre height, the
+   only way to reach that size), against the photograph scored directly.
+==============================================================================
+
+COCO 297830  photo px128_h 119.9  vs  dog_petlevel at range 0.5 m, px128_h 119.6
+  arm     photo direct  photo himax(3)  sim clean           sim himax(n)
+  float          0.523           0.404      0.415      0.237 [0.217-0.280] n=5
+  fq             0.552           0.387      0.380      0.200 [0.178-0.218] n=5
+  chip           0.783           0.543      0.590      0.246 [0.213-0.287] n=5
+
+COCO 131938  photo px128_h 128.0  vs  cat_petlevel at range 0.28 m, px128_h 128.0
+  arm     photo direct  photo himax(3)  sim clean           sim himax(n)
+  float          0.364           0.637      0.102      0.298 [0.268-0.337] n=5
+  fq             0.367           0.637      0.095      0.224 [0.190-0.245] n=5
+  chip           0.093           0.772      0.139      0.264 [0.209-0.326] n=5
+
+==============================================================================
+4. IS THE SIM PET REPRESENTATIVE?  Where the sim frame's confidence falls
+   inside the DISTRIBUTION of real photographs of the same species at the
+   same apparent size (percentile, and the real spread it sits in).
+==============================================================================
+
+  dog, arm float, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.347     0.415   0.150-0.669                 50%       6
+     15-25        0.430     0.238   0.180-0.295                100%       6
+     25-40        0.795     0.573   0.255-0.633                 86%      21
+     40-55        0.790     0.285   0.240-0.615                100%      30
+
+  dog, arm fq, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.382     0.444   0.206-0.675                 50%       6
+     15-25        0.484     0.191   0.158-0.231                100%       6
+     25-40        0.797     0.455   0.175-0.580                 86%      21
+     40-55        0.793     0.280   0.241-0.594                100%      30
+
+  dog, arm chip, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.430     0.510   0.235-0.781                 50%       6
+     15-25        0.496     0.276   0.212-0.346                100%       6
+     25-40        0.742     0.519   0.292-0.761                 71%      21
+     40-55        0.763     0.323   0.238-0.645                 90%      30
+
+  cat, arm float, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.254     0.174   0.104-0.483                 56%      18
+     15-25        0.404     0.248   0.133-0.523                 67%      18
+     25-40        0.452     0.385   0.215-0.528                 56%      36
+
+  cat, arm fq, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.289     0.176   0.112-0.498                 67%      18
+     15-25        0.421     0.242   0.129-0.511                 67%      18
+     25-40        0.469     0.353   0.232-0.510                 72%      36
+
+  cat, arm chip, himax on both sides
+           bin  sim med  real med     real p25-p75  sim pct in real  n real
+      8-15        0.338     0.162   0.132-0.513                 67%      18
+     15-25        0.470     0.281   0.131-0.465                 78%      18
+     25-40        0.433     0.457   0.313-0.562                 44%      36
