@@ -1,0 +1,100 @@
+====================================================================================================
+1. THRESHOLD: plan row vs the vis_enter follow_person.py recorded in summary.json
+====================================================================================================
+run                                  plan enter  rec enter  rec exit  rec cf  cell.json  verdict
+e0.70__A.static__control__r1a1             0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__control__r2a1             0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__control__r3a1        NO summary.json/cell.json - not a scored flight
+e0.70__A.static__control__r3a2             0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__median__r1a1              0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__median__r2a1              0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__median__r3a1         NO summary.json/cell.json - not a scored flight
+e0.70__A.static__median__r3a2              0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__p25__r1a1                 0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__p25__r2a1                 0.70        0.7      0.45       3        0.7  OK
+e0.70__A.static__p25__r3a1                 0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__control__r1a1             0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__control__r2a1             0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__control__r3a1             0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__median__r1a1              0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__median__r2a1              0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__median__r3a1              0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__p25__r1a1                 0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__p25__r2a1                 0.70        0.7      0.45       3        0.7  OK
+e0.70__B.moving__p25__r3a1                 0.70        0.7      0.45       3        0.7  OK
+e0.75__A.static__control__r1a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__control__r2a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__control__r3a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__median__r1a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__median__r2a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__median__r3a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__p25__r1a1                 0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__p25__r2a1                 0.75       0.75      0.45       3       0.75  OK
+e0.75__A.static__p25__r3a1                 0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__control__r1a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__control__r2a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__control__r3a1             0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__median__r1a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__median__r2a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__median__r3a1              0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__p25__r1a1                 0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__p25__r2a1                 0.75       0.75      0.45       3       0.75  OK
+e0.75__B.moving__p25__r3a1                 0.75       0.75      0.45       3       0.75  OK
+
+plan rows: 36   flights found: 36   missing: none
+
+====================================================================================================
+2. SCENE: sha256 of the scene.xml each flight actually loaded, vs the artefact on disk
+====================================================================================================
+  s01_control_moving    ad1caece08d55feb52a1c5fa7f317ebb
+  s15_static_offset     8e597e6ae29b088677e776a63f474fe2
+  tp01_moving_median    34ac32aadb981f3cb1ce048ae635da45
+  tp01_moving_p25       d1cae90e2d1efb21f0c8155a43231645
+  tp15_static_median    f1106a68b91b04287171110549b22825
+  tp15_static_p25       2a75dbbaac1a4021943ac27e662cf419
+
+  every flight's recorded scene hash matches its scene on disk: YES, all 36
+
+====================================================================================================
+3+4. SETUP AND PAIRING: the two arms of a cell/repeat differ in the bar and nothing else
+====================================================================================================
+  A.static__control      r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__control      r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__control      r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__median       r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__median       r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__median       r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__p25          r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__p25          r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  A.static__p25          r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__control      r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__control      r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__control      r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__median       r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['state', 'cost']
+  B.moving__median       r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__median       r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__p25          r1  seed 1001  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__p25          r2  seed 1002  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+  B.moving__p25          r3  seed 1003  IDENTICAL on all 13 setup fields
+      camera identity (7 fields): IDENTICAL   non-identity keys differing: ['cost']
+
+====================================================================================================
+VERDICT: ALL CHECKS PASS
+====================================================================================================

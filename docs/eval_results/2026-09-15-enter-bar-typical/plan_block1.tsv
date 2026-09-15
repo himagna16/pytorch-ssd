@@ -1,0 +1,25 @@
+# order	vis_enter	cell	scene	class	backend	camera	speed	dur	repeat	block
+1	0.70	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	1	1
+2	0.75	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	1	1
+3	0.75	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	1	1
+4	0.70	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	1	1
+5	0.70	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	1	1
+6	0.75	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	1	1
+7	0.75	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	1	1
+8	0.70	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	1	1
+9	0.70	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	2	1
+10	0.75	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	2	1
+11	0.75	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	2	1
+12	0.70	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	2	1
+13	0.70	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	2	1
+14	0.75	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	2	1
+15	0.75	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	2	1
+16	0.70	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	2	1
+17	0.70	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	3	1
+18	0.75	B.moving__median	tp01_moving_median	B	chip	himax_typical	chip	50	3	1
+19	0.75	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	3	1
+20	0.70	B.moving__p25	tp01_moving_p25	B	chip	himax_typical	chip	50	3	1
+21	0.70	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	3	1
+22	0.75	A.static__median	tp15_static_median	A	chip	himax_typical	chip	45	3	1
+23	0.75	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	3	1
+24	0.70	A.static__p25	tp15_static_p25	A	chip	himax_typical	chip	45	3	1

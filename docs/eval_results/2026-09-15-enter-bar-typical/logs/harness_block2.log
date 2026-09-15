@@ -1,0 +1,29 @@
+[00:05:13] enter-bar suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/plan_block2.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical scenes=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/typical_scenes start=1 stop_epoch=0
+[00:05:13] flight 1/12  vis_enter 0.70  A.static__control  r1 a1  (block 2, seed 1001, load1 4.15)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.999  6.387 Hz  track 0.991  gap_max 163.8  upset False  load1 6.38  
+[00:06:15] flight 2/12  vis_enter 0.75  A.static__control  r1 a1  (block 2, seed 1001, load1 6.38)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 1.0  6.36 Hz  track 0.99  gap_max 163.8  upset False  load1 3.85  
+[00:07:17] flight 3/12  vis_enter 0.75  B.moving__control  r1 a1  (block 2, seed 1001, load1 3.85)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.364 Hz  track 0.975  gap_max 163.7  upset False  load1 3.22  
+[00:08:24] flight 4/12  vis_enter 0.70  B.moving__control  r1 a1  (block 2, seed 1001, load1 3.22)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 1.0  6.372 Hz  track 0.992  gap_max 163.8  upset False  load1 2.79  
+[00:09:31] flight 5/12  vis_enter 0.70  B.moving__control  r2 a1  (block 2, seed 1002, load1 2.79)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.998  6.364 Hz  track 0.992  gap_max 163.5  upset False  load1 2.25  
+[00:10:38] flight 6/12  vis_enter 0.75  B.moving__control  r2 a1  (block 2, seed 1002, load1 2.25)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.36 Hz  track 0.991  gap_max 163.8  upset False  load1 2.54  
+[00:11:45] flight 7/12  vis_enter 0.75  A.static__control  r2 a1  (block 2, seed 1002, load1 2.54)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 1.0  6.366 Hz  track 0.991  gap_max 163.7  upset False  load1 2.42  
+[00:12:46] flight 8/12  vis_enter 0.70  A.static__control  r2 a1  (block 2, seed 1002, load1 2.42)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.996  6.357 Hz  track 0.971  gap_max 163.9  upset False  load1 2.38  
+[00:13:48] flight 9/12  vis_enter 0.70  A.static__control  r3 a1  (block 2, seed 1003, load1 2.38)
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/scripts/fly_plan_enter.sh: line 89: 55177 Alarm clock: 14            perl -e 'alarm shift; exec @ARGV' $((dur + 90)) "$P" follow_person.py "${args[@]}" > "$run/follower.log" 2>&1
+  -> NORUN  floor 0.0  enter None exit None cf None  sim/wall None  None Hz  track None  gap_max None  upset None  load1 2.89  exit 142
+[00:16:12] flight 9/12  vis_enter 0.70  A.static__control  r3 a2  (block 2, seed 1003, load1 2.89)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 1.0  6.357 Hz  track 0.99  gap_max 163.8  upset False  load1 2.62  
+[00:17:13] flight 10/12  vis_enter 0.75  A.static__control  r3 a1  (block 2, seed 1003, load1 2.62)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.999  6.365 Hz  track 0.99  gap_max 163.7  upset False  load1 2.39  
+[00:18:15] flight 11/12  vis_enter 0.75  B.moving__control  r3 a1  (block 2, seed 1003, load1 2.39)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.349 Hz  track 0.992  gap_max 163.8  upset False  load1 2.40  
+[00:19:22] flight 12/12  vis_enter 0.70  B.moving__control  r3 a1  (block 2, seed 1003, load1 2.40)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.999  6.369 Hz  track 0.991  gap_max 163.8  upset False  load1 2.70  
+[00:20:29] ALL FLIGHTS DONE in 15 min

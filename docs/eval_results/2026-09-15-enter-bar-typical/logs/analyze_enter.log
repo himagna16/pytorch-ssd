@@ -1,0 +1,150 @@
+  SKIPPED (scoreboard says INVALID): e0.70__A.static__control__r3a1
+  SKIPPED (scoreboard says INVALID): e0.70__A.static__median__r3a1
+==============================================================================================================
+ENTRY-GATE MARGIN AND ACQUISITION, 0.70 vs 0.75, everything else shipped (exit 0.45, confirm 3)
+==============================================================================================================
+
+### A.static__control   subject: COCO 19432, the flown cutout, 99.2nd pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.990   0.971   0.991      3/3     0.31     1      1    0.00     0.16      3.59     5.89      nan      124
+  0.75     3    0.990   0.990   0.991      3/3     0.31     0      0    0.00     0.15      3.82     4.40      nan      143
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__A.static__control__r1a1      0.991    212    0.845    0.986    185     100        7  1x6 2x2 4x2 5x1 9x1 18x1 35x1 100x1         2
+    e0.70__A.static__control__r2a1      0.971    205    0.845    0.964    180      70        7  1x2 4x1 6x2 10x1 18x1 64x1 70x1         2
+    e0.70__A.static__control__r3a2      0.990    201    0.836    0.989    177     124        7  1x4 2x1 3x1 5x2 7x1 9x1 18x1 124x1         2
+    e0.75__A.static__control__r1a1      0.990    204    0.858    0.957    157      87        7  1x6 2x1 3x3 6x1 17x1 30x1 87x1         2
+    e0.75__A.static__control__r2a1      0.991    212    0.875    0.975    180     143        5  1x3 2x1 4x2 7x1 17x1 143x1           2
+    e0.75__A.static__control__r3a1      0.990    203    0.788    0.944    135      27       10  1x13 2x3 3x4 7x1 11x1 16x1 18x1 25x1 27x1         2
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.991 longest 100 latch 0.306   |   0.75 -> M1 0.990 longest 87 latch 0.318
+    r2 seed 1002:  0.70 -> M1 0.971 longest 70 latch 0.311   |   0.75 -> M1 0.991 longest 143 latch 0.311
+    r3 seed 1003:  0.70 -> M1 0.990 longest 124 latch 0.321   |   0.75 -> M1 0.990 longest 27 latch 0.31
+
+### A.static__median   subject: COCO 250127, 52.1st pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    32.48     15.95    15.95      nan        0
+  0.75     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    32.75     15.95    15.95      nan        0
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__A.static__median__r1a1       0.000    211    0.302    0.346      0       0        0  -                                    0
+    e0.70__A.static__median__r2a1       0.000    196    0.311    0.370      0       0        0  -                                    0
+    e0.70__A.static__median__r3a2       0.000    208    0.321    0.376      0       0        0  -                                    0
+    e0.75__A.static__median__r1a1       0.000    210    0.302    0.357      0       0        0  -                                    0
+    e0.75__A.static__median__r2a1       0.000    211    0.312    0.348      0       0        0  -                                    0
+    e0.75__A.static__median__r3a1       0.000    192    0.325    0.363      0       0        0  -                                    0
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r2 seed 1002:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r3 seed 1003:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+
+### A.static__p25   subject: COCO 124442, 28.4th pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    31.38     15.95    15.95      nan        0
+  0.75     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    32.27     15.95    15.95      nan        0
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__A.static__p25__r1a1          0.000    202    0.329    0.371      0       0        0  -                                    0
+    e0.70__A.static__p25__r2a1          0.000    201    0.328    0.393      0       0        0  -                                    0
+    e0.70__A.static__p25__r3a1          0.000    200    0.342    0.394      0       0        0  -                                    0
+    e0.75__A.static__p25__r1a1          0.000    206    0.332    0.377      0       0        0  -                                    0
+    e0.75__A.static__p25__r2a1          0.000    201    0.330    0.381      0       0        0  -                                    0
+    e0.75__A.static__p25__r3a1          0.000    211    0.341    0.395      0       0        0  -                                    0
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r2 seed 1002:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r3 seed 1003:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+
+### B.moving__control   subject: COCO 19432, the flown cutout, 99.2nd pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.992   0.991   0.992      3/3     0.31     0      0    0.00     0.16      3.32     9.17      nan       84
+  0.75     3    0.991   0.975   0.992      3/3     0.32     0      0    0.00     0.16      3.29    10.57      nan       94
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__B.moving__control__r1a1      0.992    241    0.902    0.995    223      84       12  1x2 2x2 3x1 4x2 6x1 10x1 13x2 16x1 18x1 21x1 25x1 84x1         2
+    e0.70__B.moving__control__r2a1      0.992    241    0.897    0.994    224      71       10  1x4 2x1 4x2 5x2 8x1 21x2 30x1 49x1 71x1         2
+    e0.70__B.moving__control__r3a1      0.991    234    0.888    0.991    220      69        9  1x2 2x1 3x1 4x1 8x1 13x1 15x1 22x1 38x1 44x1 69x1         2
+    e0.75__B.moving__control__r1a1      0.975    244    0.906    0.994    224      94       10  1x3 2x4 3x2 4x1 5x1 11x1 13x1 15x1 19x1 46x1 94x1         6
+    e0.75__B.moving__control__r2a1      0.991    231    0.909    0.998    211      75        8  1x2 3x1 7x1 8x1 10x1 15x1 25x1 66x1 75x1         2
+    e0.75__B.moving__control__r3a1      0.992    236    0.899    0.992    215      67       13  1x1 2x1 3x2 4x3 7x1 8x1 10x1 14x1 18x2 52x1 67x1         2
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.992 longest 84 latch 0.313   |   0.75 -> M1 0.975 longest 94 latch 0.943
+    r2 seed 1002:  0.70 -> M1 0.992 longest 71 latch 0.311   |   0.75 -> M1 0.991 longest 75 latch 0.316
+    r3 seed 1003:  0.70 -> M1 0.991 longest 69 latch 0.309   |   0.75 -> M1 0.992 longest 67 latch 0.316
+
+### B.moving__median   subject: COCO 250127, 52.1st pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.013   0.013   0.038      3/3     8.50     4      1   27.62    37.05     15.14    30.73      nan        5
+  0.75     3    0.000   0.000   0.052      1/3    25.13     2      1    0.00    36.09     14.11    21.78      nan        3
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__B.moving__median__r1a1       0.013    240    0.500    0.896     30       3        1  1x19 2x4 3x1                         2
+    e0.70__B.moving__median__r2a1       0.038    236    0.513    0.907     30       5        2  1x20 2x1 3x1 5x1                     2
+    e0.70__B.moving__median__r3a1       0.013    240    0.529    0.907     27       3        1  1x18 2x3 3x1                         1
+    e0.75__B.moving__median__r1a1       0.000    238    0.527    0.889     16       2        0  1x14 2x1                             3
+    e0.75__B.moving__median__r2a1       0.052    229    0.531    0.923     27       3        2  1x21 3x2                             3
+    e0.75__B.moving__median__r3a1       0.000    231    0.548    0.920     16       2        0  1x14 2x1                             3
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.013 longest 3 latch 8.496   |   0.75 -> M1 0.000 longest 2 latch None
+    r2 seed 1002:  0.70 -> M1 0.038 longest 5 latch 7.83   |   0.75 -> M1 0.052 longest 3 latch 25.127
+    r3 seed 1003:  0.70 -> M1 0.013 longest 3 latch 13.506   |   0.75 -> M1 0.000 longest 2 latch None
+
+### B.moving__p25   subject: COCO 124442, 28.4th pct
+
+  arm      n   M1 med  M1 min  M1 max  latched  t_latch  loss  reacq  lost s  untrk s  hdg mean  hdg max dist end  longest
+  0.70     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    35.69     14.08    21.78      nan        0
+  0.75     3    0.000   0.000   0.000      0/3      nan     0      0    0.00    37.21     14.26    21.78      nan        0
+
+  ENTRY-GATE MARGIN, per flight.  run lengths = every run of CONSECUTIVE frames
+  at or above the FLOWN bar; the follower needs 3.  '(cf @other)' is the same trace
+  scored against the other arm's bar, PRE-LATCH ONLY, as a counterfactual cross-check.
+
+    run                                    M1  n frm conf med conf max n>=bar longest #runs>=3  run-length histogram         cf @other
+    e0.70__B.moving__p25__r1a1          0.000    226    0.374    0.632      0       0        0  -                                    0
+    e0.70__B.moving__p25__r2a1          0.000    238    0.364    0.639      0       0        0  -                                    0
+    e0.70__B.moving__p25__r3a1          0.000    228    0.393    0.605      0       0        0  -                                    0
+    e0.75__B.moving__p25__r1a1          0.000    238    0.366    0.713      0       0        0  -                                    1
+    e0.75__B.moving__p25__r2a1          0.000    243    0.373    0.603      0       0        0  -                                    0
+    e0.75__B.moving__p25__r3a1          0.000    225    0.389    0.601      0       0        0  -                                    0
+
+  PAIRED by repeat (same sensor seed, so the only difference is the bar):
+    r1 seed 1001:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r2 seed 1002:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+    r3 seed 1003:  0.70 -> M1 0.000 longest 0 latch None   |   0.75 -> M1 0.000 longest 0 latch None
+
+==============================================================================================================
+THE RULE: a flight latches if and only if its longest above-bar run reaches confirm_frames (3).
+  checked 36 flights: HOLDS on all of them
+==============================================================================================================
+
+wrote docs/eval_results/2026-09-15-enter-bar-typical/tables/per_cell_arm.tsv, per_flight.tsv, analysis.txt

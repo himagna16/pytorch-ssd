@@ -1,0 +1,13 @@
+# order	vis_enter	cell	scene	class	backend	camera	speed	dur	repeat	block
+1	0.70	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	1	2
+2	0.75	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	1	2
+3	0.75	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	1	2
+4	0.70	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	1	2
+5	0.70	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	2	2
+6	0.75	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	2	2
+7	0.75	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	2	2
+8	0.70	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	2	2
+9	0.70	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	3	2
+10	0.75	A.static__control	s15_static_offset	A	chip	himax_typical	chip	45	3	2
+11	0.75	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	3	2
+12	0.70	B.moving__control	s01_control_moving	B	chip	himax_typical	chip	50	3	2

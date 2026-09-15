@@ -1,0 +1,1 @@
+THRESH_OK enter=0.7 exit=0.45 cf=3

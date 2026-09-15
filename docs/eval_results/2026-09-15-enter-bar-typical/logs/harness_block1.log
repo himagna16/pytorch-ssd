@@ -1,0 +1,53 @@
+[23:36:57] enter-bar suite starting: plan=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/plan_block1.tsv out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical scenes=/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/typical_scenes start=1 stop_epoch=0
+[23:36:57] flight 1/24  vis_enter 0.70  A.static__median  r1 a1  (block 1, seed 1001, load1 4.05)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 1.0  6.372 Hz  track 0.0  gap_max 163.3  upset False  load1 4.90  
+[23:37:59] flight 2/24  vis_enter 0.75  A.static__median  r1 a1  (block 1, seed 1001, load1 4.90)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.381 Hz  track 0.0  gap_max 163.6  upset False  load1 3.80  
+[23:39:00] flight 3/24  vis_enter 0.75  A.static__p25  r1 a1  (block 1, seed 1001, load1 3.80)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.354 Hz  track 0.0  gap_max 163.7  upset False  load1 3.24  
+[23:40:02] flight 4/24  vis_enter 0.70  A.static__p25  r1 a1  (block 1, seed 1001, load1 3.24)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.998  6.377 Hz  track 0.0  gap_max 163.6  upset False  load1 5.52  
+[23:41:04] flight 5/24  vis_enter 0.70  B.moving__median  r1 a1  (block 1, seed 1001, load1 5.52)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.998  6.369 Hz  track 0.013  gap_max 163.8  upset False  load1 5.42  
+[23:42:11] flight 6/24  vis_enter 0.75  B.moving__median  r1 a1  (block 1, seed 1001, load1 5.22)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.999  6.364 Hz  track 0.0  gap_max 163.0  upset False  load1 3.71  
+[23:43:18] flight 7/24  vis_enter 0.75  B.moving__p25  r1 a1  (block 1, seed 1001, load1 3.71)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.997  6.369 Hz  track 0.0  gap_max 163.7  upset False  load1 3.96  
+[23:44:24] flight 8/24  vis_enter 0.70  B.moving__p25  r1 a1  (block 1, seed 1001, load1 3.96)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.995  6.366 Hz  track 0.0  gap_max 163.8  upset False  load1 3.32  
+[23:45:31] flight 9/24  vis_enter 0.70  A.static__p25  r2 a1  (block 1, seed 1002, load1 3.32)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.999  6.374 Hz  track 0.0  gap_max 163.9  upset False  load1 3.04  
+[23:46:33] flight 10/24  vis_enter 0.75  A.static__p25  r2 a1  (block 1, seed 1002, load1 3.04)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.368 Hz  track 0.0  gap_max 163.9  upset False  load1 4.24  
+[23:47:35] flight 11/24  vis_enter 0.75  B.moving__median  r2 a1  (block 1, seed 1002, load1 4.24)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.997  6.366 Hz  track 0.052  gap_max 163.5  upset False  load1 2.51  
+[23:48:42] flight 12/24  vis_enter 0.70  B.moving__median  r2 a1  (block 1, seed 1002, load1 2.51)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.997  6.374 Hz  track 0.038  gap_max 163.7  upset False  load1 2.32  
+[23:49:49] flight 13/24  vis_enter 0.70  B.moving__p25  r2 a1  (block 1, seed 1002, load1 2.32)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.998  6.365 Hz  track 0.0  gap_max 163.4  upset False  load1 2.93  
+[23:50:55] flight 14/24  vis_enter 0.75  B.moving__p25  r2 a1  (block 1, seed 1002, load1 2.93)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.996  6.377 Hz  track 0.0  gap_max 163.9  upset False  load1 3.97  
+[23:52:02] flight 15/24  vis_enter 0.75  A.static__median  r2 a1  (block 1, seed 1002, load1 3.97)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.362 Hz  track 0.0  gap_max 163.9  upset False  load1 3.62  
+[23:53:04] flight 16/24  vis_enter 0.70  A.static__median  r2 a1  (block 1, seed 1002, load1 3.62)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.997  6.375 Hz  track 0.0  gap_max 163.8  upset False  load1 4.75  
+[23:54:06] flight 17/24  vis_enter 0.70  B.moving__median  r3 a1  (block 1, seed 1003, load1 4.75)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.999  6.368 Hz  track 0.013  gap_max 163.8  upset False  load1 4.10  
+[23:55:13] flight 18/24  vis_enter 0.75  B.moving__median  r3 a1  (block 1, seed 1003, load1 4.10)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.999  6.373 Hz  track 0.0  gap_max 163.7  upset False  load1 3.96  
+[23:56:20] flight 19/24  vis_enter 0.75  B.moving__p25  r3 a1  (block 1, seed 1003, load1 3.96)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.372 Hz  track 0.0  gap_max 163.8  upset False  load1 2.98  
+[23:57:27] flight 20/24  vis_enter 0.70  B.moving__p25  r3 a1  (block 1, seed 1003, load1 2.98)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.996  6.361 Hz  track 0.0  gap_max 163.7  upset False  load1 2.61  
+[23:58:33] flight 21/24  vis_enter 0.70  A.static__median  r3 a1  (block 1, seed 1003, load1 2.61)
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/scripts/fly_plan_enter.sh: line 89: 53472 Alarm clock: 14            perl -e 'alarm shift; exec @ARGV' $((dur + 90)) "$P" follow_person.py "${args[@]}" > "$run/follower.log" 2>&1
+  -> NORUN  floor 0.0  enter None exit None cf None  sim/wall None  None Hz  track None  gap_max None  upset None  load1 3.98  exit 142
+[00:00:57] flight 21/24  vis_enter 0.70  A.static__median  r3 a2  (block 1, seed 1003, load1 3.98)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.996  6.373 Hz  track 0.0  gap_max 163.5  upset False  load1 4.17  
+[00:01:59] flight 22/24  vis_enter 0.75  A.static__median  r3 a1  (block 1, seed 1003, load1 4.17)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.996  6.354 Hz  track 0.0  gap_max 163.8  upset False  load1 4.44  
+[00:03:01] flight 23/24  vis_enter 0.75  A.static__p25  r3 a1  (block 1, seed 1003, load1 4.44)
+  -> VALID  floor 0.0  enter 0.75 exit 0.45 cf 3  sim/wall 0.998  6.371 Hz  track 0.0  gap_max 163.9  upset False  load1 4.46  
+[00:04:02] flight 24/24  vis_enter 0.70  A.static__p25  r3 a1  (block 1, seed 1003, load1 4.46)
+  -> VALID  floor 0.0  enter 0.7 exit 0.45 cf 3  sim/wall 0.999  6.359 Hz  track 0.0  gap_max 163.8  upset False  load1 4.29  
+[00:05:04] ALL FLIGHTS DONE in 28 min

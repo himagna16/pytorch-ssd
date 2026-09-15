@@ -1,0 +1,79 @@
+========================================================================================================
+ENTRY-GATE MARGIN EXPRESSED AS A THRESHOLD
+b* = the highest entry bar at which this flight's own trace contains 3 consecutive frames.
+A flight latches iff its flown bar <= b*.  'pre' restricts the trace to before the first latch.
+========================================================================================================
+run                                  flown bar  latched  b* whole   b* pre  margin vs 0.70  margin vs 0.75
+e0.70__A.static__control__r1a1            0.70     True     0.982     none          +0.282          +0.232
+e0.70__A.static__control__r2a1            0.70     True     0.936     none          +0.236          +0.186
+e0.70__A.static__control__r3a2            0.70     True     0.985     none          +0.285          +0.235
+e0.70__A.static__median__r1a1             0.70    False     0.318    0.318          -0.382          -0.432
+e0.70__A.static__median__r2a1             0.70    False     0.325    0.325          -0.375          -0.425
+e0.70__A.static__median__r3a2             0.70    False     0.339    0.339          -0.361          -0.411
+e0.70__A.static__p25__r1a1                0.70    False     0.352    0.352          -0.348          -0.398
+e0.70__A.static__p25__r2a1                0.70    False     0.340    0.340          -0.360          -0.410
+e0.70__A.static__p25__r3a1                0.70    False     0.355    0.355          -0.345          -0.395
+e0.70__B.moving__control__r1a1            0.70     True     0.985     none          +0.285          +0.235
+e0.70__B.moving__control__r2a1            0.70     True     0.987     none          +0.287          +0.237
+e0.70__B.moving__control__r3a1            0.70     True     0.980     none          +0.280          +0.230
+e0.70__B.moving__median__r1a1             0.70     True     0.814    0.562          +0.114          +0.064
+e0.70__B.moving__median__r2a1             0.70     True     0.753    0.603          +0.053          +0.003
+e0.70__B.moving__median__r3a1             0.70     True     0.702    0.656          +0.002          -0.048
+e0.70__B.moving__p25__r1a1                0.70    False     0.551    0.551          -0.149          -0.199
+e0.70__B.moving__p25__r2a1                0.70    False     0.526    0.526          -0.174          -0.224
+e0.70__B.moving__p25__r3a1                0.70    False     0.516    0.516          -0.184          -0.234
+e0.75__A.static__control__r1a1            0.75     True     0.918     none          +0.218          +0.168
+e0.75__A.static__control__r2a1            0.75     True     0.970     none          +0.270          +0.220
+e0.75__A.static__control__r3a1            0.75     True     0.935     none          +0.235          +0.185
+e0.75__A.static__median__r1a1             0.75    False     0.319    0.319          -0.381          -0.431
+e0.75__A.static__median__r2a1             0.75    False     0.328    0.328          -0.372          -0.422
+e0.75__A.static__median__r3a1             0.75    False     0.342    0.342          -0.358          -0.408
+e0.75__A.static__p25__r1a1                0.75    False     0.352    0.352          -0.348          -0.398
+e0.75__A.static__p25__r2a1                0.75    False     0.345    0.345          -0.355          -0.405
+e0.75__A.static__p25__r3a1                0.75    False     0.368    0.368          -0.332          -0.382
+e0.75__B.moving__control__r1a1            0.75     True     0.985    0.734          +0.285          +0.235
+e0.75__B.moving__control__r2a1            0.75     True     0.991     none          +0.291          +0.241
+e0.75__B.moving__control__r3a1            0.75     True     0.984     none          +0.284          +0.234
+e0.75__B.moving__median__r1a1             0.75    False     0.744    0.744          +0.044          -0.006
+e0.75__B.moving__median__r2a1             0.75     True     0.751    0.737          +0.051          +0.001
+e0.75__B.moving__median__r3a1             0.75    False     0.748    0.748          +0.048          -0.002
+e0.75__B.moving__p25__r1a1                0.75    False     0.544    0.544          -0.156          -0.206
+e0.75__B.moving__p25__r2a1                0.75    False     0.521    0.521          -0.179          -0.229
+e0.75__B.moving__p25__r3a1                0.75    False     0.534    0.534          -0.166          -0.216
+
+========================================================================================================
+PER CELL: how far the bar would have to fall to buy a latch (worst..best of 3 flights)
+========================================================================================================
+cell                     arm  latched   b* min   b* max   reading
+A.static__control       0.70      3/3    0.936    0.985   a bar at/below 0.985 latches at least one flight; at/below 0.936 latches all three
+A.static__control       0.75      3/3    0.918    0.970   a bar at/below 0.970 latches at least one flight; at/below 0.918 latches all three
+A.static__median        0.70      0/3    0.318    0.339   a bar at/below 0.339 latches at least one flight; at/below 0.318 latches all three
+A.static__median        0.75      0/3    0.319    0.342   a bar at/below 0.342 latches at least one flight; at/below 0.319 latches all three
+A.static__p25           0.70      0/3    0.340    0.355   a bar at/below 0.355 latches at least one flight; at/below 0.340 latches all three
+A.static__p25           0.75      0/3    0.345    0.368   a bar at/below 0.368 latches at least one flight; at/below 0.345 latches all three
+B.moving__control       0.70      3/3    0.980    0.987   a bar at/below 0.987 latches at least one flight; at/below 0.980 latches all three
+B.moving__control       0.75      3/3    0.984    0.991   a bar at/below 0.991 latches at least one flight; at/below 0.984 latches all three
+B.moving__median        0.70      3/3    0.702    0.814   a bar at/below 0.814 latches at least one flight; at/below 0.702 latches all three
+B.moving__median        0.75      1/3    0.744    0.751   a bar at/below 0.751 latches at least one flight; at/below 0.744 latches all three
+B.moving__p25           0.70      0/3    0.516    0.551   a bar at/below 0.551 latches at least one flight; at/below 0.516 latches all three
+B.moving__p25           0.75      0/3    0.521    0.544   a bar at/below 0.544 latches at least one flight; at/below 0.521 latches all three
+
+========================================================================================================
+LATCH COUNTS, and Fisher's exact test (two-sided).  n=3 per arm is small; the p-values are
+reported so nobody has to guess, not because 3 vs 3 could reach significance.
+========================================================================================================
+  A.static__control      0.70: 3/3 latched   0.75: 3/3 latched   Fisher p = 1.000
+  A.static__median       0.70: 0/3 latched   0.75: 0/3 latched   Fisher p = 1.000
+  A.static__p25          0.70: 0/3 latched   0.75: 0/3 latched   Fisher p = 1.000
+  B.moving__control      0.70: 3/3 latched   0.75: 3/3 latched   Fisher p = 1.000
+  B.moving__median       0.70: 3/3 latched   0.75: 1/3 latched   Fisher p = 0.400
+  B.moving__p25          0.70: 0/3 latched   0.75: 0/3 latched   Fisher p = 1.000
+
+  Pooling tonight's 0.75 arm with 2026-09-15-typical-person's 0.75 flights
+  (same scenes, same ships-as setup, shipped defaults; last night passed no flag,
+   tonight passes the flag at its default value - the same command line behaviourally):
+  A.static__median       0.70: 0/3   0.75 pooled: 0/6   Fisher p = 1.000
+  A.static__p25          0.70: 0/3   0.75 pooled: 0/6   Fisher p = 1.000
+  B.moving__median       0.70: 3/3   0.75 pooled: 2/6   Fisher p = 0.167
+  B.moving__p25          0.70: 0/3   0.75 pooled: 0/6   Fisher p = 1.000
+========================================================================================================

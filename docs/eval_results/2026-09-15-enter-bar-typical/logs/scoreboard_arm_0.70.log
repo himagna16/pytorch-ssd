@@ -1,0 +1,9 @@
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/scoreboards/arm_0.70/scoreboard.json
+/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-enter-bar-typical/scoreboards/arm_0.70/scoreboard.md
+suite verdict: FAIL  {'pass': 2, 'fail': 4, 'invalid': 0, 'characterised': 0}
+  PASS           A.static__control
+  FAIL           A.static__median   failed: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           A.static__p25   failed: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+  PASS           B.moving__control
+  FAIL           B.moving__median   failed: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+  FAIL           B.moving__p25   failed: M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
