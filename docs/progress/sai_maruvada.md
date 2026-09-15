@@ -59,6 +59,7 @@ fall.
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
+| MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
 | Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
 | The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
 
@@ -180,6 +181,27 @@ Newest first. One entry per working session.
   holds its line perfectly on held-out flights where the current one covers 71%.
   That is the change I am proposing, with the numbers left unset until the scene
   suite covers a realistic range of people.
+
+  I also answered MinHyuk's objection to the person study. He said that with a
+  real camera you would almost never have an entire person in the frame, and if
+  he is right then the study measured the exception and skipped the normal case.
+  The geometry says he is right about cameras in general and wrong about our
+  drone. Our camera is level at 0.8 m with a 70 degree square crop, so a 1.7 m
+  person stops fitting below 1.29 m, and the drone never gets closer than 1.55 m
+  in any flight we have. One caveat that does bite: a 1.9 m person is cut off
+  below 1.57 m, which is inside the range our flights actually reach, so the
+  1.7 m written into the scene is doing real work.
+
+  Then I checked the detection side using COCO's own annotations, and the answer
+  split in a way I did not expect. Partial people are worse, but only when they
+  are cut off by the frame edge. People who are merely occluded, standing behind
+  furniture or another person, cost nothing measurable. People who are seated or
+  lying down cost nothing either. The worst case is a person with their head cut
+  off, which is the drone-shaped cut. Reporting "partial people are harder" as
+  one number averages a real effect with a null one. None of this changes the
+  headline: the simulator still shows the drone never latching where a real whole
+  person is detected on 93% of frames, so the unusually easy cutout is what to
+  fix before the lab, not the field of view.
 
 - **2026-09-15 (overnight).** Spent the night on one question: does the
   simulator predict what the real drone will do? Nobody had checked, and the
