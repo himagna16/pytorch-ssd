@@ -1,0 +1,41 @@
+{
+  "scene_id": "dl28_401446",
+  "title": "Control: one person standing still, off to the side - COCO 401446 at 2.8 m",
+  "purpose": "Deadlock test, 2.8 m arm. Same scene, same person, moved along the same bearing so the drone starts 2.8 m away instead of 3.64 m. The follower commands no forward velocity until it has latched (follow_person.py:374-377), so at the stock range a subject whose confidence only crosses 0.75 nearer than the drone starts can never be acquired. This arm asks whether that is what happens.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 401446,
+        "ann_id": 444102
+      },
+      "height_m": 1.7,
+      "pos": [
+        2.692267,
+        -0.769219
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "DEADLOCK TEST, 2026-09-15. Two changes from s15_static_offset.json: the COCO cutout is img 401446/ann 444102, and the subject's pos is scaled from [3.5, -1.0] to [2.692267, -0.769219], which is 2.80 m at -15.945 deg against the base's 3.6401 m at -15.945 deg. The bearing is held to better than 0.001 deg, so range is the only geometric variable. Height stays 1.7 m and the panel width still follows this cutout's own aspect (2.676 h/w -> 0.6353 m). At 2.8 m the whole body is inside the 70 deg crop; the head-truncation limit for a 1.7 m person is 1.285 m (docs/eval_results/2026-09-15-partial-people). This subject's static chip confidence at the people-plural start range is 0.8333, and its detectability index is 88.8."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": []
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "unknown - this is the measurement",
+    "rationale": "If a subject that never latches at 3.64 m latches here, the perception system can see them and the control law's refusal to approach before latching is the binding constraint. If it still does not latch at 1.6 m, the model genuinely cannot see this person and no control change would help."
+  }
+}
