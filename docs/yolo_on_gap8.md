@@ -1,85 +1,92 @@
-# Can a YOLO model run on our AI-deck? Not through this pipeline.
+# Can a YOLO model run on our AI-deck? No, and I exported one to find out where it stops.
 
 Written 2026-09-15, after MinHyuk suggested YOLOv11 nano as a baseline (he had
 good results with it on a real drone) and David warned that he had trouble
 getting YOLO models to quantize and advised reviewing the architecture first.
 
-David's warning is right, and the reason is harder than "difficult to quantize".
-Our deployment path cannot represent the architecture at all.
+David's warning is right. The obstacle is earlier and more concrete than
+quantization difficulty.
 
-## What our code generator accepts
+An earlier version of this note argued the point from the published
+architecture. That version named the wrong mechanism, so this one replaces it.
+The numbers below come from exporting the models and running them through our
+own parser's accept rules.
 
-DORY converts a quantized ONNX graph into C for the GAP8. Its parser declares
-the complete set of node kinds it understands, in
-`dory/Parsers/Parser_ONNX_to_DORY.py` line 44:
+## What our code generator does with a node
 
-```python
-self.layers_supported_by_DORY_Frontend_IR = [
-    "Convolution", "Pooling", "FullyConnected",
-    "Addition", "QAddition", "Relu", "BNRelu", "Requant",
-]
-```
-
-Anything else stops the build. Line 67 is an assertion, not a fallback:
+DORY converts a quantized ONNX graph into C for the GAP8. Its NEMO frontend
+constructs the parser with two lists, in `dory/Frontend_frameworks/NEMO/Parser.py`
+lines 38 and 39. The first is what passes the door:
 
 ```python
-assert (node_iterating.op_type in self.layers_accepted), f"{node_iterating.op_type} not supported by DORY"
+layers_accepted = ['Conv','Pad','Mul','Add','Div','Constant','AveragePool',
+                   'GlobalAveragePool','MaxPool','Cast','Clip','Floor','Flatten',
+                   'Gemm','MatMul','Shape','Gather','Unsqueeze','Concat',
+                   'Reshape','Sigmoid','LogSoftmax']
+layers_neglected = ['Cast','Floor','Flatten','Shape','Gather','Unsqueeze',
+                    'Concat','Reshape','Sigmoid','LogSoftmax']
 ```
 
-The NEMO frontend's `rules.json` rewrites only eight patterns, all of them
-combinations of the same operators: Relu, BNRelu, PadConvolution, PadPooling,
-QAdd.
+Anything outside the first list stops the build at
+`Parser_ONNX_to_DORY.py` line 67, which is an assertion rather than a fallback.
 
-So the pipeline supports convolutions, pooling, fully connected layers,
-residual adds, and ReLU. That is the whole vocabulary.
+The second list is the part worth knowing about. A neglected node passes the
+assertion and is then dropped from the graph, with its output index rewired to
+the previous node. Nothing warns you. That behaviour is correct for the nodes it
+was written for: a Cast or a Flatten really is a no-op once the graph is
+quantized. It is not correct for a node that carries information.
 
-## What a YOLOv11-class architecture needs
+## What actually happens to YOLO
 
-From the published architecture rather than from an export we ran ourselves (see
-the caveat below), a YOLOv11 nano graph relies on at least:
+I exported YOLOv11 nano and YOLOv8 nano at 128x128, opset 13, and classified
+every node against those two lists. Script and raw output in
+`docs/eval_results/2026-09-15-yolo-ops/`.
 
-| Operator | Used for | In our set? |
-|---|---|---|
-| Concat | the neck, every feature-pyramid join | no |
-| Split | the C2f / C3k2 blocks | no |
-| Resize or Upsample | the top-down pyramid path | no |
-| SiLU (Sigmoid times input) | the default activation throughout | no |
-| Sigmoid | the detection head | no |
-| Elementwise Mul | part of SiLU and the attention blocks | no |
+| | YOLOv11n | YOLOv8n | our champion |
+|---|---|---|---|
+| nodes | 355 | 263 | 94 |
+| distinct op types | 18 | 17 | 11 |
+| rejected at the assertion | 21 | 16 | 0 |
+| accepted but dropped | 112 | 85 | 30 |
+| accepted and built | 222 | 162 | 64 |
 
-Concat and Upsample are not exotic operations. They are how a feature pyramid is
-built, and a YOLO without its neck is not a YOLO. Replacing SiLU with ReLU is
-routine and would need retraining; removing the concatenations is a different
-architecture.
+Both YOLO exports stop at node 10, a `Split`. The rejected types are `Split`,
+`Transpose`, `Softmax`, `Resize`, `Slice`, and `Sub`. `Resize` is the top-down
+path of the feature pyramid and `Split` is the C2f-style block, so these are not
+incidental nodes you can trim.
 
-## What this means
+The second row is the one that would bite later. Of YOLOv11n's nodes, 112 are
+accepted and then silently dropped: all 78 `Sigmoid`, all 21 `Concat`, 11
+`Reshape`, and a `Shape` and `Gather`. If someone worked around the `Split` and
+`Resize` rejections by rewriting the model, the build would stop failing and
+start succeeding on a network with its skip connections deleted and every SiLU
+reduced to a bare multiply, because SiLU is `x * sigmoid(x)` and the sigmoid half
+is on the neglect list. A wrong network that compiles is worse than one that does
+not.
 
-Trying this through our pipeline would fail at the DORY assert, not after a long
-quantization struggle. The realistic options, in order of cost:
+Our champion is the control for this measurement. It has zero rejections, and
+its 30 dropped nodes are 28 `Cast`, one `Floor`, and one `Flatten`, which are
+exactly the no-ops the neglect list was written for.
+
+## What to do instead
 
 1. Do not put YOLO on the chip. Use it off the drone, where it is genuinely
-   useful: labelling the real camera frames we capture, which is otherwise manual
-   work, and giving an upper bound on what a modern detector sees in our frames.
-2. Extend DORY with the missing operators. That is a compiler project, not a
-   model project, and the concat and resize tiling on 512 KB of L2 is the hard
-   part.
-3. Design a YOLO-shaped detector out of the eight operators we do have. At that
-   point it is our own architecture that borrows YOLO's loss and label
-   assignment, not a YOLO.
+   useful: labelling the real camera frames we capture, which is manual work
+   today, and giving an upper bound on what a modern detector sees in our frames.
+2. Extend DORY with the missing operators. That is a compiler project, and
+   tiling a concat and a resize inside 512 KB of L2 is the hard part of it.
+3. Build a detector out of the operators we do have, borrowing YOLO's loss and
+   label assignment. At that point it is our architecture, not a YOLO.
 
-Option 1 is worth doing regardless of the rest. It costs nothing and it solves a
-real problem we have.
+Option 1 costs nothing and solves a problem we already have.
 
-## What this note does not establish
+## Limits of this check
 
-We did not export a YOLOv11 nano to ONNX and enumerate its actual nodes against
-the parser. The operator list above comes from the published architecture, so
-treat it as the reason to check rather than as the check itself. If someone wants
-to close this properly it is about twenty minutes: export the model to ONNX, list
-the distinct `op_type` values, and compare against line 44. That is exactly the
-architecture review David asked for, and it would turn this note into a
-measurement.
+The export used default settings at 128x128 with opset 13 and no
+simplification. A different opset, `simplify=True`, or an
+end-to-end-NMS export would change the node census, and `onnx-simplifier` would
+fold some of the `Shape` and `Gather` nodes away. It would not remove `Split`,
+`Resize`, or the SiLU pairs, which is where the argument rests.
 
-We also have not measured what YOLOv11 nano would cost in time or power on a
-64 mW chip, which is a separate question and only matters if the operator
-problem is solved first.
+This says nothing about whether YOLOv11n would fit in time or power on a 64 mW
+chip. That question only matters if the operator problem is solved first.

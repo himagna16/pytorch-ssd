@@ -1,0 +1,18 @@
+
+=== exported: yolo11n.onnx : 355 nodes, 18 distinct op types ===
+  REJECTED by the assert (21 nodes): {'Split': 10, 'Transpose': 3, 'Softmax': 2, 'Resize': 2, 'Slice': 2, 'Sub': 2}
+  ACCEPTED but NEGLECTED, i.e. dropped (112 nodes): {'Sigmoid': 78, 'Concat': 21, 'Reshape': 11, 'Shape': 1, 'Gather': 1}
+  ACCEPTED and built (222 nodes): {'Conv': 88, 'Mul': 81, 'Constant': 29, 'Add': 17, 'MaxPool': 3, 'MatMul': 2, 'Div': 2}
+  first node to hit the assert: #10 Split
+
+=== exported: yolov8n.onnx : 263 nodes, 17 distinct op types ===
+  REJECTED by the assert (16 nodes): {'Split': 8, 'Resize': 2, 'Transpose': 1, 'Softmax': 1, 'Slice': 2, 'Sub': 2}
+  ACCEPTED but NEGLECTED, i.e. dropped (85 nodes): {'Sigmoid': 58, 'Concat': 17, 'Reshape': 8, 'Shape': 1, 'Gather': 1}
+  ACCEPTED and built (162 nodes): {'Conv': 64, 'Mul': 60, 'Constant': 24, 'Add': 9, 'MaxPool': 3, 'Div': 2}
+  first node to hit the assert: #10 Split
+
+=== /Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx : 94 nodes, 11 distinct op types ===
+  REJECTED by the assert (0 nodes): {}
+  ACCEPTED but NEGLECTED, i.e. dropped (30 nodes): {'Cast': 28, 'Floor': 1, 'Flatten': 1}
+  ACCEPTED and built (64 nodes): {'Conv': 7, 'Mul': 16, 'Add': 7, 'Constant': 17, 'Div': 8, 'Clip': 7, 'AveragePool': 1, 'Gemm': 1}
+  first node to hit the assert: #None None

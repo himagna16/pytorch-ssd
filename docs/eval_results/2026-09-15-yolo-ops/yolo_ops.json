@@ -1,0 +1,50 @@
+{
+ "ultralytics_version": "8.4.153",
+ "yolo11n.pt": {
+  "onnx": "yolo11n.onnx",
+  "n_nodes": 355,
+  "ops": {
+   "Add": 17,
+   "Concat": 21,
+   "Constant": 29,
+   "Conv": 88,
+   "Div": 2,
+   "Gather": 1,
+   "MatMul": 2,
+   "MaxPool": 3,
+   "Mul": 81,
+   "Reshape": 11,
+   "Resize": 2,
+   "Shape": 1,
+   "Sigmoid": 78,
+   "Slice": 2,
+   "Softmax": 2,
+   "Split": 10,
+   "Sub": 2,
+   "Transpose": 3
+  }
+ },
+ "yolov8n.pt": {
+  "onnx": "yolov8n.onnx",
+  "n_nodes": 263,
+  "ops": {
+   "Add": 9,
+   "Concat": 17,
+   "Constant": 24,
+   "Conv": 64,
+   "Div": 2,
+   "Gather": 1,
+   "MaxPool": 3,
+   "Mul": 60,
+   "Reshape": 8,
+   "Resize": 2,
+   "Shape": 1,
+   "Sigmoid": 58,
+   "Slice": 2,
+   "Softmax": 1,
+   "Split": 8,
+   "Sub": 2,
+   "Transpose": 1
+  }
+ }
+}
