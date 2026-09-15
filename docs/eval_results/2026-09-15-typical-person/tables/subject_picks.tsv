@@ -1,0 +1,4 @@
+role	img_id	ann_id	index_pct	pct_cohort_confmean	frac_range_ge_075	photo_chip_via244	photo_float_via244	photo_fq_via244	photo_pct_sizematched	n_photo_peers	px128_h_photo	bbox_w_px	bbox_h_px	aspect_hw	panel_w_m	n_person_anns	file_name	pct_at_1.5m	pct_at_2.0m	pct_at_2.5m	pct_at_3.0m	pct_at_3.5m	pct_at_4.0m
+control_19432	19432	428692	99.2	100.0	1.000	0.9888	0.9838	0.986	54.2	48	107.8	154	404	2.627	0.6471	1	000000019432.jpg	99.6	100.0	100.0	98.5	98.5	98.9
+median	250127	184031	52.1	52.6	0.167	0.7312	0.6841	0.6614	22.4	58	84.6	137	423	3.095	0.5493	1	000000250127.jpg	44.4	69.2	35.3	75.6	48.9	39.1
+p25	124442	1238296	28.4	25.2	0.167	0.5895	0.6826	0.6649	10.4	48	73.1	90	214	2.388	0.7119	1	000000124442.jpg	71.4	52.3	19.9	20.7	0.0	6.0

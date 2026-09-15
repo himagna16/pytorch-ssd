@@ -1,0 +1,237 @@
+==============================================================================
+tp15_static_median   vs   s15_static_offset
+==============================================================================
+manifest keys compared: 99   differing: 17
+  DERIVED    builder.scene_xml_sha256                   8e597e6ae29b088677e776a63f474fe275d52215f2ce2ff81c717da24...  ->  f1106a68b91b04287171110549b22825af36f37be8a020e25d7ca5114...
+  DERIVED    builder.asset_sha256.subj_person_target.png cd71a361c0bce46d3be3b480e2d8a0714bb318a2ee1aa73d5179083bf...  ->  fe96962bb3ca298ca7b82def23fbb33450e2ad1f9c45815ec3614a572...
+  DERIVED    subjects[0].panel.width_m                  0.6475  ->  0.5479
+  DERIVED    subjects[0].panel.aspect                   0.3809  ->  0.3223
+  DERIVED    subjects[0].background.subject_fraction    0.4935  ->  0.6462
+  IDENTITY   scene_id                                   s15_static_offset  ->  tp15_static_median
+  IDENTITY   title                                      Control: one person standing still, off to the side...  ->  Control: one person standing still, off to the side - a M...
+  IDENTITY   purpose                                    Class A (person, static) control for the v2 acceptance ma...  ->  Typical-person variant of s15_static_offset. The publishe...
+  IDENTITY   subjects[0].source.img_id                  19432  ->  250127
+  IDENTITY   subjects[0].source.ann_id                  428692  ->  184031
+  IDENTITY   subjects[0].source.file_name               000000019432.jpg  ->  000000250127.jpg
+  IDENTITY   subjects[0].source.bbox_xywh               [55.3, 26.8, 153.9, 404.1]  ->  [237.3, 179.9, 136.6, 422.8]
+  IDENTITY   subjects[0].note                           Same COCO cutout, same height and same position as scenes...  ->  TYPICAL-PERSON VARIANT, 2026-09-15. Byte-identical to s15...
+  IDENTITY   prediction.outcome                         passes  ->  unknown - this is the measurement
+  IDENTITY   prediction.rationale                       Identical geometry to the published static baseline (1.1 ...  ->  The fidelity study's static-frame result predicts more ti...
+  BUILD      built_at                                   2026-09-15T04:14:22Z  ->  2026-09-15T04:14:23Z
+  BUILD      builder.scene_def                          scene_defs/s15_static_offset.json  ->  scene_defs/tp15_static_median.json
+  UNEXPECTED: none
+
+  the keys that MUST be equal, shown as the values they hold in both:
+    OK  room.floor_reflectance                   0.0
+    OK  room.flight_height_m                     0.8
+    OK  room.wall_rgb                            [158, 158, 168]
+    OK  room.drone_start                         [0.0, 0.0]
+    OK  lighting.variant                         default
+    OK  lighting.headlight.diffuse               0.6
+    OK  lighting.headlight.ambient               0.5
+    OK  camera.fovy_deg                          70.0
+    OK  camera.focal_px                          174.23
+    OK  subjects[0].name                         subj_person_target
+    OK  subjects[0].role                         person_target
+    OK  subjects[0].panel.height_m               1.7
+    OK  subjects[0].panel.z_center_m             0.85
+    OK  subjects[0].panel.euler                  0 0 0
+    OK  subjects[0].motion.type                  static
+    OK  subjects[0].motion.p0                    [3.5, -1.0]
+    OK  subjects[0].motion.law                   p(t) = p0 (static)
+    OK  subjects[0].motion.mechanism             none
+    OK  subjects[0].truth.body                   subj_person_target
+    OK  expected_behaviour.target                subj_person_target
+    OK  expected_behaviour.verdict               follow
+    OK  scripted_motion.env                      None
+    OK  expected_behaviour.gates (15 fields) identical
+
+  scene.xml, with the scene id and the texture filename masked: 37 vs 37 lines
+  ONE line differs, and it is the panel's half-WIDTH only:
+    --- orig
+    +++ new
+    @@ -34 +34 @@
+    -      <geom name="subj_person_target_panel" type="box" size="0.004 0.3237 0.8500" euler="0 0 0" material="mat_subj_person_target" contype="0" conaffinity="0"/>
+    +      <geom name="subj_person_target_panel" type="box" size="0.004 0.2739 0.8500" euler="0 0 0" material="mat_subj_person_target" contype="0" conaffinity="0"/>
+  half-height 0.8500, thickness 0.004, euler, pos, body name, contype and
+  conaffinity are unchanged - this is the cutout's own bbox aspect, i.e.
+  the same thing the manifest reports as DERIVED panel.width_m.
+
+==============================================================================
+tp15_static_p25   vs   s15_static_offset
+==============================================================================
+manifest keys compared: 99   differing: 17
+  DERIVED    builder.scene_xml_sha256                   8e597e6ae29b088677e776a63f474fe275d52215f2ce2ff81c717da24...  ->  2a75dbbaac1a4021943ac27e662cf41958cda8a2c1ead798ed666e819...
+  DERIVED    builder.asset_sha256.subj_person_target.png cd71a361c0bce46d3be3b480e2d8a0714bb318a2ee1aa73d5179083bf...  ->  98e9aade70f509eefc9171cf902c95f6336f726efd2415206f0120811...
+  DERIVED    subjects[0].panel.width_m                  0.6475  ->  0.7139
+  DERIVED    subjects[0].panel.aspect                   0.3809  ->  0.4199
+  DERIVED    subjects[0].background.subject_fraction    0.4935  ->  0.4038
+  IDENTITY   scene_id                                   s15_static_offset  ->  tp15_static_p25
+  IDENTITY   title                                      Control: one person standing still, off to the side...  ->  Control: one person standing still, off to the side - a ~...
+  IDENTITY   purpose                                    Class A (person, static) control for the v2 acceptance ma...  ->  Typical-person variant of s15_static_offset. The publishe...
+  IDENTITY   subjects[0].source.img_id                  19432  ->  124442
+  IDENTITY   subjects[0].source.ann_id                  428692  ->  1238296
+  IDENTITY   subjects[0].source.file_name               000000019432.jpg  ->  000000124442.jpg
+  IDENTITY   subjects[0].source.bbox_xywh               [55.3, 26.8, 153.9, 404.1]  ->  [195.1, 168.4, 89.6, 214.1]
+  IDENTITY   subjects[0].note                           Same COCO cutout, same height and same position as scenes...  ->  TYPICAL-PERSON VARIANT, 2026-09-15. Byte-identical to s15...
+  IDENTITY   prediction.outcome                         passes  ->  unknown - this is the measurement
+  IDENTITY   prediction.rationale                       Identical geometry to the published static baseline (1.1 ...  ->  The fidelity study's static-frame result predicts more ti...
+  BUILD      built_at                                   2026-09-15T04:14:22Z  ->  2026-09-15T04:14:23Z
+  BUILD      builder.scene_def                          scene_defs/s15_static_offset.json  ->  scene_defs/tp15_static_p25.json
+  UNEXPECTED: none
+
+  the keys that MUST be equal, shown as the values they hold in both:
+    OK  room.floor_reflectance                   0.0
+    OK  room.flight_height_m                     0.8
+    OK  room.wall_rgb                            [158, 158, 168]
+    OK  room.drone_start                         [0.0, 0.0]
+    OK  lighting.variant                         default
+    OK  lighting.headlight.diffuse               0.6
+    OK  lighting.headlight.ambient               0.5
+    OK  camera.fovy_deg                          70.0
+    OK  camera.focal_px                          174.23
+    OK  subjects[0].name                         subj_person_target
+    OK  subjects[0].role                         person_target
+    OK  subjects[0].panel.height_m               1.7
+    OK  subjects[0].panel.z_center_m             0.85
+    OK  subjects[0].panel.euler                  0 0 0
+    OK  subjects[0].motion.type                  static
+    OK  subjects[0].motion.p0                    [3.5, -1.0]
+    OK  subjects[0].motion.law                   p(t) = p0 (static)
+    OK  subjects[0].motion.mechanism             none
+    OK  subjects[0].truth.body                   subj_person_target
+    OK  expected_behaviour.target                subj_person_target
+    OK  expected_behaviour.verdict               follow
+    OK  scripted_motion.env                      None
+    OK  expected_behaviour.gates (15 fields) identical
+
+  scene.xml, with the scene id and the texture filename masked: 37 vs 37 lines
+  ONE line differs, and it is the panel's half-WIDTH only:
+    --- orig
+    +++ new
+    @@ -34 +34 @@
+    -      <geom name="subj_person_target_panel" type="box" size="0.004 0.3237 0.8500" euler="0 0 0" material="mat_subj_person_target" contype="0" conaffinity="0"/>
+    +      <geom name="subj_person_target_panel" type="box" size="0.004 0.3569 0.8500" euler="0 0 0" material="mat_subj_person_target" contype="0" conaffinity="0"/>
+  half-height 0.8500, thickness 0.004, euler, pos, body name, contype and
+  conaffinity are unchanged - this is the cutout's own bbox aspect, i.e.
+  the same thing the manifest reports as DERIVED panel.width_m.
+
+==============================================================================
+tp01_moving_median   vs   s01_control_moving
+==============================================================================
+manifest keys compared: 101   differing: 16
+  DERIVED    builder.scene_xml_sha256                   ad1caece08d55feb52a1c5fa7f317ebb4ba343f2e5e06a46225337025...  ->  34ac32aadb981f3cb1ce048ae635da45702de8d4900438dad62edeae1...
+  DERIVED    builder.asset_sha256.subj_person.png       cd71a361c0bce46d3be3b480e2d8a0714bb318a2ee1aa73d5179083bf...  ->  fe96962bb3ca298ca7b82def23fbb33450e2ad1f9c45815ec3614a572...
+  DERIVED    subjects[0].panel.width_m                  0.6475  ->  0.5479
+  DERIVED    subjects[0].panel.aspect                   0.3809  ->  0.3223
+  DERIVED    subjects[0].background.subject_fraction    0.4935  ->  0.6462
+  IDENTITY   scene_id                                   s01_control_moving  ->  tp01_moving_median
+  IDENTITY   title                                      Control: one moving person...  ->  Control: one moving person - a MEDIAN-detectability perso...
+  IDENTITY   purpose                                    Regression control against the Sep 10 baseline (2.7 deg m...  ->  Typical-person variant of s01_control_moving. The publish...
+  IDENTITY   subjects[0].source.img_id                  19432  ->  250127
+  IDENTITY   subjects[0].source.ann_id                  428692  ->  184031
+  IDENTITY   subjects[0].source.file_name               000000019432.jpg  ->  000000250127.jpg
+  IDENTITY   subjects[0].source.bbox_xywh               [55.3, 26.8, 153.9, 404.1]  ->  [237.3, 179.9, 136.6, 422.8]
+  IDENTITY   subjects[0].note                           ...  ->  TYPICAL-PERSON VARIANT, 2026-09-15. Byte-identical to s01...
+  IDENTITY   prediction.outcome                         passes  ->  unknown - this is the measurement
+  IDENTITY   prediction.rationale                       Same geometry as the published moving baseline. MATTE 202...  ->  The fidelity study's static-frame result predicts more ti...
+  BUILD      builder.scene_def                          scene_defs/s01_control_moving.json  ->  scene_defs/tp01_moving_median.json
+  UNEXPECTED: none
+
+  the keys that MUST be equal, shown as the values they hold in both:
+    OK  room.floor_reflectance                   0.0
+    OK  room.flight_height_m                     0.8
+    OK  room.wall_rgb                            [158, 158, 168]
+    OK  room.drone_start                         [0.0, 0.0]
+    OK  lighting.variant                         default
+    OK  lighting.headlight.diffuse               0.6
+    OK  lighting.headlight.ambient               0.5
+    OK  camera.fovy_deg                          70.0
+    OK  camera.focal_px                          174.23
+    OK  subjects[0].name                         subj_person
+    OK  subjects[0].role                         person_target
+    OK  subjects[0].panel.height_m               1.7
+    OK  subjects[0].panel.z_center_m             0.85
+    OK  subjects[0].panel.euler                  0 0 0
+    OK  subjects[0].motion.type                  spring
+    OK  subjects[0].motion.p0                    [3.0, 0.0]
+    OK  subjects[0].motion.law                   y(t) = 0.0000 - 1.2000*cos(2*pi*t/20)
+    OK  subjects[0].motion.mechanism             mjcf_spring
+    OK  subjects[0].truth.body                   subj_person
+    OK  expected_behaviour.target                subj_person
+    OK  expected_behaviour.verdict               follow
+    OK  scripted_motion.env                      None
+    OK  expected_behaviour.gates (15 fields) identical
+
+  scene.xml, with the scene id and the texture filename masked: 38 vs 38 lines
+  ONE line differs, and it is the panel's half-WIDTH only:
+    --- orig
+    +++ new
+    @@ -35 +35 @@
+    -      <geom name="subj_person_panel" type="box" size="0.004 0.3237 0.8500" euler="0 0 0" material="mat_subj_person" contype="0" conaffinity="0"/>
+    +      <geom name="subj_person_panel" type="box" size="0.004 0.2739 0.8500" euler="0 0 0" material="mat_subj_person" contype="0" conaffinity="0"/>
+  half-height 0.8500, thickness 0.004, euler, pos, body name, contype and
+  conaffinity are unchanged - this is the cutout's own bbox aspect, i.e.
+  the same thing the manifest reports as DERIVED panel.width_m.
+
+==============================================================================
+tp01_moving_p25   vs   s01_control_moving
+==============================================================================
+manifest keys compared: 101   differing: 16
+  DERIVED    builder.scene_xml_sha256                   ad1caece08d55feb52a1c5fa7f317ebb4ba343f2e5e06a46225337025...  ->  d1cae90e2d1efb21f0c8155a43231645f47278a6bdb061c35254d48ff...
+  DERIVED    builder.asset_sha256.subj_person.png       cd71a361c0bce46d3be3b480e2d8a0714bb318a2ee1aa73d5179083bf...  ->  98e9aade70f509eefc9171cf902c95f6336f726efd2415206f0120811...
+  DERIVED    subjects[0].panel.width_m                  0.6475  ->  0.7139
+  DERIVED    subjects[0].panel.aspect                   0.3809  ->  0.4199
+  DERIVED    subjects[0].background.subject_fraction    0.4935  ->  0.4038
+  IDENTITY   scene_id                                   s01_control_moving  ->  tp01_moving_p25
+  IDENTITY   title                                      Control: one moving person...  ->  Control: one moving person - a ~25th-percentile person (C...
+  IDENTITY   purpose                                    Regression control against the Sep 10 baseline (2.7 deg m...  ->  Typical-person variant of s01_control_moving. The publish...
+  IDENTITY   subjects[0].source.img_id                  19432  ->  124442
+  IDENTITY   subjects[0].source.ann_id                  428692  ->  1238296
+  IDENTITY   subjects[0].source.file_name               000000019432.jpg  ->  000000124442.jpg
+  IDENTITY   subjects[0].source.bbox_xywh               [55.3, 26.8, 153.9, 404.1]  ->  [195.1, 168.4, 89.6, 214.1]
+  IDENTITY   subjects[0].note                           ...  ->  TYPICAL-PERSON VARIANT, 2026-09-15. Byte-identical to s01...
+  IDENTITY   prediction.outcome                         passes  ->  unknown - this is the measurement
+  IDENTITY   prediction.rationale                       Same geometry as the published moving baseline. MATTE 202...  ->  The fidelity study's static-frame result predicts more ti...
+  BUILD      builder.scene_def                          scene_defs/s01_control_moving.json  ->  scene_defs/tp01_moving_p25.json
+  UNEXPECTED: none
+
+  the keys that MUST be equal, shown as the values they hold in both:
+    OK  room.floor_reflectance                   0.0
+    OK  room.flight_height_m                     0.8
+    OK  room.wall_rgb                            [158, 158, 168]
+    OK  room.drone_start                         [0.0, 0.0]
+    OK  lighting.variant                         default
+    OK  lighting.headlight.diffuse               0.6
+    OK  lighting.headlight.ambient               0.5
+    OK  camera.fovy_deg                          70.0
+    OK  camera.focal_px                          174.23
+    OK  subjects[0].name                         subj_person
+    OK  subjects[0].role                         person_target
+    OK  subjects[0].panel.height_m               1.7
+    OK  subjects[0].panel.z_center_m             0.85
+    OK  subjects[0].panel.euler                  0 0 0
+    OK  subjects[0].motion.type                  spring
+    OK  subjects[0].motion.p0                    [3.0, 0.0]
+    OK  subjects[0].motion.law                   y(t) = 0.0000 - 1.2000*cos(2*pi*t/20)
+    OK  subjects[0].motion.mechanism             mjcf_spring
+    OK  subjects[0].truth.body                   subj_person
+    OK  expected_behaviour.target                subj_person
+    OK  expected_behaviour.verdict               follow
+    OK  scripted_motion.env                      None
+    OK  expected_behaviour.gates (15 fields) identical
+
+  scene.xml, with the scene id and the texture filename masked: 38 vs 38 lines
+  ONE line differs, and it is the panel's half-WIDTH only:
+    --- orig
+    +++ new
+    @@ -35 +35 @@
+    -      <geom name="subj_person_panel" type="box" size="0.004 0.3237 0.8500" euler="0 0 0" material="mat_subj_person" contype="0" conaffinity="0"/>
+    +      <geom name="subj_person_panel" type="box" size="0.004 0.3569 0.8500" euler="0 0 0" material="mat_subj_person" contype="0" conaffinity="0"/>
+  half-height 0.8500, thickness 0.004, euler, pos, body name, contype and
+  conaffinity are unchanged - this is the cutout's own bbox aspect, i.e.
+  the same thing the manifest reports as DERIVED panel.width_m.
+
+==============================================================================
+RESULT: EQUIVALENT - the only difference is which person is on the panel
+==============================================================================

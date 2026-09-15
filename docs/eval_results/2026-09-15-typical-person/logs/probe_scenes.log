@@ -1,0 +1,20 @@
+scene                 subj       cam_x   range  bearing  in_fov  conf (float/clean)
+s15_static_offset     control      0.0    3.64    -15.9    True               0.906
+s15_static_offset     control      1.0    2.69    -21.8    True               0.845
+s15_static_offset     control      2.0    1.80    -33.7   False               0.319
+tp15_static_median    median       0.0    3.64    -15.9    True               0.245
+tp15_static_median    median       1.0    2.69    -21.8    True               0.355
+tp15_static_median    median       2.0    1.80    -33.7   False               0.517
+tp15_static_p25       p25          0.0    3.64    -15.9    True               0.275
+tp15_static_p25       p25          1.0    2.69    -21.8    True               0.248
+tp15_static_p25       p25          2.0    1.80    -33.7   False               0.523
+s01_control_moving    control      0.0    3.00     -0.0    True               0.980
+s01_control_moving    control      1.0    2.00     -0.0    True               1.000
+s01_control_moving    control      2.0    1.00     -0.0    True               0.996
+tp01_moving_median    median       0.0    3.00     -0.0    True               0.428
+tp01_moving_median    median       1.0    2.00     -0.0    True               0.591
+tp01_moving_median    median       2.0    1.00     -0.0    True               0.805
+tp01_moving_p25       p25          0.0    3.00     -0.0    True               0.269
+tp01_moving_p25       p25          1.0    2.00     -0.0    True               0.365
+tp01_moving_p25       p25          2.0    1.00     -0.0    True               0.380
+wrote tables/scene_probe.tsv

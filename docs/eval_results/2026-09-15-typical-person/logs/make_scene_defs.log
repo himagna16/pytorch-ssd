@@ -1,0 +1,9 @@
+wrote /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scene_defs/tp15_static_median.json
+wrote /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scene_defs/tp15_static_p25.json
+wrote /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scene_defs/tp01_moving_median.json
+wrote /Users/saimaruvada/Downloads/drone/pytorch_ssd/tools/crazysim_macos/scene_defs/tp01_moving_p25.json
+
+  tp15_static_median     from s15_static_offset    subject COCO 250127/184031
+  tp15_static_p25        from s15_static_offset    subject COCO 124442/1238296
+  tp01_moving_median     from s01_control_moving   subject COCO 250127/184031
+  tp01_moving_p25        from s01_control_moving   subject COCO 124442/1238296

@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.static__control",
+  "scene": "s15_static_offset",
+  "scene_class": "A",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 1,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/typical_scenes/s15_static_offset",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person/runs/A.static__control__r1a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person/runs/A.static__control__r1a1/truth.csv",
+  "sensor_seed": 1001,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "typical_person"
+}

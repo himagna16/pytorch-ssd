@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.static__p25",
+  "scene": "tp15_static_p25",
+  "scene_class": "A",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 3,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/typical_scenes/tp15_static_p25",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person/runs/A.static__p25__r3a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person/runs/A.static__p25__r3a1/truth.csv",
+  "sensor_seed": 1003,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "typical_person"
+}

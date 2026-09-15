@@ -1,0 +1,78 @@
+====================================================================================
+RE-DERIVED FROM runs/*/follow_log.csv, independently of analyze_typical.py
+====================================================================================
+flights with a usable log: 18
+
+A. the latch rule every flight actually flew
+  OK  all flights vis_enter == 0.75                        got True  want True
+  OK  all flights vis_exit == 0.45                         got True  want True
+  OK  all flights confirm_frames == 3                      got True  want True
+
+B. summary.json's tracking_fraction equals the log's own tracked fraction
+  OK  max |summary - recomputed| <= 0.001                  got True  want True
+
+C. did each cell ever latch?
+  A.static__control      n=3  latched in 3/3  M1 median 0.990  range [0.990, 0.991]
+  A.static__median       n=3  latched in 0/3  M1 median 0.000  range [0.000, 0.000]
+  A.static__p25          n=3  latched in 0/3  M1 median 0.000  range [0.000, 0.000]
+  B.moving__control      n=3  latched in 3/3  M1 median 0.991  range [0.980, 0.992]
+  B.moving__median       n=3  latched in 1/3  M1 median 0.000  range [0.000, 0.013]
+  B.moving__p25          n=3  latched in 0/3  M1 median 0.000  range [0.000, 0.000]
+  OK  A.static__control: every flight latched              got True  want True
+  OK  A.static__control: M1 median >= 0.97                 got True  want True
+  OK  A.static__median: M1 median == 0.000                 got True  want True
+  OK  A.static__median: M1 max <= 0.013                    got True  want True
+  OK  A.static__median: at most 1 of 3 flights latched at all got True  want True
+  OK  A.static__p25: M1 median == 0.000                    got True  want True
+  OK  A.static__p25: M1 max <= 0.013                       got True  want True
+  OK  A.static__p25: at most 1 of 3 flights latched at all got True  want True
+  OK  B.moving__control: every flight latched              got True  want True
+  OK  B.moving__control: M1 median >= 0.97                 got True  want True
+  OK  B.moving__median: M1 median == 0.000                 got True  want True
+  OK  B.moving__median: M1 max <= 0.013                    got True  want True
+  OK  B.moving__median: at most 1 of 3 flights latched at all got True  want True
+  OK  B.moving__p25: M1 median == 0.000                    got True  want True
+  OK  B.moving__p25: M1 max <= 0.013                       got True  want True
+  OK  B.moving__p25: at most 1 of 3 flights latched at all got True  want True
+
+D. the confirmation gate: frames at/above 0.75, and the longest consecutive run
+  A.static__control__r1a1        n>=0.75  135/193  longest run  27   conf max 0.961
+  A.static__control__r2a1        n>=0.75  161/211  longest run  46   conf max 0.985
+  A.static__control__r3a1        n>=0.75  154/198  longest run  80   conf max 0.974
+  A.static__median__r1a1         n>=0.75    0/212  longest run   0   conf max 0.352
+  A.static__median__r2a1         n>=0.75    0/197  longest run   0   conf max 0.352
+  A.static__median__r3a1         n>=0.75    0/209  longest run   0   conf max 0.369
+  A.static__p25__r1a1            n>=0.75    0/213  longest run   0   conf max 0.376
+  A.static__p25__r2a1            n>=0.75    0/212  longest run   0   conf max 0.381
+  A.static__p25__r3a1            n>=0.75    0/198  longest run   0   conf max 0.386
+  B.moving__control__r1a1        n>=0.75  216/237  longest run  65   conf max 0.993
+  B.moving__control__r2a1        n>=0.75  220/244  longest run  65   conf max 0.996
+  B.moving__control__r3a1        n>=0.75  201/233  longest run  61   conf max 0.995
+  B.moving__median__r1a1         n>=0.75   16/233  longest run   2   conf max 0.894
+  B.moving__median__r2a1         n>=0.75   15/245  longest run   2   conf max 0.925
+  B.moving__median__r3a2         n>=0.75   19/238  longest run   3   conf max 0.918
+  B.moving__p25__r1a1            n>=0.75    0/241  longest run   0   conf max 0.698
+  B.moving__p25__r2a1            n>=0.75    0/234  longest run   0   conf max 0.642
+  B.moving__p25__r3a1            n>=0.75    0/241  longest run   0   conf max 0.582
+  OK  A.static__control: longest above-bar run >= 20 on every flight got True  want True
+  OK  A.static__median: longest above-bar run <= 3 on every flight got True  want True
+  OK  A.static__median: a flight latched IFF its longest above-bar run reached 3 got True  want True
+  OK  A.static__p25: longest above-bar run <= 3 on every flight got True  want True
+  OK  A.static__p25: a flight latched IFF its longest above-bar run reached 3 got True  want True
+  OK  B.moving__control: longest above-bar run >= 20 on every flight got True  want True
+  OK  B.moving__median: longest above-bar run <= 3 on every flight got True  want True
+  OK  B.moving__median: a flight latched IFF its longest above-bar run reached 3 got True  want True
+  OK  B.moving__p25: longest above-bar run <= 3 on every flight got True  want True
+  OK  B.moving__p25: a flight latched IFF its longest above-bar run reached 3 got True  want True
+
+E. time not tracking, whole flight
+  A.static__control      untracked median    0.15 s of  30.99 s flown  (0.005)
+  A.static__median       untracked median   32.67 s of  32.67 s flown  (1.000)
+  A.static__p25          untracked median   33.10 s of  33.10 s flown  (1.000)
+  B.moving__control      untracked median    0.16 s of  37.01 s flown  (0.004)
+  B.moving__median       untracked median   36.74 s of  37.21 s flown  (0.987)
+  B.moving__p25          untracked median   37.70 s of  37.70 s flown  (1.000)
+
+====================================================================================
+30/30 CHECKS PASSED  ALL VERIFIED
+====================================================================================

@@ -1,0 +1,19 @@
+run	cell	subject	repeat	conf_ge_enter	conf_lt_exit	conf_max_in_fov	conf_median_in_fov	confirm_frames	confirm_frames_needed	control_steps	dist_mean_m	flown_s	frames_above_enter	latch_rule_recorded	latched_ever	longest_above_enter_run	n_frames_in_fov	n_losses	n_reacquisitions	never_latched	person_in_view_fraction	t_first_latch_s	time_lost_s	untracked_fraction_after_latch	untracked_time_total_s	vis_enter	vis_exit
+A.static__control__r1a1	A.static	control	1	0.6995	0.0	0.9614	0.7986	3	3	193	2.556	30.12	135	True	True	27	193	0	0	False	1.0	0.312	0.0	0.0	0.16	0.75	0.45
+A.static__control__r2a1	A.static	control	2	0.763	0.0	0.985	0.8261	3	3	211	2.619	33.01	161	True	True	46	211	0	0	False	1.0	0.308	0.0	0.0	0.15	0.75	0.45
+A.static__control__r3a1	A.static	control	3	0.7778	0.0	0.9735	0.8402	3	3	198	2.546	30.99	154	True	True	80	198	0	0	False	1.0	0.309	0.0	0.0	0.15	0.75	0.45
+A.static__median__r1a1	A.static	median	1	0.0	1.0	0.3516	0.3019	3	3	212	3.64	33.15	0	True	False	0	212	0	0	True	1.0		0.0		33.15	0.75	0.45
+A.static__median__r2a1	A.static	median	2	0.0	1.0	0.3523	0.3119	3	3	197	3.64	30.77	0	True	False	0	197	0	0	True	1.0		0.0		30.77	0.75	0.45
+A.static__median__r3a1	A.static	median	3	0.0	1.0	0.369	0.3233	3	3	209	3.64	32.67	0	True	False	0	209	0	0	True	1.0		0.0		32.67	0.75	0.45
+A.static__p25__r1a1	A.static	p25	1	0.0	1.0	0.3764	0.3305	3	3	213	3.64	33.29	0	True	False	0	213	0	0	True	1.0		0.0		33.29	0.75	0.45
+A.static__p25__r2a1	A.static	p25	2	0.0	1.0	0.3806	0.3288	3	3	212	3.64	33.1	0	True	False	0	212	0	0	True	1.0		0.0		33.1	0.75	0.45
+A.static__p25__r3a1	A.static	p25	3	0.0	1.0	0.3858	0.3433	3	3	198	3.64	30.98	0	True	False	0	198	0	0	True	1.0		0.0		30.98	0.75	0.45
+B.moving__control__r1a1	B.moving	control	1	0.9114	0.0	0.9932	0.9034	3	3	237	2.532	37.01	216	True	True	65	237	0	0	False	1.0	0.311	0.0	0.0	0.16	0.75	0.45
+B.moving__control__r2a1	B.moving	control	2	0.9016	0.0	0.9959	0.9101	3	3	244	2.534	38.13	220	True	True	65	244	0	0	False	1.0	0.788	0.0	0.0	0.63	0.75	0.45
+B.moving__control__r3a1	B.moving	control	3	0.8627	0.0	0.9949	0.8896	3	3	233	2.512	36.44	201	True	True	61	233	0	0	False	1.0	0.317	0.0	0.0	0.16	0.75	0.45
+B.moving__median__r1a1	B.moving	median	1	0.0687	0.2489	0.8939	0.537	3	3	233	3.124	36.42	16	True	False	2	233	0	0	True	1.0		0.0		36.42	0.75	0.45
+B.moving__median__r2a1	B.moving	median	2	0.0612	0.2163	0.9248	0.5441	3	3	245	3.129	38.32	15	True	False	2	245	0	0	True	1.0		0.0		38.32	0.75	0.45
+B.moving__median__r3a2	B.moving	median	3	0.0798	0.2017	0.9176	0.5483	3	3	238	3.109	37.21	19	True	True	3	238	1	0	False	1.0	28.748	7.99	0.9438	36.74	0.75	0.45
+B.moving__p25__r1a1	B.moving	p25	1	0.0	0.7925	0.6979	0.3694	3	3	241	3.128	37.7	0	True	False	0	241	0	0	True	1.0		0.0		37.7	0.75	0.45
+B.moving__p25__r2a1	B.moving	p25	2	0.0	0.8462	0.6422	0.3693	3	3	234	3.125	36.63	0	True	False	0	234	0	0	True	1.0		0.0		36.63	0.75	0.45
+B.moving__p25__r3a1	B.moving	p25	3	0.0	0.8133	0.5818	0.3898	3	3	241	3.128	37.72	0	True	False	0	241	0	0	True	1.0		0.0		37.72	0.75	0.45

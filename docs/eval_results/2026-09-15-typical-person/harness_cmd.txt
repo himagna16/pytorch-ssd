@@ -1,0 +1,1 @@
+launch 2026-09-15T03:51:50Z: /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person/scripts/fly_typical.sh  (6 cells x 3 repeats = 18 flights, ships-as, no threshold flags)

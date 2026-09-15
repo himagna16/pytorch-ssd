@@ -1,0 +1,56 @@
+================================================================================================
+WHAT THE DRONE DOES WITH A TYPICAL PERSON
+================================================================================================
+suite typical_person  started 2026-09-15T03:51:50Z  21 min
+flights: {'attempted': 19, 'valid': 18, 'invalid': 1, 'scored': 18}
+
+THE BAR THAT FLEW (asserted on every flight, not assumed):
+  18 of 18 flights recorded vis_enter 0.75 / vis_exit 0.45 / confirm 3 in their own summary.json  <-- ALL
+
+================================================================================================
+A.static   (static, person at 3.5 m / y -1.0)
+================================================================================================
+published comparator: A.static__ships of docs/eval_results/2026-09-14-baseline-075, M1 median 0.9905 over 4 repeats
+
+subject               M1 tracked  latch s  losses  re-acq  lost after  untracked s  head mean  head max  dist end         verdict
+  (latch s = nan means the track never latched at all: there was nothing to lose)
+control        0.990 [0.990,0.991]     0.31       0       0        0.00         0.15       4.05      6.28      2.25            PASS
+median         0.000 [0.000,0.000]      nan       0       0        0.00        32.67      15.95     15.95      3.64            FAIL
+p25            0.000 [0.000,0.000]      nan       0       0        0.00        33.10      15.95     15.95      3.64            FAIL
+
+  per-flight detail:
+    run                              M1  latch  loss  reacq  lost s  conf med  conf max  >=0.75   <0.45  n>=bar  longest  steps         end
+    A.static__control__r1a1       0.990   0.31     0      0    0.00     0.799     0.961   0.700   0.000     135       27    193    duration
+    A.static__control__r2a1       0.991   0.31     0      0    0.00     0.826     0.985   0.763   0.000     161       46    211    duration
+    A.static__control__r3a1       0.990   0.31     0      0    0.00     0.840     0.974   0.778   0.000     154       80    198    duration
+    A.static__median__r1a1        0.000    nan     0      0    0.00     0.302     0.352   0.000   1.000       0        0    212    duration
+    A.static__median__r2a1        0.000    nan     0      0    0.00     0.312     0.352   0.000   1.000       0        0    197    duration
+    A.static__median__r3a1        0.000    nan     0      0    0.00     0.323     0.369   0.000   1.000       0        0    209    duration
+    A.static__p25__r1a1           0.000    nan     0      0    0.00     0.331     0.376   0.000   1.000       0        0    213    duration
+    A.static__p25__r2a1           0.000    nan     0      0    0.00     0.329     0.381   0.000   1.000       0        0    212    duration
+    A.static__p25__r3a1           0.000    nan     0      0    0.00     0.343     0.386   0.000   1.000       0        0    198    duration
+
+================================================================================================
+B.moving   (moving, 1.2 m sway, 20 s period)
+================================================================================================
+published comparator: B.moving__ships of docs/eval_results/2026-09-14-baseline-075, M1 median 0.992 over 4 repeats
+
+subject               M1 tracked  latch s  losses  re-acq  lost after  untracked s  head mean  head max  dist end         verdict
+  (latch s = nan means the track never latched at all: there was nothing to lose)
+control        0.991 [0.980,0.992]     0.32       0       0        0.00         0.16       3.42      9.46      2.29            PASS
+median         0.000 [0.000,0.013]    28.75       1       0        0.00        36.74      14.16     21.78      3.10            FAIL
+p25            0.000 [0.000,0.000]      nan       0       0        0.00        37.70      14.36     21.78      3.11            FAIL
+
+  per-flight detail:
+    run                              M1  latch  loss  reacq  lost s  conf med  conf max  >=0.75   <0.45  n>=bar  longest  steps         end
+    B.moving__control__r1a1       0.992   0.31     0      0    0.00     0.903     0.993   0.911   0.000     216       65    237    duration
+    B.moving__control__r2a1       0.980   0.79     0      0    0.00     0.910     0.996   0.902   0.000     220       65    244    duration
+    B.moving__control__r3a1       0.991   0.32     0      0    0.00     0.890     0.995   0.863   0.000     201       61    233    duration
+    B.moving__median__r1a1        0.000    nan     0      0    0.00     0.537     0.894   0.069   0.249      16        2    233    duration
+    B.moving__median__r2a1        0.000    nan     0      0    0.00     0.544     0.925   0.061   0.216      15        2    245    duration
+    B.moving__median__r3a2        0.013  28.75     1      0    7.99     0.548     0.918   0.080   0.202      19        3    238    duration
+    B.moving__p25__r1a1           0.000    nan     0      0    0.00     0.369     0.698   0.000   0.792       0        0    241    duration
+    B.moving__p25__r2a1           0.000    nan     0      0    0.00     0.369     0.642   0.000   0.846       0        0    234    duration
+    B.moving__p25__r3a1           0.000    nan     0      0    0.00     0.390     0.582   0.000   0.813       0        0    241    duration
+
+wrote tables/per_subject.tsv, tables/per_flight.tsv, tables/analysis.txt

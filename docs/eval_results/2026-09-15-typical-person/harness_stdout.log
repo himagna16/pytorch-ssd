@@ -1,0 +1,59 @@
+[22:51:50] typical-person suite: 6 cells x 3 repeats = 18 flights, ships-as, out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-typical-person
+[22:51:50] flight 1/18  A.static__control  repeat 1 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[22:52:51]   -> VALID
+[22:52:51]      tracked 0.99, vis_enter 0.75, sim/wall 0.998, 6.375 Hz, end duration
+[22:52:51] flight 2/18  A.static__median  repeat 1 attempt 1  (tp15_static_median, chip/himax_typical/chip, 45s)
+[22:53:53]   -> VALID
+[22:53:53]      tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.364 Hz, end duration
+[22:53:53] flight 3/18  A.static__p25  repeat 1 attempt 1  (tp15_static_p25, chip/himax_typical/chip, 45s)
+[22:54:55]   -> VALID
+[22:54:55]      tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.368 Hz, end duration
+[22:54:55] flight 4/18  B.moving__control  repeat 1 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[22:56:01]   -> VALID
+[22:56:01]      tracked 0.992, vis_enter 0.75, sim/wall 1.0, 6.376 Hz, end duration
+[22:56:01] flight 5/18  B.moving__median  repeat 1 attempt 1  (tp01_moving_median, chip/himax_typical/chip, 50s)
+[22:57:07]   -> VALID
+[22:57:07]      tracked 0.0, vis_enter 0.75, sim/wall 1.0, 6.371 Hz, end duration
+[22:57:07] flight 6/18  B.moving__p25  repeat 1 attempt 1  (tp01_moving_p25, chip/himax_typical/chip, 50s)
+[22:58:14]   -> VALID
+[22:58:14]      tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.366 Hz, end duration
+[22:58:14] flight 7/18  A.static__median  repeat 2 attempt 1  (tp15_static_median, chip/himax_typical/chip, 45s)
+[22:59:16]   -> VALID
+[22:59:16]      tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.37 Hz, end duration
+[22:59:16] flight 8/18  A.static__p25  repeat 2 attempt 1  (tp15_static_p25, chip/himax_typical/chip, 45s)
+[23:00:18]   -> VALID
+[23:00:18]      tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.374 Hz, end duration
+[23:00:18] flight 9/18  A.static__control  repeat 2 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[23:01:20]   -> VALID
+[23:01:20]      tracked 0.991, vis_enter 0.75, sim/wall 0.998, 6.361 Hz, end duration
+[23:01:20] flight 10/18  B.moving__median  repeat 2 attempt 1  (tp01_moving_median, chip/himax_typical/chip, 50s)
+[23:02:26]   -> VALID
+[23:02:26]      tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.368 Hz, end duration
+[23:02:26] flight 11/18  B.moving__p25  repeat 2 attempt 1  (tp01_moving_p25, chip/himax_typical/chip, 50s)
+[23:03:33]   -> VALID
+[23:03:33]      tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.362 Hz, end duration
+[23:03:33] flight 12/18  B.moving__control  repeat 2 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[23:04:40]   -> VALID
+[23:04:40]      tracked 0.98, vis_enter 0.75, sim/wall 0.999, 6.372 Hz, end duration
+[23:04:40] flight 13/18  A.static__p25  repeat 3 attempt 1  (tp15_static_p25, chip/himax_typical/chip, 45s)
+[23:05:42]   -> VALID
+[23:05:42]      tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.358 Hz, end duration
+[23:05:42] flight 14/18  A.static__control  repeat 3 attempt 1  (s15_static_offset, chip/himax_typical/chip, 45s)
+[23:06:43]   -> VALID
+[23:06:43]      tracked 0.99, vis_enter 0.75, sim/wall 0.999, 6.357 Hz, end duration
+[23:06:43] flight 15/18  A.static__median  repeat 3 attempt 1  (tp15_static_median, chip/himax_typical/chip, 45s)
+[23:07:45]   -> VALID
+[23:07:45]      tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.366 Hz, end duration
+[23:07:45] flight 16/18  B.moving__p25  repeat 3 attempt 1  (tp01_moving_p25, chip/himax_typical/chip, 50s)
+[23:08:52]   -> VALID
+[23:08:52]      tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.362 Hz, end duration
+[23:08:52] flight 17/18  B.moving__control  repeat 3 attempt 1  (s01_control_moving, chip/himax_typical/chip, 50s)
+[23:09:59]   -> VALID
+[23:09:59]      tracked 0.991, vis_enter 0.75, sim/wall 0.999, 6.367 Hz, end duration
+[23:09:59] flight 18/18  B.moving__median  repeat 3 attempt 1  (tp01_moving_median, chip/himax_typical/chip, 50s)
+./scripts/fly_typical.sh: line 73: 49506 Alarm clock: 14            perl -e 'alarm shift; exec @ARGV' $((dur + 90)) "$P" follow_person.py --duration "$dur" --out "$run" --backend chip --rate-hz 6.5 --latency-ms 153 > "$run/follower.log" 2>&1
+[23:12:27]   -> flight did not produce a run (exit 142)
+[23:12:27] flight 18/18  B.moving__median  repeat 3 attempt 2  (tp01_moving_median, chip/himax_typical/chip, 50s)
+[23:13:34]   -> VALID
+[23:13:34]      tracked 0.013, vis_enter 0.75, sim/wall 0.998, 6.369 Hz, end duration
+[23:13:34] all flights done in 21 min

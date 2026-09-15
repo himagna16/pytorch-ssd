@@ -1,0 +1,67 @@
+{
+  "scene_id": "tp15_static_median",
+  "title": "Control: one person standing still, off to the side - a MEDIAN-detectability person (COCO 250127)",
+  "purpose": "Typical-person variant of s15_static_offset. The published person cells were built with COCO 19432/428692, which the 2026-09-15 person fidelity study places at the 98.5-100th percentile of rendered detectability among 266 real people. This scene is that scene with a MEDIAN-detectability person in it and nothing else changed, so a flight against it measures how much of the published 0.97-0.99 tracking fraction is a property of the subject rather than of the perception system. Not part of the acceptance matrix; run_acceptance2.sh does not reference it.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 250127,
+        "ann_id": 184031
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.5,
+        -1.0
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "TYPICAL-PERSON VARIANT, 2026-09-15. Byte-identical to s15_static_offset.json except for the COCO cutout: img 250127/ann 184031 replaces img 19432/ann 428692. Same subject name, same role, same height_m 1.7, same pos, same motion, same lighting, same expected_behaviour (target and gates), same matte floor. The panel's WIDTH follows from the cutout's own bbox aspect (3.095 h/w -> 0.5493 m at 1.7 m tall, against the flown cutout's 2.627 -> 0.647 m); that is a property of which person it is, not an independent change, and it is the only geometric consequence. WHY THIS PERSON: a MEDIAN-detectability person. Rendered through build_scene's own cutout pipeline at s15's geometry it sits at the 52.1th percentile of the 266-person cohort of docs/eval_results/2026-09-15-sim-person-fidelity (per range 44.4/69.2/35.3/75.6/48.9/39.1), against the flown cutout's 99.2nd. Its own photograph scores 0.7312 on the chip arm through the resolution-matched chain, the 22.4th percentile of 58 size-matched whole-upright photographs. Selection is docs/eval_results/2026-09-15-typical-person/scripts/pick_subjects.py; no score was re-computed for it."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.95
+      },
+      {
+        "metric": "mean_true_heading_error_deg",
+        "op": "<=",
+        "value": 4.0
+      },
+      {
+        "metric": "max_true_heading_error_deg",
+        "op": "<=",
+        "value": 12.0
+      },
+      {
+        "metric": "end_reason",
+        "op": "==",
+        "value": "duration"
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "unknown - this is the measurement",
+    "rationale": "The fidelity study's static-frame result predicts more time below the 0.45 exit bar than the flown cutout ever shows (0 of 282 frames), but it states explicitly that per-frame rates cannot be multiplied into a loss-of-track fraction, because consecutive frames are correlated and the follower has hysteresis. That is what this flight measures."
+  }
+}

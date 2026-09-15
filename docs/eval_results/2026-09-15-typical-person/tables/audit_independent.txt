@@ -1,0 +1,124 @@
+==============================================================================
+1. FLIGHT NUMBERS, RE-DERIVED FROM runs/*/follow_log.csv
+==============================================================================
+  (no follow_log.csv: B.moving__median__r3a1 - the timed-out attempt)
+  run                              tf     sum_tf       span       untr     losses      reacq      first      run75   conf_med   conf_max      enter       exit         cf
+  A.static__control__r1a1      0.9896       0.99      30.12       0.31          0          0       0.31         27      0.799      0.961       0.75       0.45          3
+  A.static__control__r2a1      0.9905      0.991      33.01       0.31          0          0       0.31         46      0.826      0.985       0.75       0.45          3
+  A.static__control__r3a1      0.9899       0.99      30.99       0.31          0          0       0.31         80       0.84      0.974       0.75       0.45          3
+  A.static__median__r1a1          0.0        0.0      33.15      33.31          0          0          -          0      0.302      0.352       0.75       0.45          3
+  A.static__median__r2a1          0.0        0.0      30.77      30.92          0          0          -          0      0.312      0.352       0.75       0.45          3
+  A.static__median__r3a1          0.0        0.0      32.67      32.83          0          0          -          0      0.323      0.369       0.75       0.45          3
+  A.static__p25__r1a1             0.0        0.0      33.29      33.45          0          0          -          0      0.331      0.376       0.75       0.45          3
+  A.static__p25__r2a1             0.0        0.0       33.1      33.26          0          0          -          0      0.329      0.381       0.75       0.45          3
+  A.static__p25__r3a1             0.0        0.0      30.98      31.14          0          0          -          0      0.343      0.386       0.75       0.45          3
+  B.moving__control__r1a1      0.9916      0.992      37.01       0.31          0          0       0.31         65      0.903      0.993       0.75       0.45          3
+  B.moving__control__r2a1      0.9795       0.98      38.13       0.79          0          0       0.79         65       0.91      0.996       0.75       0.45          3
+  B.moving__control__r3a1      0.9914      0.991      36.44       0.32          0          0       0.32         61       0.89      0.995       0.75       0.45          3
+  B.moving__median__r1a1          0.0        0.0      36.42      36.57          0          0          -          2      0.537      0.894       0.75       0.45          3
+  B.moving__median__r2a1          0.0        0.0      38.32      38.47          0          0          -          2      0.544      0.925       0.75       0.45          3
+  B.moving__median__r3a2       0.0126      0.013      37.21      36.89          1          0      28.75          3      0.548      0.918       0.75       0.45          3
+  B.moving__p25__r1a1             0.0        0.0       37.7      37.86          0          0          -          0      0.369      0.698       0.75       0.45          3
+  B.moving__p25__r2a1             0.0        0.0      36.63      36.78          0          0          -          0      0.369      0.642       0.75       0.45          3
+  B.moving__p25__r3a1             0.0        0.0      37.72      37.88          0          0          -          0       0.39      0.582       0.75       0.45          3
+
+  AGREEMENT: my tracking fraction vs summary.json on all 18 flights: max |diff| = 0.0005
+  ENTRY RULE: 'latched iff longest run of conf>=0.75 reached 3' - counterexamples: none
+  THRESHOLDS: distinct (vis_enter, vis_exit, confirm_frames) across all flights: [(0.75, 0.45, 3)]
+
+==============================================================================
+2. SUBJECT SELECTION, RE-DERIVED FROM THE FIDELITY STUDY'S sim_cohort.csv
+==============================================================================
+  cohort size: 267 subjects
+  control    19432  index  99.2   per-range 100/100/100/98/98/99
+  median    250127  index  52.1   per-range 44/69/35/76/49/39
+  p25       124442  index  28.4   per-range 71/52/20/21/0/6
+  -> reproduces the README's 99.2 / 52.1 / 28.4 and its per-range vectors exactly.
+
+  IS THE ELIGIBLE POOL BIASED TOWARD EASY PEOPLE?  (the objection that matters)
+    index median, all 267 cohort subjects        : 50.3
+    index median, the 59 wui-eligible subjects  : 51.6
+    median   percentile among the 59 eligible peers:  50.8 (vs 52.1 cohort-wide)
+    p25      percentile among the 59 eligible peers:  27.1 (vs 28.4 cohort-wide)
+    control  percentile among the 59 eligible peers: 100.0 (vs 99.2 cohort-wide)
+    -> NOT biased. The eligible pool's detectability distribution is the cohort's,
+       and both picks keep their percentile under either reference population.
+
+  NOTE ON THE FLAGS. sim_cohort.csv and real_people.csv disagree for the same
+  subjects: sim_cohort says whole_upright=1 for all 267 and wui=1 for 77;
+  real_people says whole_upright=1 for 204 and wui=1 for 59. This directory used the
+  real_people flags throughout (cohort_ranking.tsv matches them on all 267 rows).
+  Consequence worth stating: THE CONTROL ITSELF IS NOT ELIGIBLE under that screen
+  (19432 has wui=0, in_crop_horizontal=0, mech_eligible=0), so 'eligible' does not
+  mean 'comparable to the control'. It does not affect the picks' percentiles.
+
+==============================================================================
+3. DOES n=2 SUBJECTS SUPPORT THE VERDICT?  ASKING ALL 267
+==============================================================================
+  The flights are 2 subjects x 3 repeats. The repeats bound machine noise only.
+  But the entry bar gives a NECESSARY condition for latching that can be asked of
+  the whole cohort on the SAME arm the flights used (chip network, himax camera,
+  dy=0): does the subject's mean frame even reach 0.75 at the flown start range?
+
+   range_m     n   reach 0.75     pct   below 0.45     pct   median
+       1.5   267          141   52.8%           51   19.1%    0.771
+       2.0   267           92   34.5%           61   22.8%    0.644
+       2.5   267           40   15.0%          144   53.9%    0.432
+       3.0   267           48   18.0%          101   37.8%    0.536
+       3.5   267           74   27.7%           70   26.2%    0.617
+       4.0   267           74   27.7%           72   27.0%    0.608
+
+  At the STATIC scene's 3.64 m start (nearest rung): 74/267 = 27.7% of the cohort reach the entry bar.
+  At the MOVING scene's 3.0 m start: 48/267 = 18.0% of the cohort reach the entry bar.
+
+  READING. The DIRECTION of the verdict does not rest on two subjects: at the ranges
+  these scenes start from, roughly three quarters of the 267-subject cohort do not
+  reach the entry bar on a static on-axis frame, which is the easiest condition a
+  flight ever offers. The flights are a costly confirmation of what the cohort
+  already implies, not the only evidence for it.
+  EQUALLY: about a fifth to a quarter of the cohort DOES reach it, so '0.00' is not
+  the population's number either. The README's own framing - 'between 0.00 and 0.99
+  depending on the person' - is the calibrated statement; 'a typical person is not
+  tracked at all' would be an overclaim.
+  This is a static-frame necessary condition, NOT a predicted tracking fraction:
+  consecutive frames are correlated and the follower has hysteresis.
+
+==============================================================================
+4. TWO CORRECTIONS THE ORIGINAL README DID NOT MAKE
+==============================================================================
+  (a) THE MEDIAN/p25 ORDERING INVERTS IN THE STATIC CELL.
+      A.static__control        in-flight conf median 0.818
+      A.static__median         in-flight conf median 0.312
+      A.static__p25            in-flight conf median 0.334
+      B.moving__control        in-flight conf median 0.899
+      B.moving__median         in-flight conf median 0.542
+      B.moving__p25            in-flight conf median 0.378
+
+      In A.static the '25th-percentile' subject returns a HIGHER in-flight confidence
+      (0.334) than the 'median' subject (0.312), reversing the cohort ranking, which at
+      3.5 m puts them at 0.241 and 0.612. The same inversion is visible in this
+      directory's own build-time probe (s15: p25 0.275/0.248/0.523 against median
+      0.245/0.355/0.517) and was not called out. The cohort index is a rank over six
+      static on-axis ranges; the static flight sits at 3.64 m and a 15.9 deg bearing
+      with sensor noise, and the ranking does not survive that. The two cells are
+      therefore TWO SAMPLES OF A TYPICAL PERSON, not a monotone difficulty ladder,
+      and no claim should be built on median-vs-p25 differences. The verdict is
+      unaffected: both are 0.000 and both are far below the bar.
+
+      Note also the level shift: the cohort's static on-axis render is systematically
+      more favourable than the flight (control 0.97->0.83, median 0.61->0.31 conf
+      medians), so cohort confidences are not flight confidences.
+
+  (b) THE 0.397 / 0.119 PAIR MIXES RESAMPLING CHAINS.
+      quoted: sim_cohort_himax chip 0.3966  vs  real_all chip 0.1190
+      same-chain: the rendered side is himax, so the photograph side must be too:
+                  realhimax_whole_upright chip 0.1127 (n=408, 136 subjects)
+      corrected pair: 0.397 rendered against 0.113 photographed.
+      The gap and the conclusion survive; the quoted 0.119 was a clean-chain group.
+
+      AND the render penalty is weaker for the stratum the picks come from:
+        whole_upright (n=204): paired median -0.1298 [-0.1786, -0.0780]
+        wui           (n=59): paired median -0.0496 [-0.1132, +0.0178]  <- CROSSES ZERO
+      Both picks are wui. So 'these cells bracket the real answer from the
+      pessimistic side' is well supported for whole_upright and NOT established at
+      n=59 for wui. The caveat should be stated as a direction, not a magnitude.

@@ -1,0 +1,94 @@
+==============================================================================
+PICKING A TYPICAL PERSON AND A HARD-BUT-ORDINARY PERSON
+==============================================================================
+scorer: champion_arms.py sha256 78946a3f93b80857d4eb9d96d9edd04d9e5a876c592aabf58ffb437909cdb310  (not invoked; the
+        cohort's scores are read from the fidelity study's tables as written)
+source: docs/eval_results/2026-09-15-sim-person-fidelity/tables/{real_people.csv, sim_cohort.csv}
+index:  mean, over the six flown ladder ranges, of the subject's percentile
+        among the 266 cohort peers at that range (chip arm, himax, dy = 0)
+
+pool: 267 rendered subjects, 266 peers once the flown cutout is out
+
+Where the FLOWN cutout sits on this index (the number this study is a reply to):
+  COCO 19432 / ann 428692   index 99.2th percentile (cohort median index is 50.0 by construction)
+  per range: 1.5m 100%  2.0m 100%  2.5m 100%  3.0m 98%  3.5m 98%  4.0m 99%
+  the fidelity study's own table reads 99.6 / 100.0 / 100.0 / 98.5 / 98.5 / 98.9 -
+  identical numbers, re-derived here from the same rows.
+
+mechanically eligible: wui 59 -> 39 after the cutout-usability cuts (20 dropped, all of them for a source crop under 200 px tall)
+by-eye screen: 12 of 39 kept (adult, standing on their own feet,
+               neutral upright stance, nothing in front of them)
+
+  rejected by eye:
+      65736  index  88.3   mid-stroke tennis pose, not a neutral stance
+     343524  index  81.5   mid-stroke tennis pose, not a neutral stance
+     158744  index  79.1   back-turned and occluded by a car
+     343937  index  77.5   arms out, leaning; not a neutral stance
+     364102  index  76.9   mid-stride with the arm raised
+     162581  index  71.4   mid-stroke tennis pose, not a neutral stance
+     358195  index  71.1   a child, on a skateboard
+     571264  index  66.0   back-turned, occluded by a motorcycle
+     139077  index  64.3   a toddler; 1.7 m is not plausible
+     235784  index  62.7   arm raised on ski poles; not a neutral stance
+     512985  index  61.2   back-turned, carrying a surfboard
+     333745  index  60.4   heavy motion blur across the whole subject
+      23126  index  57.0   mid golf swing, not a neutral stance
+       7088  index  56.3   a small child; 1.7 m is not plausible
+     281929  index  55.5   a bicycle stands in front of the legs
+     449579  index  51.6   mid-serve tennis pose, arm above the head
+      50638  index  50.3   a toddler, back-turned; 1.7 m is not plausible
+     442306  index  49.6   a toddler; 1.7 m is not plausible
+     529939  index  42.9   back-turned, carrying a kayak
+     575081  index  41.8   a child, arm raised, partly behind a door frame
+     398237  index  26.8   a toddler; 1.7 m is not plausible
+     340451  index  24.6   SITTING ON A BENCH - knees bent, not upright
+     506656  index  16.7   a second person's body intrudes at the right edge
+     161861  index  13.9   bent forward over a tennis racket
+     520910  index  10.3   reads as a shop mannequin, not a photographed person
+     394559  index   9.3   mid-stroke tennis pose, not a neutral stance
+     456662  index   2.9   a child; 1.7 m is not plausible
+
+  kept, with their index:
+     556158  index  93.9   per-range  95  95  87  92  95  99   photograph(chip_via244) 0.998
+     280779  index  92.7   per-range  90  90  92  98  97  90   photograph(chip_via244) 0.994
+     266409  index  92.1   per-range  96  94  94  90  85  94   photograph(chip_via244) 0.996
+     374369  index  90.3   per-range  85  92  82  94  94  95   photograph(chip_via244) 0.995
+     401446  index  88.8   per-range  84  91 100  89  84  85   photograph(chip_via244) 1.000
+     161875  index  87.0   per-range  86  74  85  93  92  92   photograph(chip_via244) 0.658
+      61747  index  86.8   per-range  86  86  83  97  91  79   photograph(chip_via244) 0.999
+     250127  index  52.1   per-range  44  69  35  76  49  39   photograph(chip_via244) 0.731
+     356427  index  37.8   per-range  58  48  21  25  41  35   photograph(chip_via244) 0.880
+     157365  index  34.6   per-range  63  34  24  29  37  20   photograph(chip_via244) 0.998
+     527750  index  34.3   per-range  60  49  34  19   5  40   photograph(chip_via244) 0.974
+     124442  index  28.4   per-range  71  52  20  21   0   6   photograph(chip_via244) 0.590
+
+==============================================================================
+THE PICKS
+==============================================================================
+--- control_19432: COCO img 19432 / ann 428692  (000000019432.jpg)
+    RENDERED index 99.2th percentile of 266 peers (raw-confidence index would say 100.0th)
+    per-range chip/himax  1.5m 0.998  2.0m 0.997  2.5m 0.979  3.0m 0.943  3.5m 0.972  4.0m 0.980
+    per-range percentile  1.5m 100%  2.0m 100%  2.5m 100%  3.0m  98%  3.5m  98%  4.0m  99%
+    PHOTOGRAPH (its own, resolution-matched): chip 0.9888  float 0.9838  fq 0.986
+                -> 54.2th percentile of 48 size-matched whole_upright photographs
+    geometry: bbox 154x404 px, aspect h/w 2.63, panel 0.647 m wide at 1.7 m tall, 1 person annotation(s)
+
+--- median: COCO img 250127 / ann 184031  (000000250127.jpg)
+    RENDERED index 52.1th percentile of 266 peers (raw-confidence index would say 52.6th)
+    per-range chip/himax  1.5m 0.720  2.0m 0.768  2.5m 0.336  3.0m 0.694  3.5m 0.612  4.0m 0.530
+    per-range percentile  1.5m  44%  2.0m  69%  2.5m  35%  3.0m  76%  3.5m  49%  4.0m  39%
+    PHOTOGRAPH (its own, resolution-matched): chip 0.7312  float 0.6841  fq 0.6614
+                -> 22.4th percentile of 58 size-matched whole_upright photographs
+    geometry: bbox 137x423 px, aspect h/w 3.10, panel 0.549 m wide at 1.7 m tall, 1 person annotation(s)
+
+--- p25: COCO img 124442 / ann 1238296  (000000124442.jpg)
+    RENDERED index 28.4th percentile of 266 peers (raw-confidence index would say 25.2th)
+    per-range chip/himax  1.5m 0.888  2.0m 0.652  2.5m 0.254  3.0m 0.354  3.5m 0.241  4.0m 0.329
+    per-range percentile  1.5m  71%  2.0m  52%  2.5m  20%  3.0m  21%  3.5m   0%  4.0m   6%
+    PHOTOGRAPH (its own, resolution-matched): chip 0.5895  float 0.6826  fq 0.6649
+                -> 10.4th percentile of 48 size-matched whole_upright photographs
+    geometry: bbox 90x214 px, aspect h/w 2.39, panel 0.712 m wide at 1.7 m tall, 1 person annotation(s)
+
+    runner-up for median: COCO 356427, index 37.8 (per-range 58 48 21 25 41 35)
+    runner-up for p25: COCO 527750, index 34.3 (per-range 60 49 34 19 5 40)
+

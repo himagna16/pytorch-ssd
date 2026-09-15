@@ -1,0 +1,7 @@
+cell	subject	n_valid	M1_median	M1_min	M1_max	t_first_latch_median_s	n_losses_total	n_reacq_total	time_lost_median_s	time_lost_total_s	untracked_time_median_s	untracked_time_total_s	n_never_latched	untracked_frac_after_latch_median	heading_mean_median_deg	heading_max_deg	dist_settled_err_median_m	dist_final_median_m	dist_mean_median_m	conf_median_in_fov	conf_ge_075_median	conf_lt_045_median	conf_max_max	frames_above_bar_total	longest_above_bar_run_max	person_in_view_fraction_min	verdict	failed_gates
+A.static	control	3	0.99	0.99	0.991	0.309	0	0	0.0	0.0	0.15	0.46	0	0.0	4.05	6.28	0.424	2.251	2.556	0.8261	0.763	0.0	0.985	450	80	1.0	PASS	
+A.static	median	3	0.0	0.0	0.0		0	0	0.0	0.0	32.67	96.59	3		15.95	15.95	1.698	3.64	3.64	0.3119	0.0	1.0	0.369	0	0	1.0	FAIL	M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+A.static	p25	3	0.0	0.0	0.0		0	0	0.0	0.0	33.1	97.37	3		15.95	15.95	1.698	3.64	3.64	0.3305	0.0	1.0	0.3858	0	0	1.0	FAIL	M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+B.moving	control	3	0.991	0.98	0.992	0.317	0	0	0.0	0.0	0.16	0.95	0	0.0	3.42	9.46	0.533	2.287	2.532	0.9034	0.9016	0.0	0.9959	637	65	1.0	PASS	
+B.moving	median	3	0.0	0.0	0.013	28.748	1	0	0.0	7.99	36.74	111.48	2	0.9438	14.16	21.78	1.225	3.105	3.124	0.5441	0.0687	0.2163	0.9248	50	3	1.0	FAIL	M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
+B.moving	p25	3	0.0	0.0	0.0		0	0	0.0	0.0	37.7	112.05	3		14.36	21.78	1.226	3.113	3.128	0.3694	0.0	0.8133	0.6979	0	0	1.0	FAIL	M2_heading_err_max_deg,M7_dist_err_settled_mean_m,M7_final_in_band
