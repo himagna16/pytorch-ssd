@@ -91,6 +91,23 @@ Spearman:
 | M11 yaw reversals/min | +0.425 |
 | M11 yaw saturated fraction | +0.054 |
 
+Those are pooled across four suites, and section 3 just showed the suites differ
+in difficulty, so some of that correlation could be the drift rather than
+anything about individual flights. Repeating it inside one suite and one class,
+where the scene and the floor are fixed (`within_suite.txt`):
+
+| stratum | n | M1 | M9 losses | M2 mean | M11 reversals |
+|---|---|---|---|---|---|
+| mirror-refly / B | 19 | -0.349 | +0.704 | +0.309 | -0.042 |
+| stability / B | 24 | -0.781 | +0.695 | +0.240 | -0.192 |
+| baseline-075 / B | 12 | -0.685 | +0.545 | +0.573 | +0.063 |
+
+Tracking fraction and track losses survive in every stratum with the same sign,
+so those are flight-to-flight and real. The yaw-reversal correlation does not
+survive: +0.425 pooled becomes -0.042, -0.192 and +0.063 within suites, which
+means that one was the drift. I am striking it. Heading error survives weakly and
+inconsistently. The static stratum has only 8 flights and I am not reading it.
+
 So the thing M10 measures does track how badly a flight goes. That argues
 against dropping it, and it is also the reason to be careful with it: a hard
 scene produces low confidence and poor tracking together, so M10 is largely a

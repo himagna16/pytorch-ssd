@@ -1,0 +1,13 @@
+Is the M10-to-outcome correlation real, or is it the suite drift?
+If it only exists between suites, it is an artefact of the floor fix.
+
+stratum                                       n  M1 tracking fr  M9 track losse  M2 heading err  M11 yaw revers
+ALL clean A/B (pooled, confounded)           76          -0.599          +0.619          +0.532          +0.425
+
+  within 2026-09-12-mirror-refly / B         19          -0.349          +0.704          +0.309          -0.042
+  within 2026-09-13-stability / A             8          -0.357          -0.357          +0.690          -0.357
+  within 2026-09-13-stability / B            24          -0.781          +0.695          +0.240          -0.192
+  within 2026-09-14-baseline-075 / B         12          -0.685          +0.545          +0.573          +0.063
+
+Within one suite AND one class, scene and floor are held fixed, so any
+correlation left is flight-to-flight and cannot come from the floor fix.
