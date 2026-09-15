@@ -59,6 +59,8 @@ fall.
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
+| Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
+| The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
 
 ## Results and their status
 
@@ -140,6 +142,44 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-15 (afternoon).** Answered two questions that had been sitting open,
+  neither of which needed the simulator.
+
+  MinHyuk suggested we try YOLOv11 nano, which he has had good results with on a
+  real drone. David warned that he had struggled to quantize YOLO models and told
+  us to look at the architecture before spending training time on it. I wrote
+  that up from the published architecture first and got the mechanism wrong, so I
+  exported the models and measured it instead. YOLOv11 nano at our input size is
+  355 nodes. Our code generator stops at node 10, on an operator it has no rule
+  for, and 21 nodes are rejected that way. The part I had missed is worse: 112
+  more nodes sit on a list the parser accepts and then silently deletes,
+  including every one of the 78 sigmoids and all 21 of the joins that build the
+  feature pyramid. So working around the first failure would not give us a YOLO,
+  it would give us a build that succeeds on a network with its skip connections
+  removed. I ran our own champion through the same check as a control and it has
+  zero rejections. The useful half of MinHyuk's suggestion survives: YOLO is
+  worth running off the drone to label the real frames we capture, which is
+  manual work right now.
+
+  The other one was the uncertainty gate, M10, which counts frames where the
+  model is neither confident enough to lock on nor unconfident enough to let go.
+  Its line was drawn for the old confidence bar and I was supposed to redraw it
+  for the new one. I re-scored all 287 flights we have and found that the band
+  moving is the least of it. The line's own stated justification is that
+  confidence sits at 0.96 or above on essentially every frame with a person, and
+  that is only true of the standing scenes. On moving scenes the model spends a
+  normal part of every flight in the uncertain band. At the old bar every static
+  flight passed the line and only half the moving flights did, so it was never
+  one line. And the number drifted by a factor of 76 across four of our own
+  suites on the same scene, because fixing the mirrored floor made the scene
+  harder. I am not going to fit a new number: all 76 clean flights use the two
+  scenes built around the one unusually easy person, so anything I fit today
+  bakes that person in exactly as the old line did. What I did instead is show
+  that a version of the measurement that does not depend on the confidence bar
+  holds its line perfectly on held-out flights where the current one covers 71%.
+  That is the change I am proposing, with the numbers left unset until the scene
+  suite covers a realistic range of people.
 
 - **2026-09-15 (overnight).** Spent the night on one question: does the
   simulator predict what the real drone will do? Nobody had checked, and the
