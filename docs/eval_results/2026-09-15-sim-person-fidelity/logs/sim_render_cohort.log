@@ -1,0 +1,32 @@
+267 subjects in stratum 'whole_upright'  (px128_h at 1 m = 155.4)
+loading annotations into memory...
+Done (t=0.15s)
+creating index...
+index created!
+  10/267 subjects, 420 frames, 16 s
+  20/267 subjects, 840 frames, 32 s
+  30/267 subjects, 1260 frames, 47 s
+  40/267 subjects, 1680 frames, 63 s
+  50/267 subjects, 2100 frames, 79 s
+  60/267 subjects, 2520 frames, 95 s
+  70/267 subjects, 2940 frames, 111 s
+  80/267 subjects, 3360 frames, 126 s
+  90/267 subjects, 3780 frames, 142 s
+  100/267 subjects, 4200 frames, 158 s
+  110/267 subjects, 4620 frames, 174 s
+  120/267 subjects, 5040 frames, 190 s
+  130/267 subjects, 5460 frames, 206 s
+  140/267 subjects, 5880 frames, 222 s
+  150/267 subjects, 6300 frames, 238 s
+  160/267 subjects, 6720 frames, 254 s
+  170/267 subjects, 7140 frames, 270 s
+  180/267 subjects, 7560 frames, 286 s
+  190/267 subjects, 7980 frames, 302 s
+  200/267 subjects, 8400 frames, 317 s
+  210/267 subjects, 8820 frames, 333 s
+  220/267 subjects, 9240 frames, 349 s
+  230/267 subjects, 9660 frames, 365 s
+  240/267 subjects, 10080 frames, 381 s
+  250/267 subjects, 10500 frames, 397 s
+  260/267 subjects, 10920 frames, 413 s
+wrote tables/sim_cohort_render.csv (11214 frames from 267 subjects, 424 s)

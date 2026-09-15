@@ -1,0 +1,66 @@
+==============================================================================
+A. IS THE SIMULATOR'S PERSON AN ORDINARY PERSON?
+==============================================================================
+COCO 19432 / ann 428692 - the cutout s15_static_offset AND s01_control_moving
+both name - against 266 other real people put through the SAME pipeline at
+the SAME range. chip arm, himax camera, dy = 0.
+
+range     px128_h  cohort median  cohort >=0.75    19432  percentile
+1.5 m       103.9          0.769          0.526    0.998       99.6%
+2.0 m        78.2          0.642          0.342    0.997      100.0%
+2.5 m        62.4          0.430          0.147    0.979      100.0%
+3.0 m        51.9          0.535          0.177    0.943       98.5%
+3.5 m        44.6          0.617          0.274    0.972       98.5%
+4.0 m        38.8          0.605          0.274    0.980       98.9%
+
+The same cutout AS A PHOTOGRAPH, against whole_upright photographs within
++/-15% of its own apparent size:
+
+arm         19432   peer n   peer median  percentile
+float       0.984       48         0.993       43.8%
+fq          0.986       48         0.993       43.8%
+chip        0.989       48         0.987       54.2%
+
+An ordinary photograph; an extreme render. The flown cells' confidence is a
+property of WHICH cutout was chosen, not of the rendering in general.
+
+==============================================================================
+B. WHAT THE RENDERING DOES TO A SCORE: compression toward a fixed point
+==============================================================================
+Paired, at matched apparent size (`is_r_match`), dy = 0, himax mean per
+subject, against that subject's own photograph on the resolution-matched
+chain. d = render - photo, regressed on the photograph's own score.
+
+--- wui ------------------------------------------------------------
+arm        n  slope (95% CI)                   r   fixed point
+float     59  -0.698 [-0.915, -0.485]     -0.618         0.604
+fq        59  -0.709 [-0.937, -0.508]     -0.625         0.586
+chip      59  -0.738 [-0.950, -0.526]     -0.661         0.622
+
+  render minus photo, by the photograph's own score (wui, chip):
+    photo in [0.0, 0.3):  n=  8   median d +0.292
+    photo in [0.3, 0.6):  n=  9   median d +0.107
+    photo in [0.6, 0.9):  n= 14   median d -0.119
+    photo in [0.9, 1.0):  n= 28   median d -0.120
+
+--- whole_upright ------------------------------------------------------------
+arm        n  slope (95% CI)                   r   fixed point
+float    204  -0.753 [-0.903, -0.607]     -0.561         0.563
+fq       204  -0.797 [-0.932, -0.659]     -0.594         0.568
+chip     204  -0.792 [-0.941, -0.651]     -0.603         0.585
+
+  render minus photo, by the photograph's own score (whole_upright, chip):
+    photo in [0.0, 0.3):  n= 10   median d +0.292
+    photo in [0.3, 0.6):  n= 17   median d +0.073
+    photo in [0.6, 0.9):  n= 52   median d -0.210
+    photo in [0.9, 1.0):  n=125   median d -0.302
+
+A slope near -0.8 with a fixed point around 0.6: the renderer does not add
+or subtract detectability, it COMPRESSES the scale. A photograph the network
+scores low is pushed UP by being rendered; one it scores high is pulled DOWN.
+That one mechanism predicts BOTH studies: the pet study's rendered dog (a
+~0.3 photograph) went up and became a false alarm; a real person (a ~0.9
+photograph) goes down. The flown person cells escape it only because their
+cutout renders in the top 1-2% of people.
+
+wrote tables/subject_selection.tsv, regression_to_middle.tsv, subject_selection.txt

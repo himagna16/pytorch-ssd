@@ -1,0 +1,10 @@
+question	arm	range_m	px128_h	n_peers	peer_median	peer_frac_ge_075	subject_value	percentile
+render_rank	chip	1.5	103.9	266	0.7689	0.5263	0.9981	99.6
+render_rank	chip	2.0	78.2	266	0.6418	0.3421	0.9967	100.0
+render_rank	chip	2.5	62.4	266	0.4300	0.1466	0.9787	100.0
+render_rank	chip	3.0	51.9	266	0.5353	0.1767	0.9427	98.5
+render_rank	chip	3.5	44.6	266	0.6171	0.2744	0.9722	98.5
+render_rank	chip	4.0	38.8	266	0.6045	0.2744	0.9797	98.9
+photo_rank	float	n/a	107.8	48	0.9929	0.8333	0.9838	43.8
+photo_rank	fq	n/a	107.8	48	0.9931	0.8333	0.9860	43.8
+photo_rank	chip	n/a	107.8	48	0.9873	0.8333	0.9888	54.2

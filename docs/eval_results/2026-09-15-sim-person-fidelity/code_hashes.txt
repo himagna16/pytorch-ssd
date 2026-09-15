@@ -1,0 +1,26 @@
+# sha256 of every file this directory imported or ran, as imported.
+# Compared against docs/eval_results/2026-09-14-baseline-075/code_hashes_after.txt
+# (the 0.75 baseline whose 0.97-0.99 person tracking fractions this study interrogates).
+
+ea639fea1b14abd12426aaaee4941468ff5402412ab1e42bda78adc2fe3bbe64  tools/crazysim_macos/build_scene.py
+481c0a9999ff19f5f2745978d3a0076cb63a225af31e19f3c4e561ab269029de  tools/crazysim_macos/camera_model.py
+8281df9fcf2c7121e7c44a0e340c3017d6930e62e4e4617e9ecfe081787e2fd5  tools/crazysim_macos/follow_person.py
+ce917647848eb55f457e772030b613f2180bfd72bad9f02e4c2d65494082175d  tools/crazysim_macos/perception_backends.py
+e0d7cbe50dd1976f97205ddaa20f92679a2869ccd4197745a7f969e8e488214d  tools/crazysim_macos/scoreboard.py
+559e7b83fe85b9a2162234bb48f1646aa7fed41015cfb90dd304f2adb362b112  tools/crazysim_macos/chip_infer_server.py
+0ab1ba56b74310538bd6cc2219c1fb672bebd7f11bf026d5cda46b53579a07ec  tools/crazysim_macos/scene_defs/s15_static_offset.json
+a5af9a9cab6f0389e6e4725520881702706f3028e7545fab7e4e7d86fb34f7cc  tools/crazysim_macos/scene_defs/s01_control_moving.json
+78946a3f93b80857d4eb9d96d9edd04d9e5a876c592aabf58ffb437909cdb310  docs/eval_results/2026-09-15-sim-pet-fidelity/scripts/champion_arms.py
+
+# this directory's own scripts
+e609b633314be98e8752734a143bfb478b89f36bea2f64cab5b2f299ea00d549  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/analyze_person.py
+77ef6ef769846fe9c68a7f64450aa2da337a84d68d9ef81e200468775f5db837  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/control_resolution.py
+1bd9adff0db21f550b83b3058e4dc2681a9958973b92bbb7752918e6b79fc506  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/make_figures.py
+16688339d161c70e96e73fdeb83423db048402ae1f54059a6c7e1c3d5a5aaa66  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/real_people.py
+75ca3512fce8548b4f4dc1f32d9d2f98cd420bb07617eff618ea5506922c6759  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/real_people_himax.py
+30a5efc8c380b564d35406eef1f405b98e85d127e8b8e3b7c67f8cf5ec3dc234  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/shared_arms.py
+f2a0961e8ec170d999136e78f2d38ebaa417d78b7c05a85559e2ea9743961305  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/sim_render_cohort.py
+c9a002df6d2b9deb4733d245303298f7a9d250bc9715be8c1245ff97c8a5e985  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/sim_render_person.py
+f6e218b1d6389f61e653f35e30ed4bd42048a15ec5d09555e9e91fee02949bf9  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/sim_score_person.py
+6922e257c53c5d444e572019acdcbf8f10ab9cb26c369d6913f2a828b5c89f23  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/subject_selection.py
+9446c078b4253fa5fc81121487f68df675181992a57865830df398fa20b2fbea  docs/eval_results/2026-09-15-sim-person-fidelity/scripts/verify_readme_numbers.py

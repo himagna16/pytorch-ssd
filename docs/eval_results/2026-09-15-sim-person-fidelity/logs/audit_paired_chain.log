@@ -1,0 +1,14 @@
+PAIRED render minus photograph, chip arm, matched apparent size, dy=0:
+  clean vs via244   matched    whole_upright  n=204  median d -0.169 [-0.237,-0.109]   >=0.75 0.755 -> 0.407   <0.45 0.069 -> 0.255
+  clean vs via244   matched    wui            n=59   median d -0.076 [-0.123,-0.032]   >=0.75 0.593 -> 0.407   <0.45 0.169 -> 0.220
+  himax vs himax    matched    whole_upright  n=204  median d -0.130 [-0.179,-0.078]   >=0.75 0.657 -> 0.373   <0.45 0.127 -> 0.245
+  himax vs himax    matched    wui            n=59   median d -0.050 [-0.113,+0.018]   >=0.75 0.593 -> 0.458   <0.45 0.254 -> 0.288
+  himax vs via244   UNMATCHED  whole_upright  n=204  median d -0.209 [-0.256,-0.156]   >=0.75 0.755 -> 0.373   <0.45 0.069 -> 0.245
+  himax vs via244   UNMATCHED  wui            n=59   median d -0.068 [-0.111,-0.033]   >=0.75 0.593 -> 0.458   <0.45 0.169 -> 0.288
+
+COMPRESSION REGRESSION vs the independence null (chip, whole_upright):
+  himax vs via244 (README)   n=204 slope_d -0.792  fixed_pt 0.585   beta(render|photo) +0.208  r +0.194  mean(render) 0.639   NULL slope -1.003 [-1.162,-0.848] fixed_pt 0.638
+  clean vs via244            n=204 slope_d -0.757  fixed_pt 0.575   beta(render|photo) +0.243  r +0.204  mean(render) 0.641   NULL slope -1.003 [-1.165,-0.854] fixed_pt 0.640
+  himax vs himax             n=204 slope_d -0.807  fixed_pt 0.607   beta(render|photo) +0.193  r +0.194  mean(render) 0.639   NULL slope -0.996 [-1.127,-0.856] fixed_pt 0.638
+
+wrote /Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-sim-person-fidelity/tables/paired_chain_matched.tsv

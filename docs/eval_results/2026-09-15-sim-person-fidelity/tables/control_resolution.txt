@@ -1,0 +1,54 @@
+==============================================================================
+CONTROL (i): IS THE 244 CHAIN A NO-OP ON THE SIM SIDE?
+==============================================================================
+A rendered AI-deck frame is 324x244, so its centre crop is natively 244 px.
+Resampling it to 244 before firmware_preprocess must change nothing at all.
+
+sim set                             n frames    max |chip - chip_via244|  n differing
+main (s15 + s01 person cells)            600                      0.0000            0
+cohort (267 rendered people)           11214                      0.0000            0
+  (float, both sim sets)               11814                      0.0000            0
+  (fq, both sim sets)                  11814                      0.0000            0
+
+VERDICT (i): PASS - bit-identical on the chip arm over every rendered frame.
+             (float/fq move by a hair because PIL BILINEAR 244->128 is not
+              the identity map even when the input is already 244; the chip
+              arm, the one that flies, is exactly unchanged.)
+
+==============================================================================
+CONTROL (ii): DOES IT MOVE THE REAL SIDE, ON THE *CHIP* ARM?
+==============================================================================
+The pet study validated this on `float` only, where PIL's antialiasing hides
+the effect, and the headline was overstated 2.5x as a result. Chip first.
+
+--- chip arm ------------------------------------------------------------
+real set                                     n  >=0.75 raw  >=0.75 via244    delta              95% CI
+all people, whole slice                   2693       0.505          0.634   +0.129   [+0.114, +0.144]
+all people, flown band 38.8-103.6 px      1262       0.551          0.704   +0.153   [+0.129, +0.176]
+whole_upright                              204       0.564          0.755   +0.191   [+0.132, +0.255]
+wui (whole+upright+isolated)                59       0.407          0.593   +0.186   [+0.102, +0.288]
+
+--- float arm ------------------------------------------------------------
+real set                                     n  >=0.75 raw  >=0.75 via244    delta              95% CI
+all people, whole slice                   2693       0.619          0.612   -0.008   [-0.014, -0.002]
+all people, flown band 38.8-103.6 px      1262       0.696          0.685   -0.010   [-0.020, -0.002]
+whole_upright                              204       0.755          0.760   +0.005   [-0.015, +0.025]
+wui (whole+upright+isolated)                59       0.559          0.593   +0.034   [+0.000, +0.085]
+
+--- fq arm ------------------------------------------------------------
+real set                                     n  >=0.75 raw  >=0.75 via244    delta              95% CI
+all people, whole slice                   2693       0.607          0.599   -0.008   [-0.015, -0.001]
+all people, flown band 38.8-103.6 px      1262       0.686          0.672   -0.014   [-0.025, -0.004]
+whole_upright                              204       0.745          0.745   +0.000   [-0.015, +0.015]
+wui (whole+upright+isolated)                59       0.559          0.559   +0.000   [+0.000, +0.000]
+
+==============================================================================
+WHY: the stride firmware_preprocess actually samples at
+==============================================================================
+real photographs: centre crop 145-640 px, median 427  ->  stride 3.34
+rendered frames : centre crop 244 px                 ->  stride 1.91
+real via244     : centre crop resampled to 244 px    ->  stride 1.91
+
+So sim `chip` pairs with real `chip_via244`, and raw `chip` on a 640-px
+photograph corresponds to nothing the drone can ever see. Every chip number
+in this directory's comparisons uses chip_via244 on the real side.

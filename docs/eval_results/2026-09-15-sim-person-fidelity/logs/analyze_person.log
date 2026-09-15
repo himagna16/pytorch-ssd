@@ -1,0 +1,374 @@
+==============================================================================
+0. WHAT IS IN EACH SET
+==============================================================================
+group                               rows  clusters         px128_h min..med..max
+real_all                            2692      2692          0.0 .. 71.4 .. 128.0
+real_whole_upright                   204       204         19.0 .. 68.8 .. 123.8
+real_wui                              59        59         23.0 .. 77.1 .. 122.5
+real_occluded_or_truncated          2488      2488          0.0 .. 71.6 .. 128.0
+realhimax_all                       8076      2692          0.0 .. 71.4 .. 128.0
+realhimax_whole_upright              612       204         19.0 .. 68.8 .. 123.8
+realhimax_wui                        177        59         23.0 .. 77.1 .. 122.5
+sim_cells_himax                      450       150         30.9 .. 56.7 .. 125.4
+sim_cells_clean                      150       150         30.9 .. 56.7 .. 125.4
+sim_cohort_himax                    5712       204         25.7 .. 62.4 .. 125.4
+sim_cohort_clean                    2856       204         25.7 .. 62.4 .. 125.4
+sim_cohort_wui_himax                1652        59         25.7 .. 62.4 .. 125.4
+
+The flown band for a 1.7 m person on the 0.8 m eye line is 38.8-103.6 px128_h (4.0 m .. 1.5 m).
+Unlike the pet study, the sim person is NOT size-capped: it reaches 120 px
+at 1.30 m, past the whole real distribution's median, so sim and real
+overlap over the whole flown band and beyond.
+
+==============================================================================
+1. CONFIDENCE VERSUS APPARENT SIZE   median [frac >= 0.75] (frac < 0.45)  n
+==============================================================================
+--- float arm, real side via244, sim side himax ------------------------
+px128_h                       real all        real whole_upright                  real wui                 SIM cells                SIM cohort
+8-15          0.52 [0.28] (0.40) n=141                         -                         -                         -                         -
+15-25         0.53 [0.28] (0.42) n=212   0.67 [0.45] (0.09) n=11    0.64 [0.00] (0.00) n=1                         -                         -
+25-40         0.75 [0.50] (0.25) n=286   0.89 [0.67] (0.13) n=39    0.51 [0.44] (0.33) n=9   0.92 [1.00] (0.00) n=90 0.49 [0.21] (0.44) n=1014
+40-55         0.87 [0.63] (0.21) n=306   0.94 [0.77] (0.10) n=31   0.86 [0.60] (0.20) n=10  0.96 [0.95] (0.00) n=120 0.50 [0.20] (0.44) n=1756
+55-80         0.90 [0.65] (0.15) n=437   0.98 [0.76] (0.11) n=45   0.73 [0.45] (0.27) n=11  0.95 [1.00] (0.00) n=108 0.48 [0.21] (0.46) n=1394
+80-129       0.96 [0.76] (0.09) n=1199   0.99 [0.85] (0.04) n=78   0.98 [0.71] (0.11) n=28  1.00 [1.00] (0.00) n=132 0.63 [0.37] (0.28) n=1548
+
+--- fq arm, real side via244, sim side himax ------------------------
+px128_h                       real all        real whole_upright                  real wui                 SIM cells                SIM cohort
+8-15          0.51 [0.26] (0.42) n=141                         -                         -                         -                         -
+15-25         0.49 [0.24] (0.43) n=212   0.69 [0.36] (0.09) n=11    0.64 [0.00] (0.00) n=1                         -                         -
+25-40         0.72 [0.47] (0.25) n=286   0.85 [0.64] (0.15) n=39    0.50 [0.44] (0.33) n=9   0.93 [1.00] (0.00) n=90 0.51 [0.22] (0.42) n=1014
+40-55         0.86 [0.61] (0.22) n=306   0.94 [0.74] (0.10) n=31   0.84 [0.50] (0.20) n=10  0.96 [0.95] (0.00) n=120 0.48 [0.20] (0.46) n=1756
+55-80         0.89 [0.64] (0.16) n=437   0.98 [0.76] (0.09) n=45   0.67 [0.45] (0.18) n=11  0.95 [1.00] (0.00) n=108 0.47 [0.20] (0.48) n=1394
+80-129       0.96 [0.76] (0.09) n=1199   0.99 [0.85] (0.04) n=78   0.98 [0.68] (0.11) n=28  1.00 [1.00] (0.00) n=132 0.59 [0.34] (0.33) n=1548
+
+--- chip arm, real side via244, sim side himax ------------------------
+px128_h                       real all        real whole_upright                  real wui                 SIM cells                SIM cohort
+8-15          0.55 [0.32] (0.34) n=141                         -                         -                         -                         -
+15-25         0.54 [0.29] (0.36) n=212   0.79 [0.55] (0.09) n=11    0.80 [1.00] (0.00) n=1                         -                         -
+25-40         0.72 [0.48] (0.22) n=286   0.90 [0.69] (0.08) n=39    0.56 [0.44] (0.22) n=9   0.90 [0.93] (0.00) n=90 0.54 [0.23] (0.37) n=1014
+40-55         0.85 [0.60] (0.19) n=306   0.91 [0.68] (0.10) n=31   0.73 [0.50] (0.20) n=10  0.93 [0.94] (0.00) n=120 0.51 [0.19] (0.41) n=1756
+55-80         0.90 [0.68] (0.12) n=437   0.94 [0.76] (0.07) n=45   0.69 [0.45] (0.18) n=11  0.94 [0.92] (0.00) n=108 0.50 [0.19] (0.44) n=1394
+80-129       0.96 [0.80] (0.07) n=1199   0.99 [0.85] (0.05) n=78   0.98 [0.71] (0.14) n=28  1.00 [1.00] (0.00) n=132 0.70 [0.44] (0.21) n=1548
+
+==============================================================================
+2. MATCHED-SIZE GAP: sim minus real, 95% cluster bootstrap
+==============================================================================
+d_median  sim median confidence minus real median confidence
+d_frac    sim fraction >= 0.75 minus real fraction >= 0.75  (the follow bar)
+d_exit    sim fraction  < 0.45 minus real fraction  < 0.45  (the let-go bar)
+A NEGATIVE d_frac or a POSITIVE d_exit means the simulator UNDERSTATES how
+hard a real person is to hold - the dangerous direction.
+
+--- sim_cells_himax  vs  real_all -----------------
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     90/286            +0.175 [+0.124,+0.243]    +0.500 [+0.441,+0.559]    -0.248 [-0.297,-0.196]
+float  40-55     120/306           +0.097 [+0.054,+0.154]    +0.323 [+0.231,+0.405]    -0.209 [-0.255,-0.167]
+float  55-80     108/437           +0.048 [+0.019,+0.087]    +0.348 [+0.302,+0.394]    -0.151 [-0.185,-0.117]
+float  80-129    132/1199          +0.040 [+0.031,+0.048]    +0.242 [+0.218,+0.266]    -0.087 [-0.103,-0.070]
+fq     25-40     90/286            +0.210 [+0.153,+0.250]    +0.535 [+0.476,+0.591]    -0.252 [-0.304,-0.203]
+fq     40-55     120/306           +0.098 [+0.067,+0.166]    +0.342 [+0.246,+0.423]    -0.219 [-0.265,-0.173]
+fq     55-80     108/437           +0.060 [+0.019,+0.102]    +0.362 [+0.314,+0.407]    -0.165 [-0.199,-0.130]
+fq     80-129    132/1199          +0.039 [+0.030,+0.047]    +0.241 [+0.216,+0.264]    -0.088 [-0.104,-0.072]
+chip   25-40     90/286            +0.174 [+0.104,+0.226]    +0.458 [+0.349,+0.545]    -0.220 [-0.269,-0.171]
+chip   40-55     120/306           +0.081 [+0.038,+0.129]    +0.337 [+0.244,+0.415]    -0.193 [-0.239,-0.150]
+chip   55-80     108/437           +0.039 [+0.005,+0.082]    +0.235 [+0.119,+0.325]    -0.124 [-0.156,-0.094]
+chip   80-129    132/1199          +0.034 [+0.027,+0.043]    +0.199 [+0.177,+0.223]    -0.066 [-0.079,-0.052]
+
+--- sim_cells_himax  vs  real_whole_upright -------
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     90/39             +0.032 [-0.013,+0.169]    +0.333 [+0.179,+0.487]    -0.128 [-0.256,-0.026]
+float  40-55     120/31            +0.022 [-0.015,+0.101]    +0.176 [+0.018,+0.355]    -0.097 [-0.226,+0.000]
+float  55-80     108/45            -0.026 [-0.046,+0.043]    +0.244 [+0.133,+0.378]    -0.111 [-0.200,-0.022]
+float  80-129    132/78            +0.007 [+0.002,+0.021]    +0.154 [+0.077,+0.231]    -0.038 [-0.090,+0.000]
+fq     25-40     90/39             +0.085 [-0.007,+0.193]    +0.359 [+0.230,+0.513]    -0.154 [-0.256,-0.051]
+fq     40-55     120/31            +0.013 [-0.016,+0.135]    +0.208 [+0.040,+0.369]    -0.097 [-0.194,+0.000]
+fq     55-80     108/45            -0.024 [-0.044,+0.047]    +0.244 [+0.133,+0.378]    -0.089 [-0.178,-0.022]
+fq     80-129    132/78            +0.008 [+0.002,+0.022]    +0.154 [+0.077,+0.231]    -0.038 [-0.090,+0.000]
+chip   25-40     90/39             +0.001 [-0.050,+0.140]    +0.241 [+0.076,+0.410]    -0.077 [-0.179,+0.000]
+chip   40-55     120/31            +0.025 [-0.055,+0.175]    +0.264 [+0.085,+0.448]    -0.097 [-0.194,+0.000]
+chip   55-80     108/45            -0.006 [-0.058,+0.052]    +0.161 [+0.006,+0.322]    -0.067 [-0.156,+0.000]
+chip   80-129    132/78            +0.010 [+0.003,+0.017]    +0.154 [+0.077,+0.231]    -0.051 [-0.103,-0.013]
+
+--- sim_cells_himax  vs  real_wui -----------------
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     90/9              +0.413 [-0.005,+0.660]    +0.556 [+0.222,+0.889]    -0.333 [-0.667,+0.000]
+float  40-55     120/10            +0.106 [-0.009,+0.473]    +0.350 [+0.050,+0.675]    -0.200 [-0.500,+0.000]
+float  55-80     108/11            +0.226 [-0.026,+0.510]    +0.545 [+0.273,+0.818]    -0.273 [-0.545,+0.000]
+float  80-129    132/28            +0.015 [+0.002,+0.164]    +0.286 [+0.107,+0.464]    -0.107 [-0.214,+0.000]
+fq     25-40     90/9              +0.435 [+0.006,+0.687]    +0.556 [+0.222,+0.889]    -0.333 [-0.667,-0.111]
+fq     40-55     120/10            +0.116 [-0.010,+0.370]    +0.450 [+0.150,+0.775]    -0.200 [-0.500,+0.000]
+fq     55-80     108/11            +0.282 [-0.023,+0.430]    +0.545 [+0.273,+0.818]    -0.182 [-0.455,+0.000]
+fq     80-129    132/28            +0.014 [+0.001,+0.200]    +0.321 [+0.143,+0.500]    -0.107 [-0.214,+0.000]
+chip   25-40     90/9              +0.343 [-0.021,+0.526]    +0.489 [+0.133,+0.800]    -0.222 [-0.556,+0.000]
+chip   40-55     120/10            +0.204 [-0.050,+0.515]    +0.442 [+0.142,+0.758]    -0.200 [-0.500,+0.000]
+chip   55-80     108/11            +0.251 [+0.022,+0.412]    +0.462 [+0.161,+0.763]    -0.182 [-0.455,+0.000]
+chip   80-129    132/28            +0.017 [-0.000,+0.141]    +0.286 [+0.143,+0.464]    -0.143 [-0.286,-0.036]
+
+--- sim_cells_himax  vs  realhimax_whole_upright --
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     90/117            +0.260 [+0.172,+0.372]    +0.641 [+0.496,+0.778]    -0.291 [-0.436,-0.154]
+float  40-55     120/93            +0.163 [+0.057,+0.259]    +0.326 [+0.151,+0.505]    -0.151 [-0.280,-0.043]
+float  55-80     108/135           +0.100 [+0.013,+0.235]    +0.415 [+0.274,+0.556]    -0.133 [-0.244,-0.044]
+float  80-129    132/234           +0.062 [+0.025,+0.106]    +0.218 [+0.132,+0.316]    -0.090 [-0.158,-0.034]
+fq     25-40     90/117            +0.348 [+0.209,+0.434]    +0.709 [+0.573,+0.838]    -0.325 [-0.470,-0.179]
+fq     40-55     120/93            +0.175 [+0.074,+0.289]    +0.423 [+0.233,+0.606]    -0.194 [-0.355,-0.065]
+fq     55-80     108/135           +0.153 [+0.041,+0.274]    +0.452 [+0.319,+0.593]    -0.163 [-0.274,-0.067]
+fq     80-129    132/234           +0.079 [+0.037,+0.158]    +0.248 [+0.154,+0.350]    -0.098 [-0.167,-0.038]
+chip   25-40     90/117            +0.263 [+0.146,+0.344]    +0.600 [+0.434,+0.747]    -0.231 [-0.376,-0.111]
+chip   40-55     120/93            +0.100 [+0.008,+0.174]    +0.243 [+0.078,+0.412]    -0.151 [-0.290,-0.032]
+chip   55-80     108/135           +0.078 [-0.004,+0.154]    +0.191 [+0.033,+0.337]    -0.104 [-0.193,-0.030]
+chip   80-129    132/234           +0.055 [+0.022,+0.097]    +0.201 [+0.120,+0.286]    -0.077 [-0.141,-0.026]
+
+--- sim_cohort_himax  vs  real_whole_upright ------
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     1014/39           -0.400 [-0.459,-0.245]    -0.458 [-0.606,-0.310]    +0.316 [+0.187,+0.426]
+float  40-55     1756/31           -0.445 [-0.501,-0.343]    -0.574 [-0.719,-0.413]    +0.343 [+0.214,+0.451]
+float  55-80     1394/45           -0.498 [-0.540,-0.418]    -0.545 [-0.674,-0.406]    +0.351 [+0.244,+0.451]
+float  80-129    1548/78           -0.361 [-0.404,-0.298]    -0.474 [-0.568,-0.369]    +0.246 [+0.177,+0.310]
+fq     25-40     1014/39           -0.335 [-0.430,-0.229]    -0.419 [-0.580,-0.257]    +0.261 [+0.126,+0.382]
+fq     40-55     1756/31           -0.467 [-0.511,-0.329]    -0.545 [-0.697,-0.386]    +0.362 [+0.245,+0.469]
+fq     55-80     1394/45           -0.509 [-0.554,-0.425]    -0.558 [-0.688,-0.420]    +0.387 [+0.283,+0.474]
+fq     80-129    1548/78           -0.404 [-0.455,-0.340]    -0.510 [-0.603,-0.407]    +0.296 [+0.224,+0.363]
+chip   25-40     1014/39           -0.363 [-0.430,-0.218]    -0.464 [-0.615,-0.309]    +0.295 [+0.183,+0.390]
+chip   40-55     1756/31           -0.396 [-0.481,-0.236]    -0.491 [-0.655,-0.307]    +0.310 [+0.182,+0.414]
+chip   55-80     1394/45           -0.448 [-0.508,-0.390]    -0.561 [-0.684,-0.430]    +0.369 [+0.268,+0.454]
+chip   80-129    1548/78           -0.283 [-0.334,-0.234]    -0.404 [-0.504,-0.300]    +0.163 [+0.092,+0.229]
+
+--- sim_cohort_wui_himax  vs  real_wui ------------
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     276/9             +0.027 [-0.385,+0.247]    -0.191 [-0.550,+0.146]    +0.072 [-0.284,+0.375]
+float  40-55     512/10            -0.351 [-0.515,-0.000]    -0.350 [-0.648,-0.029]    +0.236 [-0.059,+0.486]
+float  55-80     396/11            -0.252 [-0.524,+0.061]    -0.230 [-0.547,+0.079]    +0.202 [-0.107,+0.462]
+float  80-129    468/28            -0.295 [-0.385,-0.122]    -0.300 [-0.482,-0.099]    +0.143 [-0.009,+0.282]
+fq     25-40     276/9             +0.041 [-0.378,+0.286]    -0.184 [-0.524,+0.143]    +0.062 [-0.303,+0.369]
+fq     40-55     512/10            -0.351 [-0.535,-0.002]    -0.254 [-0.562,+0.080]    +0.259 [-0.022,+0.492]
+fq     55-80     396/11            -0.201 [-0.532,-0.036]    -0.245 [-0.542,+0.053]    +0.301 [+0.025,+0.522]
+fq     80-129    468/28            -0.335 [-0.415,-0.136]    -0.296 [-0.493,-0.088]    +0.183 [+0.019,+0.328]
+chip   25-40     276/9             +0.007 [-0.394,+0.205]    -0.180 [-0.524,+0.141]    +0.136 [-0.177,+0.396]
+chip   40-55     512/10            -0.219 [-0.479,+0.030]    -0.256 [-0.568,+0.054]    +0.208 [-0.081,+0.447]
+chip   55-80     396/11            -0.174 [-0.414,-0.003]    -0.240 [-0.537,+0.055]    +0.222 [-0.058,+0.436]
+chip   80-129    468/28            -0.233 [-0.341,-0.111]    -0.216 [-0.407,-0.024]    +0.052 [-0.106,+0.205]
+
+--- sim_cohort_himax  vs  realhimax_whole_upright -
+arm    bin       n sim/real                      d_median                    d_frac                    d_exit
+float  25-40     1014/117          -0.172 [-0.269,-0.034]    -0.150 [-0.305,-0.005]    +0.153 [+0.005,+0.302]
+float  40-55     1756/93           -0.304 [-0.416,-0.203]    -0.423 [-0.587,-0.240]    +0.289 [+0.155,+0.410]
+float  55-80     1394/135          -0.371 [-0.468,-0.226]    -0.375 [-0.521,-0.231]    +0.329 [+0.206,+0.431]
+float  80-129    1548/234          -0.306 [-0.369,-0.227]    -0.410 [-0.518,-0.300]    +0.194 [+0.115,+0.272]
+fq     25-40     1014/117          -0.071 [-0.210,+0.043]    -0.069 [-0.211,+0.066]    +0.090 [-0.079,+0.248]
+fq     40-55     1756/93           -0.305 [-0.412,-0.177]    -0.330 [-0.501,-0.160]    +0.265 [+0.114,+0.400]
+fq     55-80     1394/135          -0.333 [-0.460,-0.196]    -0.351 [-0.502,-0.195]    +0.313 [+0.191,+0.426]
+fq     80-129    1548/234          -0.333 [-0.402,-0.229]    -0.416 [-0.524,-0.309]    +0.236 [+0.150,+0.314]
+chip   25-40     1014/117          -0.101 [-0.230,-0.017]    -0.106 [-0.262,+0.035]    +0.141 [-0.004,+0.277]
+chip   40-55     1756/93           -0.321 [-0.416,-0.232]    -0.512 [-0.672,-0.351]    +0.257 [+0.110,+0.380]
+chip   55-80     1394/135          -0.364 [-0.447,-0.288]    -0.532 [-0.663,-0.402]    +0.332 [+0.230,+0.427]
+chip   80-129    1548/234          -0.239 [-0.302,-0.173]    -0.357 [-0.459,-0.258]    +0.137 [+0.058,+0.210]
+
+==============================================================================
+3. THE PAIRED TEST: the SAME person, as a photograph and as a card
+==============================================================================
+204 whole/upright/untruncated people (of 267 rendered; the rest fell out when the
+centre-crop rule was tightened), each rendered at the range where the
+card subtends exactly what that person subtends in their own photograph's
+centre crop (`is_r_match`). Identity, pose, clothing and apparent size are
+held fixed; what is left is the simulator. Paired difference, render minus
+photograph, bootstrap over SUBJECTS.
+
+float whole_upright  n=204  median d -0.215 [-0.275,-0.157]   >=0.75 photo 0.760 -> render 0.382 (-0.377 [-0.451,-0.299])   <0.45 0.083 -> 0.260 (+0.176)
+fq    whole_upright  n=204  median d -0.229 [-0.277,-0.147]   >=0.75 photo 0.745 -> render 0.348 (-0.397 [-0.475,-0.314])   <0.45 0.083 -> 0.265 (+0.181)
+chip  whole_upright  n=204  median d -0.209 [-0.255,-0.156]   >=0.75 photo 0.755 -> render 0.373 (-0.382 [-0.466,-0.299])   <0.45 0.069 -> 0.245 (+0.176)
+float wui            n=59   median d -0.051 [-0.123,-0.016]   >=0.75 photo 0.593 -> render 0.441 (-0.153 [-0.288,-0.017])   <0.45 0.186 -> 0.288 (+0.102)
+fq    wui            n=59   median d -0.049 [-0.169,-0.019]   >=0.75 photo 0.559 -> render 0.356 (-0.203 [-0.339,-0.068])   <0.45 0.169 -> 0.288 (+0.119)
+chip  wui            n=59   median d -0.068 [-0.127,-0.033]   >=0.75 photo 0.593 -> render 0.458 (-0.136 [-0.288,+0.017])   <0.45 0.169 -> 0.288 (+0.119)
+
+
+==============================================================================
+4. SIZE-STANDARDISED OVER THE FLOWN BAND
+==============================================================================
+The sim's own size mix is applied to the real photographs, so neither side
+can win on its size distribution. Flown band only (38.8-103.6 px).
+
+sim                     real                        arm      sim>=.75  real>=.75   ratio  sim<.45  real<.45   ratio
+sim_cells_himax         real_all                    float       0.979      0.652    1.50    0.000     0.168    0.00
+sim_cells_himax         real_all                    fq          0.979      0.633    1.54    0.000     0.180    0.00
+sim_cells_himax         real_all                    chip        0.943      0.655    1.44    0.000     0.149    0.00
+sim_cells_himax         real_whole_upright          float       0.979      0.773    1.27    0.000     0.102    0.00
+sim_cells_himax         real_whole_upright          fq          0.979      0.762    1.28    0.000     0.094    0.00
+sim_cells_himax         real_whole_upright          chip        0.943      0.732    1.29    0.000     0.085    0.00
+sim_cells_himax         real_wui                    float       0.978      0.546    1.79    0.000     0.227    0.00
+sim_cells_himax         real_wui                    fq          0.978      0.501    1.95    0.000     0.191    0.00
+sim_cells_himax         real_wui                    chip        0.941      0.492    1.91    0.000     0.191    0.00
+sim_cells_himax         realhimax_whole_upright     float       0.979      0.625    1.57    0.000     0.138    0.00
+sim_cells_himax         realhimax_whole_upright     fq          0.979      0.548    1.78    0.000     0.169    0.00
+sim_cells_himax         realhimax_whole_upright     chip        0.943      0.713    1.32    0.000     0.128    0.00
+
+sim_cohort_himax        real_all                    float       0.218      0.645    0.34    0.442     0.170    2.59
+sim_cohort_himax        real_all                    fq          0.208      0.621    0.33    0.457     0.184    2.48
+sim_cohort_himax        real_all                    chip        0.222      0.641    0.35    0.397     0.155    2.55
+sim_cohort_himax        real_whole_upright          float       0.218      0.772    0.28    0.442     0.111    3.99
+sim_cohort_himax        real_whole_upright          fq          0.208      0.762    0.27    0.457     0.103    4.42
+sim_cohort_himax        real_whole_upright          chip        0.222      0.732    0.30    0.397     0.096    4.14
+sim_cohort_himax        real_wui                    float       0.224      0.550    0.41    0.430     0.225    1.91
+sim_cohort_himax        real_wui                    fq          0.212      0.504    0.42    0.450     0.191    2.35
+sim_cohort_himax        real_wui                    chip        0.228      0.493    0.46    0.390     0.191    2.04
+sim_cohort_himax        realhimax_whole_upright     float       0.218      0.620    0.35    0.442     0.145    3.05
+sim_cohort_himax        realhimax_whole_upright     fq          0.208      0.521    0.40    0.457     0.174    2.63
+sim_cohort_himax        realhimax_whole_upright     chip        0.222      0.700    0.32    0.397     0.136    2.92
+
+sim_cohort_wui_himax    real_all                    float       0.248      0.644    0.39    0.439     0.171    2.56
+sim_cohort_wui_himax    real_all                    fq          0.236      0.621    0.38    0.455     0.185    2.46
+sim_cohort_wui_himax    real_all                    chip        0.263      0.640    0.41    0.389     0.156    2.49
+sim_cohort_wui_himax    real_whole_upright          float       0.248      0.772    0.32    0.439     0.110    3.97
+sim_cohort_wui_himax    real_whole_upright          fq          0.236      0.761    0.31    0.455     0.103    4.41
+sim_cohort_wui_himax    real_whole_upright          chip        0.263      0.731    0.36    0.389     0.096    4.06
+sim_cohort_wui_himax    real_wui                    float       0.256      0.551    0.47    0.432     0.225    1.92
+sim_cohort_wui_himax    real_wui                    fq          0.244      0.503    0.49    0.450     0.191    2.35
+sim_cohort_wui_himax    real_wui                    chip        0.272      0.493    0.55    0.381     0.191    1.99
+sim_cohort_wui_himax    realhimax_whole_upright     float       0.248      0.619    0.40    0.439     0.145    3.03
+sim_cohort_wui_himax    realhimax_whole_upright     fq          0.236      0.521    0.45    0.455     0.174    2.61
+sim_cohort_wui_himax    realhimax_whole_upright     chip        0.263      0.700    0.38    0.389     0.136    2.86
+
+==============================================================================
+4b. THE HOLD BAND - the sizes the follower actually spends its time at
+==============================================================================
+The four person cells of the 0.75 baseline settle at 1.55-2.45 m from the
+person (`M7_dist_err_settled`, target 1.94 m; per-cell means 1.63 / 1.74 /
+1.87 / 2.00 / 2.19 / 2.44, repeat range 1.55-2.44). For a 1.7 m person that
+is px128_h 63.4-100.2.
+
+The pet study's correction 0a.3: an AND of a range filter and a size filter
+is not one band named twice. Both cuts are given. The SIZE cut is the one
+that is matched to the real side; the range cut is the sim's own geometry.
+
+group                         cut                   arm         n   median   >=0.75   <0.45
+real_all                      size 63.4-100.2 px    float     697    0.939    0.723   0.106
+real_all                      size 63.4-100.2 px    fq        697    0.933    0.719   0.113
+real_all                      size 63.4-100.2 px    chip      697    0.936    0.750   0.085
+
+real_whole_upright            size 63.4-100.2 px    float      81    0.987    0.790   0.074
+real_whole_upright            size 63.4-100.2 px    fq         81    0.984    0.802   0.062
+real_whole_upright            size 63.4-100.2 px    chip       81    0.984    0.778   0.049
+
+real_wui                      size 63.4-100.2 px    float      21    0.878    0.524   0.190
+real_wui                      size 63.4-100.2 px    fq         21    0.855    0.524   0.143
+real_wui                      size 63.4-100.2 px    chip       21    0.731    0.476   0.143
+
+realhimax_whole_upright       size 63.4-100.2 px    float     243    0.910    0.704   0.107
+realhimax_whole_upright       size 63.4-100.2 px    fq        243    0.871    0.683   0.128
+realhimax_whole_upright       size 63.4-100.2 px    chip      243    0.906    0.749   0.095
+
+sim_cells_himax               size 63.4-100.2 px    float     102    0.991    1.000   0.000
+sim_cells_himax               size 63.4-100.2 px    fq        102    0.992    1.000   0.000
+sim_cells_himax               size 63.4-100.2 px    chip      102    0.978    1.000   0.000
+sim_cells_himax               range 1.55-2.45 m     float      90    0.993    1.000   0.000
+sim_cells_himax               range 1.55-2.45 m     fq         90    0.994    1.000   0.000
+sim_cells_himax               range 1.55-2.45 m     chip       90    0.986    1.000   0.000
+sim_cells_himax               range AND size        float      90    0.993    1.000   0.000
+sim_cells_himax               range AND size        fq         90    0.994    1.000   0.000
+sim_cells_himax               range AND size        chip       90    0.986    1.000   0.000
+
+sim_cohort_himax              size 63.4-100.2 px    float    1542    0.538    0.259   0.398
+sim_cohort_himax              size 63.4-100.2 px    fq       1542    0.519    0.243   0.414
+sim_cohort_himax              size 63.4-100.2 px    chip     1542    0.585    0.294   0.333
+sim_cohort_himax              range 1.55-2.45 m     float    1140    0.592    0.311   0.320
+sim_cohort_himax              range 1.55-2.45 m     fq       1140    0.566    0.293   0.343
+sim_cohort_himax              range 1.55-2.45 m     chip     1140    0.651    0.359   0.238
+sim_cohort_himax              range AND size        float    1126    0.594    0.311   0.320
+sim_cohort_himax              range AND size        fq       1126    0.569    0.295   0.344
+sim_cohort_himax              range AND size        chip     1126    0.652    0.360   0.237
+
+==============================================================================
+5. IS IT THE CAMERA MODEL? raw photo -> +244 resample -> +resample+sensor
+==============================================================================
+The pet study's correction 0a.2: the himax real arm resizes to 244 BEFORE
+the sensor model, so it carries resampling AND sensor. Split, on the same
+photographs, flown band only.
+
+arm    stratum         metric             raw    +244  +244+sens  resample   sensor     n
+float  all             frac_ge_0.75     0.696   0.686      0.536    -0.010   -0.150  1261
+float  all             frac_lt_0.45     0.136   0.142      0.218    +0.006   +0.076  1261
+float  all             median           0.921   0.919      0.790    -0.003   -0.129  1261
+float  whole_upright   frac_ge_0.75     0.794   0.787      0.667    -0.007   -0.120   136
+float  whole_upright   frac_lt_0.45     0.074   0.088      0.120    +0.015   +0.032   136
+float  whole_upright   median           0.977   0.974      0.872    -0.003   -0.102   136
+float  wui             frac_ge_0.75     0.541   0.568      0.532    +0.027   -0.036    37
+float  wui             frac_lt_0.45     0.189   0.216      0.270    +0.027   +0.054    37
+float  wui             median           0.910   0.917      0.774    +0.007   -0.143    37
+
+fq     all             frac_ge_0.75     0.687   0.672      0.505    -0.014   -0.168  1261
+fq     all             frac_lt_0.45     0.140   0.150      0.241    +0.010   +0.091  1261
+fq     all             median           0.913   0.913      0.755    -0.000   -0.158  1261
+fq     whole_upright   frac_ge_0.75     0.787   0.787      0.610    +0.000   -0.176   136
+fq     whole_upright   frac_lt_0.45     0.066   0.081      0.142    +0.015   +0.061   136
+fq     whole_upright   median           0.975   0.967      0.820    -0.008   -0.147   136
+fq     wui             frac_ge_0.75     0.541   0.541      0.495    +0.000   -0.045    37
+fq     wui             frac_lt_0.45     0.162   0.189      0.297    +0.027   +0.108    37
+fq     wui             median           0.877   0.866      0.748    -0.011   -0.118    37
+
+chip   all             frac_ge_0.75     0.551   0.704      0.581    +0.153   -0.123  1261
+chip   all             frac_lt_0.45     0.221   0.119      0.177    -0.102   +0.058  1261
+chip   all             median           0.807   0.915      0.814    +0.107   -0.100  1261
+chip   whole_upright   frac_ge_0.75     0.610   0.765      0.735    +0.154   -0.029   136
+chip   whole_upright   frac_lt_0.45     0.184   0.074      0.113    -0.110   +0.039   136
+chip   whole_upright   median           0.856   0.965      0.869    +0.109   -0.097   136
+chip   wui             frac_ge_0.75     0.405   0.514      0.640    +0.108   +0.126    37
+chip   wui             frac_lt_0.45     0.351   0.189      0.252    -0.162   +0.063    37
+chip   wui             median           0.599   0.762      0.841    +0.164   +0.079    37
+
+==============================================================================
+6. THE EXIT BAR: how often each side falls below 0.45
+==============================================================================
+Below 0.45 the follower drops the track. This is the number that decides
+whether the drone lets go of someone it was following.
+
+group                         arm          n  frac < 0.45   median
+real_all                      float     1261        0.142    0.919
+real_all                      fq        1261        0.150    0.913
+real_all                      chip      1261        0.119    0.915
+
+real_whole_upright            float      136        0.088    0.974
+real_whole_upright            fq         136        0.081    0.967
+real_whole_upright            chip       136        0.074    0.965
+
+real_wui                      float       37        0.216    0.917
+real_wui                      fq          37        0.189    0.866
+real_wui                      chip        37        0.189    0.762
+
+real_occluded_or_truncated    float     1125        0.148    0.906
+real_occluded_or_truncated    fq        1125        0.158    0.900
+real_occluded_or_truncated    chip      1125        0.124    0.907
+
+realhimax_whole_upright       float      408        0.120    0.872
+realhimax_whole_upright       fq         408        0.142    0.820
+realhimax_whole_upright       chip       408        0.113    0.869
+
+sim_cells_himax               float      282        0.000    0.964
+sim_cells_himax               fq         282        0.000    0.962
+sim_cells_himax               chip       282        0.000    0.940
+
+sim_cohort_himax              float     4188        0.442    0.499
+sim_cohort_himax              fq        4188        0.457    0.479
+sim_cohort_himax              chip      4188        0.397    0.522
+
+sim_cohort_wui_himax          float     1196        0.439    0.513
+sim_cohort_wui_himax          fq        1196        0.455    0.500
+sim_cohort_wui_himax          chip      1196        0.389    0.525
+
+==============================================================================
+7. THE SIM'S OWN PERSON, BOTH WAYS (COCO 19432 / ann 428692)
+==============================================================================
+the photograph subtends px128_h = 107.77 in its own centre crop;
+the flown eye line reaches that size at r = 1.44 m, INSIDE the band the
+drone flies - so this pair needs no padding and no invented surround, which
+is exactly what the pet study could not do for its dog (51.9 px cap).
+
+arm    camera      photo   render        d   (render at r=1.44, dy=0)
+float  clean       0.984    0.996   +0.012
+fq     clean       0.986    0.996   +0.010
+chip   clean       0.989    0.997   +0.008
+
+float  himax       0.993    0.999   +0.006
+fq     himax       0.995    0.999   +0.005
+chip   himax       0.997    0.999   +0.002
+
+wrote tables/*.tsv and tables/analysis.txt

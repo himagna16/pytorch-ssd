@@ -1,0 +1,6 @@
+champion_arms.py sha256 78946a3f93b80857d4eb9d96d9edd04d9e5a876c592aabf58ffb437909cdb310
+arms: {"float": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth", "head": "xbin9_size_bucket4"}, "fq": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3.pth", "how": "learned QAT alphas, 8 bit"}, "chip": {"backend": "chip", "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_
+  400/600  (3 s)
+cross-check: max |float - build_scene.run_model| = 0.00e+00 over 600 frames
+SIM-SIDE CONTROL: max |chip - chip_via244| = 0.0000 over 600 frames (0 frames differ at all)
+wrote tables/sim_person.csv

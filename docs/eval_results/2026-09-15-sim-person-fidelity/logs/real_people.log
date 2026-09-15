@@ -1,0 +1,31 @@
+champion_arms.py sha256 78946a3f93b80857d4eb9d96d9edd04d9e5a876c592aabf58ffb437909cdb310
+arms: {"float": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth", "head": "xbin9_size_bucket4"}, "fq": {"ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3.pth", "how": "learned QAT alphas, 8 bit"}, "chip": {"backend": "chip", "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_
+  200 images
+  400 images
+  600 images
+  800 images
+  1000 images
+  1200 images
+  1400 images
+  1600 images
+  1800 images
+  2000 images
+  2200 images
+  2400 images
+  2600 images
+
+n = 2693 images with a non-crowd person
+  all_people                     n = 2693
+  whole_upright                  n = 204
+  wui (whole+upright+isolated)   n = 59
+  occluded_or_truncated          n = 2489
+  sim source photograph present: 1
+
+whole-slice rates (NOT the comparison - see analyze_person.py):
+  float        >=0.45 0.819  >=0.75 0.619  <0.45 0.181  median 0.870
+  float_via244 >=0.45 0.817  >=0.75 0.612  <0.45 0.183  median 0.858
+  fq           >=0.45 0.815  >=0.75 0.607  <0.45 0.185  median 0.864
+  fq_via244    >=0.45 0.808  >=0.75 0.599  <0.45 0.192  median 0.854
+  chip         >=0.45 0.739  >=0.75 0.505  <0.45 0.261  median 0.755
+  chip_via244  >=0.45 0.843  >=0.75 0.634  <0.45 0.157  median 0.877
+wrote tables/real_people.csv

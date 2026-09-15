@@ -1,0 +1,11 @@
+CHECKED 295 scalar claims: PASS 295, FAIL 0
+CHECKED 8 structural claims:
+   ok 48 sim_cells cells   (got 48)
+   ok 84 matched_gap cells   (got 84)
+   ok d_median positive in 45 of 48   (got 45)
+   ok d_frac positive in all 48   (got 0.1538)
+   ok no d_frac interval crosses zero   (got 0)
+   ok d_exit negative in all 48   (got -0.0385)
+   ok d_exit interval excludes zero in 31   (got 31)
+   ok d_frac range +0.154 .. +0.709   (got (0.1538, 0.7094))
+ALL CLAIMS VERIFIED
