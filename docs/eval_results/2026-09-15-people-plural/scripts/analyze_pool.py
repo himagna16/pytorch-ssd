@@ -8,6 +8,7 @@ hand.
 Usage: nemoenv/bin/python analyze_pool.py <outdir>
 """
 import csv
+import itertools
 import json
 import sys
 from pathlib import Path
@@ -95,19 +96,33 @@ def main():
         who = cid.split("__")[1]
         ve, vx, cf, rec = SB.latch_rule(summary)
         w, sf = panel_geom(cell["scene"])
-        trk = [1 if SB.fnum(r, "tracking") > 0.5 else 0
-               for r in rows if r.get("event", "") == ""]
-        t = [SB.fnum(r, "t") for r in rows if r.get("event", "") == ""]
+        flown = [r for r in rows if r.get("event", "") == ""]
+        trk = np.array([1 if SB.fnum(r, "tracking") > 0.5 else 0 for r in flown])
+        t = np.array([SB.fnum(r, "t") for r in flown])
+        conf = np.array([SB.fnum(r, "conf") for r in flown])
+        dt = np.diff(t, prepend=t[0])
         first = next((tt - t[0] for tt, x in zip(t, trk) if x), None)
+        # A flight that NEVER latched has zero M9 losses, byte-identical to a
+        # flight that tracked perfectly, because scoreboard.py:564 builds the
+        # loss list only from a 1->0 transition. These three do not have that
+        # blind spot; the precursor's analyze_typical.py introduced them for
+        # exactly this reason.
+        untracked_s = float(np.sum(dt[trk == 0]))
+        above = conf >= ve
+        runs_ = [len(list(g)) for k, g in itertools.groupby(above) if k]
         flights.append({
             "run": rd.name, "cell": cid, "subject": who,
             "cls": cell["scene_class"], "scene": cell["scene"],
             "repeat": cell["repeat"], "attempt": cell["attempt"],
             "index_pct": (ctl if who == "control" else subj[who])["index_pct"],
+            "conf_flown_range": (ctl if who == "control" else subj[who])["conf_flown_range"],
             "panel_w_m": round(w, 4), "subject_fraction": round(sf, 4),
             "M1": m.get("M1_tracking_fraction"),
             "ever_latched": int(any(trk)),
             "time_to_first_latch_s": None if first is None else round(float(first), 2),
+            "untracked_time_total_s": round(untracked_s, 2),
+            "frames_above_enter": int(above.sum()),
+            "longest_above_enter_run": max(runs_) if runs_ else 0,
             "M9_losses": len(m.get("M9_track_outage_all_s") or []),
             "M10_p05": m.get("M10_conf_p05_present"),
             "M2_mean": m.get("M2_heading_err_mean_deg"),
@@ -173,44 +188,87 @@ def main():
               f"M1 median {np.median([f['M1'] for f in p]):.3f}")
     print()
 
-    # ---- subject-level relationship, with the covariates -------------------
+    # ---- the estimand: a two-group contrast, NOT a slope --------------------
+    # The 12 subjects sit in two clouds, index 28.4-52.1 (n=5) and 86.8-93.9
+    # (n=7), with a 34.7-point hole. Every step function with a threshold
+    # anywhere in that hole fits the data identically, so a correlation or a
+    # slope over the 12 would look like a dose-response curve while measuring
+    # only "the two clouds differ". The estimand is the contrast; rank
+    # correlations are printed as diagnostics with the identified set beside
+    # them, never as the headline.
+    LOW_MAX, HIGH_MIN = 52.1, 86.8
     print("=" * 92)
-    print("Does detectability predict flight?  Subject-level, pool only (control excluded:")
-    print("it did not pass the screen its peers passed, so it is a reference, not a sample).")
+    print("THE ESTIMAND: low group (index <= 52.1, n=5) vs high group (index >= 86.8, n=7)")
+    print("Control excluded: it has wui == 0 and would not pass the screen its peers passed.")
     print("=" * 92)
     for cls, name in (("A", "static"), ("B", "moving")):
         g = [f for f in flights if f["cls"] == cls and f["subject"] != "control"]
         if not g:
             continue
         subs = sorted({f["subject"] for f in g})
-        idx, lat, m1, wid, sf = [], [], [], [], []
-        for s in subs:
-            h = [f for f in g if f["subject"] == s]
-            idx.append(h[0]["index_pct"])
-            lat.append(np.mean([f["ever_latched"] for f in h]))
-            m1.append(np.mean([f["M1"] for f in h if f["M1"] is not None]))
-            wid.append(h[0]["panel_w_m"])
-            sf.append(h[0]["subject_fraction"])
-        print(f"  {name}, n = {len(subs)} subjects")
-        print(f"    Spearman(index, latch rate)       = {spearman(idx, lat):+.3f}")
-        print(f"    Spearman(index, mean M1)          = {spearman(idx, m1):+.3f}")
-        print(f"    Spearman(panel width, latch rate) = {spearman(wid, lat):+.3f}   <- covariate")
-        print(f"    Spearman(subj fraction, latch)    = {spearman(sf, lat):+.3f}   <- covariate")
-        hi = [i for i, v in enumerate(idx) if v >= 60]
-        if len(hi) >= 5:
-            print(f"    within the HIGH cluster (n={len(hi)}, index "
-                  f"{min(idx[i] for i in hi):.1f}-{max(idx[i] for i in hi):.1f}):")
-            print(f"      Spearman(index, latch) = {spearman([idx[i] for i in hi], [lat[i] for i in hi]):+.3f}"
-                  f"   Spearman(width, latch) = {spearman([wid[i] for i in hi], [lat[i] for i in hi]):+.3f}")
-        # cluster bootstrap over subjects for the pooled latch rate
-        boot = []
-        for _ in range(10000):
-            pick = RNG.choice(len(subs), len(subs), replace=True)
-            boot.append(np.mean([lat[i] for i in pick]))
-        print(f"    pooled subject-level latch rate {np.mean(lat):.3f} "
-              f"[{np.percentile(boot, 2.5):.3f}, {np.percentile(boot, 97.5):.3f}] "
-              f"(cluster bootstrap over subjects, 10k)")
+        rec = {}
+        for sname in subs:
+            h = [f for f in g if f["subject"] == sname]
+            rec[sname] = {
+                "index": h[0]["index_pct"], "conf": h[0]["conf_flown_range"],
+                "width": h[0]["panel_w_m"], "sf": h[0]["subject_fraction"],
+                "latch": float(np.mean([f["ever_latched"] for f in h])),
+                "m1": float(np.mean([f["M1"] for f in h if f["M1"] is not None])),
+                "untracked": float(np.mean([f["untracked_time_total_s"] for f in h])),
+                "longrun": float(np.mean([f["longest_above_enter_run"] for f in h])),
+                "n": len(h)}
+        lo = [v for v in rec.values() if v["index"] <= LOW_MAX]
+        hi = [v for v in rec.values() if v["index"] >= HIGH_MIN]
+        if not lo or not hi:
+            continue
+        for key, lbl in (("latch", "latch rate"), ("m1", "mean M1")):
+            dl = np.mean([v[key] for v in lo]); dh = np.mean([v[key] for v in hi])
+            boot = []
+            for _ in range(20000):
+                a = RNG.choice(len(lo), len(lo), replace=True)
+                b = RNG.choice(len(hi), len(hi), replace=True)
+                boot.append(np.mean([lo[i][key] for i in a]) - np.mean([hi[i][key] for i in b]))
+            print(f"  {name:>7} {lbl:<11} low {dl:.3f}  high {dh:.3f}  "
+                  f"difference {dl - dh:+.3f} "
+                  f"[{np.percentile(boot, 2.5):+.3f}, {np.percentile(boot, 97.5):+.3f}]  "
+                  f"(cluster bootstrap over subjects, 20k)")
+        print(f"  {name:>7} untracked s  low {np.mean([v['untracked'] for v in lo]):.1f}  "
+              f"high {np.mean([v['untracked'] for v in hi]):.1f}     "
+              f"longest run >=0.75 (need 3): low {np.mean([v['longrun'] for v in lo]):.1f}  "
+              f"high {np.mean([v['longrun'] for v in hi]):.1f}")
         print()
+
+    print("=" * 92)
+    print("DIAGNOSTICS ONLY - these are ranks over 12 points in two clouds")
+    print("=" * 92)
+    print("  No subject was flown with an index between 52.1 and 86.8, so the location and")
+    print("  shape of the transition are NOT estimated. Any threshold in that interval fits.")
+    print("  In confidence terms the unflown gap is 0.653 to 0.833 mean chip confidence at")
+    print("  the flown range; the follower's own 0.75 enter bar lies inside it.")
+    for cls, name in (("A", "static"), ("B", "moving")):
+        g = [f for f in flights if f["cls"] == cls and f["subject"] != "control"]
+        if not g:
+            continue
+        subs = sorted({f["subject"] for f in g})
+        idx, cf, lat, wid, sf = [], [], [], [], []
+        for sname in subs:
+            h = [f for f in g if f["subject"] == sname]
+            idx.append(h[0]["index_pct"]); cf.append(h[0]["conf_flown_range"])
+            wid.append(h[0]["panel_w_m"]); sf.append(h[0]["subject_fraction"])
+            lat.append(np.mean([f["ever_latched"] for f in h]))
+        print(f"  {name}, n = {len(subs)} subjects")
+        print(f"    rho(index, latch) {spearman(idx, lat):+.3f}   "
+              f"rho(conf@flown, latch) {spearman(cf, lat):+.3f}   "
+              f"rho(width, latch) {spearman(wid, lat):+.3f}   "
+              f"rho(subj frac, latch) {spearman(sf, lat):+.3f}")
+        hicl = [i for i, v in enumerate(idx) if v >= HIGH_MIN]
+        if len(hicl) >= 5:
+            print(f"    WITHIN the high cloud (n={len(hicl)}, index "
+                  f"{min(idx[i] for i in hicl):.1f}-{max(idx[i] for i in hicl):.1f}): "
+                  f"rho(index) {spearman([idx[i] for i in hicl], [lat[i] for i in hicl]):+.3f}  "
+                  f"rho(width) {spearman([wid[i] for i in hicl], [lat[i] for i in hicl]):+.3f}")
+            print("      If width beat index here, the trend would be the card, not the person.")
+    print()
 
     json.dump(flights, open(OUT / "tables/flights.json", "w"), indent=1)
     print(f"wrote tables/flights.tsv and tables/flights.json")
