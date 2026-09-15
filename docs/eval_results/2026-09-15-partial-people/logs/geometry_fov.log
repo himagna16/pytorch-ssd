@@ -1,0 +1,58 @@
+==============================================================================
+GEOMETRY OF THE MODEL'S CROP - is MinHyuk's FOV objection true of OUR rig?
+==============================================================================
+  CROP_FOV_DEG      70.0   (scoreboard.py, square crop)
+  half-angle        35.0 deg, tan = 0.70021  (BOTH axes: the crop is square)
+  camera height     0.8 m  (follow_person.py --height default), optical axis LEVEL
+  person height     1.7 m  (scene_defs, every person cell)
+
+  head leaves the crop below   d = (1.7 - 0.8) / 0.70021 = 1.285 m
+  feet leave the crop below    d = 0.8 / 0.70021 = 1.143 m
+  => WHOLE PERSON FITS FOR d >= 1.285 m, and the head goes first
+
+Visible fraction and apparent size against range:
+  range m  vis frac               what is cut  px128_h vis                              note
+     0.50     0.412                 head+feet        128.0                                  
+     0.75     0.618                 head+feet        128.0                                  
+     1.00     0.824                 head+feet        128.0                                  
+     1.20     0.965                      head        128.0                                  
+     1.28     1.000                      head        120.9         <- whole person just fits
+     1.50     1.000                         -        103.6                                  
+     1.62     1.000                         -         95.9         <- near edge of hold band
+     1.80     1.000                         -         86.3    (inside the flown hold spread)
+     1.94     1.000                         -         80.1              <- follower's target
+     2.20     1.000                         -         70.6    (inside the flown hold spread)
+     2.43     1.000                         -         63.9    <- approach floor (bucket 1/2)
+     2.70     1.000                         -         57.5                                  
+     3.00     1.000                         -         51.8                                  
+     3.11     1.000                         -         50.0                <- s01 start range
+     3.64     1.000                         -         42.7                <- s15 start range
+     4.00     1.000                         -         38.8                                  
+     5.00     1.000                         -         31.1                                  
+
+Where the follower actually is:
+  flown hold means (7 person cells, 2026-09-14-baseline-075): 1.63 / 1.74 / 1.87 / 2.00 / 2.19 / 2.20 / 2.44 m
+  repeat spread 1.55-2.44 m; target 1.942 m (HOLD_K x 1.7)
+  size-bucket hold band 1.619-2.428 m: a person anywhere in it decodes
+    to bucket 2, so a drone closing from far away STOPS at 2.428 m - that is the closest
+    the control law ever needs to get, and the flown cells confirm it (nearest mean 1.63 m).
+  start range s15 static: 3.64 m, visible fraction 1.000
+  start range s01 moving: 3.11 m, visible fraction 1.000
+
+  MARGIN: the closest the flown cells ever settled is 1.55 m, against a whole-body limit of 1.285 m.
+  That is 0.26 m of clearance, i.e. the follower would have to overshoot by 21%
+  of its own closest observed station-keeping distance before the head leaves the crop.
+
+The OTHER axis, which is the one that does bite: BEARING.
+  a subject more than 35 deg off boresight is outside the crop entirely (scoreboard.MODEL_HALF_FOV_DEG).
+  At range d the crop's half-width on the floor is d*tan = 0.700*d:
+    d = 1.28 m -> the crop spans +-0.90 m laterally (1.80 m wide) at the person's plane
+    d = 1.62 m -> the crop spans +-1.13 m laterally (2.27 m wide) at the person's plane
+    d = 1.94 m -> the crop spans +-1.36 m laterally (2.72 m wide) at the person's plane
+    d = 2.43 m -> the crop spans +-1.70 m laterally (3.40 m wide) at the person's plane
+    d = 3.64 m -> the crop spans +-2.55 m laterally (5.10 m wide) at the person's plane
+  2026-09-15-typical-person's own build-time probe has the control cutout at 0.319 at
+  1.80 m / -33.7 deg and calls it 'outside the crop' - that is a BEARING loss, not a
+  vertical-truncation loss, and it happens at a range where the whole body still fits.
+
+wrote tables/geometry_fov.tsv and geometry_fov.txt

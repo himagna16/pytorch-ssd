@@ -1,0 +1,22 @@
+the scorer that produced the confidences (not invoked here): champion_arms.py sha256 78946a3f93b80857d4eb9d96d9edd04d9e5a876c592aabf58ffb437909cdb310
+read 2693 rows from the fidelity study's real_people.csv
+
+CENSUS (2 693 val2017 images with a non-crowd person)
+  whole_upright      204    7.6%
+  trunc_only         814   30.2%
+  occl_only          420   15.6%
+  trunc_and_occl     543   20.2%
+  no_keypoints       370   13.7%
+  clean_other        342   12.7%
+
+  occluded_or_truncated total 2489 (fidelity study reports 2488 after dropping the sim source)
+    truncated in any way         1509
+      by the image edge           801
+      by the centre crop         1354
+        cut at the TOP edge       225
+        cut at the BOTTOM edge    270
+        cut at a SIDE edge        518
+    occlusion-flagged (v==1)      963
+    no keypoints annotated        370
+
+wrote tables/strata.csv (2693 rows) and strata_himax.csv (8079 rows)
