@@ -36,7 +36,7 @@ processor. In the first three weeks I:
 | Put the champion network into the drone firmware | Sai, then frontend trio | Done in simulation: local branch compiles; six independently verified safety rounds; delivered as a bundle with a hand-off (docs/firmware_integration/) | Frontend trio writes the flight-controller handler and runs the bench test |
 | Output-scale reporting bug in the release pipeline | Sai | Done Sep 11 | None |
 | Which model we fly | Sai, with the team | **DECIDED 2026-09-13: the champion.** Taken at the team dinner on the strength of the first head-to-head flight comparison: the confuser fixes the pet problem but cannot follow a person at all (0% tracking on a standing subject), and re-scoring every threshold showed the champion wins at all of them on both accuracy and false alarms. The still-image recall gap understated this badly, because the drone needs three consecutive confident frames to lock on, and a slightly less confident model almost never gets three in a row | None. The follow-on work is making the champion safer, tracked in the row below |
-| Making the champion safer around pets | Sai | **Settings are exhausted; the fix is retraining.** Both of the drone's two thresholds have now been swept in flight. Raising the lock-on bar helped but does not reliably clear the limit; raising the let-go bar does not close it either, and at the higher value it makes the drone drop a walking person six times where it previously never lost them. Pointing and distance-keeping are untouched throughout | Fine-tune the model against pets and mannequins. That needs Grace's preserve-QAT-alphas work for the gains to survive release, so it is the thing to unblock |
+| Making the champion safer around pets | Sai | **Still open. Settings are exhausted, and the first retraining attempt did not beat them.** Both drone thresholds were swept in flight and neither closes the limit. A five-round fine-tune (2026-09-14) appeared to cut per-frame false alarms from 24% to 9-13%, but independent re-checking showed that comparison read the false-alarm rate and the accuracy at two different confidence settings. Held at equal person-finding ability, the fine-tuned rounds are no safer than the model we fly, and simply turning up the model's own confidence dial reproduces almost the whole apparent gain. What the run did establish is a small but consistent accuracy cost. Evidence and the correction: docs/eval_results/2026-09-14-champion-hardneg/ (section 0) | Try a different recipe, not more seeds of this one. The confuser model IS genuinely safer at equal person-finding, so the effect is real and reachable - the question is how to get it without the confuser's recall collapse |
 | Repeatable training | Sai | Done Sep 11: --seed option, tested (identical runs) | Use 3+ seeded repeats before reporting |
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
@@ -59,6 +59,7 @@ processor. In the first three weeks I:
 |---|---|
 | QAT champion beats David's released model, 0.8008 vs 0.789 peak F1 | Verified in simulated quantized (fake-quant) evaluation; reproduced by Grace. Not verified on the chip |
 | Confuser model: animal and mannequin false alarms 24% to 8% | Verified in fake-quant evaluation |
+| ~~Champion fine-tuned against pets: false alarms 24% to 9-13%, for about half a point of F1~~ | **WITHDRAWN 2026-09-14 on independent re-check.** The two figures were read at different confidence thresholds. At equal person-finding ability the fine-tuned rounds match the model we fly on pet false alarms (gain 0.000-0.001 at its operating point), and the model's own threshold dial reproduces almost all of the apparent cut. The accuracy cost is real; the safety gain is not established. Never verified on the chip |
 | Reproduced David's GVSOC chip validation of his own app | Verified |
 | Our Aug 28 and Aug 31 chip apps | **Were broken.** The integer network gave one output for all 96 test images: the DORY code generator turned every negative weight into 0 on Apple Silicon, and the old check compared the chip against a reference built from the same corrupted weights |
 | Champion chip app after the fix | **Verified:** distinct output for all 96 images; exact on the chip simulator for 5 images, agreeing with an independent runtime; 94.8% visibility agreement with the float model |
@@ -135,6 +136,43 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-14 (night).** Took the first real swing at the pet problem by
+  retraining, now that both drone settings are exhausted. Fine-tuned the model
+  we fly for five short rounds, each one teaching it harder on the negatives it
+  currently gets wrong, and measured both things that matter after every round:
+  how well it still finds people, and how often it mistakes a pet or mannequin
+  for one. The false-alarm rate on pets and mannequins fell from 24% to 9% at
+  its best, and to 13% in the round I would actually pick. The cost is real but
+  small: every one of the five rounds finds slightly fewer people than the model
+  we fly, by about half a point of F1. So retraining does move the thing that
+  configuration could not move at all, and it does not cost much - but it is a
+  trade, not a free win, and the team has to decide whether half a point of
+  accuracy is worth a large cut in false alarms. Two honest limits. This is one
+  seeded run, and our own rule says three before quoting a training number; the
+  best round's 9% bounced back to 13% the very next round, so I do not trust 9%
+  yet. And none of this is the chip: the release path throws away exactly the
+  calibration this training produces, which is Grace's preserve-QAT-alphas task,
+  and I measured that same effect costing part of the gain at the very start of
+  the run. Full numbers, commands and caveats in
+  docs/eval_results/2026-09-14-champion-hardneg/.
+
+  **Correction, added the same night after an independent re-check.** Every
+  individual number above reproduces exactly, but the headline comparison was
+  wrong: the false-alarm rate was read at one confidence setting and the
+  accuracy at another, and the drone only runs at one. Compared properly - at
+  equal person-finding ability - the fine-tuned rounds are no safer around pets
+  than the model we already fly, and simply turning the existing model's
+  confidence dial up reproduces almost the entire apparent improvement. That
+  dial is the lever we had already swept in flight and rejected, so this run did
+  not find a new one. The accuracy cost, on the other hand, holds up. The
+  genuinely useful findings survive: the data-mix measurement, and the discovery
+  that the release path's calibration reset costs part of any gain before
+  training even starts. One real lead came out of the re-check: the confuser
+  model *is* measurably safer at equal person-finding, so the effect we want is
+  real - we just have not found a recipe that captures it without wrecking
+  recall. Details in section 0 of
+  docs/eval_results/2026-09-14-champion-hardneg/.
 
 - **2026-09-14 (late).** Swept the drone's second threshold, the one that decides
   when it lets go of something it is following. This was the lead from the

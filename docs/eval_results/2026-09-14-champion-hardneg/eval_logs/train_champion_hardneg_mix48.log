@@ -1,0 +1,233 @@
+Seeded random generators with --seed 0
+Training device: mps
+plain_follow train annotations: pytorch_ssd/data/coco/annotations/instances_train2017.json
+plain_follow val annotations: pytorch_ssd/data/coco/annotations/instances_val2017.json
+loading annotations into memory...
+Done (t=4.47s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.60s)
+creating index...
+index created!
+Applied train sample manifest: path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48_manifest.json, selected=100729/118287
+Building follow sampling metadata from annotations...
+Follow sampling metadata:
+  visible_after_preprocess=62835, not_visible=37894, true_no_person=36614, crop_negative=1280
+Follow training policy:
+  base_loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, phase1_loss_weights=None
+  visible_fraction_target=0.6, hard_negative_start_epoch=1, hard_negative_boost=1.5, hard_negative_ema=0.7, phase1_epochs=0
+Loaded init checkpoint: /Users/saimaruvada/Downloads/drone/training/CHAMPION_qat_ep3_f1_8008.pth (missing=0, unexpected=59)
+  Unexpected keys (first 10): ['stem.conv.W_alpha', 'stem.conv.W_beta', 'stem.conv.x_alpha', 'stem.relu.alpha', 'stem.relu.max', 'stem.relu.min', 'stem.relu.running_mean', 'stem.relu.running_var', 'stage1.downsample.conv.W_alpha', 'stage1.downsample.conv.W_beta']
+Enabled quant-aware fine-tune: bits=8, calib_batches=16
+
+Epoch 1/5
+Follow epoch policy: phase=single_phase, loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, hard_negative_active=True
+Follow sampler: target_visible=0.600, expected_visible=0.600, expected_true_no_person=0.386, boosted_true_no_person=0
+
+Train:   0%| | 1/2600 [00:13<9:42:58, 13.46s/it, loss=3.1783, x=1.9685, size=1.2623, vis=0.4155, xre
+Train:   0%| | 1/2600 [00:13<9:42:58, 13.46s/it, loss=4.3538, x=1.9035, size=1.4588, vis=1.0063, xre
+Train:   0%| | 2/2600 [00:13<4:06:26,  5.69s/it, loss=4.3538, x=1.9035, size=1.4588, vis=1.0063, xre
+Train:   0%| | 2/2600 [00:13<4:06:26,  5.69s/it, loss=3.6385, x=2.0454, size=0.8334, vis=0.6715, xre
+Train:   0%| | 3/2600 [00:13<2:17:29,  3.18s/it, loss=3.6385, x=2.0454, size=0.8334, vis=0.6715, xre
+Train:   0%| | 3/2600 [00:14<2:17:29,  3.18s/it, loss=2.0642, x=1.1673, size=1.0772, vis=0.2869, xre
+Train:   0%| | 4/2600 [00:14<1:26:40,  2.00s/it, loss=2.0642, x=1.1673, size=1.0772, vis=0.2869, xre
+Train:   0%| | 4/2600 [00:14<1:26:40,  2.00s/it, loss=2.5298, x=1.2988, size=0.6049, vis=0.5247, xre
+Train:   0%| | 5/2600 [00:14<59:49,  1.38s/it, loss=2.5298, x=1.2988, size=0.6049, vis=0.5247, xres=
+Train:   0%| | 5/2600 [00:14<59:49,  1.38s/it, loss=2.6528, x=1.4988, size=1.2205, vis=0.3939, xres=
+
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=2.4652, x=1.4662, size=0.8857, vis=0.3666, xres=0.00
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=3.2856, x=1.7304, size=0.8543, vis=0.6495, xres=0.00
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=3.3348, x=1.9379, size=0.8957, vis=0.5641, xres=0.00
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=2.6366, x=1.9248, size=0.9990, vis=0.2060, xres=0.00
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=1.9853, x=0.9647, size=0.9029, vis=0.3749, xres=0.00
+Val:   4%| | 1/25 [00:04<01:47,  4.48s/it, loss=2.9038, x=1.7031, size=0.6197, vis=0.5074, xres=0.00
+Train loss: 2.8688 (x=1.5199, size=0.9200, vis=0.5364)
+Train gating pressure: negative_visibility_confidence=0.2875
+Val loss: 2.7489 (x=1.6524, size=0.9051, vis=0.4125)
+Val follow metrics:
+  x_mae=0.3253
+  size_mae=0.1502
+  follow_score=0.3703
+  control_score=0.3253
+  x_exact_match_rate=0.3401
+  x_adjacent_match_rate=0.6650
+  size_exact_match_rate=0.6091
+Val visibility @ 0.50: bce=0.4125, acc=0.8200, precision=0.8698, recall=0.7462, f1=0.8033, no_person_fp_rate=0.1095 (22/201)
+Recommended visibility threshold: 0.60 (score=0.9770, precision=0.9195, recall=0.6954, f1=0.7919, no_person_fp_rate=0.0597)
+Saved checkpoint to /Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_epoch_001.pth
+Updated best x-error checkpoint: epoch=1, val_x_mae=0.3253, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_x.pth
+Updated best follow-score checkpoint: epoch=1, val_follow_score=0.3703, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_follow_score.pth
+Best x-error so far: epoch=1, val_x_mae=0.3253
+Best follow score so far: epoch=1, val_follow_score=0.3703
+
+Epoch 2/5
+Follow epoch policy: phase=single_phase, loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, hard_negative_active=True
+Follow sampler: target_visible=0.600, expected_visible=0.566, expected_true_no_person=0.421, boosted_true_no_person=13001
+
+Train:   0%| | 1/2600 [00:16<11:43:05, 16.23s/it, loss=2.9496, x=1.4668, size=1.0757, vis=0.5800, xr
+Train:   0%| | 1/2600 [00:16<11:43:05, 16.23s/it, loss=3.2046, x=1.5924, size=1.0603, vis=0.6471, xr
+Train:   0%| | 2/2600 [00:16<5:03:16,  7.00s/it, loss=3.2046, x=1.5924, size=1.0603, vis=0.6471, xre
+Train:   0%| | 2/2600 [00:17<5:03:16,  7.00s/it, loss=3.1116, x=1.6771, size=0.6358, vis=0.6219, xre
+Train:   0%| | 3/2600 [00:17<2:49:27,  3.92s/it, loss=3.1116, x=1.6771, size=0.6358, vis=0.6219, xre
+Train:   0%| | 3/2600 [00:17<2:49:27,  3.92s/it, loss=3.1888, x=1.7195, size=1.0451, vis=0.5779, xre
+Train:   0%| | 4/2600 [00:17<1:49:39,  2.53s/it, loss=3.1888, x=1.7195, size=1.0451, vis=0.5779, xre
+Train:   0%| | 4/2600 [00:17<1:49:39,  2.53s/it, loss=3.8762, x=1.4429, size=0.8141, vis=1.0946, xre
+Train:   0%| | 5/2600 [00:17<1:14:49,  1.73s/it, loss=3.8762, x=1.4429, size=0.8141, vis=1.0946, xre
+Train:   0%| | 5/2600 [00:18<1:14:49,  1.73s/it, loss=2.5811, x=1.3370, size=0.9004, vis=0.4870, xre
+Train:   0%| | 6/2600 [00:18<54:15,  1.26s/it, loss=2.5811, x=1.3370, size=0.9004, vis=0.4870, xres=
+Train:   0%| | 6/2600 [00:18<54:15,  1.26s/it, loss=2.0747, x=0.7644, size=0.7798, vis=0.5382, xres=
+
+Val:   4%| | 1/25 [00:04<01:59,  4.98s/it, loss=2.4903, x=1.5078, size=0.8614, vis=0.3620, xres=0.00
+Val:   4%| | 1/25 [00:04<01:59,  4.98s/it, loss=3.3217, x=1.7580, size=0.8747, vis=0.6506, xres=0.00
+Val:   4%| | 1/25 [00:05<01:59,  4.98s/it, loss=3.2913, x=1.9516, size=0.8312, vis=0.5452, xres=0.00
+Val:   4%| | 1/25 [00:05<01:59,  4.98s/it, loss=2.5524, x=1.7973, size=1.0141, vis=0.2254, xres=0.00
+Val:   4%| | 1/25 [00:05<01:59,  4.98s/it, loss=2.1389, x=1.0255, size=0.9264, vis=0.4178, xres=0.00
+Val:   4%| | 1/25 [00:05<01:59,  4.98s/it, loss=2.9052, x=1.7107, size=0.6376, vis=0.5016, xres=0.00
+Val:   4%| | 1/25 [00:05<01:59,  4.98s/it, loss=2.3413, x=1.1631, size=0.9154, vis=0.4518, xres=0.00
+Train loss: 2.8546 (x=1.5054, size=0.9129, vis=0.5377)
+Train gating pressure: negative_visibility_confidence=0.2615
+Val loss: 2.7489 (x=1.6617, size=0.9132, vis=0.4067)
+Val follow metrics:
+  x_mae=0.3153
+  size_mae=0.1548
+  follow_score=0.3618
+  control_score=0.3153
+  x_exact_match_rate=0.3756
+  x_adjacent_match_rate=0.6751
+  size_exact_match_rate=0.6091
+Val visibility @ 0.50: bce=0.4067, acc=0.8325, precision=0.9221, recall=0.7208, f1=0.8091, no_person_fp_rate=0.0597 (12/201)
+Recommended visibility threshold: 0.55 (score=0.9966, precision=0.9437, recall=0.6802, f1=0.7906, no_person_fp_rate=0.0398)
+Saved checkpoint to /Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_epoch_002.pth
+Updated best x-error checkpoint: epoch=2, val_x_mae=0.3153, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_x.pth
+Updated best follow-score checkpoint: epoch=2, val_follow_score=0.3618, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_follow_score.pth
+Best x-error so far: epoch=2, val_x_mae=0.3153
+Best follow score so far: epoch=2, val_follow_score=0.3618
+
+Epoch 3/5
+Follow epoch policy: phase=single_phase, loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, hard_negative_active=True
+Follow sampler: target_visible=0.600, expected_visible=0.551, expected_true_no_person=0.437, boosted_true_no_person=21076
+
+Train:   0%| | 1/2600 [00:16<11:59:46, 16.62s/it, loss=2.9304, x=1.8622, size=0.8801, vis=0.4021, xr
+Train:   0%| | 1/2600 [00:17<11:59:46, 16.62s/it, loss=2.1866, x=0.8743, size=0.7800, vis=0.5392, xr
+Train:   0%| | 2/2600 [00:17<5:07:58,  7.11s/it, loss=2.1866, x=0.8743, size=0.7800, vis=0.5392, xre
+Train:   0%| | 2/2600 [00:17<5:07:58,  7.11s/it, loss=2.5801, x=1.4435, size=0.7717, vis=0.4525, xre
+Train:   0%| | 3/2600 [00:17<2:59:07,  4.14s/it, loss=2.5801, x=1.4435, size=0.7717, vis=0.4525, xre
+Train:   0%| | 3/2600 [00:18<2:59:07,  4.14s/it, loss=3.1957, x=1.9076, size=1.0819, vis=0.4817, xre
+Train:   0%| | 4/2600 [00:18<1:56:00,  2.68s/it, loss=3.1957, x=1.9076, size=1.0819, vis=0.4817, xre
+Train:   0%| | 4/2600 [00:18<1:56:00,  2.68s/it, loss=2.6423, x=1.4361, size=1.0684, vis=0.4428, xre
+Train:   0%| | 5/2600 [00:18<1:26:23,  2.00s/it, loss=2.6423, x=1.4361, size=1.0684, vis=0.4428, xre
+Train:   0%| | 5/2600 [00:19<1:26:23,  2.00s/it, loss=3.5836, x=1.5549, size=0.8861, vis=0.8814, xre
+Train:   0%| | 6/2600 [00:19<1:03:47,  1.48s/it, loss=3.5836, x=1.5549, size=0.8861, vis=0.8814, xre
+Train:   0%| | 6/2600 [00:19<1:03:47,  1.48s/it, loss=3.0556, x=1.5500, size=0.8368, vis=0.6273, xre
+Train:   0%| | 7/2600 [00:19<51:17,  1.19s/it, loss=3.0556, x=1.5500, size=0.8368, vis=0.6273, xres=
+Train:   0%| | 7/2600 [00:20<51:17,  1.19s/it, loss=2.3960, x=1.1679, size=1.0090, vis=0.4627, xres=
+Train:  52%|▌| 1343/2600 [11:35<22:07,  1.06s/it, loss=2.5279, x=1.4464, size=0.7993, vis=0.4208, xr
+Train:  52%|▌| 1343/2600 [11:36<22:07,  1.06s/it, loss=2.5991, x=1.5744, size=0.7267, vis=0.4033, xr
+
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=2.4936, x=1.4959, size=0.8557, vis=0.3705, xres=0.00
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=3.3833, x=1.7471, size=0.8341, vis=0.6930, xres=0.00
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=3.2564, x=1.9181, size=0.8075, vis=0.5480, xres=0.00
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=2.6895, x=1.9061, size=1.0015, vis=0.2414, xres=0.00
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=2.2032, x=1.0496, size=0.8748, vis=0.4456, xres=0.00
+Val:   4%| | 1/25 [00:05<02:17,  5.71s/it, loss=2.9978, x=1.7268, size=0.6379, vis=0.5399, xres=0.00
+Train loss: 2.8681 (x=1.5134, size=0.9181, vis=0.5397)
+Train gating pressure: negative_visibility_confidence=0.2559
+Val loss: 2.7806 (x=1.6620, size=0.9057, vis=0.4234)
+Val follow metrics:
+  x_mae=0.3133
+  size_mae=0.1470
+  follow_score=0.3574
+  control_score=0.3133
+  x_exact_match_rate=0.3807
+  x_adjacent_match_rate=0.6751
+  size_exact_match_rate=0.6294
+Val visibility @ 0.50: bce=0.4234, acc=0.8075, precision=0.8896, recall=0.6954, f1=0.7806, no_person_fp_rate=0.0846 (17/201)
+Recommended visibility threshold: 0.65 (score=0.9587, precision=0.9593, recall=0.5990, f1=0.7375, no_person_fp_rate=0.0249)
+Saved checkpoint to /Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_epoch_003.pth
+Updated best x-error checkpoint: epoch=3, val_x_mae=0.3133, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_x.pth
+Updated best follow-score checkpoint: epoch=3, val_follow_score=0.3574, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_follow_score.pth
+Best x-error so far: epoch=3, val_x_mae=0.3133
+Best follow score so far: epoch=3, val_follow_score=0.3574
+
+Epoch 4/5
+Follow epoch policy: phase=single_phase, loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, hard_negative_active=True
+Follow sampler: target_visible=0.600, expected_visible=0.542, expected_true_no_person=0.446, boosted_true_no_person=26175
+
+Train:   0%| | 1/2600 [00:17<12:50:41, 17.79s/it, loss=3.1017, x=1.7560, size=0.8112, vis=0.5512, xr
+Train:   0%| | 1/2600 [00:17<12:50:41, 17.79s/it, loss=2.8047, x=1.0527, size=1.7222, vis=0.6177, xr
+Train:   0%| | 1/2600 [00:18<12:50:41, 17.79s/it, loss=2.7841, x=1.6445, size=0.7461, vis=0.4579, xr
+Train:   0%| | 3/2600 [00:18<3:23:15,  4.70s/it, loss=2.7841, x=1.6445, size=0.7461, vis=0.4579, xre
+Train:   0%| | 3/2600 [00:18<3:23:15,  4.70s/it, loss=2.7548, x=1.3430, size=0.9248, vis=0.5672, xre
+Train:   0%| | 4/2600 [00:18<2:15:47,  3.14s/it, loss=2.7548, x=1.3430, size=0.9248, vis=0.5672, xre
+Train:   0%| | 4/2600 [00:18<2:15:47,  3.14s/it, loss=3.1111, x=1.6551, size=0.9582, vis=0.5843, xre
+Train:   0%| | 5/2600 [00:18<1:33:40,  2.17s/it, loss=3.1111, x=1.6551, size=0.9582, vis=0.5843, xre
+Train:   0%| | 5/2600 [00:18<1:33:40,  2.17s/it, loss=2.3613, x=1.3616, size=0.6040, vis=0.4093, xre
+Train:   0%| | 5/2600 [00:18<1:33:40,  2.17s/it, loss=2.3348, x=1.3072, size=0.5099, vis=0.4373, xre
+Train:   0%| | 7/2600 [00:18<50:46,  1.17s/it, loss=2.3348, x=1.3072, size=0.5099, vis=0.4373, xres=
+Train:   0%| | 7/2600 [00:18<50:46,  1.17s/it, loss=2.6249, x=1.7558, size=0.9950, vis=0.2853, xres=
+Train:   0%| | 7/2600 [00:18<50:46,  1.17s/it, loss=3.5880, x=1.9727, size=1.0519, vis=0.6498, xres=
+
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=2.5006, x=1.4792, size=0.8459, vis=0.3838, xres=0.00
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=3.4757, x=1.7488, size=0.8582, vis=0.7347, xres=0.00
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=3.2085, x=1.8721, size=0.8312, vis=0.5435, xres=0.00
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=2.7186, x=1.9154, size=0.9949, vis=0.2524, xres=0.00
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=2.1340, x=0.9538, size=0.8731, vis=0.4591, xres=0.00
+Val:   4%| | 1/25 [00:05<02:00,  5.02s/it, loss=3.0778, x=1.7041, size=0.6237, vis=0.5933, xres=0.00
+Train loss: 2.8737 (x=1.5127, size=0.9262, vis=0.5416)
+Train gating pressure: negative_visibility_confidence=0.2550
+Val loss: 2.8022 (x=1.6618, size=0.9126, vis=0.4333)
+Val follow metrics:
+  x_mae=0.3056
+  size_mae=0.1440
+  follow_score=0.3488
+  control_score=0.3056
+  x_exact_match_rate=0.3706
+  x_adjacent_match_rate=0.6853
+  size_exact_match_rate=0.6244
+Val visibility @ 0.50: bce=0.4333, acc=0.8050, precision=0.9220, recall=0.6599, f1=0.7692, no_person_fp_rate=0.0547 (11/201)
+Recommended visibility threshold: 0.55 (score=0.9588, precision=0.9394, recall=0.6294, f1=0.7538, no_person_fp_rate=0.0398)
+Saved checkpoint to /Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_epoch_004.pth
+Updated best x-error checkpoint: epoch=4, val_x_mae=0.3056, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_x.pth
+Updated best follow-score checkpoint: epoch=4, val_follow_score=0.3488, path=/Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_best_follow_score.pth
+Best x-error so far: epoch=4, val_x_mae=0.3056
+Best follow score so far: epoch=4, val_follow_score=0.3488
+
+Epoch 5/5
+Follow epoch policy: phase=single_phase, loss_weights={'visibility': 2.0, 'x': 1.0, 'size': 0.3, 'residual': 0.5}, hard_negative_active=True
+Follow sampler: target_visible=0.600, expected_visible=0.537, expected_true_no_person=0.451, boosted_true_no_person=29569
+
+Train:   0%| | 1/2600 [00:14<10:18:15, 14.27s/it, loss=2.6547, x=1.4454, size=0.7525, vis=0.4918, xr
+Train:   0%| | 1/2600 [00:14<10:18:15, 14.27s/it, loss=3.7305, x=1.3759, size=1.0540, vis=1.0192, xr
+Train:   0%| | 1/2600 [00:14<10:18:15, 14.27s/it, loss=5.3367, x=2.4663, size=1.5184, vis=1.2075, xr
+Train:   0%| | 1/2600 [00:14<10:18:15, 14.27s/it, loss=2.8705, x=1.3115, size=0.6769, vis=0.6780, xr
+Train:   0%| | 4/2600 [00:14<1:58:33,  2.74s/it, loss=2.8705, x=1.3115, size=0.6769, vis=0.6780, xre
+Train:   0%| | 4/2600 [00:14<1:58:33,  2.74s/it, loss=4.0388, x=1.8004, size=0.8864, vis=0.9862, xre
+Train:   0%| | 4/2600 [00:14<1:58:33,  2.74s/it, loss=2.7890, x=1.2574, size=0.5168, vis=0.6883, xre
+Train:   0%| | 4/2600 [00:14<1:58:33,  2.74s/it, loss=1.7877, x=1.0573, size=0.9715, vis=0.2194, xre
+Train:   0%| | 7/2600 [00:14<56:11,  1.30s/it, loss=1.7877, x=1.0573, size=0.9715, vis=0.2194, xres=
+Train:   0%| | 7/2600 [00:14<56:11,  1.30s/it, loss=3.3158, x=1.7864, size=1.4399, vis=0.5487, xres=
+Train:   0%| | 7/2600 [00:14<56:11,  1.30s/it, loss=3.5737, x=1.6965, size=0.8466, vis=0.8116, xres=
+
+Val:   4%| | 1/25 [00:04<01:58,  4.94s/it, loss=2.4993, x=1.4186, size=0.8819, vis=0.4081, xres=0.00
+Val:   4%| | 1/25 [00:04<01:58,  4.94s/it, loss=3.4370, x=1.7863, size=0.8439, vis=0.6988, xres=0.00
+Val:   4%| | 1/25 [00:04<01:58,  4.94s/it, loss=3.2842, x=1.9100, size=0.8788, vis=0.5553, xres=0.00
+Val:   4%| | 1/25 [00:05<01:58,  4.94s/it, loss=2.6363, x=1.8978, size=0.9816, vis=0.2220, xres=0.00
+Val:   4%| | 1/25 [00:05<01:58,  4.94s/it, loss=2.1184, x=1.0304, size=0.9072, vis=0.4079, xres=0.00
+Val:   4%| | 1/25 [00:05<01:58,  4.94s/it, loss=2.9632, x=1.7110, size=0.6082, vis=0.5349, xres=0.00
+Train loss: 2.8671 (x=1.5154, size=0.9121, vis=0.5390)
+Train gating pressure: negative_visibility_confidence=0.2493
+Val loss: 2.7560 (x=1.6561, size=0.9067, vis=0.4139)
+Val follow metrics:
+  x_mae=0.3137
+  size_mae=0.1523
+  follow_score=0.3593
+  control_score=0.3137
+  x_exact_match_rate=0.3807
+  x_adjacent_match_rate=0.6751
+  size_exact_match_rate=0.5990
+Val visibility @ 0.50: bce=0.4139, acc=0.8150, precision=0.9073, recall=0.6954, f1=0.7874, no_person_fp_rate=0.0697 (14/201)
+Recommended visibility threshold: 0.60 (score=0.9742, precision=0.9412, recall=0.6497, f1=0.7688, no_person_fp_rate=0.0398)
+Saved checkpoint to /Users/saimaruvada/Downloads/drone/training/champion_hardneg_mix48/plain_follow_epoch_005.pth
+Best x-error so far: epoch=4, val_x_mae=0.3056
+Best follow score so far: epoch=4, val_follow_score=0.3488

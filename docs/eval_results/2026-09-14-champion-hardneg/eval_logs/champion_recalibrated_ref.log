@@ -1,0 +1,4 @@
+[calib-ref] CHAMPION_qat_ep3_f1_8008.pth: loaded FP weights (missing=0, dropped 59 QAT alpha/range tensors)
+[calib-ref] recalibrated activations on 32 rep_images
+[calib-ref] DEPLOYED-FORM peak F1 = 0.7991 at threshold 0.45
+[calib-ref] confuser-slice FP: 0.258 @0.45, 0.184 @0.55 (n=771)

@@ -1,0 +1,8 @@
+loading annotations into memory...
+Done (t=0.21s)
+creating index...
+index created!
+ckpt=CHAMPION_qat_ep3_f1_8008.pth n=5000 positives=2635
+peak F1 point estimate = 0.8008
+bootstrap 95% CI = [0.7887, 0.8113]  (300 resamples, seed 0)
+CI half-width = 0.0113; bootstrap sd = 0.0059

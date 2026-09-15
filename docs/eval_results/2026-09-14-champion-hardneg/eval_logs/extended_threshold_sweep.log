@@ -1,0 +1,6 @@
+CHAMPION_qat_ep3_f1_8008.pth: narrow(0.30-0.75) peak F1=0.8008 @0.45 | wide(0.05-0.75) peak F1=0.8008 @0.45 (prec=0.781 rec=0.822)
+plain_follow_epoch_002.pth: narrow(0.30-0.75) peak F1=0.7964 @0.30 | wide(0.05-0.75) peak F1=0.7964 @0.30 (prec=0.756 rec=0.841)
+plain_follow_epoch_004.pth: narrow(0.30-0.75) peak F1=0.7946 @0.30 | wide(0.05-0.75) peak F1=0.7971 @0.25 (prec=0.753 rec=0.846)
+plain_follow_epoch_001.pth: narrow(0.30-0.75) peak F1=0.7964 @0.35 | wide(0.05-0.75) peak F1=0.7964 @0.35 (prec=0.764 rec=0.831)
+plain_follow_epoch_003.pth: narrow(0.30-0.75) peak F1=0.7946 @0.30 | wide(0.05-0.75) peak F1=0.7946 @0.30 (prec=0.758 rec=0.835)
+plain_follow_epoch_005.pth: narrow(0.30-0.75) peak F1=0.7970 @0.30 | wide(0.05-0.75) peak F1=0.7970 @0.30 (prec=0.760 rec=0.838)

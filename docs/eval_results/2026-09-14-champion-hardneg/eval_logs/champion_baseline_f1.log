@@ -1,0 +1,19 @@
+[fq-sweep] CHAMPION_qat_ep3_f1_8008.pth mode=qat head=xbin9_size_bucket4 epoch=3
+[fq-sweep] loaded QAT state (missing=0, unexpected=0)
+loading annotations into memory...
+Done (t=0.24s)
+creating index...
+index created!
+thresh |   prec recall     f1 | noP FP rate
+  0.30 |  0.695  0.891  0.781 |       0.430
+  0.35 |  0.724  0.868  0.790 |       0.362
+  0.40 |  0.754  0.847  0.798 |       0.300
+  0.45 |  0.781  0.822  0.801 |       0.250
+  0.50 |  0.803  0.791  0.797 |       0.212
+  0.55 |  0.825  0.758  0.790 |       0.176
+  0.60 |  0.847  0.731  0.784 |       0.144
+  0.65 |  0.872  0.699  0.776 |       0.113
+  0.70 |  0.891  0.665  0.761 |       0.089
+  0.75 |  0.911  0.619  0.737 |       0.068
+
+DEPLOYED-FORM peak F1 = 0.8008 at threshold 0.45

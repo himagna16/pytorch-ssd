@@ -1,0 +1,19 @@
+[fq-sweep] plain_follow_epoch_004.pth mode=qat head=xbin9_size_bucket4 epoch=4
+[fq-sweep] loaded QAT state (missing=0, unexpected=0)
+loading annotations into memory...
+Done (t=0.23s)
+creating index...
+index created!
+thresh |   prec recall     f1 | noP FP rate
+  0.30 |  0.790  0.800  0.795 |       0.231
+  0.35 |  0.816  0.758  0.786 |       0.186
+  0.40 |  0.847  0.715  0.775 |       0.139
+  0.45 |  0.872  0.676  0.762 |       0.107
+  0.50 |  0.893  0.642  0.747 |       0.084
+  0.55 |  0.913  0.608  0.730 |       0.063
+  0.60 |  0.933  0.572  0.709 |       0.046
+  0.65 |  0.941  0.529  0.677 |       0.037
+  0.70 |  0.959  0.491  0.649 |       0.023
+  0.75 |  0.970  0.452  0.617 |       0.016
+
+DEPLOYED-FORM peak F1 = 0.7946 at threshold 0.30
