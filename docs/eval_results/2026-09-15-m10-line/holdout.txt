@@ -1,0 +1,31 @@
+Deriving on: 2026-09-13-stability + 2026-09-12-mirror-refly
+Testing on : 2026-09-14-baseline-075 + 2026-09-11-simv2
+Both halves use the SAME two scenes (s01_control_moving, s15_static_offset)
+and the same subject, so this varies run-to-run noise, not the subject.
+
+========================================================================
+M10 band [0.45,0.75)   (line set at the 90% coverage point of the derivation half)
+========================================================================
+cls    n der     line  n hold  hold pass  hold med
+A         14    0.033       5       0.80     0.008
+B         43    0.151      14       0.71     0.096
+
+========================================================================
+p05 in-FOV confidence   (line set at the 90% coverage point of the derivation half)
+========================================================================
+cls    n der     line  n hold  hold pass  hold med
+A         14    0.738       5       1.00     0.839
+B         43    0.549      14       1.00     0.658
+
+========================================================================
+What the current 0.05 line does on these same flights, by class and suite
+========================================================================
+suite                       cls     n  M10@0.70  pass .05  M10@0.75  pass .05
+2026-09-11-simv2            A       1     0.000      1.00     0.000      1.00
+2026-09-11-simv2            B       2     0.001      1.00     0.003      1.00
+2026-09-12-mirror-refly     A       6     0.001      1.00     0.003      0.83
+2026-09-12-mirror-refly     B      19     0.016      0.58     0.026      0.58
+2026-09-13-stability        A       8     0.001      1.00     0.003      1.00
+2026-09-13-stability        B      24     0.032      0.58     0.054      0.50
+2026-09-14-baseline-075     A       4     0.005      1.00     0.017      1.00
+2026-09-14-baseline-075     B      12     0.076      0.17     0.108      0.00
