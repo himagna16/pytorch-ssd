@@ -3,6 +3,29 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-15** — **Every person-tracking number this project has published
+  describes one unusually easy subject.** The cutout both person cells were built
+  from sits near the 98th percentile of detectability among real people. With a
+  median-detectability or 25th-percentile person the drone never starts following
+  at all: 0.000 tracking on 11 of 12 flights, while the same rig reproduces 0.990
+  on the original subject. Established twice, independently audited from raw logs.
+  RULE ADOPTED: a scene's subject is a parameter of the experiment, not set
+  dressing. Any tracking claim must state which subject produced it and where that
+  subject sits in the detectability distribution. The 0.97-0.99 figures are not
+  withdrawn - they are correctly measured, and they describe COCO 19432.
+
+- **2026-09-15** — **The 0.70 -> 0.75 confirmation bar stays, and the pet fix is
+  not a threshold problem.** On ordinary people, three of four cells acquire at
+  NEITHER bar (their margin sits 0.15-0.43 below even 0.70, and for the static
+  cells below the 0.45 exit bar), so reverting would not produce a working
+  follower - it would buy 2.36 s of tracking against 1.90 s in the one cell that
+  is sensitive, with worse pointing. The shipped bar does carry a real acquisition
+  cost, confined to subjects whose margin lands between 0.70 and 0.75, and that
+  cost was invisible when measured on the easy subject. Rejected: reverting to
+  0.70, and treating acquisition as a tunable. OPEN and now the top question: where
+  do REAL people's margins sit? Rendered cutouts bracket this pessimistically and
+  cannot answer it. The lab session answers it.
+
 - **2026-09-14 (late)** — **Do not ship an exit-bar change.** Sweeping the
   follower's release threshold (0.45 shipped, 0.55, 0.65; enter fixed at 0.75;
   27 interleaved flights) does NOT close the pet gate: all three arms fail, worst

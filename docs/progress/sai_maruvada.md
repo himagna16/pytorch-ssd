@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 14, 2026
-**Last updated:** 2026-09-14
+**Period covered:** Aug 24 to Sep 15, 2026
+**Last updated:** 2026-09-15
 
 ## Summary
 
@@ -41,6 +41,7 @@ processor. In the first three weeks I:
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
+| How well the drone follows people | Sai | **Not yet known, and the published figures are about one person.** Every tracking number in this project (97-99%) came from scenes built around a photograph that turns out to sit near the 98th percentile of how easily this model detects a person. Rebuilt the same scenes around a typical person and a somewhat-below-average person: the drone never starts following at all, in 11 of 12 flights, while the original subject still reproduces 99% on the same rig. Rendered cutouts are harder than real people, so the truth lies between the two, and neither end is the drone's real behaviour | This is the question the lab session answers. Capture real frames of real people and measure where they fall |
 | Simulator demo for Prof. Mok | Sai | Sent Sep 12; Prof. Mok replied "Great progress, team!" and David called the simulation's prediction of the AI-deck behaviour impressive | Live demo slot still unset: he said Tue/Thu after 3:30 pm, I offered after 5 pm - needs one confirming email |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
@@ -136,6 +137,30 @@ checked the results, and made the decisions recorded in DECISIONS.md.
   with the decode contract.
 
 ## Session log
+
+- **2026-09-15 (overnight).** Spent the night checking whether the simulator
+  predicts reality, and the answer changes what we believe about the drone. Two
+  findings, both measured against real photographs rather than against the
+  simulator itself. First, the simulator **overstates** the pet problem by about
+  three times: a rendered dog is far more detectable than real dogs of the same
+  apparent size, so the drone chasing a dog across the room is a property of a
+  flat cardboard cutout more than a prediction about real animals. Second, and
+  far more important, the person scenes were built around a photograph that sits
+  near the **98th percentile** of how easily this model detects a person. Rebuilt
+  the same scenes around a typical person: **the drone never starts following at
+  all**, in eleven of twelve flights, while the original subject still reproduces
+  99% on the identical rig. The obstacle is the rule that needs three confident
+  frames in a row before locking on; an ordinary person produces scattered
+  confident frames that never form a run. I then tested whether the confirmation
+  threshold we shipped two days ago is to blame, and mostly it is not: for three
+  of four ordinary subjects no threshold would help, because the confidence never
+  comes close. Lowering it back would buy 2.4 seconds of tracking instead of 1.9,
+  with worse pointing. So the setting stays and the real question is the model.
+  Rendered people are harder than real ones, so this brackets the answer from the
+  pessimistic side, and where real people actually fall is exactly what the lab
+  session will tell us. Also fixed a real bug in the training code, which had been
+  silently discarding a model's learned calibration on startup, and two scoring
+  defects.
 
 - **2026-09-14 (night).** Took the first real swing at the pet problem by
   retraining, now that both drone settings are exhausted. Fine-tuned the model
