@@ -1,0 +1,70 @@
+{
+  "scene_id": "pp01_157365",
+  "title": "Control: one moving person - pool subject COCO 157365 (index 34.6)",
+  "purpose": "People-plural variant of s01_control_moving, one of 24. The published person cells were built with COCO 19432/428692, which sits at the 99.2nd percentile of rendered detectability among 266 real people. This is that scene with a different screened person in it and nothing else changed. Flown as part of a 13-arm suite so the answer is a distribution rather than a second anecdote. Not part of the acceptance matrix; run_acceptance2.sh does not reference it, and this definition lives outside tools/.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person",
+      "role": "person_target",
+      "coco": {
+        "img_id": 157365,
+        "ann_id": 480194
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.0,
+        0.0
+      ],
+      "motion": {
+        "type": "spring",
+        "axis": "y",
+        "amp_m": 1.2,
+        "period_s": 20.0
+      },
+      "note": "PEOPLE-PLURAL POOL, 2026-09-15. Identical to s01_control_moving.json except for the COCO cutout: img 157365/ann 480194 replaces img 19432/ann 428692. Same subject name, role, height_m 1.7, pos, motion, lighting, expected_behaviour (target and gates), scene_class and matte floor. The panel's WIDTH follows from this cutout's own bbox aspect (2.891 h/w -> 0.588 m at 1.7 m tall, against the flown cutout's 2.627 -> 0.6471 m). That is a property of which person it is rather than an independent change, and it is the only geometric consequence, but it is NOT held constant across the pool: width runs 0.5493-0.8004 m and correlates with the detectability index at Spearman +0.385, so the analysis must carry it as a covariate and not read the raw trend as a pure subject effect. WHY THIS PERSON: no reason particular to them. This scene is one of 12 built from every subject carrying eye_verdict == keep in the pre-registered screen of docs/eval_results/2026-09-15-typical-person (12 of 39 mechanically eligible, published there in full). Taking the whole pool is what removes subject selection from this experiment. This subject sits at the 34.6th percentile of the 266-person cohort of docs/eval_results/2026-09-15-sim-person-fidelity (per range 63.2/34.2/24.1/28.6/37.2/20.3), against the flown cutout's 99.2nd; its own photograph scores 0.9982 on the chip arm through the resolution-matched chain. Pool derivation: scripts/pick_all_eligible.py, which imports the screen rather than restating it and reproduces the earlier study's three published subjects field for field. No score was re-computed for any subject."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person",
+    "target_policy": null,
+    "gates": [
+      {
+        "metric": "tracking_fraction",
+        "op": ">=",
+        "value": 0.99
+      },
+      {
+        "metric": "mean_true_heading_error_deg",
+        "op": "<=",
+        "value": 3.5
+      },
+      {
+        "metric": "max_true_heading_error_deg",
+        "op": "<=",
+        "value": 9.0
+      },
+      {
+        "metric": "end_reason",
+        "op": "==",
+        "value": "duration"
+      },
+      {
+        "metric": "z_after_landing_m",
+        "op": "<=",
+        "value": 0.1
+      }
+    ]
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "unknown - this is the measurement",
+    "rationale": "Unknown, and that is the measurement. Every published person tracking fraction (0.97-0.99) comes from one cutout that the fidelity study places at the 99.2nd percentile of rendered detectability. Flying the whole screened pool turns that single number into a distribution. Static frames cannot answer it: per-frame rates do not multiply into a loss-of-track fraction, because consecutive frames are correlated and the follower has hysteresis (3 frames at 0.75 to latch, below 0.45 to let go)."
+  }
+}
