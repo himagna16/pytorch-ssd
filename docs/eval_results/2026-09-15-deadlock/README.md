@@ -1,129 +1,170 @@
-# Would a drone that creeps forward fix this? Mostly no.
+# Would a drone that creeps forward fix this? On the clean evidence, once out of seven.
 
 156 flights, 2026-09-15 into 2026-09-16, all VALID. Simulation only.
 
 `docs/eval_results/2026-09-15-people-plural` found that seven of the twelve
 screened people are never acquired on the standing scene, and that the follower
 commands neither yaw nor forward velocity until it has latched
-(`follow_person.py:371-376`). Across those 208 flights, all 109 latches happened
-with the drone still at its start pose, so the drone never closes range on its
-own. That suggested an obvious fix: let it creep forward while unsure.
+(`follow_person.py:371-376`). This suite asks whether letting the drone creep
+forward while unsure would fix that, by putting the person at 1.6, 2.2 or 2.8 m
+instead of 3.64 m.
 
-This suite tests that fix before anyone builds it. **It would rescue one of the
-seven.**
+**This README is the second version.** The first one reached roughly the right
+number by an argument that does not hold, miscounted its own subject list, and
+missed a rendering discontinuity in the arm carrying its most striking result.
+Fifteen independent agents were asked to refute it and fourteen succeeded. §5
+lists what changed.
 
-## The design
+## 1. The part that is solid
 
-The same thirteen people on the same standing scene, with the person moved along
-the same bearing so the drone starts 1.6, 2.2 or 2.8 m away instead of 3.64 m.
-Range is the only geometric variable: generation asserts both the range and the
-bearing, and the bearing is held to better than 0.001 deg. Four repeats per cell,
-ships-as, shipped 0.75 / 0.45 / 3 latch rule asserted on every flight. The 3.64 m
-column below is the people-plural suite's own static arm, eight repeats.
+`follow_person.py:371-376` assigns yaw and forward velocity only inside
+`if vis_state:`; the else branch zeroes both. Across the 208 flights of the prior
+suite and the 156 here, **every latch happened with the drone still at its start
+pose**: over the 116 held flights in this suite, the largest difference between
+the range at the first latched frame and the start range is 0.000 m. The drone
+never closes range on its own before acquiring. That is not in dispute.
 
-The harness is people-plural's, unchanged. `fly_deadlock.sh` passes it a
-different cell list and output directory, so the lock protocol, validity gate and
-re-fly rule are the same code.
+The forward law, once latched, is also worth stating correctly. `size_value` is
+quantised to bucket centres `(bucket + 0.5) / 4` and `--target-size` defaults to
+0.625, exactly the bucket-2 centre. So the error term is identically zero across
+the whole bucket-2 band and `k_fwd` never acts inside it. This is bang-bang
+control at +-0.2 m/s with a wide dead zone, not a controller seeking a setpoint.
+The drone halts at whichever edge of the dead zone it entered through. The
+nominal 1.94 m hold is never reached.
 
-## Latch rate against start range
+## 2. The result, counted by subject
 
-Held at least one second, because `ever_latched` counts a single frame.
+The conclusions are stated per subject ("four are never acquired"), so the
+statistic should be too. Number of the twelve screened people acquirable at all,
+meaning at least one flight holding the track a second or more:
 
-| subject | index | 1.6 m | 2.2 m | 2.8 m | 3.64 m |
-|---|---|---|---|---|---|
-| 124442 | 28.4 | 0/4 | 0/4 | 0/4 | 0/8 |
-| 527750 | 34.3 | 0/4 | 0/4 | 0/4 | 0/8 |
-| 157365 | 34.6 | **4/4** | 0/4 | 0/4 | 0/8 |
-| 356427 | 37.8 | **4/4** | 0/4 | 0/4 | 0/8 |
-| 250127 | 52.1 | 0/4 | 0/4 | 0/4 | 0/8 |
-| 61747 | 86.8 | 4/4 | 4/4 | 4/4 | 8/8 |
-| 161875 | 87.0 | 0/4 | 0/4 | 0/4 | 0/8 |
-| 401446 | 88.8 | 4/4 | **4/4** | 0/4 | 1/8 |
-| 374369 | 90.3 | **4/4** | **4/4** | **4/4** | 0/8 |
-| 266409 | 92.1 | 4/4 | 0/4 | 0/4 | 3/8 |
-| 280779 | 92.7 | 4/4 | 4/4 | 4/4 | 8/8 |
-| 556158 | 93.9 | 4/4 | 4/4 | 4/4 | 8/8 |
-| control | 99.2 | 4/4 | 4/4 | 4/4 | 8/8 |
+| start range | subjects acquirable | flights held >= 1 s |
+|---|---|---|
+| 3.64 m | 5/12 | 28/96 = 0.292 |
+| 2.8 m | 4/12 | 16/48 = 0.333 |
+| 2.2 m | 5/12 | 20/48 = 0.417 |
+| 1.6 m | 8/12 | 32/48 = 0.667 |
 
-Pooled over the twelve screened subjects, closer is better and the trend is
-clean:
+**The flight-level column looks monotone and the subject-level one is not.** It
+falls from 3.64 to 2.8 m and is flat from 3.64 to 2.2 m. The pooled rise at
+2.8 m is three subjects moving: 374369 flips 0.000 to 1.000, while 266409 drops
+0.375 to 0.000 and 401446 drops 0.125 to 0.000. One better, two worse, nine
+unchanged, sign test p = 1.000.
 
-| start range | held >= 1 s |
-|---|---|
-| 3.64 m | 28/96 = 0.292 [0.203, 0.393] |
-| 2.8 m | 16/48 = 0.333 [0.204, 0.484] |
-| 2.2 m | 20/48 = 0.417 [0.276, 0.568] |
-| 1.6 m | 32/48 = 0.667 [0.516, 0.796] |
+## 3. The seven failures, one at a time
 
-## Why that pooled trend is not the answer
+The seven never acquired at 3.64 m are 124442, 527750, 157365, 356427, 250127,
+161875 and 374369.
 
-**The drone cannot get to 1.6 m.** Over the 116 flights that latched and held,
-the range it actually settles at has a median of 2.22 m, a 5th percentile of
-1.92 m and a minimum of 1.75 m. That is the forward controller driving the
-decoded size bucket to its setpoint, and it is where a creep-forward controller
-would arrive too. So the column that matters for the proposed fix is 2.2 m, where
-the pooled rate is 0.417, not the 1.6 m column at 0.667.
+| subject | 2.8 m | 2.2 m | 1.6 m |
+|---|---|---|---|
+| 374369 | **4/4** | **4/4** | 4/4 |
+| 157365 | 0/4 | 0/4 | 4/4 |
+| 356427 | 0/4 | 0/4 | 4/4 |
+| 124442 | 0/4 | 0/4 | 0/4 |
+| 527750 | 0/4 | 0/4 | 0/4 |
+| 250127 | 0/4 | 0/4 | 0/4 |
+| 161875 | 0/4 | 0/4 | 0/4 |
 
-**Take the seven that fail at 3.64 m one at a time.** That is the population the
-fix is for.
+In the two arms that are geometrically clean, **exactly one of the seven is
+rescued**. The two that look rescued are rescued only in the 1.6 m arm, and that
+arm has a problem.
 
-- **374369** is acquired at 2.8, 2.2 and 1.6 m. Genuinely range-limited. A
-  creep-forward controller would rescue it.
-- **401446** is acquired at 2.2 and 1.6 m. It is 1/8 at 3.64 m and 0/4 at 2.8 m,
-  so it sits near the edge; creeping to 2.2 m would probably rescue it.
-- **157365** and **356427** are acquired only at 1.6 m, below where the drone
-  will stop. Creeping forward does not reach them.
-- **124442**, **527750**, **250127** and **161875** are never acquired at any
-  range tested, including 1.6 m. Their problem is not distance.
+## 4. Why the 1.6 m arm cannot carry a verdict
 
-So of seven failures: one clear rescue, one likely, two that need closer than the
-drone will go, and four that are not a range problem at all.
+The room's far wall is 4 m tall at x = 7 m, so from a camera at 0.8 m its top
+edge falls at image row 42 of 244. Working out where each arm puts the subject's
+head:
 
-**161875 is the strangest of these.** Index 87.0, never acquired on the standing
-scene at any of the four ranges, and yet acquired on 8 of 8 moving flights in the
-other suite. The standing scene puts the person at -15.9 deg and the moving scene
-opens at +21.5 deg, so something about pose or bearing rather than range is
-deciding it. Nothing here explains that and it should not be guessed at.
+| start range | subject spans rows | head above row 42? |
+|---|---|---|
+| 1.6 m | 24.0 to 209.1 | **yes** |
+| 2.2 m | 50.7 to 185.4 | no |
+| 2.8 m | 66.0 to 171.8 | no |
+| 3.64 m | 78.9 to 160.3 | no |
 
-## What I checked and did not find
+At 1.6 m and only at 1.6 m the subject's head crosses above the wall into the
+skybox. The cutout is an opaque card whose padding is painted the wall colour
+(158, 158, 168) precisely so it disappears against the wall, and against the sky
+it does not. So the 1.6 m arm changes what the network sees in a way that is not
+range, and it is the arm in which two of the three rescues appear.
 
-Two subjects look non-monotone in range: 266409 is 4/4 at 1.6 m, 0/4 at 2.2 and
-2.8, then 3/8 at 3.64; 401446 is 0/4 at 2.8 but 1/8 at 3.64. The static probe in
-the fidelity study also dips at its 2.5 m rung for every subject, so I expected to
-confirm a real inversion here. **It does not reach significance.** Two-sided
-Fisher on the two cells gives p = 0.491 and p = 1.000, and only 2 of 13 subjects
-show any inversion at all. At four flights a cell this suite cannot distinguish a
-real dip from noise, so the apparent non-monotonicity is not a finding. Whether
-the 2.5 m rung in the static probe is an artefact remains open and would need its
-own experiment.
+That does not prove the 1.6 m rescues are artefacts. It means this suite cannot
+tell, and the arm should not be used to decide whether a controller change is
+worth building.
 
-## What this means for the project
+## 5. What the first version of this README got wrong
 
-The deadlock is real as a mechanism and it is not the explanation for why the
-drone ignores ordinary people. Letting the drone creep forward while unsure is
-still worth doing, it is cheap, and it converts one and probably two of seven
-failures into successes. It is not the fix. Four of the seven are not seeing the
-person at 1.6 m, which is a perception problem no control law reaches.
+Fourteen of fifteen refutation attempts succeeded.
 
-That is worth knowing before anyone spends a week on the controller.
+1. **The floor argument was invalid.** I wrote that the drone "cannot reach
+   1.6 m" because latched flights settle at a median of 2.22 m. That number is
+   measured entirely after acquisition, on flights governed by the post-latch
+   station-keeping law. A creep controller runs in the branch where forward
+   velocity is hard-zeroed, so nothing in the size loop constrains where it would
+   stop. Its floor is a design choice. The suite's own data contains a drone
+   sitting unlatched at 1.52 m for 3.94 seconds with forward velocity commanded
+   at exactly zero throughout (`A.r22__401446__r2a1`), which is below the
+   "minimum" I quoted.
+2. **I described the forward law wrongly** as driving the size bucket to a
+   setpoint. It is bang-bang with a dead zone, and 2.22 m is a quantiser
+   artefact.
+3. **I listed eight subjects and called them seven.** 401446 is not a 3.64 m
+   failure; it holds 21.5 s on one of its eight flights there. Removing it takes
+   the count from "one clear rescue and one likely" to one.
+4. **I called the trend monotone and clean.** At subject level it is not.
+5. **I missed the skybox crossing in the 1.6 m arm**, which is the real reason to
+   discount that column, and a better one than the floor argument I used.
+6. **I under-claimed on the 2.5 m dip.** I wrote that it "would need its own
+   experiment". The experiment is already in the repo and covers all thirteen of
+   these subjects: `2026-09-15-sim-person-fidelity/tables/sim_cohort.csv` has 534
+   renders per rung over 267 subjects, with median confidence 0.643 at 2.0 m,
+   0.420 at 2.5 m and 0.532 at 3.0 m. Binarising 200 frames of graded confidence
+   into one bit at the 0.75 bar and then reporting that the bit could not resolve
+   the dip measured my choice of statistic, not the data.
+7. **The bearing guarantee was 0.002 deg, not the 0.001 I asserted.** The
+   generator asserts on six-decimal positions that `build_scene.py` then rounds
+   to four before writing the XML, so the assertion guarded a number MuJoCo never
+   reads. Physically irrelevant, but the stated guarantee was not the enforced
+   one, and it is exactly the failure mode the generator's own comment
+   anticipated.
 
-## Limits
+## 6. What this means for the project
+
+On the clean arms, moving the person from 3.64 m to 2.2 m rescues one of seven.
+Six of the seven are still not acquired at 2.2 m, and four of them are not
+acquired even at 1.6 m. **The deadlock is real as a mechanism and it is not the
+explanation for why the drone ignores ordinary people.**
+
+A creep-forward controller is still cheap and still worth building, and there is a
+second parameter worth changing alongside it. After latching at 1.6 m the decode
+reads bucket 3 and the law immediately commands -0.2 m/s; 157365 and 356427 then
+lose the track on the way out, at 1.62 to 1.97 m, while 374369 holds because it
+stays detectable out to 2.4 m. So a creep without a closer hold buys a latch that
+does not survive. Both are parameter changes to the same few lines.
+
+But the honest headline is that this suite does not establish that creeping
+forward helps much, because the one arm where it clearly helps is the one arm
+that is not clean.
+
+## 7. Limits
 
 Simulation only, rendered cutouts, which are harder than real photographs. Four
-flights per cell, so a single cell's rate carries a wide interval; the per-subject
-verdicts above rest on clean 0/4 and 4/4 separations rather than on marginal
-counts. All three near ranges keep the whole body inside the 70 deg crop, the
-head-truncation limit for a 1.7 m person being 1.285 m. The moving scene is not
-part of this suite, so the 161875 comparison crosses two scenes that differ in
-bearing as well as range.
+flights a cell, so single cells carry wide intervals; the per-subject verdicts
+rest on clean 0/4 and 4/4 separations. The 1.6 m arm is confounded as described.
+No rung was flown between 1.6 and 2.2 m, so where the transition sits for 157365
+and 356427 is unknown. The moving scene is not part of this suite, so the
+161875 comparison below crosses two scenes differing in bearing as well as range.
+
+**161875 remains unexplained.** Index 87.0, never acquired on the standing scene
+at any of the four ranges, acquired on 8 of 8 moving flights in the other suite.
+Not guessed at here.
 
 ## One provenance wart
 
-`suite_meta.json` in this directory records `"suite": "people_plural"`. That
-string is hardcoded in `fly_pool.sh`, which this suite reuses deliberately rather
-than forking, and `fly_deadlock.sh` does not override it. The file is otherwise
-correct and distinguishes itself by `cells: 39`, `repeats: 4` and its
-`started_utc` of 2026-09-16T03:17:16Z against the other suite's
-2026-09-15T23:26:05Z. Left as written rather than edited after the run, because
-editing a recorded artefact to look tidier is worse than a wrong label with an
-explanation next to it.
+`suite_meta.json` records `"suite": "people_plural"`. That string is hardcoded in
+`fly_pool.sh`, which this suite reuses deliberately rather than forking, and
+`fly_deadlock.sh` does not override it. The file is otherwise correct and is
+distinguished by `cells: 39`, `repeats: 4` and its `started_utc`. Left as written
+rather than edited, because editing a recorded artefact to look tidier is worse
+than a wrong label with an explanation next to it.
