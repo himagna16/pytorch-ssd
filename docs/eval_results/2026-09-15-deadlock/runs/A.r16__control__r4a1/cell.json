@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.r16__control",
+  "scene": "dl16_19432",
+  "scene_class": "A",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 4,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/deadlock_scenes/dl16_19432",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-deadlock/runs/A.r16__control__r4a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-deadlock/runs/A.r16__control__r4a1/truth.csv",
+  "sensor_seed": 1004,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "people_plural"
+}

@@ -1,0 +1,49 @@
+260 flights (156 deadlock + 104 from people-plural at 3.64 m)
+
+================================================================================================
+LATCH RATE AGAINST START RANGE.  ever / held>=1s / held>=3s, out of 8 (3.64 m) or 4
+================================================================================================
+  subject  index             1.6 m             2.2 m             2.8 m            3.64 m
+   124442   28.4        4/0/0 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+   527750   34.3        0/0/0 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+   157365   34.6        4/4/2 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+   356427   37.8        4/4/1 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+   250127   52.1        0/0/0 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+    61747   86.8        4/4/4 of 4        4/4/4 of 4        4/4/4 of 4        8/8/8 of 8
+   161875   87.0        0/0/0 of 4        0/0/0 of 4        0/0/0 of 4        0/0/0 of 8
+   401446   88.8        4/4/3 of 4        4/4/3 of 4        0/0/0 of 4        1/1/1 of 8
+   374369   90.3        4/4/4 of 4        4/4/4 of 4        4/4/4 of 4        0/0/0 of 8
+   266409   92.1        4/4/4 of 4        0/0/0 of 4        0/0/0 of 4        3/3/2 of 8
+   280779   92.7        4/4/4 of 4        4/4/4 of 4        4/4/4 of 4        8/8/8 of 8
+   556158   93.9        4/4/4 of 4        4/4/4 of 4        4/4/4 of 4        8/8/8 of 8
+  control   99.2        4/4/4 of 4        4/4/4 of 4        4/4/4 of 4        8/8/8 of 8  <- control
+
+================================================================================================
+THE TEST: the seven subjects that NEVER latched at 3.64 m on the static scene
+================================================================================================
+  7 such subjects: 124442, 527750, 157365, 356427, 250127, 161875, 374369
+    subject  index       1.6 m       2.2 m       2.8 m      3.64 m   rescued?
+     124442   28.4         0/4         0/4         0/4         0/8   NO at any range
+     527750   34.3         0/4         0/4         0/4         0/8   NO at any range
+     157365   34.6         4/4         0/4         0/4         0/8   yes, at 1.6 m
+     356427   37.8         4/4         0/4         0/4         0/8   yes, at 1.6 m
+     250127   52.1         0/4         0/4         0/4         0/8   NO at any range
+     161875   87.0         0/4         0/4         0/4         0/8   NO at any range
+     374369   90.3         4/4         4/4         4/4         0/8   yes, at 1.6 m
+
+================================================================================================
+WOULD CREEPING FORWARD ACTUALLY HELP?  The follower cannot close past its own
+size-decoder floor, so a rescue that needs 1.6 m is not a rescue the drone can
+reach. Final range on flights that latched and held >= 1 s:
+================================================================================================
+  start  1.6 m: n= 36  final range median 2.23 m  min 1.77  max 2.59
+  start  2.2 m: n= 24  final range median 2.20 m  min 1.75  max 2.48
+  start  2.8 m: n= 20  final range median 2.25 m  min 1.99  max 2.47
+  start 3.64 m: n= 36  final range median 2.26 m  min 1.90  max 3.58
+
+  pooled over the 12 screened, start  1.6 m: held>=1s 32/48 = 0.667 [0.516, 0.796]
+  pooled over the 12 screened, start  2.2 m: held>=1s 20/48 = 0.417 [0.276, 0.568]
+  pooled over the 12 screened, start  2.8 m: held>=1s 16/48 = 0.333 [0.204, 0.484]
+  pooled over the 12 screened, start 3.64 m: held>=1s 28/96 = 0.292 [0.203, 0.393]
+
+wrote tables/flights.tsv and tables/flights.json
