@@ -59,6 +59,8 @@ fall.
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
+| How well the drone follows people, measured across people | Sai | **Measured Sep 15: 208 flights, 13 subjects, 8 repeats.** The published subject latched 16/16 and tracked 0.99. The twelve screened subjects latched on 29% of standing flights and 68% of moving ones, median tracking 0.000 standing. My pre-registered prediction failed: four of seven high-ranking subjects also never got going. What predicts the outcome is the share of frames clearing the 0.75 bar at the flown distance, which is 0.000 for seven subjects and 0.43-0.86 for the four that always follow. Card width is ruled out by three subjects matched to 13 mm whose outcomes still span never to always. Evidence: docs/eval_results/2026-09-15-people-plural/ | Report to the team once the control-law test lands |
+| Why the drone ignores ordinary people: a control-law deadlock | Sai | **Found Sep 15, test in flight.** The follower commands no forward motion until it has locked on (follow_person.py:374-377), and it starts 3.64 m out, but the subjects it fails on only clear the confidence bar nearer than about 1.8 m. So it cannot lock on because it is too far and cannot approach because it has not locked on. One flight has the drone at the origin on the first frame and the last, 3.64 m away, tracking 0.000 for 45 s. 156 flights at 1.6 / 2.2 / 2.8 m are running to separate a perception limit from a controller limit | If it is the controller, the fix is creeping forward while unsure, which is far cheaper than retraining. Evidence: docs/eval_results/2026-09-15-deadlock/ |
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
 | Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
 | The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
@@ -143,6 +145,56 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-15 (evening, 208 flights).** Answered the question this project has
+  been unable to answer since August: how well does the drone follow people,
+  plural. Every tracking number we have published, 97 to 99 percent, came from
+  one photograph. I flew twelve more.
+
+  The twelve are not a selection. An earlier study wrote down a screen for who
+  counts as a usable subject, applied it to all 266 people in the cohort, and
+  published the verdict for every one. Twelve passed. I flew all twelve, plus the
+  original photograph as a reference, on both person scenes, eight times each.
+  208 flights, every one valid, about four hours.
+
+  The original photograph latched on all sixteen of its flights and tracked 99
+  percent, exactly as published. The twelve screened people latched on 29 percent
+  of the standing flights and 68 percent of the moving ones. On the standing
+  scene the median person tracked nothing at all.
+
+  I was wrong about why. I predicted before flying that the easy-looking people
+  would all do well and the hard-looking ones would all fail, and wrote that
+  prediction into the repository so it could fail. It failed. Four of the seven
+  easy-looking people also never got going on the standing scene, two of them not
+  once in eight tries. The ranking I used to pick them averages how visible
+  someone is across six distances, including distances these scenes never fly at.
+
+  What actually predicts it is simple and I should have used it from the start:
+  the share of frames where the model's confidence clears the bar it needs, at
+  the distance the drone actually sits. Seven subjects never clear it once and
+  none of them ever start following. The ones that clear it on 43, 71, 78 and 86
+  percent of frames follow every time. Average confidence is not enough, because
+  one subject averages 0.61 and never crosses the line at all.
+
+  The reason is worse than a detection problem, and I only found it by reading
+  the controller. The drone does not move until it has decided it is following
+  someone. It starts three and a half metres away. The people it cannot see only
+  become visible closer than that. So it cannot lock on because it is too far,
+  and it cannot get closer because it has not locked on. One flight record is
+  that sentence: the drone sat at the origin, three point six four metres away,
+  for the whole forty five seconds, and never moved a centimetre.
+
+  If that is right it is good news, because a controller that creeps forward
+  while it is still unsure is a much cheaper fix than a better network. A second
+  suite of 156 flights is running now to test it, putting the same people at one
+  point six, two point two and two point eight metres.
+
+  One thing I checked before believing any of it: whether the difference was the
+  people or the cardboard. The panels are cut to each photograph's own
+  proportions, so a wider person gets a wider card, and card width did track
+  visibility. Three of the subjects happen to have the same card width to within
+  thirteen millimetres, and across those three the outcome still runs from never
+  to always. It is the person, not the card.
 
 - **2026-09-15 (afternoon).** Answered two questions that had been sitting open,
   neither of which needed the simulator.
