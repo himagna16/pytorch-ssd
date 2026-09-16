@@ -1,0 +1,424 @@
+[18:26:05] people-plural suite: 26 cells x 8 repeats = 208 flights, ships-as, out=/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-15-people-plural
+[18:26:05] flight 1/208  A.static__control  repeat 1 attempt 1  (s15_static_offset, 45s, elapsed 0s)
+[18:27:07]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.992, 6.367 Hz, end duration
+[18:27:07] flight 2/208  A.static__124442  repeat 1 attempt 1  (pp15_124442, 45s, elapsed 62s)
+[18:28:09]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.987, 6.376 Hz, end duration
+[18:28:09] flight 3/208  A.static__527750  repeat 1 attempt 1  (pp15_527750, 45s, elapsed 124s)
+[18:29:10]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.356 Hz, end duration
+[18:29:10] flight 4/208  A.static__157365  repeat 1 attempt 1  (pp15_157365, 45s, elapsed 185s)
+[18:30:12]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.364 Hz, end duration
+[18:30:12] flight 5/208  A.static__356427  repeat 1 attempt 1  (pp15_356427, 45s, elapsed 247s)
+[18:31:14]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.369 Hz, end duration
+[18:31:14] flight 6/208  A.static__250127  repeat 1 attempt 1  (pp15_250127, 45s, elapsed 309s)
+[18:32:15]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.366 Hz, end duration
+[18:32:15] flight 7/208  A.static__61747  repeat 1 attempt 1  (pp15_61747, 45s, elapsed 370s)
+[18:33:16]   -> VALID  tracked 0.279, vis_enter 0.75, sim/wall 0.992, 6.361 Hz, end duration
+[18:33:16] flight 8/208  A.static__161875  repeat 1 attempt 1  (pp15_161875, 45s, elapsed 431s)
+[18:34:18]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.425 Hz, end duration
+[18:34:18] flight 9/208  A.static__401446  repeat 1 attempt 1  (pp15_401446, 45s, elapsed 493s)
+[18:35:20]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.431 Hz, end duration
+[18:35:20] flight 10/208  A.static__374369  repeat 1 attempt 1  (pp15_374369, 45s, elapsed 555s)
+[18:36:22]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.993, 6.431 Hz, end duration
+[18:36:22] flight 11/208  A.static__266409  repeat 1 attempt 1  (pp15_266409, 45s, elapsed 617s)
+[18:37:24]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.431 Hz, end duration
+[18:37:24] flight 12/208  A.static__280779  repeat 1 attempt 1  (pp15_280779, 45s, elapsed 679s)
+[18:38:25]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.992, 6.425 Hz, end duration
+[18:38:25] flight 13/208  A.static__556158  repeat 1 attempt 1  (pp15_556158, 45s, elapsed 740s)
+[18:39:27]   -> VALID  tracked 0.748, vis_enter 0.75, sim/wall 0.987, 6.432 Hz, end duration
+[18:39:27] flight 14/208  B.moving__control  repeat 1 attempt 1  (s01_control_moving, 50s, elapsed 802s)
+[18:40:34]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.991, 6.426 Hz, end duration
+[18:40:34] flight 15/208  B.moving__124442  repeat 1 attempt 1  (pp01_124442, 50s, elapsed 869s)
+[18:41:40]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.425 Hz, end duration
+[18:41:40] flight 16/208  B.moving__527750  repeat 1 attempt 1  (pp01_527750, 50s, elapsed 935s)
+[18:42:47]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.431 Hz, end duration
+[18:42:47] flight 17/208  B.moving__157365  repeat 1 attempt 1  (pp01_157365, 50s, elapsed 1002s)
+[18:43:54]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.423 Hz, end duration
+[18:43:54] flight 18/208  B.moving__356427  repeat 1 attempt 1  (pp01_356427, 50s, elapsed 1069s)
+[18:45:01]   -> VALID  tracked 0.008, vis_enter 0.75, sim/wall 0.995, 6.434 Hz, end duration
+[18:45:01] flight 19/208  B.moving__250127  repeat 1 attempt 1  (pp01_250127, 50s, elapsed 1136s)
+[18:46:07]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.429 Hz, end duration
+[18:46:07] flight 20/208  B.moving__61747  repeat 1 attempt 1  (pp01_61747, 50s, elapsed 1202s)
+[18:47:14]   -> VALID  tracked 0.73, vis_enter 0.75, sim/wall 0.993, 6.43 Hz, end duration
+[18:47:14] flight 21/208  B.moving__161875  repeat 1 attempt 1  (pp01_161875, 50s, elapsed 1269s)
+[18:48:21]   -> VALID  tracked 0.073, vis_enter 0.75, sim/wall 0.992, 6.432 Hz, end duration
+[18:48:21] flight 22/208  B.moving__401446  repeat 1 attempt 1  (pp01_401446, 50s, elapsed 1336s)
+[18:49:28]   -> VALID  tracked 0.206, vis_enter 0.75, sim/wall 0.995, 6.427 Hz, end duration
+[18:49:28] flight 23/208  B.moving__374369  repeat 1 attempt 1  (pp01_374369, 50s, elapsed 1403s)
+[18:50:34]   -> VALID  tracked 0.374, vis_enter 0.75, sim/wall 0.99, 6.431 Hz, end duration
+[18:50:34] flight 24/208  B.moving__266409  repeat 1 attempt 1  (pp01_266409, 50s, elapsed 1469s)
+[18:51:41]   -> VALID  tracked 0.291, vis_enter 0.75, sim/wall 0.99, 6.43 Hz, end duration
+[18:51:41] flight 25/208  B.moving__280779  repeat 1 attempt 1  (pp01_280779, 50s, elapsed 1536s)
+[18:52:48]   -> VALID  tracked 0.979, vis_enter 0.75, sim/wall 0.989, 6.427 Hz, end duration
+[18:52:48] flight 26/208  B.moving__556158  repeat 1 attempt 1  (pp01_556158, 50s, elapsed 1603s)
+[18:53:55]   -> VALID  tracked 0.976, vis_enter 0.75, sim/wall 0.987, 6.429 Hz, end duration
+[18:53:55] flight 27/208  A.static__124442  repeat 2 attempt 1  (pp15_124442, 45s, elapsed 1670s)
+[18:54:56]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.993, 6.427 Hz, end duration
+[18:54:56] flight 28/208  A.static__527750  repeat 2 attempt 1  (pp15_527750, 45s, elapsed 1731s)
+[18:55:58]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.989, 6.428 Hz, end duration
+[18:55:58] flight 29/208  A.static__157365  repeat 2 attempt 1  (pp15_157365, 45s, elapsed 1793s)
+[18:57:00]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.993, 6.435 Hz, end duration
+[18:57:00] flight 30/208  A.static__356427  repeat 2 attempt 1  (pp15_356427, 45s, elapsed 1855s)
+[18:58:02]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.425 Hz, end duration
+[18:58:02] flight 31/208  A.static__250127  repeat 2 attempt 1  (pp15_250127, 45s, elapsed 1917s)
+[18:59:03]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.417 Hz, end duration
+[18:59:03] flight 32/208  A.static__61747  repeat 2 attempt 1  (pp15_61747, 45s, elapsed 1978s)
+[19:00:05]   -> VALID  tracked 0.922, vis_enter 0.75, sim/wall 0.99, 6.423 Hz, end duration
+[19:00:05] flight 33/208  A.static__161875  repeat 2 attempt 1  (pp15_161875, 45s, elapsed 2040s)
+[19:01:07]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.425 Hz, end duration
+[19:01:07] flight 34/208  A.static__401446  repeat 2 attempt 1  (pp15_401446, 45s, elapsed 2102s)
+[19:02:08]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.419 Hz, end duration
+[19:02:08] flight 35/208  A.static__374369  repeat 2 attempt 1  (pp15_374369, 45s, elapsed 2163s)
+[19:03:10]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.419 Hz, end duration
+[19:03:10] flight 36/208  A.static__266409  repeat 2 attempt 1  (pp15_266409, 45s, elapsed 2225s)
+[19:04:12]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.425 Hz, end duration
+[19:04:12] flight 37/208  A.static__280779  repeat 2 attempt 1  (pp15_280779, 45s, elapsed 2287s)
+[19:05:14]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.994, 6.425 Hz, end duration
+[19:05:14] flight 38/208  A.static__556158  repeat 2 attempt 1  (pp15_556158, 45s, elapsed 2349s)
+[19:06:15]   -> VALID  tracked 0.808, vis_enter 0.75, sim/wall 0.993, 6.428 Hz, end duration
+[19:06:15] flight 39/208  A.static__control  repeat 2 attempt 1  (s15_static_offset, 45s, elapsed 2410s)
+[19:07:17]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.988, 6.426 Hz, end duration
+[19:07:17] flight 40/208  B.moving__124442  repeat 2 attempt 1  (pp01_124442, 50s, elapsed 2472s)
+[19:08:24]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.99, 6.43 Hz, end duration
+[19:08:24] flight 41/208  B.moving__527750  repeat 2 attempt 1  (pp01_527750, 50s, elapsed 2539s)
+[19:09:31]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.986, 6.433 Hz, end duration
+[19:09:31] flight 42/208  B.moving__157365  repeat 2 attempt 1  (pp01_157365, 50s, elapsed 2606s)
+[19:10:37]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.424 Hz, end duration
+[19:10:37] flight 43/208  B.moving__356427  repeat 2 attempt 1  (pp01_356427, 50s, elapsed 2672s)
+[19:11:44]   -> VALID  tracked 0.021, vis_enter 0.75, sim/wall 0.991, 6.431 Hz, end duration
+[19:11:44] flight 44/208  B.moving__250127  repeat 2 attempt 1  (pp01_250127, 50s, elapsed 2739s)
+[19:12:51]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.99, 6.433 Hz, end duration
+[19:12:51] flight 45/208  B.moving__61747  repeat 2 attempt 1  (pp01_61747, 50s, elapsed 2806s)
+[19:13:58]   -> VALID  tracked 0.745, vis_enter 0.75, sim/wall 0.998, 6.424 Hz, end duration
+[19:13:58] flight 46/208  B.moving__161875  repeat 2 attempt 1  (pp01_161875, 50s, elapsed 2873s)
+[19:15:04]   -> VALID  tracked 0.113, vis_enter 0.75, sim/wall 0.994, 6.426 Hz, end duration
+[19:15:04] flight 47/208  B.moving__401446  repeat 2 attempt 1  (pp01_401446, 50s, elapsed 2939s)
+[19:16:11]   -> VALID  tracked 0.233, vis_enter 0.75, sim/wall 0.995, 6.419 Hz, end duration
+[19:16:11] flight 48/208  B.moving__374369  repeat 2 attempt 1  (pp01_374369, 50s, elapsed 3006s)
+[19:17:18]   -> VALID  tracked 0.937, vis_enter 0.75, sim/wall 0.996, 6.425 Hz, end duration
+[19:17:18] flight 49/208  B.moving__266409  repeat 2 attempt 1  (pp01_266409, 50s, elapsed 3073s)
+[19:18:24]   -> VALID  tracked 0.213, vis_enter 0.75, sim/wall 0.997, 6.424 Hz, end duration
+[19:18:24] flight 50/208  B.moving__280779  repeat 2 attempt 1  (pp01_280779, 50s, elapsed 3139s)
+[19:19:31]   -> VALID  tracked 0.983, vis_enter 0.75, sim/wall 0.995, 6.423 Hz, end duration
+[19:19:31] flight 51/208  B.moving__556158  repeat 2 attempt 1  (pp01_556158, 50s, elapsed 3206s)
+[19:20:38]   -> VALID  tracked 0.919, vis_enter 0.75, sim/wall 0.996, 6.424 Hz, end duration
+[19:20:38] flight 52/208  B.moving__control  repeat 2 attempt 1  (s01_control_moving, 50s, elapsed 3273s)
+[19:21:45]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.997, 6.423 Hz, end duration
+[19:21:45] flight 53/208  A.static__527750  repeat 3 attempt 1  (pp15_527750, 45s, elapsed 3340s)
+[19:22:46]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.425 Hz, end duration
+[19:22:47] flight 54/208  A.static__157365  repeat 3 attempt 1  (pp15_157365, 45s, elapsed 3402s)
+[19:23:48]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.99, 6.43 Hz, end duration
+[19:23:48] flight 55/208  A.static__356427  repeat 3 attempt 1  (pp15_356427, 45s, elapsed 3463s)
+[19:26:12]   -> flight did not produce a run (exit 142)
+[19:26:12] flight 55/208  A.static__356427  repeat 3 attempt 2  (pp15_356427, 45s, elapsed 3607s)
+[19:27:13]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.42 Hz, end duration
+[19:27:13] flight 56/208  A.static__250127  repeat 3 attempt 1  (pp15_250127, 45s, elapsed 3668s)
+[19:28:15]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.431 Hz, end duration
+[19:28:15] flight 57/208  A.static__61747  repeat 3 attempt 1  (pp15_61747, 45s, elapsed 3730s)
+[19:29:17]   -> VALID  tracked 0.971, vis_enter 0.75, sim/wall 0.997, 6.419 Hz, end duration
+[19:29:17] flight 58/208  A.static__161875  repeat 3 attempt 1  (pp15_161875, 45s, elapsed 3792s)
+[19:30:18]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.431 Hz, end duration
+[19:30:18] flight 59/208  A.static__401446  repeat 3 attempt 1  (pp15_401446, 45s, elapsed 3853s)
+[19:31:20]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.986, 6.416 Hz, end duration
+[19:31:20] flight 60/208  A.static__374369  repeat 3 attempt 1  (pp15_374369, 45s, elapsed 3915s)
+[19:32:22]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.423 Hz, end duration
+[19:32:22] flight 61/208  A.static__266409  repeat 3 attempt 1  (pp15_266409, 45s, elapsed 3977s)
+[19:33:24]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.431 Hz, end duration
+[19:33:24] flight 62/208  A.static__280779  repeat 3 attempt 1  (pp15_280779, 45s, elapsed 4039s)
+[19:34:25]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.98, 6.447 Hz, end duration
+[19:34:25] flight 63/208  A.static__556158  repeat 3 attempt 1  (pp15_556158, 45s, elapsed 4100s)
+[19:35:27]   -> VALID  tracked 0.962, vis_enter 0.75, sim/wall 0.957, 6.438 Hz, end duration
+[19:35:27] flight 64/208  A.static__control  repeat 3 attempt 1  (s15_static_offset, 45s, elapsed 4162s)
+[19:36:29]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.952, 6.427 Hz, end duration
+[19:36:29] flight 65/208  A.static__124442  repeat 3 attempt 1  (pp15_124442, 45s, elapsed 4224s)
+[19:37:31]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.98, 6.448 Hz, end duration
+[19:37:31] flight 66/208  B.moving__527750  repeat 3 attempt 1  (pp01_527750, 50s, elapsed 4286s)
+[19:38:37]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.954, 6.437 Hz, end duration
+[19:38:37] flight 67/208  B.moving__157365  repeat 3 attempt 1  (pp01_157365, 50s, elapsed 4352s)
+[19:39:44]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.966, 6.441 Hz, end duration
+[19:39:44] flight 68/208  B.moving__356427  repeat 3 attempt 1  (pp01_356427, 50s, elapsed 4419s)
+[19:40:51]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.983, 6.45 Hz, end duration
+[19:40:51] flight 69/208  B.moving__250127  repeat 3 attempt 1  (pp01_250127, 50s, elapsed 4486s)
+[19:43:19]   -> flight did not produce a run (exit 142)
+[19:43:19] flight 69/208  B.moving__250127  repeat 3 attempt 2  (pp01_250127, 50s, elapsed 4634s)
+[19:44:26]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.943, 6.433 Hz, end duration
+[19:44:26] flight 70/208  B.moving__61747  repeat 3 attempt 1  (pp01_61747, 50s, elapsed 4701s)
+[19:45:33]   -> VALID  tracked 0.052, vis_enter 0.75, sim/wall 0.981, 6.444 Hz, end duration
+[19:45:33] flight 71/208  B.moving__161875  repeat 3 attempt 1  (pp01_161875, 50s, elapsed 4768s)
+[19:46:40]   -> VALID  tracked 0.398, vis_enter 0.75, sim/wall 0.981, 6.444 Hz, end duration
+[19:46:40] flight 72/208  B.moving__401446  repeat 3 attempt 1  (pp01_401446, 50s, elapsed 4835s)
+[19:47:46]   -> VALID  tracked 0.659, vis_enter 0.75, sim/wall 0.983, 6.449 Hz, end duration
+[19:47:46] flight 73/208  B.moving__374369  repeat 3 attempt 1  (pp01_374369, 50s, elapsed 4901s)
+[19:48:53]   -> VALID  tracked 0.768, vis_enter 0.75, sim/wall 0.979, 6.451 Hz, end duration
+[19:48:53] flight 74/208  B.moving__266409  repeat 3 attempt 1  (pp01_266409, 50s, elapsed 4968s)
+[19:50:00]   -> VALID  tracked 0.061, vis_enter 0.75, sim/wall 0.966, 6.435 Hz, end duration
+[19:50:00] flight 75/208  B.moving__280779  repeat 3 attempt 1  (pp01_280779, 50s, elapsed 5035s)
+[19:51:06]   -> VALID  tracked 0.916, vis_enter 0.75, sim/wall 0.98, 6.445 Hz, end duration
+[19:51:06] flight 76/208  B.moving__556158  repeat 3 attempt 1  (pp01_556158, 50s, elapsed 5101s)
+[19:52:13]   -> VALID  tracked 0.873, vis_enter 0.75, sim/wall 0.962, 6.441 Hz, end duration
+[19:52:13] flight 77/208  B.moving__control  repeat 3 attempt 1  (s01_control_moving, 50s, elapsed 5168s)
+[19:53:20]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.975, 6.448 Hz, end duration
+[19:53:20] flight 78/208  B.moving__124442  repeat 3 attempt 1  (pp01_124442, 50s, elapsed 5235s)
+[19:54:27]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.981, 6.453 Hz, end duration
+[19:54:27] flight 79/208  A.static__157365  repeat 4 attempt 1  (pp15_157365, 45s, elapsed 5302s)
+[19:55:28]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.982, 6.447 Hz, end duration
+[19:55:28] flight 80/208  A.static__356427  repeat 4 attempt 1  (pp15_356427, 45s, elapsed 5363s)
+[19:56:30]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.964, 6.435 Hz, end duration
+[19:56:30] flight 81/208  A.static__250127  repeat 4 attempt 1  (pp15_250127, 45s, elapsed 5425s)
+[19:57:32]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.98, 6.447 Hz, end duration
+[19:57:32] flight 82/208  A.static__61747  repeat 4 attempt 1  (pp15_61747, 45s, elapsed 5487s)
+[19:58:34]   -> VALID  tracked 0.3, vis_enter 0.75, sim/wall 0.982, 6.457 Hz, end duration
+[19:58:34] flight 83/208  A.static__161875  repeat 4 attempt 1  (pp15_161875, 45s, elapsed 5549s)
+[19:59:36]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.985, 6.445 Hz, end duration
+[19:59:36] flight 84/208  A.static__401446  repeat 4 attempt 1  (pp15_401446, 45s, elapsed 5611s)
+[20:00:37]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.975, 6.444 Hz, end duration
+[20:00:37] flight 85/208  A.static__374369  repeat 4 attempt 1  (pp15_374369, 45s, elapsed 5672s)
+[20:01:39]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.98, 6.442 Hz, end duration
+[20:01:39] flight 86/208  A.static__266409  repeat 4 attempt 1  (pp15_266409, 45s, elapsed 5734s)
+[20:02:41]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.959, 6.433 Hz, end duration
+[20:02:41] flight 87/208  A.static__280779  repeat 4 attempt 1  (pp15_280779, 45s, elapsed 5796s)
+[20:03:43]   -> VALID  tracked 0.972, vis_enter 0.75, sim/wall 0.963, 6.44 Hz, end duration
+[20:03:43] flight 88/208  A.static__556158  repeat 4 attempt 1  (pp15_556158, 45s, elapsed 5858s)
+[20:04:44]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.978, 6.451 Hz, end duration
+[20:04:44] flight 89/208  A.static__control  repeat 4 attempt 1  (s15_static_offset, 45s, elapsed 5919s)
+[20:05:46]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.994, 6.427 Hz, end duration
+[20:05:46] flight 90/208  A.static__124442  repeat 4 attempt 1  (pp15_124442, 45s, elapsed 5981s)
+[20:06:48]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.982, 6.434 Hz, end duration
+[20:06:48] flight 91/208  A.static__527750  repeat 4 attempt 1  (pp15_527750, 45s, elapsed 6043s)
+[20:07:50]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.986, 6.427 Hz, end duration
+[20:07:50] flight 92/208  B.moving__157365  repeat 4 attempt 1  (pp01_157365, 50s, elapsed 6105s)
+[20:08:56]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.982, 6.433 Hz, end duration
+[20:08:56] flight 93/208  B.moving__356427  repeat 4 attempt 1  (pp01_356427, 50s, elapsed 6171s)
+[20:10:03]   -> VALID  tracked 0.008, vis_enter 0.75, sim/wall 0.989, 6.43 Hz, end duration
+[20:10:03] flight 94/208  B.moving__250127  repeat 4 attempt 1  (pp01_250127, 50s, elapsed 6238s)
+[20:11:10]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.988, 6.429 Hz, end duration
+[20:11:10] flight 95/208  B.moving__61747  repeat 4 attempt 1  (pp01_61747, 50s, elapsed 6305s)
+[20:12:17]   -> VALID  tracked 0.452, vis_enter 0.75, sim/wall 0.99, 6.425 Hz, end duration
+[20:12:17] flight 96/208  B.moving__161875  repeat 4 attempt 1  (pp01_161875, 50s, elapsed 6372s)
+[20:13:23]   -> VALID  tracked 0.208, vis_enter 0.75, sim/wall 0.994, 6.426 Hz, end duration
+[20:13:23] flight 97/208  B.moving__401446  repeat 4 attempt 1  (pp01_401446, 50s, elapsed 6438s)
+[20:14:30]   -> VALID  tracked 0.411, vis_enter 0.75, sim/wall 0.996, 6.427 Hz, end duration
+[20:14:30] flight 98/208  B.moving__374369  repeat 4 attempt 1  (pp01_374369, 50s, elapsed 6505s)
+[20:15:37]   -> VALID  tracked 0.434, vis_enter 0.75, sim/wall 0.992, 6.428 Hz, end duration
+[20:15:37] flight 99/208  B.moving__266409  repeat 4 attempt 1  (pp01_266409, 50s, elapsed 6572s)
+[20:16:44]   -> VALID  tracked 0.218, vis_enter 0.75, sim/wall 0.984, 6.418 Hz, end duration
+[20:16:44] flight 100/208  B.moving__280779  repeat 4 attempt 1  (pp01_280779, 50s, elapsed 6639s)
+[20:17:51]   -> VALID  tracked 0.954, vis_enter 0.75, sim/wall 0.991, 6.427 Hz, end duration
+[20:17:51] flight 101/208  B.moving__556158  repeat 4 attempt 1  (pp01_556158, 50s, elapsed 6706s)
+[20:18:57]   -> VALID  tracked 0.875, vis_enter 0.75, sim/wall 0.994, 6.426 Hz, end duration
+[20:18:57] flight 102/208  B.moving__control  repeat 4 attempt 1  (s01_control_moving, 50s, elapsed 6772s)
+[20:20:04]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.995, 6.426 Hz, end duration
+[20:20:04] flight 103/208  B.moving__124442  repeat 4 attempt 1  (pp01_124442, 50s, elapsed 6839s)
+[20:21:11]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.424 Hz, end duration
+[20:21:11] flight 104/208  B.moving__527750  repeat 4 attempt 1  (pp01_527750, 50s, elapsed 6906s)
+[20:22:18]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.988, 6.416 Hz, end duration
+[20:22:18] flight 105/208  A.static__356427  repeat 5 attempt 1  (pp15_356427, 45s, elapsed 6973s)
+[20:23:19]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.423 Hz, end duration
+[20:23:19] flight 106/208  A.static__250127  repeat 5 attempt 1  (pp15_250127, 45s, elapsed 7034s)
+[20:24:21]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.429 Hz, end duration
+[20:24:21] flight 107/208  A.static__61747  repeat 5 attempt 1  (pp15_61747, 45s, elapsed 7096s)
+[20:25:23]   -> VALID  tracked 0.965, vis_enter 0.75, sim/wall 0.993, 6.354 Hz, end duration
+[20:25:23] flight 108/208  A.static__161875  repeat 5 attempt 1  (pp15_161875, 45s, elapsed 7158s)
+[20:26:25]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.358 Hz, end duration
+[20:26:25] flight 109/208  A.static__401446  repeat 5 attempt 1  (pp15_401446, 45s, elapsed 7220s)
+[20:27:27]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.365 Hz, end duration
+[20:27:27] flight 110/208  A.static__374369  repeat 5 attempt 1  (pp15_374369, 45s, elapsed 7282s)
+[20:28:29]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.366 Hz, end duration
+[20:28:29] flight 111/208  A.static__266409  repeat 5 attempt 1  (pp15_266409, 45s, elapsed 7344s)
+[20:29:30]   -> VALID  tracked 0.303, vis_enter 0.75, sim/wall 0.997, 6.345 Hz, end duration
+[20:29:30] flight 112/208  A.static__280779  repeat 5 attempt 1  (pp15_280779, 45s, elapsed 7405s)
+[20:30:32]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.982, 6.352 Hz, end duration
+[20:30:32] flight 113/208  A.static__556158  repeat 5 attempt 1  (pp15_556158, 45s, elapsed 7467s)
+[20:31:34]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.998, 6.365 Hz, end duration
+[20:31:34] flight 114/208  A.static__control  repeat 5 attempt 1  (s15_static_offset, 45s, elapsed 7529s)
+[20:32:35]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.997, 6.366 Hz, end duration
+[20:32:35] flight 115/208  A.static__124442  repeat 5 attempt 1  (pp15_124442, 45s, elapsed 7590s)
+[20:33:37]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.364 Hz, end duration
+[20:33:37] flight 116/208  A.static__527750  repeat 5 attempt 1  (pp15_527750, 45s, elapsed 7652s)
+[20:34:39]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.364 Hz, end duration
+[20:34:39] flight 117/208  A.static__157365  repeat 5 attempt 1  (pp15_157365, 45s, elapsed 7714s)
+[20:35:41]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.35 Hz, end duration
+[20:35:41] flight 118/208  B.moving__356427  repeat 5 attempt 1  (pp01_356427, 50s, elapsed 7776s)
+[20:36:47]   -> VALID  tracked 0.025, vis_enter 0.75, sim/wall 0.998, 6.37 Hz, end duration
+[20:36:47] flight 119/208  B.moving__250127  repeat 5 attempt 1  (pp01_250127, 50s, elapsed 7842s)
+[20:37:54]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.392 Hz, end duration
+[20:37:54] flight 120/208  B.moving__61747  repeat 5 attempt 1  (pp01_61747, 50s, elapsed 7909s)
+[20:39:01]   -> VALID  tracked 0.605, vis_enter 0.75, sim/wall 0.998, 6.357 Hz, end duration
+[20:39:01] flight 121/208  B.moving__161875  repeat 5 attempt 1  (pp01_161875, 50s, elapsed 7976s)
+[20:40:08]   -> VALID  tracked 0.153, vis_enter 0.75, sim/wall 0.997, 6.346 Hz, end duration
+[20:40:08] flight 122/208  B.moving__401446  repeat 5 attempt 1  (pp01_401446, 50s, elapsed 8043s)
+[20:41:14]   -> VALID  tracked 0.298, vis_enter 0.75, sim/wall 0.995, 6.357 Hz, end duration
+[20:41:14] flight 123/208  B.moving__374369  repeat 5 attempt 1  (pp01_374369, 50s, elapsed 8109s)
+[20:42:21]   -> VALID  tracked 0.825, vis_enter 0.75, sim/wall 0.997, 6.363 Hz, end duration
+[20:42:21] flight 124/208  B.moving__266409  repeat 5 attempt 1  (pp01_266409, 50s, elapsed 8176s)
+[20:43:28]   -> VALID  tracked 0.083, vis_enter 0.75, sim/wall 0.999, 6.373 Hz, end duration
+[20:43:28] flight 125/208  B.moving__280779  repeat 5 attempt 1  (pp01_280779, 50s, elapsed 8243s)
+[20:44:34]   -> VALID  tracked 0.966, vis_enter 0.75, sim/wall 0.997, 6.363 Hz, end duration
+[20:44:34] flight 126/208  B.moving__556158  repeat 5 attempt 1  (pp01_556158, 50s, elapsed 8309s)
+[20:45:41]   -> VALID  tracked 0.961, vis_enter 0.75, sim/wall 0.997, 6.361 Hz, end duration
+[20:45:41] flight 127/208  B.moving__control  repeat 5 attempt 1  (s01_control_moving, 50s, elapsed 8376s)
+[20:46:48]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.995, 6.354 Hz, end duration
+[20:46:48] flight 128/208  B.moving__124442  repeat 5 attempt 1  (pp01_124442, 50s, elapsed 8443s)
+[20:47:55]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.377 Hz, end duration
+[20:47:55] flight 129/208  B.moving__527750  repeat 5 attempt 1  (pp01_527750, 50s, elapsed 8510s)
+[20:49:01]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.363 Hz, end duration
+[20:49:01] flight 130/208  B.moving__157365  repeat 5 attempt 1  (pp01_157365, 50s, elapsed 8576s)
+[20:50:08]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.362 Hz, end duration
+[20:50:08] flight 131/208  A.static__250127  repeat 6 attempt 1  (pp15_250127, 45s, elapsed 8643s)
+[20:51:10]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.37 Hz, end duration
+[20:51:10] flight 132/208  A.static__61747  repeat 6 attempt 1  (pp15_61747, 45s, elapsed 8705s)
+[20:52:12]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.996, 6.364 Hz, end duration
+[20:52:12] flight 133/208  A.static__161875  repeat 6 attempt 1  (pp15_161875, 45s, elapsed 8767s)
+[20:53:13]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.999, 6.358 Hz, end duration
+[20:53:13] flight 134/208  A.static__401446  repeat 6 attempt 1  (pp15_401446, 45s, elapsed 8828s)
+[20:54:15]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.373 Hz, end duration
+[20:54:15] flight 135/208  A.static__374369  repeat 6 attempt 1  (pp15_374369, 45s, elapsed 8890s)
+[20:55:17]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.368 Hz, end duration
+[20:55:17] flight 136/208  A.static__266409  repeat 6 attempt 1  (pp15_266409, 45s, elapsed 8952s)
+[20:57:40]   -> flight did not produce a run (exit 142)
+[20:57:40] flight 136/208  A.static__266409  repeat 6 attempt 2  (pp15_266409, 45s, elapsed 9095s)
+[20:58:42]   -> VALID  tracked 0.044, vis_enter 0.75, sim/wall 0.998, 6.344 Hz, end duration
+[20:58:42] flight 137/208  A.static__280779  repeat 6 attempt 1  (pp15_280779, 45s, elapsed 9157s)
+[20:59:44]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.998, 6.363 Hz, end duration
+[20:59:44] flight 138/208  A.static__556158  repeat 6 attempt 1  (pp15_556158, 45s, elapsed 9219s)
+[21:00:45]   -> VALID  tracked 0.55, vis_enter 0.75, sim/wall 0.997, 6.365 Hz, end duration
+[21:00:45] flight 139/208  A.static__control  repeat 6 attempt 1  (s15_static_offset, 45s, elapsed 9280s)
+[21:01:47]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.998, 6.361 Hz, end duration
+[21:01:47] flight 140/208  A.static__124442  repeat 6 attempt 1  (pp15_124442, 45s, elapsed 9342s)
+[21:02:49]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.358 Hz, end duration
+[21:02:49] flight 141/208  A.static__527750  repeat 6 attempt 1  (pp15_527750, 45s, elapsed 9404s)
+[21:03:51]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.365 Hz, end duration
+[21:03:51] flight 142/208  A.static__157365  repeat 6 attempt 1  (pp15_157365, 45s, elapsed 9466s)
+[21:04:52]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.361 Hz, end duration
+[21:04:52] flight 143/208  A.static__356427  repeat 6 attempt 1  (pp15_356427, 45s, elapsed 9527s)
+[21:05:54]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.359 Hz, end duration
+[21:05:54] flight 144/208  B.moving__250127  repeat 6 attempt 1  (pp01_250127, 50s, elapsed 9589s)
+[21:07:01]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.361 Hz, end duration
+[21:07:01] flight 145/208  B.moving__61747  repeat 6 attempt 1  (pp01_61747, 50s, elapsed 9656s)
+[21:08:07]   -> VALID  tracked 0.838, vis_enter 0.75, sim/wall 0.989, 6.43 Hz, end duration
+[21:08:07] flight 146/208  B.moving__161875  repeat 6 attempt 1  (pp01_161875, 50s, elapsed 9722s)
+[21:09:14]   -> VALID  tracked 0.309, vis_enter 0.75, sim/wall 0.997, 6.421 Hz, end duration
+[21:09:14] flight 147/208  B.moving__401446  repeat 6 attempt 1  (pp01_401446, 50s, elapsed 9789s)
+[21:10:21]   -> VALID  tracked 0.75, vis_enter 0.75, sim/wall 0.995, 6.419 Hz, end duration
+[21:10:21] flight 148/208  B.moving__374369  repeat 6 attempt 1  (pp01_374369, 50s, elapsed 9856s)
+[21:11:28]   -> VALID  tracked 0.906, vis_enter 0.75, sim/wall 0.997, 6.428 Hz, end duration
+[21:11:28] flight 149/208  B.moving__266409  repeat 6 attempt 1  (pp01_266409, 50s, elapsed 9923s)
+[21:12:34]   -> VALID  tracked 0.083, vis_enter 0.75, sim/wall 0.996, 6.428 Hz, end duration
+[21:12:34] flight 150/208  B.moving__280779  repeat 6 attempt 1  (pp01_280779, 50s, elapsed 9989s)
+[21:13:41]   -> VALID  tracked 0.967, vis_enter 0.75, sim/wall 0.987, 6.416 Hz, end duration
+[21:13:41] flight 151/208  B.moving__556158  repeat 6 attempt 1  (pp01_556158, 50s, elapsed 10056s)
+[21:14:48]   -> VALID  tracked 0.932, vis_enter 0.75, sim/wall 0.994, 6.416 Hz, end duration
+[21:14:48] flight 152/208  B.moving__control  repeat 6 attempt 1  (s01_control_moving, 50s, elapsed 10123s)
+[21:15:54]   -> VALID  tracked 0.975, vis_enter 0.75, sim/wall 0.997, 6.426 Hz, end duration
+[21:15:54] flight 153/208  B.moving__124442  repeat 6 attempt 1  (pp01_124442, 50s, elapsed 10189s)
+[21:17:01]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.428 Hz, end duration
+[21:17:01] flight 154/208  B.moving__527750  repeat 6 attempt 1  (pp01_527750, 50s, elapsed 10256s)
+[21:18:08]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.998, 6.428 Hz, end duration
+[21:18:08] flight 155/208  B.moving__157365  repeat 6 attempt 1  (pp01_157365, 50s, elapsed 10323s)
+[21:19:15]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.427 Hz, end duration
+[21:19:15] flight 156/208  B.moving__356427  repeat 6 attempt 1  (pp01_356427, 50s, elapsed 10390s)
+[21:20:21]   -> VALID  tracked 0.021, vis_enter 0.75, sim/wall 0.994, 6.43 Hz, end duration
+[21:20:21] flight 157/208  A.static__61747  repeat 7 attempt 1  (pp15_61747, 45s, elapsed 10456s)
+[21:21:23]   -> VALID  tracked 0.605, vis_enter 0.75, sim/wall 0.996, 6.424 Hz, end duration
+[21:21:23] flight 158/208  A.static__161875  repeat 7 attempt 1  (pp15_161875, 45s, elapsed 10518s)
+[21:22:25]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.428 Hz, end duration
+[21:22:25] flight 159/208  A.static__401446  repeat 7 attempt 1  (pp15_401446, 45s, elapsed 10580s)
+[21:23:26]   -> VALID  tracked 0.848, vis_enter 0.75, sim/wall 0.998, 6.428 Hz, end duration
+[21:23:26] flight 160/208  A.static__374369  repeat 7 attempt 1  (pp15_374369, 45s, elapsed 10641s)
+[21:24:28]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.425 Hz, end duration
+[21:24:28] flight 161/208  A.static__266409  repeat 7 attempt 1  (pp15_266409, 45s, elapsed 10703s)
+[21:25:30]   -> VALID  tracked 0.439, vis_enter 0.75, sim/wall 0.998, 6.428 Hz, end duration
+[21:25:30] flight 162/208  A.static__280779  repeat 7 attempt 1  (pp15_280779, 45s, elapsed 10765s)
+[21:26:31]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.997, 6.429 Hz, end duration
+[21:26:31] flight 163/208  A.static__556158  repeat 7 attempt 1  (pp15_556158, 45s, elapsed 10826s)
+[21:27:33]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.995, 6.435 Hz, end duration
+[21:27:33] flight 164/208  A.static__control  repeat 7 attempt 1  (s15_static_offset, 45s, elapsed 10888s)
+[21:28:35]   -> VALID  tracked 0.991, vis_enter 0.75, sim/wall 0.993, 6.429 Hz, end duration
+[21:28:35] flight 165/208  A.static__124442  repeat 7 attempt 1  (pp15_124442, 45s, elapsed 10950s)
+[21:29:37]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.423 Hz, end duration
+[21:29:37] flight 166/208  A.static__527750  repeat 7 attempt 1  (pp15_527750, 45s, elapsed 11012s)
+[21:30:38]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.982, 6.398 Hz, end duration
+[21:30:38] flight 167/208  A.static__157365  repeat 7 attempt 1  (pp15_157365, 45s, elapsed 11073s)
+[21:31:40]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.993, 6.43 Hz, end duration
+[21:31:40] flight 168/208  A.static__356427  repeat 7 attempt 1  (pp15_356427, 45s, elapsed 11135s)
+[21:32:42]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.437 Hz, end duration
+[21:32:42] flight 169/208  A.static__250127  repeat 7 attempt 1  (pp15_250127, 45s, elapsed 11197s)
+[21:33:43]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.991, 6.432 Hz, end duration
+[21:33:43] flight 170/208  B.moving__61747  repeat 7 attempt 1  (pp01_61747, 50s, elapsed 11258s)
+[21:34:50]   -> VALID  tracked 0.867, vis_enter 0.75, sim/wall 0.997, 6.424 Hz, end duration
+[21:34:50] flight 171/208  B.moving__161875  repeat 7 attempt 1  (pp01_161875, 50s, elapsed 11325s)
+[21:35:57]   -> VALID  tracked 0.135, vis_enter 0.75, sim/wall 0.998, 6.423 Hz, end duration
+[21:35:57] flight 172/208  B.moving__401446  repeat 7 attempt 1  (pp01_401446, 50s, elapsed 11392s)
+[21:37:03]   -> VALID  tracked 0.262, vis_enter 0.75, sim/wall 0.992, 6.435 Hz, end duration
+[21:37:03] flight 173/208  B.moving__374369  repeat 7 attempt 1  (pp01_374369, 50s, elapsed 11458s)
+[21:38:10]   -> VALID  tracked 0.846, vis_enter 0.75, sim/wall 0.989, 6.424 Hz, end duration
+[21:38:10] flight 174/208  B.moving__266409  repeat 7 attempt 1  (pp01_266409, 50s, elapsed 11525s)
+[21:39:17]   -> VALID  tracked 0.227, vis_enter 0.75, sim/wall 0.987, 6.437 Hz, end duration
+[21:39:17] flight 175/208  B.moving__280779  repeat 7 attempt 1  (pp01_280779, 50s, elapsed 11592s)
+[21:40:24]   -> VALID  tracked 0.896, vis_enter 0.75, sim/wall 0.995, 6.433 Hz, end duration
+[21:40:24] flight 176/208  B.moving__556158  repeat 7 attempt 1  (pp01_556158, 50s, elapsed 11659s)
+[21:41:30]   -> VALID  tracked 0.947, vis_enter 0.75, sim/wall 0.991, 6.432 Hz, end duration
+[21:41:30] flight 177/208  B.moving__control  repeat 7 attempt 1  (s01_control_moving, 50s, elapsed 11725s)
+[21:42:37]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.994, 6.421 Hz, end duration
+[21:42:37] flight 178/208  B.moving__124442  repeat 7 attempt 1  (pp01_124442, 50s, elapsed 11792s)
+[21:43:44]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.424 Hz, end duration
+[21:43:44] flight 179/208  B.moving__527750  repeat 7 attempt 1  (pp01_527750, 50s, elapsed 11859s)
+[21:44:51]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.423 Hz, end duration
+[21:44:51] flight 180/208  B.moving__157365  repeat 7 attempt 1  (pp01_157365, 50s, elapsed 11926s)
+[21:45:57]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.991, 6.433 Hz, end duration
+[21:45:57] flight 181/208  B.moving__356427  repeat 7 attempt 1  (pp01_356427, 50s, elapsed 11992s)
+[21:47:04]   -> VALID  tracked 0.008, vis_enter 0.75, sim/wall 0.99, 6.433 Hz, end duration
+[21:47:04] flight 182/208  B.moving__250127  repeat 7 attempt 1  (pp01_250127, 50s, elapsed 12059s)
+[21:48:11]   -> VALID  tracked 0.004, vis_enter 0.75, sim/wall 0.991, 6.433 Hz, end duration
+[21:48:11] flight 183/208  A.static__161875  repeat 8 attempt 1  (pp15_161875, 45s, elapsed 12126s)
+[21:49:12]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.991, 6.423 Hz, end duration
+[21:49:12] flight 184/208  A.static__401446  repeat 8 attempt 1  (pp15_401446, 45s, elapsed 12187s)
+[21:50:14]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.994, 6.424 Hz, end duration
+[21:50:14] flight 185/208  A.static__374369  repeat 8 attempt 1  (pp15_374369, 45s, elapsed 12249s)
+[21:51:16]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.428 Hz, end duration
+[21:51:16] flight 186/208  A.static__266409  repeat 8 attempt 1  (pp15_266409, 45s, elapsed 12311s)
+[21:52:18]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.985, 6.419 Hz, end duration
+[21:52:18] flight 187/208  A.static__280779  repeat 8 attempt 1  (pp15_280779, 45s, elapsed 12373s)
+[21:53:19]   -> VALID  tracked 0.972, vis_enter 0.75, sim/wall 0.984, 6.428 Hz, end duration
+[21:53:19] flight 188/208  A.static__556158  repeat 8 attempt 1  (pp15_556158, 45s, elapsed 12434s)
+[21:54:21]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.992, 6.422 Hz, end duration
+[21:54:21] flight 189/208  A.static__control  repeat 8 attempt 1  (s15_static_offset, 45s, elapsed 12496s)
+[21:55:23]   -> VALID  tracked 0.99, vis_enter 0.75, sim/wall 0.989, 6.42 Hz, end duration
+[21:55:23] flight 190/208  A.static__124442  repeat 8 attempt 1  (pp15_124442, 45s, elapsed 12558s)
+[21:56:24]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.987, 6.432 Hz, end duration
+[21:56:24] flight 191/208  A.static__527750  repeat 8 attempt 1  (pp15_527750, 45s, elapsed 12619s)
+[21:57:26]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.992, 6.431 Hz, end duration
+[21:57:26] flight 192/208  A.static__157365  repeat 8 attempt 1  (pp15_157365, 45s, elapsed 12681s)
+[21:58:28]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.988, 6.385 Hz, end duration
+[21:58:28] flight 193/208  A.static__356427  repeat 8 attempt 1  (pp15_356427, 45s, elapsed 12743s)
+[21:59:30]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.991, 6.374 Hz, end duration
+[21:59:30] flight 194/208  A.static__250127  repeat 8 attempt 1  (pp15_250127, 45s, elapsed 12805s)
+[22:00:31]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.988, 6.384 Hz, end duration
+[22:00:31] flight 195/208  A.static__61747  repeat 8 attempt 1  (pp15_61747, 45s, elapsed 12866s)
+[22:01:33]   -> VALID  tracked 0.746, vis_enter 0.75, sim/wall 0.991, 6.385 Hz, end duration
+[22:01:33] flight 196/208  B.moving__161875  repeat 8 attempt 1  (pp01_161875, 50s, elapsed 12928s)
+[22:02:40]   -> VALID  tracked 0.231, vis_enter 0.75, sim/wall 0.991, 6.369 Hz, end duration
+[22:02:40] flight 197/208  B.moving__401446  repeat 8 attempt 1  (pp01_401446, 50s, elapsed 12995s)
+[22:03:47]   -> VALID  tracked 0.269, vis_enter 0.75, sim/wall 0.995, 6.362 Hz, end duration
+[22:03:47] flight 198/208  B.moving__374369  repeat 8 attempt 1  (pp01_374369, 50s, elapsed 13062s)
+[22:04:53]   -> VALID  tracked 0.041, vis_enter 0.75, sim/wall 0.998, 6.354 Hz, end duration
+[22:04:53] flight 199/208  B.moving__266409  repeat 8 attempt 1  (pp01_266409, 50s, elapsed 13128s)
+[22:05:59]   -> VALID  tracked 0.112, vis_enter 0.75, sim/wall 0.999, 6.36 Hz, end duration
+[22:05:59] flight 200/208  B.moving__280779  repeat 8 attempt 1  (pp01_280779, 50s, elapsed 13194s)
+[22:07:06]   -> VALID  tracked 0.88, vis_enter 0.75, sim/wall 0.999, 6.367 Hz, end duration
+[22:07:06] flight 201/208  B.moving__556158  repeat 8 attempt 1  (pp01_556158, 50s, elapsed 13261s)
+[22:08:13]   -> VALID  tracked 0.961, vis_enter 0.75, sim/wall 0.997, 6.352 Hz, end duration
+[22:08:13] flight 202/208  B.moving__control  repeat 8 attempt 1  (s01_control_moving, 50s, elapsed 13328s)
+[22:09:20]   -> VALID  tracked 0.992, vis_enter 0.75, sim/wall 0.998, 6.366 Hz, end duration
+[22:09:20] flight 203/208  B.moving__124442  repeat 8 attempt 1  (pp01_124442, 50s, elapsed 13395s)
+[22:10:26]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.997, 6.368 Hz, end duration
+[22:10:26] flight 204/208  B.moving__527750  repeat 8 attempt 1  (pp01_527750, 50s, elapsed 13461s)
+[22:11:33]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.995, 6.365 Hz, end duration
+[22:11:33] flight 205/208  B.moving__157365  repeat 8 attempt 1  (pp01_157365, 50s, elapsed 13528s)
+[22:12:40]   -> VALID  tracked 0.0, vis_enter 0.75, sim/wall 0.996, 6.369 Hz, end duration
+[22:12:40] flight 206/208  B.moving__356427  repeat 8 attempt 1  (pp01_356427, 50s, elapsed 13595s)
+[22:13:46]   -> VALID  tracked 0.062, vis_enter 0.75, sim/wall 0.998, 6.362 Hz, end duration
+[22:13:46] flight 207/208  B.moving__250127  repeat 8 attempt 1  (pp01_250127, 50s, elapsed 13661s)
+[22:14:53]   -> VALID  tracked 0.081, vis_enter 0.75, sim/wall 0.995, 6.353 Hz, end duration
+[22:14:53] flight 208/208  B.moving__61747  repeat 8 attempt 1  (pp01_61747, 50s, elapsed 13728s)
+[22:16:00]   -> VALID  tracked 0.846, vis_enter 0.75, sim/wall 0.996, 6.363 Hz, end duration
+[22:16:00] done: 208 flights in 13795s

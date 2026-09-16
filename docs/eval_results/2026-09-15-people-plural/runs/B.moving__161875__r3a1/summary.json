@@ -1,0 +1,59 @@
+{
+  "end_reason": "duration",
+  "control_steps": 249,
+  "loop_hz": 6.4,
+  "processed_hz": 6.444,
+  "tracking_fraction": 0.398,
+  "mean_abs_x_while_tracking": 0.171,
+  "centered_fraction_while_tracking": 0.949,
+  "z_max": 0.85,
+  "yaw_range_deg": [
+    -23.4,
+    26.1
+  ],
+  "final_pose": {
+    "px": 0.48,
+    "py": -0.1,
+    "pz": 0.8,
+    "yaw": 21.96
+  },
+  "stale_events": 0,
+  "z_after_landing": 0.02,
+  "rate_hz_requested": 6.5,
+  "latency_ms_requested": 153.0,
+  "vis_enter": 0.75,
+  "vis_exit": 0.45,
+  "confirm_frames": 3,
+  "backend": "chip",
+  "backend_info": {
+    "backend": "chip",
+    "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx",
+    "eps": 0.0002009823510888964,
+    "shadow": "none",
+    "ready": true,
+    "onnx_sha1": "d90555c8462b6dd6c3432d184b427d4d3e653fda",
+    "input_hw": [
+      128,
+      128
+    ],
+    "n_out": 14,
+    "onnxruntime": "1.19.2",
+    "python": "/Users/saimaruvada/Downloads/drone/doryenv/bin/python3",
+    "threads": 2,
+    "transport": "fd"
+  },
+  "frames_processed": 249,
+  "frames_dropped": 293,
+  "torn_frames": 0,
+  "step_gap_ms": {
+    "min": 153.9,
+    "median": 154.8,
+    "max": 158.6
+  },
+  "applied_latency_ms": {
+    "mean": 154.3,
+    "p90": 156.1,
+    "max": 158.0
+  },
+  "sim_wall_ratio": 0.981
+}

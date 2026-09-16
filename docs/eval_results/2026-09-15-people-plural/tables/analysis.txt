@@ -1,0 +1,128 @@
+208 scored flights, latch rule 0.75/0.45/3 on every one
+
+============================================================================================
+STATIC scenes: per-subject latch rate and tracking fraction
+============================================================================================
+  subject  index   n  latched  latch rate            95% CI  M1 median  M1 mean
+   124442   28.4   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   527750   34.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   157365   34.6   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   356427   37.8   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   250127   52.1   8        0       0.000    [0.000, 0.369]      0.000    0.000
+    61747   86.8   8        8       1.000    [0.631, 1.000]      0.834    0.722
+   161875   87.0   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   401446   88.8   8        1       0.125    [0.003, 0.527]      0.000    0.106
+   374369   90.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   266409   92.1   8        3       0.375    [0.085, 0.755]      0.000    0.098
+   280779   92.7   8        8       1.000    [0.631, 1.000]      0.990    0.986
+   556158   93.9   8        8       1.000    [0.631, 1.000]      0.976    0.879
+  control   99.2   8        8       1.000    [0.631, 1.000]      0.991    0.991  <- CONTROL
+
+============================================================================================
+MOVING scenes: per-subject latch rate and tracking fraction
+============================================================================================
+  subject  index   n  latched  latch rate            95% CI  M1 median  M1 mean
+   124442   28.4   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   527750   34.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   157365   34.6   8        0       0.000    [0.000, 0.369]      0.000    0.000
+   356427   37.8   8        7       0.875    [0.473, 0.997]      0.015    0.019
+   250127   52.1   8        2       0.250    [0.032, 0.651]      0.000    0.011
+    61747   86.8   8        8       1.000    [0.631, 1.000]      0.738    0.642
+   161875   87.0   8        8       1.000    [0.631, 1.000]      0.180    0.203
+   401446   88.8   8        8       1.000    [0.631, 1.000]      0.283    0.386
+   374369   90.3   8        8       1.000    [0.631, 1.000]      0.796    0.641
+   266409   92.1   8        8       1.000    [0.631, 1.000]      0.163    0.161
+   280779   92.7   8        8       1.000    [0.631, 1.000]      0.960    0.943
+   556158   93.9   8        8       1.000    [0.631, 1.000]      0.940    0.930
+  control   99.2   8        8       1.000    [0.631, 1.000]      0.992    0.990  <- CONTROL
+
+============================================================================================
+THE HEADLINE: control vs the screened pool
+============================================================================================
+  static: control latched 8/8 = 1.000 [0.631, 1.000], M1 median 0.991
+   static  pool latched 28/96 = 0.292 [0.203, 0.393], M1 median 0.000
+  moving: control latched 8/8 = 1.000 [0.631, 1.000], M1 median 0.992
+   moving  pool latched 65/96 = 0.677 [0.574, 0.769], M1 median 0.124
+
+============================================================================================
+THE ESTIMAND: low group (index <= 52.1, n=5) vs high group (index >= 86.8, n=7)
+Control excluded: it has wui == 0 and would not pass the screen its peers passed.
+============================================================================================
+   static latch rate  low 0.000  high 0.500  difference -0.500 [-0.857, -0.179]  (cluster bootstrap over subjects, 20k)
+   static mean M1     low 0.000  high 0.399  difference -0.399 [-0.715, -0.131]  (cluster bootstrap over subjects, 20k)
+   static untracked s  low 32.7  high 19.5     longest run >=0.75 (need 3): low 0.0  high 37.4
+
+   moving latch rate  low 0.225  high 1.000  difference -0.775 [-1.000, -0.425]  (cluster bootstrap over subjects, 20k)
+   moving mean M1     low 0.006  high 0.558  difference -0.552 [-0.768, -0.335]  (cluster bootstrap over subjects, 20k)
+   moving untracked s  low 37.5  high 16.7     longest run >=0.75 (need 3): low 1.1  high 22.5
+
+============================================================================================
+DIAGNOSTICS ONLY - these are ranks over 12 points in two clouds
+============================================================================================
+  No subject was flown with an index between 52.1 and 86.8, so the location and
+  shape of the transition are NOT estimated. Any threshold in that interval fits.
+  In confidence terms the unflown gap is 0.653 to 0.833 mean chip confidence at
+  the flown range; the follower's own 0.75 enter bar lies inside it.
+  static, n = 12 subjects
+    rho(index, latch) +0.678   rho(conf@flown, latch) +0.699   rho(width, latch) +0.385   rho(subj frac, latch) -0.238
+    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index) +0.214  rho(width) +0.321
+      If width beat index here, the trend would be the card, not the person.
+  moving, n = 12 subjects
+    rho(index, latch) +0.776   rho(conf@flown, latch) +0.839   rho(width, latch) +0.545   rho(subj frac, latch) -0.035
+    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index) -0.071  rho(width) +0.607
+      If width beat index here, the trend would be the card, not the person.
+
+============================================================================================
+WIDTH-MATCHED CONTRAST: same card size, opposite detectability
+============================================================================================
+  static: 3 subjects within 0.01 m of each other in panel width
+      subject    width   index   latch   mean M1   n
+       157365   0.5877    34.6   0.000     0.000   8
+       161875   0.5811    87.0   0.000     0.000   8
+       280779   0.5943    92.7   1.000     0.986   8
+    Width is held; if latch still tracks the index here, the card is not the cause.
+
+  moving: 3 subjects within 0.01 m of each other in panel width
+      subject    width   index   latch   mean M1   n
+       157365   0.5877    34.6   0.000     0.000   8
+       161875   0.5811    87.0   1.000     0.203   8
+       280779   0.5943    92.7   1.000     0.943   8
+    Width is held; if latch still tracks the index here, the card is not the cause.
+
+============================================================================================
+CONFIDENCE, RANGE-MATCHED (the whole-flight version is a collider:
+a drone that latches closes in, so it sees the person larger BECAUSE it latched)
+============================================================================================
+  static, frames with true range in [3.3, 3.9] m
+      subject   index  n frames  mean conf     p05  frac >=0.75
+       124442    28.4      1705      0.333   0.275        0.000
+       527750    34.3      1687      0.416   0.347        0.000
+       157365    34.6      1678      0.404   0.337        0.000
+       356427    37.8      1667      0.394   0.328        0.000
+       250127    52.1      1685      0.318   0.272        0.000
+        61747    86.8       189      0.717   0.517        0.434
+       161875    87.0      1683      0.613   0.542        0.000
+       401446    88.8      1494      0.689   0.623        0.039
+       374369    90.3      1662      0.625   0.530        0.000
+       266409    92.1      1388      0.694   0.599        0.075
+       280779    92.7       166      0.806   0.548        0.711
+       556158    93.9       164      0.796   0.620        0.780
+      control    99.2       166      0.825   0.688        0.855
+
+  moving, frames with true range in [2.9, 3.4] m
+      subject   index  n frames  mean conf     p05  frac >=0.75
+       124442    28.4      1945      0.388   0.284        0.000
+       527750    34.3      1931      0.413   0.293        0.000
+       157365    34.6      1941      0.411   0.283        0.001
+       356427    37.8      1401      0.530   0.284        0.080
+       250127    52.1      1875      0.569   0.393        0.103
+        61747    86.8       392      0.615   0.206        0.291
+       161875    87.0       611      0.514   0.177        0.224
+       401446    88.8       197      0.727   0.524        0.482
+       374369    90.3       380      0.498   0.157        0.182
+       266409    92.1       633      0.509   0.165        0.196
+       280779    92.7       188      0.808   0.621        0.702
+       556158    93.9       169      0.782   0.583        0.669
+      control    99.2       162      0.847   0.697        0.914
+
+wrote tables/flights.tsv and tables/flights.json
