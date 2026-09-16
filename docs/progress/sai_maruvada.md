@@ -60,7 +60,7 @@ fall.
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
 | How well the drone follows people, measured across people | Sai | **Measured Sep 15: 208 flights, 13 subjects, 8 repeats, all valid.** The published subject latched 16/16 and tracked 0.99. The twelve screened subjects latched on 29% of standing flights and 68% of moving ones, median tracking 0.000 standing. My pre-registered prediction failed on its high half in both classes: six of seven high-ranking subjects missed the bar on the standing scene and only one met it. The low half held 5/5. Card width is ruled out by two subjects rendering to exactly the same width, 0.7139 m, going 0/8 against 8/8; fill fraction is not ruled out. Thirteen of eighteen refutation attempts landed against my first draft and the claims here are the corrected ones; a full independent recount of all 208 flights found zero mismatches, so the corrections are all to interpretation. Evidence and the full list of what I got wrong: docs/eval_results/2026-09-15-people-plural/ | Report to the team once the control-law test lands |
-| Why the drone ignores ordinary people: a frozen-geometry deadlock | Sai | **Found Sep 15, test in flight.** The follower commands neither yaw nor forward motion until it has locked on (follow_person.py:371-376), and it starts 3.64 m out, while the subjects it fails on only clear the confidence bar nearer than about 1.8 m. Across all 208 flights every one of the 109 latches happened with the drone still at its start pose, so the drone never closes range on its own. I first wrote that such a person can never be acquired and that is too strong: one subject fails the standing scene 0/8 yet is acquired 7/8 on the moving scene, where the person simply starts closer. The correct claim is that while the geometry is frozen the loop is absorbing. 156 flights at 1.6 / 2.2 / 2.8 m are running to separate a perception limit from a controller limit | If it is the controller, the fix is creeping forward while unsure, far cheaper than retraining. Evidence: docs/eval_results/2026-09-15-deadlock/ |
+| Why the drone ignores ordinary people: a frozen-geometry deadlock | Sai | **Found Sep 15, tested Sep 16: the deadlock is real and is NOT the explanation.** The follower commands neither yaw nor forward motion until locked on (follow_person.py:371-376) and every one of the 109 latches across 208 flights happened with the drone still at its start pose, so it never closes range on its own. But flying the same 13 people at 1.6 / 2.2 / 2.8 m rescues only one of the seven failures in the two geometrically clean arms. Four are not acquired even at 1.6 m. The 1.6 m arm cannot be used: the far wall's top edge falls at image row 42 of 244 and at that range the subject's head crosses into the skybox, so it changes what the network sees in a way unrelated to range. My first write-up concluded the opposite through an invalid floor argument and miscounted seven as eight; 14 of 15 refutation passes found something. Evidence: docs/eval_results/2026-09-15-deadlock/ | Creep forward plus a closer hold is still worth building and is a few parameters, but it is not the fix. The remaining four are a perception problem |
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
 | Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
 | The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
@@ -145,6 +145,48 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-16 (overnight, 156 more flights).** Tested the fix I proposed last
+  night and it mostly does not work. The idea was simple: the drone refuses to
+  move until it has locked onto someone, so let it creep forward while it is
+  still unsure and it will get close enough to see them. I flew the same thirteen
+  people with the person standing at one point six, two point two and two point
+  eight metres instead of three point six four.
+
+  In the two distances that are cleanly comparable, one of the seven people the
+  drone ignores is rescued. Six are not. Four of them are not picked up even at
+  one point six metres, which is closer than the drone will ever get. Their
+  problem is not distance.
+
+  The nearest distance looked much better, eight of twelve instead of five, and I
+  cannot use it. The room's far wall is four metres tall, so from the camera its
+  top edge lands about a sixth of the way down the picture. At one point six
+  metres the person's head rises above that line and sits against the sky instead
+  of the wall. The cutouts are rectangular cards painted the wall's colour around
+  the edges so the card disappears, and against sky it does not. So that distance
+  changes what the network sees in a way that has nothing to do with how far away
+  the person is, and it happens to be the distance where two of my three rescues
+  appear.
+
+  I had written the opposite conclusion first, and reached my number through an
+  argument that was wrong. I claimed the drone cannot get to one point six metres
+  because flights settle around two point two. That figure is measured entirely
+  after the drone has already locked on, and the creep I was proposing happens
+  before that, in the part of the code where forward speed is hardwired to zero.
+  One of my own flights has the drone sitting unlatched at one and a half metres
+  for four seconds. I also described the forward controller as steering toward a
+  target distance when it does nothing of the sort: the size estimate only comes
+  in four steps, and the drone simply stops anywhere inside the middle one. And I
+  wrote "seven failures" and then listed eight.
+
+  Fifteen independent passes were made over that first write-up with instructions
+  to tear it down. Fourteen found something. One of them found the wall, which I
+  would not have.
+
+  Worth saying plainly: creeping forward is still cheap and still worth building,
+  and it needs a second change beside it, because the two people that do get
+  picked up close then lose the track immediately as the drone backs away to its
+  usual distance. But this run does not show that it helps much.
 
 - **2026-09-15 (evening, 208 flights).** Answered the question this project has
   been unable to answer since August: how well does the drone follow people,
