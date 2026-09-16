@@ -3,38 +3,38 @@
 ============================================================================================
 STATIC scenes: per-subject latch rate and tracking fraction
 ============================================================================================
-  subject  index   n  latched  latch rate            95% CI  M1 median  M1 mean
-   124442   28.4   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   527750   34.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   157365   34.6   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   356427   37.8   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   250127   52.1   8        0       0.000    [0.000, 0.369]      0.000    0.000
-    61747   86.8   8        8       1.000    [0.631, 1.000]      0.834    0.722
-   161875   87.0   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   401446   88.8   8        1       0.125    [0.003, 0.527]      0.000    0.106
-   374369   90.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   266409   92.1   8        3       0.375    [0.085, 0.755]      0.000    0.098
-   280779   92.7   8        8       1.000    [0.631, 1.000]      0.990    0.986
-   556158   93.9   8        8       1.000    [0.631, 1.000]      0.976    0.879
-  control   99.2   8        8       1.000    [0.631, 1.000]      0.991    0.991  <- CONTROL
+  subject  index   n  ever  >=1s  >=3s  ever rate     95% CI (ever)  M1 median  M1 mean
+   124442   28.4   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   527750   34.3   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   157365   34.6   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   356427   37.8   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   250127   52.1   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+    61747   86.8   8     8     8     8      1.000    [0.631, 1.000]      0.834    0.722
+   161875   87.0   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   401446   88.8   8     1     1     1      0.125    [0.003, 0.527]      0.000    0.106
+   374369   90.3   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   266409   92.1   8     3     3     2      0.375    [0.085, 0.755]      0.000    0.098
+   280779   92.7   8     8     8     8      1.000    [0.631, 1.000]      0.990    0.986
+   556158   93.9   8     8     8     8      1.000    [0.631, 1.000]      0.976    0.879
+  control   99.2   8     8     8     8      1.000    [0.631, 1.000]      0.991    0.991  <- CONTROL
 
 ============================================================================================
 MOVING scenes: per-subject latch rate and tracking fraction
 ============================================================================================
-  subject  index   n  latched  latch rate            95% CI  M1 median  M1 mean
-   124442   28.4   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   527750   34.3   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   157365   34.6   8        0       0.000    [0.000, 0.369]      0.000    0.000
-   356427   37.8   8        7       0.875    [0.473, 0.997]      0.015    0.019
-   250127   52.1   8        2       0.250    [0.032, 0.651]      0.000    0.011
-    61747   86.8   8        8       1.000    [0.631, 1.000]      0.738    0.642
-   161875   87.0   8        8       1.000    [0.631, 1.000]      0.180    0.203
-   401446   88.8   8        8       1.000    [0.631, 1.000]      0.283    0.386
-   374369   90.3   8        8       1.000    [0.631, 1.000]      0.796    0.641
-   266409   92.1   8        8       1.000    [0.631, 1.000]      0.163    0.161
-   280779   92.7   8        8       1.000    [0.631, 1.000]      0.960    0.943
-   556158   93.9   8        8       1.000    [0.631, 1.000]      0.940    0.930
-  control   99.2   8        8       1.000    [0.631, 1.000]      0.992    0.990  <- CONTROL
+  subject  index   n  ever  >=1s  >=3s  ever rate     95% CI (ever)  M1 median  M1 mean
+   124442   28.4   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   527750   34.3   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   157365   34.6   8     0     0     0      0.000    [0.000, 0.369]      0.000    0.000
+   356427   37.8   8     7     1     0      0.875    [0.473, 0.997]      0.015    0.019
+   250127   52.1   8     2     1     0      0.250    [0.032, 0.651]      0.000    0.011
+    61747   86.8   8     8     8     7      1.000    [0.631, 1.000]      0.738    0.642
+   161875   87.0   8     8     8     4      1.000    [0.631, 1.000]      0.180    0.203
+   401446   88.8   8     8     8     8      1.000    [0.631, 1.000]      0.283    0.386
+   374369   90.3   8     8     8     7      1.000    [0.631, 1.000]      0.796    0.641
+   266409   92.1   8     8     8     4      1.000    [0.631, 1.000]      0.163    0.161
+   280779   92.7   8     8     8     8      1.000    [0.631, 1.000]      0.960    0.943
+   556158   93.9   8     8     8     8      1.000    [0.631, 1.000]      0.940    0.930
+  control   99.2   8     8     8     8      1.000    [0.631, 1.000]      0.992    0.990  <- CONTROL
 
 ============================================================================================
 THE HEADLINE: control vs the screened pool
@@ -64,30 +64,52 @@ DIAGNOSTICS ONLY - these are ranks over 12 points in two clouds
   In confidence terms the unflown gap is 0.653 to 0.833 mean chip confidence at
   the flown range; the follower's own 0.75 enter bar lies inside it.
   static, n = 12 subjects
-    rho(index, latch) +0.678   rho(conf@flown, latch) +0.699   rho(width, latch) +0.385   rho(subj frac, latch) -0.238
-    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index) +0.214  rho(width) +0.321
-      If width beat index here, the trend would be the card, not the person.
+    rho(index, latch)    +0.708   rho(conf@flown)    +0.692   rho(width)    +0.374   rho(subj frac)    -0.236
+    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index)    +0.374  rho(width)    +0.112
   moving, n = 12 subjects
-    rho(index, latch) +0.776   rho(conf@flown, latch) +0.839   rho(width, latch) +0.545   rho(subj frac, latch) -0.035
-    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index) -0.071  rho(width) +0.607
-      If width beat index here, the trend would be the card, not the person.
+    rho(index, latch)    +0.881   rho(conf@flown)    +0.881   rho(width)    +0.422   rho(subj frac)    +0.189
+    WITHIN the high cloud (n=7, index 86.8-93.9): rho(index)  undefined  rho(width)  undefined
+      Both undefined: every subject in this cloud latches at exactly 1.000, so there is no rank order to correlate against.
 
 ============================================================================================
-WIDTH-MATCHED CONTRAST: same card size, opposite detectability
+ARE THE LATCHES REAL?  bearing error on settled AND tracking frames only
 ============================================================================================
-  static: 3 subjects within 0.01 m of each other in panel width
-      subject    width   index   latch   mean M1   n
-       157365   0.5877    34.6   0.000     0.000   8
-       161875   0.5811    87.0   0.000     0.000   8
-       280779   0.5943    92.7   1.000     0.986   8
-    Width is held; if latch still tracks the index here, the card is not the cause.
+  static: 36 latched flights, mean of flight means 2.65 deg, worst 11.01 deg
+    flights whose tracked-frame mean bearing falls outside the +-35 deg crop: 0
+  moving: 73 latched flights, mean of flight means 4.26 deg, worst 13.22 deg
+    flights whose tracked-frame mean bearing falls outside the +-35 deg crop: 0
+  For comparison, the same column over NEVER-latched flights is a constant of
+  the geometry, because the drone never yawed:
+    static: n=68, range 15.95-15.95 deg (scoreboard's M2, all settled frames)
+    moving: n=31, range 12.89-14.50 deg (scoreboard's M2, all settled frames)
 
-  moving: 3 subjects within 0.01 m of each other in panel width
-      subject    width   index   latch   mean M1   n
-       157365   0.5877    34.6   0.000     0.000   8
-       161875   0.5811    87.0   1.000     0.203   8
-       280779   0.5943    92.7   1.000     0.943   8
-    Width is held; if latch still tracks the index here, the card is not the cause.
+============================================================================================
+WIDTH-MATCHED CONTRAST
+============================================================================================
+  EXACT width match. These two render to the same panel width to four
+  decimals, and sit at opposite ends of the detectability index:
+      subject    width  subjfrac   index   class   ever   >=1s   mean M1
+       124442   0.7139    0.4038    28.4  static  0.000  0.000     0.000
+       124442   0.7139    0.4038    28.4  moving  0.000  0.000     0.000
+        61747   0.7139    0.4861    86.8  static  1.000  1.000     0.722
+        61747   0.7139    0.4861    86.8  moving  1.000  1.000     0.642
+    Same card, same rendered width, 0.000 against 1.000 on both scenes.
+    Their subject fractions differ (0.4038 vs 0.4861), so this pair holds
+    width exactly but does NOT hold fill fraction. No pair in this pool holds
+    both.
+
+  Every group of >=3 subjects matched to within 0.010 m, not just the first:
+    width spread 0.0132 m:
+         157365 width 0.5877  subjfrac 0.5765  index  34.6   static ever 0.000  moving ever 0.000
+         161875 width 0.5811  subjfrac 0.6278  index  87.0   static ever 0.000  moving ever 1.000
+         280779 width 0.5943  subjfrac 0.5177  index  92.7   static ever 1.000  moving ever 1.000
+      -> rho(index, static ever) = +0.866, exact permutation p = 0.167 on n = 3. That is the floor for this many
+         subjects, so this group cannot on its own rule width out.
+    width spread 0.0133 m:
+         527750 width 0.5744  subjfrac 0.5063  index  34.3   static ever 0.000  moving ever 0.000
+         157365 width 0.5877  subjfrac 0.5765  index  34.6   static ever 0.000  moving ever 0.000
+         161875 width 0.5811  subjfrac 0.6278  index  87.0   static ever 0.000  moving ever 1.000
+      -> every subject in this group has the same static outcome (0.000); uninformative about width.
 
 ============================================================================================
 CONFIDENCE, RANGE-MATCHED (the whole-flight version is a collider:
