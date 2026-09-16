@@ -116,3 +116,14 @@ counts. All three near ranges keep the whole body inside the 70 deg crop, the
 head-truncation limit for a 1.7 m person being 1.285 m. The moving scene is not
 part of this suite, so the 161875 comparison crosses two scenes that differ in
 bearing as well as range.
+
+## One provenance wart
+
+`suite_meta.json` in this directory records `"suite": "people_plural"`. That
+string is hardcoded in `fly_pool.sh`, which this suite reuses deliberately rather
+than forking, and `fly_deadlock.sh` does not override it. The file is otherwise
+correct and distinguishes itself by `cells: 39`, `repeats: 4` and its
+`started_utc` of 2026-09-16T03:17:16Z against the other suite's
+2026-09-15T23:26:05Z. Left as written rather than edited after the run, because
+editing a recorded artefact to look tidier is worse than a wrong label with an
+explanation next to it.

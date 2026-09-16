@@ -1,0 +1,14 @@
+{
+  "suite": "people_plural",
+  "repeats": 8,
+  "cells": 26,
+  "started_utc": "2026-09-15T23:26:05Z",
+  "setup": "ships-as for every cell: chip backend, himax_typical camera, 6.5 Hz / 153 ms, matte floor",
+  "latch_rule": "follow_person.py defaults, no flags: vis_enter 0.75, vis_exit 0.45, confirm_frames 3",
+  "arms": "13 subjects: the 12 carrying eye_verdict==keep in the typical-person screen, plus the flown control 19432",
+  "model": {
+    "ckpt": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth",
+    "onnx": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx"
+  },
+  "duration_s": 13795
+}
