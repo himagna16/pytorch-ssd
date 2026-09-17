@@ -3,6 +3,32 @@
 104 flights, 2026-09-16, all VALID. Simulation only. One hang on the watchdog,
 re-flown and valid, the same 1% rate the other suites saw.
 
+> # CORRECTION, 2026-09-16, before this reached anyone
+>
+> **Bearing was not the only variable, and the confound makes the off-axis arm
+> artificially hard.** The subject panel is an opaque rectangle, and the scene's
+> second light is `dir="1 0 -0.3"` with no sideways component, so the card casts a
+> box shadow onto the far wall 3.4 m behind it. Because the shadow keeps the
+> subject's lateral offset but lands at a greater depth, it appears displaced
+> toward the image centre by an amount proportional to that offset. At 0 degrees
+> it hides exactly behind the card. At -15.9 degrees it does not.
+>
+> Measured on the first snapshot of every flight, in a fixed strip against a plain
+> wall reference: **off axis -30.0 DN on 13 of 13 subjects, on axis +2.3 DN on 13
+> of 13.** For 374369 the strip reads 79.1 against 112.2 of adjacent wall, a
+> hard-edged dark block abutting the subject, inside the model's crop.
+>
+> So the off-axis arm shows the detector an extra dark rectangle glued to the
+> person and the on-axis arm does not. That is a property of a rectangular card,
+> not of a person standing to one side. **Every gain below is an upper bound on
+> the bearing effect, not a measurement of it.** The 13,003-frame grid in
+> `2026-09-16-protocol-geometry` was rendered from the same scene and inherits the
+> identical confound, so it cannot separate them either.
+>
+> Found by an adversarial verifier, not by me. I then measured it at the wrong
+> image scale, concluded it was not there, and had to redo it: the snapshots are
+> 648x488 and the prediction was in 324x244 coordinates.
+
 ## What changed, and only what changed
 
 `s15_static_offset` puts the person at 3.6401 m and **-15.945 degrees**. These
@@ -62,10 +88,50 @@ about what the network can see, and reading it as one was my error.
 
 124442, 527750, 157365 and 356427 are at exactly 0.000 in both conditions, and
 the rendered grid puts them at exactly 0.000 frames above the bar on axis at
-3.5 m too. Four of the twelve are hard in a way no camera pose fixes. That is the
-residue of the original finding and it survives intact.
+3.5 m too.
 
-## A nonlinearity worth knowing
+**But "hard in a way no camera pose fixes" overstated it,** and the same grid I
+cited contradicts it. On axis at 1.5 m those four clear the bar on 0.950, 1.000,
+0.800 and 0.675 of frames. Range is part of pose. The supported statement is that
+no bearing rescues them at 3.5 m, which is the range the drone actually holds.
+
+## For tomorrow, which is what this was built for
+
+The capture protocol's bearing-0 marks are the clean comparison. **The off-axis
+columns of the reference table are contaminated by the card shadow** and should
+not be compared against real people, who do not carry a rectangular shadow that
+tracks their lateral offset.
+
+And the 250127 disagreement above is a reason to treat the reference table as
+approximate at the margin. Where the grid and the simulator disagree by 0.44 at
+nominally the same geometry, a real number landing between them says little.
+
+## A nonlinearity I claimed, and should not have
+
+**This section was wrong in three ways and is retained only as a record.** It
+said the grid's fraction above the bar predicts acquisition while tracking
+fraction is a much steeper function of it, citing 0.450 to 0.007, 0.950 to 0.613
+and 1.000 to 0.990.
+
+1. **Miscount, my recurring failure.** Five screened subjects sit at grid 1.000 on
+   axis at 3.5 m, not four: 266409, 280779, 374369, 401446 and 556158.
+2. **I dropped the point that breaks the shape.** 61747 sits at grid 0.975 and
+   flown M1 0.991, above the 1.000 group. Restored, the relation reads 0.450 to
+   0.007, 0.950 to 0.613, 0.975 to 0.991, 1.000 to 0.990. That is a step with one
+   subject below its neighbour 2.5 points away, not a steep curve.
+3. **The stated mechanism is contradicted by the logs.** 161875 does not fail to
+   latch. It clears the bar on 95% of frames at the start pose and latches at
+   0.31 s in all eight flights, the earliest possible. It loses the track later,
+   at 2.66 to 2.81 m, while closing range. That is a standoff and control-law
+   property during approach, not the latch rule at the acquisition pose.
+
+A fourth thing the same check surfaced, and it matters more than the section did:
+**250127 clears the bar on 0.450 of frames in the rendered grid at 3.5 m on axis,
+and on 0.007 of frames in the simulator at the same nominal geometry.** That is a
+0.44 disagreement between the reference table and the thing it is meant to
+reference. See §"For tomorrow" below.
+
+## The original nonlinearity text, superseded
 
 The rendered grid's fraction-of-frames-above-the-bar predicts **whether** a
 subject can be acquired, but tracking fraction is a much steeper function of it:
