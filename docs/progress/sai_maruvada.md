@@ -59,7 +59,7 @@ fall.
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
-| How well the drone follows people, measured across people | Sai | **Measured Sep 15 (208 flights), substantially qualified Sep 16.** The published subject latched 16/16 and tracked 0.99; the twelve screened subjects latched on 29% of standing flights. But the standing scene places the person 15.9 degrees off centre, and a 13,003-frame grid at five distances by five angles shows that straight ahead at 3.5 m, four of the seven that never latch clear the bar on 95-100% of frames. Four others fail either way and are genuinely hard. So the 29% is substantially a property of one camera pose. 104 on-axis flights (Sep 16) give latch 0.292 to 0.594 and median tracking 0.000 to 0.963, but **the comparison is confounded**: the opaque card throws a shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so those gains are an upper bound on the bearing effect, not a measurement. The bearing-0 column is clean; the off-axis ones are not. Evidence: docs/eval_results/2026-09-15-people-plural/, 2026-09-16-protocol-geometry/, 2026-09-16-one-frozen-pose/, 2026-09-16-onaxis/ | 13 refutation passes running against the revised reading before it goes to the team |
+| How well the drone follows people, measured across people | Sai | **Measured Sep 15 (208 flights), substantially qualified Sep 16.** The published subject latched 16/16 and tracked 0.99; the twelve screened subjects latched on 29% of standing flights. But the standing scene places the person 15.9 degrees off centre, and a 13,003-frame grid at five distances by five angles shows that straight ahead at 3.5 m, four of the seven that never latch clear the bar on 95-100% of frames. Four others fail either way and are genuinely hard. So the 29% is substantially a property of one camera pose. 104 on-axis flights (Sep 16) give latch 0.292 to 0.594 and median tracking 0.000 to 0.963, but **the comparison is confounded**: the opaque card throws a shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so those gains are an upper bound. A 156-flight attempt to remove the shadow FAILED and is not interpretable: the sensor model's auto-exposure holds every frame at a mean of 60 DN, so lightening the room pulled gain down and cost the subject contrast, collapsing detection even on-axis. A narrower re-run, stopping only the panel from casting, is in flight. Evidence: 2026-09-16-noshadow/ (the failure), 2026-09-17-panel-noshadow/ Evidence: docs/eval_results/2026-09-15-people-plural/, 2026-09-16-protocol-geometry/, 2026-09-16-one-frozen-pose/, 2026-09-16-onaxis/ | 13 refutation passes running against the revised reading before it goes to the team |
 | The standing scene is one frozen photograph | Sai | **Found Sep 16.** On every frame of every standing flight the drone sits at the origin with zero yaw, because it never latches so it never moves. A standing cell therefore renders one pose and the eight repeats differ only by sensor noise, so intervals computed as if they were independent are too narrow. Also: the covariate I used to rank subjects was measured on-axis while the flights were off-axis, a mean gap of 0.122 and up to 0.336 | Any future standing suite must vary the pose, or say plainly that it measures one |
 | Why the drone ignores ordinary people: a frozen-geometry deadlock | Sai | **Found Sep 15, tested Sep 16: the deadlock is real and is NOT the explanation.** The follower commands neither yaw nor forward motion until locked on (follow_person.py:371-376) and every one of the 109 latches across 208 flights happened with the drone still at its start pose, so it never closes range on its own. But flying the same 13 people at 1.6 / 2.2 / 2.8 m rescues only one of the seven failures in the two geometrically clean arms. Four are not acquired even at 1.6 m. The 1.6 m arm cannot be used: the far wall's top edge falls at image row 42 of 244 and at that range the subject's head crosses into the skybox, so it changes what the network sees in a way unrelated to range. My first write-up concluded the opposite through an invalid floor argument and miscounted seven as eight; 14 of 15 refutation passes found something. Evidence: docs/eval_results/2026-09-15-deadlock/ | Creep forward plus a closer hold is still worth building and is a few parameters, but it is not the fix. The remaining four are a perception problem |
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
@@ -147,6 +147,38 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-17 (overnight).** Tried to measure how much of yesterday's result was
+  really about where the person stands, and the experiment failed in a way worth
+  writing down.
+
+  The problem was that the cardboard cutouts throw a rectangular shadow on the
+  wall behind them, and that shadow only shows up when the person is off to one
+  side. So my comparison was rigged: the off centre condition had an extra dark
+  block next to the person and the straight ahead one did not. I re-flew both with
+  shadows switched off, a hundred and fifty six flights.
+
+  Everything got worse, including the control, which went from following
+  ninety nine percent of the time to five. Subjects that work in every other
+  condition dropped to nothing. That made no sense until I found why.
+
+  The simulated camera has an automatic exposure loop that holds the average
+  brightness of every frame at a fixed value. Turning off shadows made the room
+  brighter, the exposure loop pulled the gain down to compensate, and the person
+  came back with less contrast than before. The average brightness of my frames is
+  identical in all four conditions, to within half a percent, because the sensor
+  forces it to be. So I was not removing one artefact, I was changing the whole
+  room and letting the camera re-normalise the person along with it.
+
+  That is a real lesson about this rig and it applies backwards too. Anything that
+  changes what else is in the picture will change how the person looks, even when
+  nobody touched the person. That includes the floor reflectance work from last
+  week.
+
+  So I still cannot say how much of yesterday's improvement is genuinely about
+  where the person stands. It remains an upper bound with no lower bound. The
+  right way to do it is to stop the cutout alone from casting a shadow while
+  everything else in the room still does, which is a much narrower change, and a
+  hundred and fifty six flights of that are running now.
 - **2026-09-16 (late evening).** Found out that a good chunk of last night's
   headline is about where the person stands, not who the person is.
 
