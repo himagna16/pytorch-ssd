@@ -6,6 +6,18 @@ mock streamer, `cpx_grab.py`, `score_real_frames.py`. Built as the reference
 table the real frames get compared against, and it changed what the flight
 suites mean on the way.
 
+> # SECOND CORRECTION, 2026-09-17: EVERY NUMBER HERE IS THE WRONG NETWORK
+>
+> `score_real_frames.py` is hardwired to the float arm and has no backend switch,
+> while every flight this project has run uses the chip arm. All 13,003 frames
+> below were scored float. On the same frames the chip arm gives mean confidence
+> 0.5826 against 0.7065 and a fraction above the bar of 0.2989 against 0.5383, and
+> 122 of 325 cells move by 0.25 or more, some from 1.000 to 0.000.
+>
+> **Read `docs/eval_results/2026-09-17-chip-arm-rescore/` instead.** It carries
+> both arms for every cell. The subject conclusions, the bearing table and the
+> 2.5 m discussion below all need re-reading against the chip column.
+>
 > # CORRECTION, 2026-09-16
 >
 > **The bearing comparison in §2 is confounded and the confound scales with
