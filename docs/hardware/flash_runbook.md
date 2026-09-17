@@ -10,8 +10,10 @@ marked UNVERIFIED**, which need the real drone.
 > time, so the moment the champion app lands, MinHyuk's WiFi camera streamer is
 > gone — and with it every capture in `docs/real_frame_capture_protocol.md`,
 > which is the only thing in the whole session that cannot be done anywhere else.
-> Getting the streamer back needs MinHyuk's image (open question 12 in the
-> session runbook), not anything in this document.
+> **UPDATE 2026-09-16: getting the streamer back no longer needs MinHyuk.** The
+> streamer's source is in this workspace and it builds here. See §3c. Back the
+> frames up anyway, because a flash that goes wrong at the wrong moment still
+> costs you the session, but the one-way door is closed.
 >
 > **This document does not decide when you run it.
 > `docs/hardware/lab_session_runbook.md` section 4 does.** There it is step
@@ -240,6 +242,54 @@ bash ./flash_person_follow_aideck.sh radio://0/80/2M/E7E7E7E7E7 APP_DEBUG=0
 > **Careful:** every variant writes to the *same* output path. Build bench, you
 > overwrite flight. Copy the `.img` out before rebuilding, or just use the
 > prebuilt copies in `_prebuilt_champion/`.
+
+### 3c. The camera streamer, and why the flash is reversible (NEW 2026-09-16)
+
+Until today this document said that flashing the champion app destroys the WiFi
+camera streamer and that only MinHyuk could put it back. That was wrong, and it
+was the single largest risk in the session plan. The streamer's source ships in
+this workspace at `aideck-gap8-examples/examples/other/wifi-img-streamer`, and it
+builds with the same toolchain and the same command shape as the champion app.
+
+```bash
+cd ~/Downloads/drone
+docker run --rm -v "$HOME/Downloads/drone:/workspace" -w /workspace \
+  bitcraze/aideck aideck-gap8-examples/tools/build/make-example \
+  examples/other/wifi-img-streamer clean build image
+```
+
+**Built and verified 2026-09-16.** 61,472 bytes, and two independent clean builds
+produced byte-identical images:
+
+```
+sha256  de11368dc856eb5a7877015bd38da011c5f2e211045b384d5178aaaefe0e3e2d
+```
+
+A copy of that image, and of the champion flight image, is kept outside the build
+tree at `~/Downloads/drone/handoff_private/aideck_images/`, with `SHA256SUMS.txt`
+beside them, so a `clean` cannot delete your way back to a working camera.
+
+```
+handoff_private/aideck_images/
+  wifi-img-streamer.flash.img    61,472 B   de11368d...
+  champion-flight.flash.img     340,896 B   261e20d8...
+  SHA256SUMS.txt
+```
+
+**To go back to the camera after flashing the champion app**, flash the streamer
+image the same way you flashed the champion one, with the same
+`~/Downloads/drone/cfloaderenv/bin/python` spelled out in full:
+
+```bash
+~/Downloads/drone/cfloaderenv/bin/python -m cfloader flash \
+  ~/Downloads/drone/handoff_private/aideck_images/wifi-img-streamer.flash.img \
+  deck-bcAI:gap8-fw -w "radio://0/80/2M/E7E7E7E7E7"
+```
+
+**UNVERIFIED on hardware.** Nobody has flashed this image to a real AI-deck. The
+build is verified and reproducible; the flash is not, because there has been no
+deck to flash. Treat it as a recovery path that is very likely to work rather
+than one that is known to.
 
 ### 3b. Never run these
 
