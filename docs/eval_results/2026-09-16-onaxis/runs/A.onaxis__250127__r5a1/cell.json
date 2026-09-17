@@ -1,0 +1,20 @@
+{
+  "cell_id": "A.onaxis__250127",
+  "scene": "oa_250127",
+  "scene_class": "A",
+  "backend": "chip",
+  "camera": "himax_typical",
+  "speed": "chip",
+  "rate_hz": 6.5,
+  "latency_ms": 153,
+  "repeat": 5,
+  "attempt": 1,
+  "duration_s": 45,
+  "scene_dir": "/private/tmp/claude-501/-Users-saimaruvada-Downloads/90541ca8-cca5-4400-9855-79d1dde551f0/scratchpad/onaxis_scenes/oa_250127",
+  "run_dir": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-16-onaxis/runs/A.onaxis__250127__r5a1",
+  "truth": "/Users/saimaruvada/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-16-onaxis/runs/A.onaxis__250127__r5a1/truth.csv",
+  "sensor_seed": 1005,
+  "freeze_expected": false,
+  "needs_truth": true,
+  "suite": "people_plural"
+}
