@@ -1,0 +1,41 @@
+{
+  "scene_id": "oa_401446",
+  "title": "Control: one person standing still, off to the side - COCO 401446, ON AXIS",
+  "purpose": "On-axis variant of s15_static_offset. The person stands at the SAME range, 3.6401 m, but straight ahead instead of 15.945 degrees off. docs/eval_results/2026-09-16-protocol-geometry measured a large confidence gain from exactly this change on rendered frames; this scene is for flying it, because confidence is not tracking.",
+  "lighting": "default",
+  "preview_cam_x": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "subjects": [
+    {
+      "name": "subj_person_target",
+      "role": "person_target",
+      "coco": {
+        "img_id": 401446,
+        "ann_id": 444102
+      },
+      "height_m": 1.7,
+      "pos": [
+        3.640055,
+        0.0
+      ],
+      "motion": {
+        "type": "static"
+      },
+      "note": "ON-AXIS VARIANT, 2026-09-16. Two changes from s15_static_offset.json for the twelve pool subjects, one for the control: the COCO cutout is img 401446/ann 444102 (unchanged for the control), and pos goes from [3.5, -1.0] to [3.640055, 0.0]. Range is held at 3.6401 m to four decimals and the bearing goes from -15.945 to 0.000 degrees, so bearing is the only variable. This subject's flown tracking fraction at the off-axis pose was 0.8333 predicted against what the flight delivered; see 2026-09-16-one-frozen-pose for that gap. Height stays 1.7 m and panel width still follows this cutout's own aspect."
+    }
+  ],
+  "expected_behaviour": {
+    "verdict": "follow",
+    "target": "subj_person_target",
+    "target_policy": null,
+    "gates": []
+  },
+  "prediction": {
+    "model": "champion",
+    "outcome": "unknown - this is the measurement",
+    "rationale": "The rendered grid says these subjects clear the 0.75 bar on most frames when straight ahead. If the drone still does not follow them here, then confidence above the bar is not sufficient and something in the follower or the control law is the constraint. If it does follow them, the 29 percent standing latch rate in 2026-09-15-people-plural is mostly a property of that scene's off-axis placement."
+  }
+}
