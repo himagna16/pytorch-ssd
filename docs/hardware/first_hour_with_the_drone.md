@@ -86,6 +86,28 @@ Either answer is worth the afternoon. One subject is not a sample of humanity, s
 record how many people you got and what they were wearing, and do not let a single
 clip of one person in one jacket become a project-wide claim.
 
+## Two things a dry run on 2026-09-16 turned up
+
+The whole chain was run against the mock streamer the night before, capturing
+three labelled clips and scoring the folder. It works. Two traps showed up that
+are worth knowing at the bench.
+
+**The mirror check needs clips from BOTH sides, and silently reports NO DATA if
+it does not have them.** Every clip in the dry run was labelled bearing 0, and
+the check printed `no detected person frames with |bearing| >= 8 deg -> NO DATA`.
+If you capture only head-on, you will not find out that the model's left and
+right are wrong. Shoot the two off-centre clips early, not last.
+
+**A large `bearing err` means your floor marks and your labels disagree.** The
+dry run labelled its clips b0 while the mock streamer was rendering a subject at
+-25 degrees, and the scorer reported `bearing err -23.2`. That is the scorer
+working: it compares what you wrote on the clip against what it sees. If a real
+capture comes back with a bearing error of that size, do not reach for the model.
+Check the tape measure and the labels first.
+
+The dry run's other columns behaved as designed: `vis acc 100%`, `track 94%`,
+and `size acc +-1 100%`, on 108 frames across three clips.
+
 ## Step 4, only after the frames are backed up somewhere else: flash
 
 Copy the frames off the capture laptop first. Then, if you want to flash:
@@ -110,3 +132,20 @@ laptop.
 - Do not paste the flash command the build script prints. It begins with a bare
   `python`, which does not exist on this Mac. `flash_runbook.md` §0 explains it.
 - Do not run `follow_person.py` or `flight_check.py` against real hardware.
+
+## What was verified the night before, and what was not
+
+Run on 2026-09-16, the evening before the drone arrives:
+
+| thing | result |
+|---|---|
+| champion flight image rebuilds | byte-identical to the 2026-09-13 image, sha256 `261e20d8...`, 340,896 B |
+| camera streamer builds from our own source | yes, 61,472 B, two clean builds byte-identical, sha256 `de11368d...` |
+| both images kept outside the build tree | `handoff_private/aideck_images/` with `SHA256SUMS.txt` |
+| scorer against the real checkpoint | 39/39 checks pass, mirror PASS on upright and MIRRORED on the flipped copy, bin acc 96%, 0 false tracks, n=680 |
+| capture chain, mock streamer to scored folder | 3 clips, 108 frames, scored clean |
+
+**Not verified, and cannot be until there is a deck in the room:** flashing
+anything to real hardware, the streamer image actually running on a deck, the
+deck's revision, the real URI, and the STM32 and ESP32 firmware versions. Every
+build step is reproducible. No flash step has ever touched hardware.
