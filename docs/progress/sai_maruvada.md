@@ -55,7 +55,7 @@ fall.
 | First real AI-deck camera frames, motors off | Sai, MinHyuk | **Lab session next week**: Prof. Mok asked MinHyuk to meet the team with real hardware | Rehearse capture and scoring against a mock streamer before going; run the capture protocol in the lab |
 | Simulator: chip latency and saved frames | Sai | Done Sep 12: reviewed and committed | None |
 | Realistic simulator (v2) and its acceptance suite | Sai | Done Sep 12: camera-sensor model, chip-in-the-loop perception, 18-scene suite, 10-metric scoreboard; 14 cells x 37 flights flown, evidence in docs/sim_results/2026-09-11-simv2. **One correction Sep 12:** the suite's explanation of the distance failure was wrong and is withdrawn - see the row below and docs/eval_results/2026-09-12-distance | Fix the simulator's reflective floor and the size decode, then re-fly the distance cells (see the distance-keeping row); team uses the pet result to pick champion vs confuser |
-| Flashing the champion app onto a real AI-deck | Sai | **Blocked:** the GAP8 build tooling (`aideck-gap8-examples/tools/build/`) is missing on this Mac, so nothing can be flashed yet | Restore the toolchain and write a flash runbook before the lab session |
+| Flashing the champion app onto a real AI-deck | Sai | **Unblocked and rehearsed Sep 16.** Toolchain present, flight image rebuilds byte-identical to the Sep 13 one (sha256 261e20d8, 340,896 B). The bigger fix: flashing was believed to destroy the camera streamer irreversibly, needing MinHyuk to restore it. The streamer's source is in our own workspace; I built it twice from clean to a byte-identical 61,472 B image (de11368d) and kept both images outside the build tree. The flash is reversible. Build verified, flash never tried on hardware | Drone arrives Sep 17 at 1 pm. Follow docs/hardware/first_hour_with_the_drone.md |
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
@@ -145,6 +145,42 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-16 (evening).** Switched off the simulator and spent the night
+  getting ready for real hardware, because the drone arrives tomorrow at one.
+
+  The biggest thing I fixed was a risk nobody had checked. Our flashing guide
+  said that putting our own app on the drone's camera board destroys the camera
+  streamer, and that only MinHyuk could put it back. That would have made
+  tomorrow a one-way door: capture first and flash last, and if the flash went
+  wrong there was no way back to a working camera. It turns out the streamer's
+  source code has been sitting in our own workspace the whole time. I built it,
+  built it a second time from clean, and got a byte-identical image both times.
+  Both that image and our flight image now live outside the build folder where a
+  cleanup cannot delete them. The flash is reversible now. I have written plainly
+  that the build is verified and the flash of it is not, because there has never
+  been a drone to try it on.
+
+  I also rebuilt our flight image from scratch and it came out byte-identical to
+  the one from three days ago, ran the scoring tool's full test against the real
+  network and got thirty nine of thirty nine, and ran the whole capture chain
+  against a fake camera to make sure the plumbing works: three clips, a hundred
+  and eight frames, scored clean.
+
+  Two traps turned up in that dry run and both are now written down. The
+  left-right sanity check needs clips taken from both sides of the centre line
+  and says nothing at all if it only gets head-on ones, which is a quiet way to
+  miss a model that steers backwards. And if the reported bearing error comes
+  back large, the floor marks and the labels disagree, not the network.
+
+  Last thing: I wrote down what I expect real people to do before seeing a single
+  real frame, so it can be wrong in public the way last night's prediction was.
+  The short version is that I expect a real person standing three and a half
+  metres away to be tracked more than eighty percent of the time, and nobody to
+  come back at exactly zero. If that holds, the gloomy result from the twelve
+  simulated people is about how we build scenes and not about the network. If it
+  fails, the network is the blocking problem and that is the most important thing
+  this project could learn.
 
 - **2026-09-16 (overnight, 156 more flights).** Tested the fix I proposed last
   night and it mostly does not work. The idea was simple: the drone refuses to
