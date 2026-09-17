@@ -59,9 +59,23 @@ level, on a tripod or a stack of books, pointing down a taped centre line.
 | mark | why |
 |---|---|
 | **3.5 m, bearing 0** | the one that matters most, closest to the 3.64 m the simulator parks at |
+| **3.5 m, bearing -25 and +25** | **now equally important, see below** |
 | 2.5 m, bearing 0 | the middle of the useful band |
+| 2.5 m, bearing -25 and +25 | the second bearing point, if time allows |
 | 1.5 m, bearing 0 | close range; note the whole body barely fits below about 1.3 m |
-| 3.5 m, bearing -25 and +25 | whether bearing costs anything inside the crop |
+
+> **The off-centre marks were promoted on 2026-09-17 and are now the most valuable
+> thing in the session.** Three simulator suites tried to measure what bearing
+> costs and none of them could, because the simulated person is an opaque
+> rectangular card that throws a rectangular shadow on the wall behind it, and
+> that shadow only appears when the person is off centre. MuJoCo will not let us
+> switch it off for the card alone, and switching it off for the whole room moves
+> the scene brightness, which the sensor's auto-exposure then pushes back into the
+> subject. See `docs/eval_results/2026-09-17-panel-noshadow/`.
+>
+> A real person standing to one side does not bring a rectangular shadow with
+> them. **These clips are the only clean measurement of the bearing cost that
+> anyone will have.** Shoot them carefully, and shoot them before you get tired.
 
 Thirty seconds a clip is plenty. Label every clip with its distance and bearing,
 which `cpx_grab.py` takes as flags, and note the lighting in the folder name.
@@ -73,6 +87,14 @@ Then score the folder:
   ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py \
   ~/drone_frames/2026-09-16
 ```
+
+**One caution about the reference table.** The rendered comparison in
+`docs/eval_results/2026-09-16-protocol-geometry/tables/reference_table.tsv` is the
+right shape but is approximate at the margin. For at least one subject it reads
+0.450 where the simulator at the same nominal geometry gives 0.007, which is being
+investigated. Treat a real number landing in the middle of the table's range as
+uninformative, and read the extremes: near 1.000 or near 0.000 mean something,
+0.4 does not yet.
 
 **Read `track%` at the 3.5 m mark.** That is the same quantity as the simulator's
 tracking fraction, computed by different code on real pixels. The prediction
