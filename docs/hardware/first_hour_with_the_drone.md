@@ -80,15 +80,43 @@ level, on a tripod or a stack of books, pointing down a taped centre line.
 Thirty seconds a clip is plenty. Label every clip with its distance and bearing,
 which `cpx_grab.py` takes as flags, and note the lighting in the folder name.
 
-Then score the folder:
+Then score the folder. **You must run BOTH commands.** The first gives the mirror
+check, the bins and the labels. The second gives the confidence the drone actually
+sees.
 
 ```bash
+# 1. the usual scorer: mirror check, bin accuracy, labels, track%
 ~/Downloads/drone/trainenv/bin/python \
   ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py \
-  ~/drone_frames/2026-09-16
+  ~/drone_frames/2026-09-17
+
+# 2. the chip arm, which is the network that flies. Seconds to run.
+~/Downloads/drone/doryenv/bin/python \
+  ~/Downloads/drone/pytorch_ssd/docs/eval_results/2026-09-17-chip-arm-rescore/scripts/rescore_chip.py \
+  ~/drone_frames/2026-09-17
 ```
 
-**One caution about the reference table.** The rendered comparison in
+> # ⚠ THE FIRST COMMAND ALONE WILL MISLEAD YOU
+>
+> `score_real_frames.py` has no backend switch and is hardwired to the **float**
+> PyTorch model. Every flight this project has run, and the GAP8 itself, uses the
+> **chip** model: the int8 export plus the firmware's integer preprocessing.
+>
+> On 13,003 rendered frames the two disagree by **-0.124 in mean confidence and
+> -0.239 in the fraction of frames above the 0.75 bar**, with 122 of 325 cells
+> moving by 0.25 or more and some going from 1.000 to 0.000. It is not a constant
+> offset, so it cannot be subtracted off afterwards.
+>
+> Read the chip numbers when you want to know what the drone will do. Read the
+> float numbers only for the mirror check and the bin and bearing diagnostics,
+> which do not depend on the arm.
+>
+> Compare against the chip column of
+> `docs/eval_results/2026-09-17-chip-arm-rescore/tables/reference_table_chip.tsv`,
+> **not** the float table from 2026-09-16. Found at 02:20 the same morning; see
+> that directory for the full story.
+
+**A second caution, superseded by the one above but still true.** The rendered comparison in
 `docs/eval_results/2026-09-16-protocol-geometry/tables/reference_table.tsv` is the
 right shape but is approximate at the margin. For at least one subject it reads
 0.450 where the simulator at the same nominal geometry gives 0.007, which is being

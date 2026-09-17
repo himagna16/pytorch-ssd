@@ -147,6 +147,37 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 
 Newest first. One entry per working session.
 
+- **2026-09-17 (early morning).** Caught something at two in the morning that
+  would have quietly wrecked today's hardware session.
+
+  The tool we use to score captured camera frames runs the wrong network. It uses
+  the ordinary floating point model, while the drone runs the compressed integer
+  version that actually fits on the chip. Those are not the same network, and on
+  thirteen thousand frames they disagree by a lot: the float version thinks the
+  model clears its confidence bar on fifty four percent of frames and the chip
+  version says thirty. A third of the individual test cases shift by a quarter or
+  more, and some go from always to never.
+
+  This mattered today for two reasons. The protocol tells whoever is at the bench
+  to score the real frames with that tool, so the numbers would have described a
+  model we do not fly. And the comparison table I built last night was made the
+  same way, so a real person could have looked like a perfect match to the
+  simulation while both numbers were wrong in the same direction.
+
+  I rescored all thirteen thousand frames on the chip network, published both
+  columns side by side, and wrote a small script that does the same for any folder
+  of real frames in about twenty seconds. The first hour guide now says to run
+  both and which one to believe.
+
+  I did not change the scoring tool itself. It is shared, the project's own rules
+  say changes like that go through a branch and a review, and doing it unreviewed
+  a few hours before the first hardware session is exactly the kind of thing that
+  goes wrong. It should be the first job afterwards.
+
+  This also means last night's angle measurements are all on the wrong network and
+  need re-reading. I have flagged that directory rather than quietly fixing the
+  numbers, because some of its conclusions will not survive.
+
 - **2026-09-17 (overnight).** Tried to measure how much of yesterday's result was
   really about where the person stands, and the experiment failed in a way worth
   writing down.
