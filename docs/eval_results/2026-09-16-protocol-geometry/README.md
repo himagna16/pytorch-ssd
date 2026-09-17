@@ -6,6 +6,31 @@ mock streamer, `cpx_grab.py`, `score_real_frames.py`. Built as the reference
 table the real frames get compared against, and it changed what the flight
 suites mean on the way.
 
+> # CORRECTION, 2026-09-16
+>
+> **The bearing comparison in §2 is confounded and the confound scales with
+> bearing.** The subject panel is an opaque rectangle and the scene's second light
+> is `dir="1 0 -0.3"` with no sideways component, so the card casts a box shadow
+> onto the far wall 3.4 m behind it. The shadow keeps the subject's lateral offset
+> but lands at greater depth, so it appears displaced toward the image centre in
+> proportion to how far off-centre the person stands. At bearing 0 it hides behind
+> the card; at every other bearing it does not.
+>
+> Measured in the flight snapshots: at 0 degrees a fixed wall strip reads +2.3 DN
+> against a reference on 13 of 13 subjects; at -15.9 degrees it reads -30.0 DN on
+> 13 of 13. So the off-axis frames carry a hard-edged dark block next to the
+> subject and the on-axis frames do not.
+>
+> **The bearing-0 column stands. Every off-axis number in §2 is an upper bound on
+> the cost of bearing, because part of what it measures is the card's own shadow.**
+> A real person standing to one side does not bring a rectangular shadow with them.
+>
+> This matters for the capture tomorrow: compare real frames against the bearing-0
+> column, not against the off-axis ones.
+>
+> Found by an adversarial verifier. Details and the other corrections are in
+> `docs/eval_results/2026-09-16-onaxis/README.md`.
+
 ## 1. The headline
 
 The standing scene parks the person 1.0 m to the side, which is 15.9 degrees off

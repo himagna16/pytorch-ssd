@@ -59,7 +59,7 @@ fall.
 | Rehearsing the real-frame capture before the lab | Sai | **Done Sep 14.** The whole chain was run the way the lab operator will run it, with the real champion network on realistic rendered frames: the left/right mirror check, the safety test that decides whether the drone would steer the wrong way, gives the correct answer in every direction (pass, mirrored, no data, mislabelled), and each answer was reproduced independently. The real network detects a rendered person at every distance; an earlier 0% result turned out to be crude test drawings, not the model. Seven documentation errors found by typing the commands exactly as written are fixed | Run it once more on the lab laptop the day before; expect the plush-toy clip to register as a false track, which the protocol now says to record |
 | Distance keeping in the simulator | Sai | **Fixed, and my published cause was wrong.** The drone held about 3 m where it should hold 1.94 m. I had blamed the network's size head; on Sep 12 I traced it instead to the simulator's floor, which was 20% reflective, so the renderer drew people 1.5-2.0x too tall and the network read the person plus their reflection as one object. The size head reads real photographs correctly. Turning the reflection off and re-flying fixed it in all seven cells (for example 3.18 m to 2.43 m, and 2.42 m to 1.97 m against a 1.94 m target). A first re-fly suggested the fix cost flight stability; a controlled re-run with the code pinned and the two conditions interleaved found 0 upsets in 28 flights against 1 in 28, so that was an artefact of an overloaded laptop. Removing the mirror is free | Done Sep 12: the full 14-cell baseline has been re-flown on the fixed scenes. Next: give the pet case a controlled mirrored arm before it decides the model choice, and find out whether the detector really does lose people at close range. Do **not** retrain the size head |
 | Retest "QAT erases confuser gains" | Sai | Done Sep 11: overturned | None |
-| How well the drone follows people, measured across people | Sai | **Measured Sep 15 (208 flights), substantially qualified Sep 16.** The published subject latched 16/16 and tracked 0.99; the twelve screened subjects latched on 29% of standing flights. But the standing scene places the person 15.9 degrees off centre, and a 13,003-frame grid at five distances by five angles shows that straight ahead at 3.5 m, four of the seven that never latch clear the bar on 95-100% of frames. Four others fail either way and are genuinely hard. So the 29% is substantially a property of one camera pose. 104 on-axis flights (Sep 16) confirm it converts: latch rate 0.292 to 0.594, median tracking 0.000 to 0.963, six subjects better and none worse, four unchanged at 0.000. Evidence: docs/eval_results/2026-09-15-people-plural/, 2026-09-16-protocol-geometry/, 2026-09-16-one-frozen-pose/, 2026-09-16-onaxis/ | 13 refutation passes running against the revised reading before it goes to the team |
+| How well the drone follows people, measured across people | Sai | **Measured Sep 15 (208 flights), substantially qualified Sep 16.** The published subject latched 16/16 and tracked 0.99; the twelve screened subjects latched on 29% of standing flights. But the standing scene places the person 15.9 degrees off centre, and a 13,003-frame grid at five distances by five angles shows that straight ahead at 3.5 m, four of the seven that never latch clear the bar on 95-100% of frames. Four others fail either way and are genuinely hard. So the 29% is substantially a property of one camera pose. 104 on-axis flights (Sep 16) give latch 0.292 to 0.594 and median tracking 0.000 to 0.963, but **the comparison is confounded**: the opaque card throws a shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so those gains are an upper bound on the bearing effect, not a measurement. The bearing-0 column is clean; the off-axis ones are not. Evidence: docs/eval_results/2026-09-15-people-plural/, 2026-09-16-protocol-geometry/, 2026-09-16-one-frozen-pose/, 2026-09-16-onaxis/ | 13 refutation passes running against the revised reading before it goes to the team |
 | The standing scene is one frozen photograph | Sai | **Found Sep 16.** On every frame of every standing flight the drone sits at the origin with zero yaw, because it never latches so it never moves. A standing cell therefore renders one pose and the eight repeats differ only by sensor noise, so intervals computed as if they were independent are too narrow. Also: the covariate I used to rank subjects was measured on-axis while the flights were off-axis, a mean gap of 0.122 and up to 0.336 | Any future standing suite must vary the pose, or say plainly that it measures one |
 | Why the drone ignores ordinary people: a frozen-geometry deadlock | Sai | **Found Sep 15, tested Sep 16: the deadlock is real and is NOT the explanation.** The follower commands neither yaw nor forward motion until locked on (follow_person.py:371-376) and every one of the 109 latches across 208 flights happened with the drone still at its start pose, so it never closes range on its own. But flying the same 13 people at 1.6 / 2.2 / 2.8 m rescues only one of the seven failures in the two geometrically clean arms. Four are not acquired even at 1.6 m. The 1.6 m arm cannot be used: the far wall's top edge falls at image row 42 of 244 and at that range the subject's head crosses into the skybox, so it changes what the network sees in a way unrelated to range. My first write-up concluded the opposite through an invalid floor argument and miscounted seven as eight; 14 of 15 refutation passes found something. Evidence: docs/eval_results/2026-09-15-deadlock/ | Creep forward plus a closer hold is still worth building and is a few parameters, but it is not the fix. The remaining four are a perception problem |
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
@@ -202,9 +202,35 @@ Newest first. One entry per working session.
   hundred, ninety nine. The drop-out rule is unforgiving, so anyone reading the
   frame statistics as a tracking prediction will be too optimistic.
 
-  I have thirteen independent checks running against all of this before I put the
-  revised headline in front of the team, because the last two times I published
-  something this size most of my claims did not survive.
+  Thirteen independent checks ran against all of that, and the headline did not
+  survive intact. The cards the simulator uses are opaque rectangles, and the room
+  light comes from one side with no sideways angle, so each card throws a
+  rectangular shadow onto the wall behind it. Because the wall is three and a half
+  metres further back than the person, the shadow lands offset from the card by an
+  amount that grows the further off centre the person stands. Dead ahead it hides
+  behind them. Off to the side it does not.
+
+  So the comparison I ran was not clean. The off centre condition was showing the
+  network an extra dark block glued to the person that the straight ahead
+  condition did not have. Every number I quoted is an upper bound on what being
+  off centre costs, not a measurement of it. A real person does not carry a
+  rectangular shadow around with them.
+
+  I checked it myself, got the image scale wrong, concluded it was not there, and
+  had to redo it. It is there on thirteen subjects out of thirteen in one
+  condition and zero out of thirteen in the other. The checker found it and I
+  nearly talked myself out of it.
+
+  Three other things of mine went too. I counted four subjects where there were
+  five, I left out the one data point that turns my claimed steep curve into a
+  flat step, and I named a cause the logs contradict: the subject I said could not
+  lock on actually locks on within a third of a second every single time and loses
+  the track later while closing in, which is a different problem entirely.
+
+  What still stands is that four of the twelve are not seen at three and a half
+  metres no matter which way they face, and that the original twenty nine percent
+  is not a clean statement about people. What I cannot yet say is how much of the
+  improvement is really about where they stand.
 
 - **2026-09-16 (evening).** Switched off the simulator and spent the night
   getting ready for real hardware, because the drone arrives tomorrow at one.
