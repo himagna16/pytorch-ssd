@@ -3,6 +3,38 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-20** — **Lighthouse, not a Flow deck, and ground truth comes from a
+  second drone on the subject's head.** The thesis setup uses a Bitcraze Flow deck,
+  which gives relative motion over the floor: it cannot say where anything is in
+  the room and cannot say where the *subject* is at all. Lighthouse gives absolute
+  pose for every drone carrying a deck. So a second Crazyflie, props off and motors
+  never armed, rides on the subject's head as a pose beacon; the follower logs its
+  own pose; the difference, rotated into the follower's body frame, is where the
+  subject truly was when each frame was taken, and the network's output on that
+  frame is the measurement. **The reason this is worth the hardware: ground truth
+  exists for frames the network misses entirely**, which no other labelling method
+  available to us can give, and those are the frames the open fine-tuning problem
+  needs. Rejected: sticking with a Flow deck, which cannot produce this data even in
+  principle. CONDITIONS, all of which must hold before any data is collected — the
+  pose-to-label pipeline is built and verified against the simulator first, where
+  exact ground truth already exists; the head-versus-torso offset is fixed in
+  writing, or it becomes a systematic bias in every label; the WiFi-frames /
+  radio-poses clock offset is measured rather than assumed, because that error grows
+  with subject speed and so looks clean on static marks; and the yaw-sign chain is
+  verified, because a sign error there yields a confidently mirrored label set that
+  would train the drone to steer away from people. SEQUENCING: this does not delay
+  the capture session, which needs WiFi only and answers the project's top open
+  question. Plan: docs/hardware/before_the_next_session.md
+
+- **2026-09-20** — **The bearing question leaves the simulator.** Two attempts to
+  separate "where the person stands" from "the shadow the subject card casts" are
+  dead: `castshadow="false"` collapsed detection everywhere including the control
+  (0.991 to 0.048) because the sensor model holds every frame at AE_TARGET_DN = 60
+  and lightening the room took the contrast back out of the subject, and the
+  narrower panel-only re-run aborted. The Sep 16 on-axis gain stays an upper bound
+  with no lower bound, and this rig cannot give it one. Rejected: further simulator
+  variants of the same comparison. It is a lab measurement now.
+
 - **2026-09-15** — **Every person-tracking number this project has published
   describes one unusually easy subject.** The cutout both person cells were built
   from sits near the 98th percentile of detectability among real people. With a
