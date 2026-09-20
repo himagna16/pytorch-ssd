@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 15, 2026
-**Last updated:** 2026-09-15
+**Period covered:** Aug 24 to Sep 20, 2026
+**Last updated:** 2026-09-20
 
 ## Summary
 
@@ -32,6 +32,22 @@ its person scenes turn out to be built around one unusually easy photograph. Bot
 are written up below. The short version is that our tracking figures describe
 that one subject, and the lab session is what will tell us where real people
 fall.
+
+The drone itself arrived on Sep 17. That session confirmed the deck can be
+flashed over the air and already carries the camera streamer, so capturing frames
+needs no flashing at all — and then ended on a flat battery, because charging runs
+through the Crazyflie's own micro-USB and we did not have a cable. That is still
+the state as of Sep 20, and it is the only thing standing between us and the
+measurement this project is waiting for.
+
+The plan for what comes after capture is now written down. We are using the
+Lighthouse deck rather than the thesis setup's Flow deck, which changes what is
+possible: a second Crazyflie with its props off rides on the subject's head as a
+pose beacon, and the difference between the two drones' poses gives us where the
+person truly was for every frame, including the frames the network misses
+entirely. That is labelled training data of a kind nothing else here can produce.
+What can be built before the next hands-on session, and what will go wrong if it
+is not, is in `docs/hardware/before_the_next_session.md`.
 
 ## Live tracker
 
@@ -65,6 +81,13 @@ fall.
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
 | Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
 | The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
+| Two cables, and they block a whole session | Sai | **Outstanding since Sep 17.** A data-capable micro-USB cable is the single blocking item: without it the battery cannot be charged, which caps every visit at the five to seven minutes a 350 mAh pack gives with the AI-deck streaming. Separately the Crazyradio 2.0 is USB-A and the laptop is USB-C only; a scan on Sep 17 reported `Cannot find a Crazyradio Dongle` and it was never established whether the dongle was plugged in at all. Under the Lighthouse plan the radio stops being optional, because positions come back over CRTP, not over the deck's WiFi | Buy both. Charge-only micro-USB cables are common and will fail the bench-power and flashing uses, so check for data |
+| Scoring tool runs the wrong network | Sai | **Found Sep 17, deliberately not fixed that night.** `tools/real_frames/score_real_frames.py` is hardwired to the float model while the drone flies the int8 chip export. On 13,003 frames they disagree by -0.124 mean confidence and -0.239 in the fraction above the 0.75 bar, 122 of 325 cells moving by 0.25 or more, so it cannot be corrected after the fact. Left alone because it is a shared tool and the repo's rules put that on a branch with a PR, hours before a hardware session. Workaround in place: the first-hour guide runs both scorers and says to believe the chip one | **The first code job now.** Add `--backend {float,chip}` defaulting to chip, on a branch with a PR |
+| The Sep 16 bearing work was scored on the float arm | Sai | Flagged, not quietly corrected, because some conclusions will not survive. Affects `docs/eval_results/2026-09-16-onaxis/` and `2026-09-16-protocol-geometry/` | Rescore both with `2026-09-17-chip-arm-rescore/scripts/rescore_chip.py`, about twenty seconds per folder. Then re-read the conclusions |
+| Separating bearing from the card's own shadow | Sai | **The simulator cannot answer this. Two attempts dead.** The subject panel is opaque and throws a box shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so the Sep 16 on-axis gain is an upper bound. Attempt 1 (`2026-09-16-noshadow`, 156 flights) removed the shadow and collapsed detection everywhere including the control, 0.991 to 0.048, because `camera_model.py` holds every frame at `AE_TARGET_DN = 60.0` and lightening the room made the exposure loop take the contrast back out of the subject. Attempt 2 (`2026-09-17-panel-noshadow`) aborted after one flight | Stop trying in simulation. It is a lab measurement now. Say so to the team before the session, not in the room |
+| Lighthouse ground truth from a head-mounted second drone | Sai, MinHyuk | **Planned Sep 20, nothing built yet.** A second Crazyflie, props off and motors never armed, rides on the subject's head as a pose beacon; both drones carry Lighthouse decks; the difference between the two poses, rotated into the follower's body frame, is where the subject truly was. Truth minus what the network said is the training signal. **The property that makes this worth doing: ground truth exists for frames the network misses entirely**, which no other labelling method we have can give us. The thesis setup's Flow deck could not do this even in principle, because optical flow gives relative motion and never tells you where the subject is. Plan and prerequisites: `docs/hardware/before_the_next_session.md` §3 | Build the pose-to-label pipeline against CrazySim first, where exact ground truth already exists. Email MinHyuk the seven hardware questions (§3.4). Run the static taped-mark calibration case before collecting anything |
+| The yaw-sign chain, still unverified | Sai | Named in `lab_session_runbook.md` as the reason Lighthouse was scoped out of the first session. It now has to be settled, because a sign error here does not fail loudly: it produces a confidently mirrored label set, which would train the drone to steer away from people | Verify inside the pose-to-label pipeline against the simulator, where the answer is known. Extend the existing left/right mirror check to cover it |
+| First hands-on session with the hardware | Sai | **Happened Sep 17, 1 pm. Half a result.** Confirmed from the bench: AI-deck 1.1, Rev D or newer, so over-the-air flashing is supported, closing an open question in `flash_runbook.md` §8. The deck already carries the WiFi streamer, so nothing needs flashing to capture frames. No power button exists; the Crazyflie powers up when the battery is connected. The afternoon went almost entirely to things nobody had written down, and ended on a flat battery with no charging cable. Written up in `docs/hardware/powering_the_drone.md` | Buy the cable, then run the capture. Nothing else is in the way |
 
 ## Results and their status
 
@@ -127,6 +150,257 @@ Team context.
 Code, as the project lead encouraged. I directed the experiments, ran and
 checked the results, and made the decisions recorded in DECISIONS.md.
 
+## Everything done, in one list
+
+Aug 24 to Sep 20, 2026. Grouped by area rather than by date; the dated narrative
+is in the session log below. Withdrawn and corrected results are listed with the
+rest rather than quietly dropped, because several of them are the most useful
+things in here.
+
+### Toolchain and environments
+
+- Rebuilt the training and NEMO quantization environments on macOS from a setup
+  that only ran on David's machine. Four toolchain fixes: Linux-only package
+  pins, a numpy/pycocotools ABI conflict, a NEMO export crash under PyTorch 2.x,
+  and a path hardcoded to his laptop.
+- Set the team PyTorch version so Grace's Intel Mac could join.
+- Containerized the legacy export environment, which is what let the release
+  pipeline run anywhere but David's machine.
+- Ported MinHyuk's CrazySim to Apple Silicon, with the firmware in a small
+  container. Five issues found and fixed in the process, including macOS network
+  limits and a steering sign flip.
+- Setup runbooks that let Grace and Oaj reproduce results on three operating
+  systems, plus fixes for the bugs they found doing it.
+
+### Models and training
+
+- Reimplemented the thesis's bin-head model from the text of the thesis and
+  replicated both of its main claims: the straight-through graph exports through
+  NEMO with zero patches where the hybrid needs the eps hack, and decoded bins
+  survive the float-to-quantized step where a scalar head does not.
+- Ran the full-COCO training campaign. **QAT champion: 0.8008 peak F1 in
+  fake-quant form against David's released 0.789.** Reproduced by Grace.
+- Trained the confuser variant, which cuts animal and mannequin false alarms from
+  24% to 8%.
+- Hard-negative mining plus QAT, after a control run showed mining rather than
+  QAT was the missing piece.
+- Added `--seed`, tested to give identical runs, after finding large run-to-run
+  variance. Three or more seeded repeats before reporting is now the rule.
+- Fixed `train.py --init-ckpt` silently dropping 59 learned PACT alpha/range
+  tensors, which cost 0.0017 F1 and added 0.019 slice false-alarm rate before a
+  single gradient step. PR #3; `--init-ckpt-drop-qat-alphas` reproduces the old
+  behaviour bit-exactly.
+
+### Evaluation tooling and method
+
+- Drift audit between float and quantized models. Showed the cheap 16-image audit
+  predicts full-set quantization loss.
+- Threshold sweeps, error analysis, confuser-slice metrics.
+- A tested C decoder for the firmware team, verified against the Python decode on
+  14,579 checks and catching all 7 deliberate bugs in a mutation test.
+- `rescore_chip.py`, which rescores any folder of frames on the network that
+  actually flies, in about twenty seconds.
+- **Two method rules that came out of being wrong**, and that now apply to
+  everything here: compare models at **matched recall**, never at different
+  thresholds, and always run the threshold-dial control on the baseline before
+  crediting training with a gain. A scene's **subject is a parameter of the
+  experiment**, not set dressing, and every tracking claim has to say which
+  subject produced it and where that subject sits in the detectability
+  distribution.
+
+### The chip lane: GAP8, NEMO, DORY
+
+- Reproduced David's GVSOC chip validation of his own app.
+- **Found that our released integer networks were ignoring their input entirely**
+  — one output for all 96 test images. Withdrew the chip-validation claims the
+  same day, then traced it to the DORY code generator casting weights in a way
+  that zeroes negative values on Apple Silicon. David's app was built on x86,
+  where it works. Wrote the patch.
+- Fixed a second pipeline bug: the release reported decoded chip outputs with a
+  hard-coded scale 6.6x too small, which made integer accuracy read 0.12 instead
+  of 0.84. Champion integer F1 is 0.837 against 0.815 for the float model.
+- Two further DORY template bugs: an out-of-bounds array write, and a debug
+  switch costing 38 ms per inference.
+- Verified the 8-core build: bit-exact against single-core, 154 ms down to 23 ms
+  per inference with debug output off.
+- Chip-versus-float agreement on 1,000 random images: 93-96% visibility agreement
+  for all three candidates, about one confident contradiction per thousand
+  images, no measurable F1 loss.
+- Audited every chip app ever built on this Mac. Only the two already-withdrawn
+  releases were corrupted.
+- **Established that YOLO cannot replace our model through this pipeline.**
+  Exported YOLOv11n and YOLOv8n and ran every node against the code generator's
+  own accept rules: the build stops at node 10 of 355, 21 nodes rejected
+  outright, another 112 accepted and then silently dropped, including all 78
+  sigmoids and all 21 feature-pyramid joins. Our champion passes with zero
+  rejections. Use YOLO off the drone to label real frames instead.
+
+### Release pipeline and gates
+
+- Made David's release pipeline portable, five fixes.
+- **Five permanent semantic release gates** that would have caught the constant-
+  output bug. Verified: both old releases fail all five, David's app passes the
+  weights check, a synthetic healthy release passes all five.
+- Promoted the champion's chip app after it passed every gate twice plus the
+  app's own integrity check. It is the team's validated app.
+- The confuser's chip app runs correctly but agrees with its float model on only
+  88.5% of visibility calls against a 90% bar, all near the decision boundary.
+
+### Firmware integration
+
+- Put the champion into a local branch of the drone firmware. **Six rounds of
+  independent safety review** with a timing simulator, until no failure pattern
+  the chip controls could produce would make the drone steer on stale frames or
+  fail to land. It now rejects failed inferences, resets tracking on camera or
+  pipeline failures, and lands 3 s after the last good frame in every simulated
+  failure pattern.
+- Found the firmware's image resize was costing recall and replaced it with a 2x2
+  average matching training.
+- Delivered the branch as a git bundle with a hand-off for the frontend trio.
+- A firmware decode contract, with the tested C decoder above.
+
+### Simulator
+
+- Closed-loop person follower, passing all five safety and tracking tests.
+- Realistic simulator v2: camera-sensor model, chip-in-the-loop perception, an
+  18-scene suite, a 10-metric scoreboard. 14 cells and 37 flights flown.
+- Chip latency and frame rate in the loop: at 6.5 Hz with 153 ms delay, 3.1
+  degrees mean heading error against 2.7 at full speed, no oscillation.
+- Realism costs measured one factor at a time: the realistic camera adds 0.32 m
+  of distance error, the chip network 0.13 m, the slower frame rate 0.10 m.
+- Person scenes built from COCO photographs, ground-truth logging, a one-command
+  acceptance suite.
+- Fixed the scoreboard's camera gating and M10 band. Baseline-075 went from 8
+  pass / 6 fail to 10 pass / 4 fail.
+
+### What the studies established
+
+- **The drone chases a dog.** In simulation it confirms a dog 0.31 s in at
+  confidence 0.87-0.89, stays latched 68-78% of the flight and drifts 2.3-2.7 m
+  against a 0.5 m limit. Survives the chip network and the realistic camera.
+- **Which model we fly: the champion.** Decided at the team dinner on Sep 13 on
+  the first head-to-head flight comparison. The confuser fixes the pet problem
+  and cannot follow a person at all, 0% tracking on a standing subject. The
+  still-image recall gap understated this badly, because the drone needs three
+  consecutive confident frames to lock on and a slightly less confident model
+  almost never gets three in a row.
+- **The acquisition rule**, which held on all 54 flights across two studies: the
+  drone latches if and only if the longest above-bar run is at least 3 frames.
+  The binding constraint is the **entry** gate, not the 0.45 exit bar.
+- **Both drone thresholds swept in flight and rejected.** 0.65 rejected for
+  re-latch chatter; 0.55 lower on 6 of 7 matched seeds but not callable; the
+  0.70-versus-0.75 enter bar leaves 3 of 4 ordinary cells acquiring at neither.
+  Reverting does not produce a working follower. **0.75 stays. Configuration is
+  exhausted.**
+- **Every tracking number this project published describes one unusually easy
+  photograph.** COCO val2017 19432 sits near the 98th percentile of
+  detectability. Rebuild the same scenes around a median or 25th-percentile
+  person and the drone never starts following at all: 0.000 tracking on 11 of 12
+  flights, while the original subject still reproduces 0.990 on the same rig.
+- **The simulator does not predict reality, in both directions.** On pets it
+  overstates confidence by about 2.9x at matched apparent size. On people it
+  overstates, and the cause is subject selection rather than the renderer. Real-
+  pet false alarms at the shipped 0.75 bar are 6.9-8.2%, not the 30.2% usually
+  quoted, which was measured at 0.45.
+- **Distance keeping: the published cause was wrong.** The drone held about 3 m
+  where it should hold 1.94 m. I had blamed the size head. It was the
+  simulator's groundplane being 20% reflective, so people rendered 1.5-2.0x too
+  tall and the network read person-plus-reflection as one object. Against 2,635
+  real COCO photographs the size head is unbiased. The follower's control law
+  also cannot reach 1.94 m at all; its floor is 2.43 m.
+- **MinHyuk's field-of-view objection, answered mostly in our favour.** A 1.7 m
+  person stops fitting below 1.29 m and the drone never closes past 1.55 m in any
+  flight on record. The real caveat is height: a 1.9 m person is cut off below
+  1.57 m, which is inside the range our flights reach. The detection penalty for
+  partial people comes entirely from frame-edge truncation; occlusion and pose
+  cost nothing measurable.
+- **The auto-exposure lesson**, which applies backwards to the floor-reflectance
+  work: the sensor model holds every frame at a mean of 60 DN, so anything that
+  changes what else is in the picture changes how the person looks, even when
+  nobody touched the person.
+- **The F.pets cell drifts between sessions** by as much as the effects we chase.
+  Identical config gave 11/16 in an afternoon and 2/7 the same evening. Compare
+  that cell only within one interleaved session.
+
+### Corrections and withdrawals
+
+Kept deliberately visible. Five results were published and then pulled or
+rewritten after checking:
+
+1. **Chip validation, withdrawn Sep 10.** The integer networks ignored their
+   input; the old check compared the chip against a reference built from the same
+   corrupted weights.
+2. **"The size head over-reads," withdrawn Sep 12.** It was the simulator's
+   mirror floor. The size head is unbiased on real photographs.
+3. **"QAT erases the confuser gains," overturned Sep 11.** Missing hard-negative
+   mining was the cause, not QAT.
+4. **The Sep 14 pet fine-tune, withdrawn Sep 14 on independent re-check.** The
+   24%-to-9-13% false-alarm cut and the F1 figure were read at two different
+   thresholds. At matched recall the fine-tuned epochs lie on the champion's own
+   false-alarm curve, gaining 0.000-0.001 at its operating point, and simply
+   turning up the champion's own confidence dial reproduces 0.133 of the 0.146
+   apparent drop. The accuracy cost is real; the safety gain is not established.
+5. **The Sep 16 on-axis bearing gain, downgraded to an upper bound.** The opaque
+   subject card throws a shadow visible only off-axis. Two attempts to remove it
+   failed, one of them by collapsing detection everywhere including the control.
+
+Also corrected in place rather than argued: a 208-flight entry that understated
+my own error, a miscount of seven failures as eight, an invalid floor argument,
+and a rendering confound in the decisive arm of the deadlock study, found by 14
+of 15 refutation passes.
+
+### Hardware
+
+- **First hands-on session, Sep 17.** Confirmed an AI-deck 1.1, Rev D or newer,
+  so over-the-air flashing is supported — that closes an open question in the
+  flash runbook. The deck already carries the WiFi streamer, so nothing needs
+  flashing to capture frames.
+- Established that the flash is reversible: built the camera streamer ourselves
+  twice from clean to a byte-identical 61,472 B image, and kept both images
+  outside the build tree. This had been believed to be a one-way door needing
+  MinHyuk to undo.
+- Flight image rebuilds byte-identical to the Sep 13 one, sha256 261e20d8,
+  340,896 B.
+- Rehearsed the whole real-frame capture chain against a mock streamer, the way
+  the lab operator will run it. The left/right mirror check gives the correct
+  answer in every direction. Seven documentation errors found by typing the
+  commands exactly as written, and fixed.
+- Wrote `powering_the_drone.md` after the Sep 17 session, covering everything
+  nobody had written down: no power button, the battery plugs, propellers versus
+  motors, the AI-deck's WiFi AP, five to seven minutes of battery, the AI-deck
+  browning out before the mainboard, and charging over the Crazyflie's micro-USB.
+
+### Documents, process and team
+
+- The team fork, the workflow, and `DECISIONS.md`.
+- Onboarding runbooks for Grace and Oaj, and fixes for the three setup bugs Oaj
+  found on Linux.
+- The real-frame capture protocol and its scoring tool.
+- The lab-session runbook, the first-hour guide for the case where it is just me,
+  and this pre-session checklist.
+- Meeting reports, the Sep 2 meeting document, Week 1 report.
+- This progress record, which Prof. Mok asked to be kept current so it can be
+  edited into a final project report.
+- 54 commits on `main` and the release branch at the last count, about 9,200
+  lines added.
+
+### What is NOT established
+
+Worth keeping in one place, because several of these are easy to assume:
+
+- **Nothing has been measured on real hardware.** Every number above is
+  fake-quant, chip-simulator, or rendered.
+- **How well the drone follows a real person is unknown**, and the published
+  97-99% figures describe one photograph.
+- **The pet problem is unsolved.** Settings are exhausted and the first
+  retraining attempt did not beat them.
+- **No flight has happened**, in the lab or anywhere else. The flight-controller
+  software is written and passes an independent safety review in simulation only.
+- **The bearing question has no lower bound**, and cannot get one from the
+  simulator.
+- **The yaw-sign chain is unverified**, which is why Lighthouse was scoped out of
+  the first session.
+
 ## Team context
 
 - **David Liu:** original thesis, training and release pipeline, handoff
@@ -146,6 +420,92 @@ checked the results, and made the decisions recorded in DECISIONS.md.
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-20.** No experiments. Took stock, planned the ground-truth rig, and
+  wrote down two things that should have been written down already.
+
+  The drone has been sitting on the desk since Sep 17 because we do not have a
+  micro-USB cable. That is the whole blocker: the battery charges through the
+  Crazyflie's own mainboard and there is no separate charger, so without a cable
+  every session is capped at the five to seven minutes a 350 mAh pack gives with
+  the AI-deck streaming. The Crazyradio's USB-A-versus-USB-C problem is still
+  unresolved from the same afternoon.
+
+  The bigger piece of the session was the ground-truth plan. We are using the
+  Lighthouse deck where the thesis setup used a Flow deck, and that is not a
+  like-for-like swap. A Flow deck gives relative motion over the floor; it cannot
+  tell you where anything is in the room, and it cannot tell you where the
+  *subject* is at all. Lighthouse gives absolute pose for every drone carrying a
+  deck, which is what makes the scheme possible: a second Crazyflie with its
+  props off rides on the subject's head as a pose beacon, the follower logs its
+  own pose, and the difference between the two, rotated into the follower's body
+  frame, is where the subject truly was when each frame was taken. What the
+  network said about that frame is the measurement. The gap between them is the
+  training signal.
+
+  The property that makes this worth the trouble is that **ground truth exists
+  for frames where the network misses entirely.** Every other way we have of
+  labelling real frames needs something to detect the person first. This one does
+  not, and missed frames are exactly what the open fine-tuning problem needs.
+
+  What I wrote down rather than built, because none of it needs the drone:
+  the pose-to-label pipeline should be built and tested against the simulator
+  first, where exact ground truth already exists; the head-versus-torso offset is
+  a convention that has to be fixed in writing before any data is collected, or
+  it becomes a systematic bias in every label; the frames come over WiFi and the
+  poses over the radio, two clocks with no shared timebase, and a sync error
+  there turns into a bearing error that grows with how fast the subject walks,
+  which means it will look fine on the static marks and silently corrupt the
+  moving data. All of it is in `docs/hardware/before_the_next_session.md`.
+
+  This is also where the yaw-sign chain finally has to be settled. It is the
+  stated reason Lighthouse was scoped out of the first session, and a sign error
+  does not fail loudly — it produces a confidently mirrored label set, which
+  would train the drone to steer away from people.
+
+  Two things I want on the record because they are easy to lose. First, the
+  static calibration case — subject on a taped mark, drone on a taped mark, thirty
+  seconds, check the pipeline against a tape measure — catches almost all of the
+  above and **needs no second drone at all**, so it survives the second deck not
+  materialising. Second, none of the Lighthouse work should delay the capture
+  session. The top open question in this project is where real people's detection
+  margins sit, that needs WiFi only, and it is unblocked by a cable that costs a
+  few dollars.
+
+  Also added a full inventory section to this record, since Prof. Mok asked for
+  documentation that can be edited into a final report, and backfilled the Sep 17
+  afternoon entry below, which existed only as a hardware document and a commit
+  message.
+
+- **2026-09-17 (afternoon, first hands-on session).** Backfilled on Sep 20 from
+  `docs/hardware/powering_the_drone.md` and commit b4e196f, which were written at
+  the time; this entry was missing.
+
+  The drone arrived around 1 pm and the afternoon went almost entirely to things
+  nobody had written down. Every runbook in the hardware directory assumed
+  MinHyuk would be at the bench handling the hardware, so not one of them said
+  how to turn it on.
+
+  What was established, from photographs and from trying it: there is no power
+  button, and the Crazyflie powers up the moment the battery is connected through
+  a pair of small white two-pin plugs that sit loose in storage. The propellers
+  are not the motors. The deck is an **AI-deck 1.1, Rev D or newer, so
+  over-the-air flashing is supported** — that closes an open question in
+  `flash_runbook.md` §8. It raised its WiFi access point, `WiFi streaming
+  example`, which means the streamer is already flashed and **nothing needs
+  flashing to capture frames.** The battery gives five to seven minutes with the
+  deck streaming, and the AI-deck browns out before the mainboard does, so the
+  symptom you notice is the WiFi vanishing while an LED is still lit.
+
+  The session ended on a flat battery. Charging is over the Crazyflie's own
+  micro-USB with the battery still connected, we did not have a micro-USB cable,
+  and so that was that. A scan also reported `Cannot find a Crazyradio Dongle`,
+  and it was never established whether the dongle was plugged in at all or an
+  adapter was missing.
+
+  Half a result, and the half we got is worth having: the capture work needs only
+  WiFi, no radio and no flashing, and it is unblocked the moment the battery can
+  be charged.
 
 - **2026-09-17 (early morning).** Caught something at two in the morning that
   would have quietly wrecked today's hardware session.
