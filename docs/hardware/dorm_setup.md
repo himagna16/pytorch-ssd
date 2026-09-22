@@ -11,7 +11,7 @@ Lighthouse hardware. Now Sai has:
 | micro-USB cable | **one**, in hand. This clears the Sep 17 blocker |
 | Two Lighthouse base stations | in hand, **V1 or V2 unknown** |
 | Lighthouse **decks** (the boards that go on the drone) | **Lighthouse deck ("LH4") fitted on every drone, stacked with the AI-deck on the same drone** (confirmed by Sai 2026-09-22) |
-| Crazyradio 2.0 + USB-A to USB-C adapter | dongle yes, adapter unknown |
+| Crazyradio 2.0 + USB-A to USB-C adapter | dongle yes. **No adapter or hub yet (2026-09-22): the drone's micro-USB cable is also USB-A, so the laptop cannot reach the drone either.** Buy a USB-C hub with >= 2 USB-A data ports (drone cable + Crazyradio at once, needed for Session B). Charging does not need it: any USB-A wall charger works |
 | Room | a small dorm room. Dimensions not yet measured |
 
 The unknowns are what the first 20 minutes below are for.
