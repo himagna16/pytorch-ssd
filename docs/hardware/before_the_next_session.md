@@ -39,6 +39,13 @@ bench-power and flashing uses. Check the packaging says data.
 
 ### 2.1 Give `score_real_frames.py` a backend switch
 
+> **DONE 2026-09-22** on branch `sai/score-real-frames-chip-backend` (PR to `main`).
+> `--backend {float,chip}`, with chip the default. `scores.json` records the arm,
+> the model sha1 and the eps. The workaround below is retired: run the scorer once.
+> The -0.124 / -0.239 / 122-cell figures below came from a script that ran the
+> preprocess twice. The real figures are -0.020 / -0.043 / 45 cells. See
+> `docs/eval_results/2026-09-22-sep16-chip-rescore/`.
+
 The highest-priority code task, and it was deliberately deferred.
 
 `tools/real_frames/score_real_frames.py` is hardwired to the **float** PyTorch
@@ -60,6 +67,10 @@ Until it is done, the workaround in `first_hour_with_the_drone.md` stands: run
 both scorers and believe the chip one.
 
 ### 2.2 Re-read the Sep 16 bearing work on the chip network
+
+> **DONE 2026-09-22:** `docs/eval_results/2026-09-22-sep16-chip-rescore/`. Most
+> conclusions survive; the 25-degree asymmetry does not. Do not use
+> `rescore_chip.py` (it preprocesses twice); `score_real_frames.py` is the tool.
 
 `docs/eval_results/2026-09-16-onaxis/` and `2026-09-16-protocol-geometry/` were
 scored through the float arm. The directories are flagged rather than quietly

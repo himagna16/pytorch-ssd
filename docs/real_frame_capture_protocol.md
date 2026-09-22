@@ -221,6 +221,15 @@ is deliberate slack.
   ~/drone_frames/2026-09-12 [--full-hfov 86] [--ckpt other.pth]
 ```
 
+> **2026-09-22: the scorer defaults to the CHIP arm** (`--backend chip`): the
+> firmware's integer preprocess plus `model_id_dory.onnx`, which is what the drone
+> flies, run through the same `perception_backends.ChipPerception` the simulator
+> flights used. It needs `~/Downloads/drone/doryenv` and starts it itself. The
+> header line reads `BACKEND chip`, and `scores.json` records the backend, the
+> model sha1 and the eps. `--ckpt` now needs `--backend float`, because a
+> checkpoint is the float arm; without it the scorer stops rather than silently
+> scoring the chip. Before this date the scorer ran the float model only.
+
 (The scorer has **no `--bayer`** — checked, its `--help` does not mention it.
 Bayer conversion happens at capture time in `cpx_grab.py`, so colour-camera clips
 are already gray by the time they reach the scorer.)

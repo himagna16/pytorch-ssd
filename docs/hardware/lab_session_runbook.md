@@ -60,7 +60,9 @@ everything a laptop can do later.**
 M4 is the reason the session is worth holding at all. Note what it buys: once the
 frames exist, **champion vs confuser can be compared on real data without another lab
 visit**, by re-running `score_real_frames.py --ckpt <other>.pth` over the same folder.
-Capture once, score many times.
+Capture once, score many times. *(2026-09-22: the scorer defaults to the chip arm now,
+so scoring a checkpoint needs `--backend float --ckpt <other>.pth`. A different chip
+network goes in with `--chip-onnx <model_id_dory.onnx>`.)*
 
 ### SHOULD happen if time allows, in this order
 
@@ -509,6 +511,10 @@ Nothing is listening on this machine's port 5051. For a real AI-deck drop --host
       ```
 
       The last line must read `24/24 recovered inside tolerance`.
+- [ ] *(2026-09-22)* The scorer's default is now the chip arm. Confirm
+      `~/Downloads/drone/doryenv/bin/python3` and the champion's
+      `model_id_dory.onnx` + `release_summary.json` are on the laptop; the header
+      line must read `BACKEND chip ... eps 0.0002009823510888964`.
 - [ ] Confirm the checkpoint is on the laptop and the scorer runs offline. Scoring is
       fast: 192 frames took **1.4 s wall** end to end including model load (570 frames
       in 19 clips: 2.4 s on 2026-09-14), so scoring in the room costs nothing.
@@ -523,6 +529,8 @@ Nothing is listening on this machine's port 5051. For a real AI-deck drop --host
 
       The last line must read `39/39 checks passed`, and two lines above it must
       say `real MuJoCo render + real checkpoint -> PASS` and `... -> MIRRORED`.
+      *(2026-09-22: now `46/46 checks passed`, and the same PASS / MIRRORED pair
+      must also appear for `real chip arm (model_id_dory.onnx)`.)*
       First run on 2026-09-14: 39/39, 37 s wall, PASS on 680 upright frames
       (bin acc 96%, +-1 100%, bearing err +0.6 deg, 0 false tracks) and MIRRORED
       on the flipped copy. Until that day the `--real` path had never been executed;
@@ -997,8 +1005,10 @@ Do this the same day. Details evaporate overnight.
    ```bash
    ~/Downloads/drone/trainenv/bin/python \
      ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py \
-     ~/drone_frames/<date> [--full-hfov <measured>] [--ckpt <other>.pth]
+     ~/drone_frames/<date> [--full-hfov <measured>] [--backend float --ckpt <other>.pth]
    ```
+
+   *(2026-09-22: chip arm by default; `--ckpt` only with `--backend float`.)*
 
    (The scorer has no `--bayer`; Bayer conversion happens at capture time in
    `cpx_grab.py`, so colour-camera clips are already gray by the time they are scored.)
