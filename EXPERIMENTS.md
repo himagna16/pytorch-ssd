@@ -1,5 +1,26 @@
 # Experiment Log
 
+## Sep 22, 2026 — The scorer defaults to the chip arm; the Sep 17 chip rescore was wrong (Sai)
+
+`tools/real_frames/score_real_frames.py` gains `--backend {float,chip}`, default
+**chip** (firmware preprocess + `model_id_dory.onnx`, eps 2.009823510888964e-4
+from the release, follower on raw 5467 / -998 / 3), reusing
+`perception_backends.ChipPerception`. Branch `sai/score-real-frames-chip-backend`.
+
+| check | result |
+|---|---|
+| chip scorer vs the simulator's flight path, 51 frames | all 14 int32 outputs identical |
+| `--backend float` vs the pre-backend scorer (b1a0108) | CSV byte-identical |
+| Sep 17 `rescore_chip.py` | reproduced 51/51 **only** by preprocessing twice: it is not the chip arm |
+| Sep 16 grid re-rendered, float arm | 13,000/13,000 frames match Sep 16 to 4 dp |
+| real chip minus float, 13,000 frames | **-0.020** mean conf, **-0.043** frac >= 0.75, 45/325 cells move >= 0.25 (Sep 17 said -0.124 / -0.239 / 122) |
+
+Sep 16 conclusions on the chip arm: the pose-four / hard-four split, the bearing
+cost shape, the 2.5 m finding, the 3.5 m b0 reference (median 0.975, 4 of 13 at
+0.000) and the mirror check survive. The 25-degree left/right asymmetry does not
+(+0.059 becomes -0.007). The hard four at 1.5 m weaken to 0.75 / 0.95 / 0.40 / 0.40.
+Evidence: `docs/eval_results/2026-09-22-sep16-chip-rescore/`. Rendered frames only.
+
 ## Sep 12, 2026 — CORRECTION: the distance failure is a reflective simulator floor, not the size head (Sai)
 
 The Sep 12 simulator entry below reported that the drone settles at about 3.0-3.3 m
