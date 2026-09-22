@@ -3,8 +3,8 @@
 **Project:** Autonomous person-following nano-drone (Crazyflie + AI-deck GAP8), UT Austin
 **Advisor:** Prof. Aloysius Mok
 **Role:** Neural network training and evaluation (Role 1), plus simulator integration
-**Period covered:** Aug 24 to Sep 20, 2026
-**Last updated:** 2026-09-20
+**Period covered:** Aug 24 to Sep 22, 2026
+**Last updated:** 2026-09-22
 
 ## Summary
 
@@ -81,12 +81,12 @@ is not, is in `docs/hardware/before_the_next_session.md`.
 | MinHyuk's field-of-view objection to the person study | Sai | **Answered Sep 15, mostly in our favour with one real caveat.** He said a real camera almost never has the whole person in frame. Our camera is level at 0.8 m behind a 70 degree square crop, so a 1.7 m person stops fitting below 1.29 m while the drone never closes past 1.55 m in any flight on record. The caveat is height: a 1.9 m person is cut off below 1.57 m, which is inside the range our flights reach. Separately, the detection penalty for partial people is entirely from being cut off by the frame edge; occlusion and pose cost nothing measurable. Evidence: docs/eval_results/2026-09-15-partial-people/ | The axis that actually threatens a track is bearing, not truncation. Worth measuring next |
 | Whether a YOLO model could replace ours | Sai | **Answered Sep 15: no, not through this pipeline.** MinHyuk suggested YOLOv11 nano and David warned about quantizing it. Exported both YOLOv11n and YOLOv8n and ran every node against our code generator's own accept rules: the build stops at node 10 of 355, 21 nodes are rejected outright, and another 112 are accepted and then silently dropped, including all 78 sigmoids and all 21 feature-pyramid joins. Our champion passes the same check with zero rejections. Evidence: docs/yolo_on_gap8.md, docs/eval_results/2026-09-15-yolo-ops/ | Use YOLO off the drone to label the real frames we capture. Do not try to put it on the chip |
 | The uncertainty gate (M10) and its line | Sai | **Proposal written Sep 15, number deliberately not set.** The line was drawn for the old confidence bar and needed redrawing for the new one. Re-scoring all 287 flights showed the band is not the problem: the line's stated justification holds only for standing scenes, every static flight passed it while half the moving flights failed, and the number drifted 76x across four of our suites on one scene because the mirror-floor fix made it harder. A version of the measurement that does not reference the confidence bar holds its line on 100% of held-out flights where the current one manages 71%. Evidence: docs/eval_results/2026-09-15-m10-line/ | Team decides. No number until the scene suite covers a realistic range of people |
-| Two cables, and they block a whole session | Sai | **Outstanding since Sep 17.** A data-capable micro-USB cable is the single blocking item: without it the battery cannot be charged, which caps every visit at the five to seven minutes a 350 mAh pack gives with the AI-deck streaming. Separately the Crazyradio 2.0 is USB-A and the laptop is USB-C only; a scan on Sep 17 reported `Cannot find a Crazyradio Dongle` and it was never established whether the dongle was plugged in at all. Under the Lighthouse plan the radio stops being optional, because positions come back over CRTP, not over the deck's WiFi | Buy both. Charge-only micro-USB cables are common and will fail the bench-power and flashing uses, so check for data |
-| Scoring tool runs the wrong network | Sai | **Found Sep 17, deliberately not fixed that night.** `tools/real_frames/score_real_frames.py` is hardwired to the float model while the drone flies the int8 chip export. On 13,003 frames they disagree by -0.124 mean confidence and -0.239 in the fraction above the 0.75 bar, 122 of 325 cells moving by 0.25 or more, so it cannot be corrected after the fact. Left alone because it is a shared tool and the repo's rules put that on a branch with a PR, hours before a hardware session. Workaround in place: the first-hour guide runs both scorers and says to believe the chip one | **The first code job now.** Add `--backend {float,chip}` defaulting to chip, on a branch with a PR |
-| The Sep 16 bearing work was scored on the float arm | Sai | Flagged, not quietly corrected, because some conclusions will not survive. Affects `docs/eval_results/2026-09-16-onaxis/` and `2026-09-16-protocol-geometry/` | Rescore both with `2026-09-17-chip-arm-rescore/scripts/rescore_chip.py`, about twenty seconds per folder. Then re-read the conclusions |
+| Two cables, and they block a whole session | Sai | **micro-USB cable in hand Sep 22; the radio adapter is still unknown.** Also in hand Sep 22: a second Crazyflie and two Lighthouse base stations (V1/V2, Lighthouse decks and drone 2's decks not yet identified; plan in `docs/hardware/dorm_setup.md`). *The Sep 17 text follows:* **Outstanding since Sep 17.** A data-capable micro-USB cable is the single blocking item: without it the battery cannot be charged, which caps every visit at the five to seven minutes a 350 mAh pack gives with the AI-deck streaming. Separately the Crazyradio 2.0 is USB-A and the laptop is USB-C only; a scan on Sep 17 reported `Cannot find a Crazyradio Dongle` and it was never established whether the dongle was plugged in at all. Under the Lighthouse plan the radio stops being optional, because positions come back over CRTP, not over the deck's WiFi | Buy both. Charge-only micro-USB cables are common and will fail the bench-power and flashing uses, so check for data |
+| Scoring tool runs the wrong network | Sai | **Fixed Sep 22 on branch `sai/score-real-frames-chip-backend` (PR, awaiting merge).** `score_real_frames.py --backend {float,chip}`, default chip, reusing the simulator's own chip perception; `scores.json` records the arm, the model sha1 and the eps. Tests: chip output identical to the flight path on all 14 integer outputs; float output byte-identical to the old scorer. *The Sep 17 text follows; its numbers were wrong (see the next row):* **Found Sep 17, deliberately not fixed that night.** `tools/real_frames/score_real_frames.py` is hardwired to the float model while the drone flies the int8 chip export. On 13,003 frames they disagree by -0.124 mean confidence and -0.239 in the fraction above the 0.75 bar, 122 of 325 cells moving by 0.25 or more, so it cannot be corrected after the fact. Left alone because it is a shared tool and the repo's rules put that on a branch with a PR, hours before a hardware session. Workaround in place: the first-hour guide runs both scorers and says to believe the chip one | Merge the PR. Nothing else |
+| The Sep 16 bearing work was scored on the float arm | Sai | **Rescored Sep 22: most of it survives, and the Sep 17 alarm was mostly my own bug.** `rescore_chip.py` ran the image preprocess twice, so its "chip" numbers came from a blurred frame. The real chip-versus-float gap is -0.020 in confidence, not -0.124, and 45 cells move rather than 122. On the real chip arm the pose/hard split, the bearing-cost shape, the 2.5 m finding and the 3.5 m reference all hold. The 25-degree left/right asymmetry does not, and two of the four hard subjects come back only weakly at 1.5 m. Evidence: `docs/eval_results/2026-09-22-sep16-chip-rescore/` | None. Compare real frames against that folder's chip column, bearing 0 |
 | Separating bearing from the card's own shadow | Sai | **The simulator cannot answer this. Two attempts dead.** The subject panel is opaque and throws a box shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so the Sep 16 on-axis gain is an upper bound. Attempt 1 (`2026-09-16-noshadow`, 156 flights) removed the shadow and collapsed detection everywhere including the control, 0.991 to 0.048, because `camera_model.py` holds every frame at `AE_TARGET_DN = 60.0` and lightening the room made the exposure loop take the contrast back out of the subject. Attempt 2 (`2026-09-17-panel-noshadow`) aborted after one flight | Stop trying in simulation. It is a lab measurement now. Say so to the team before the session, not in the room |
-| Lighthouse ground truth from a head-mounted second drone | Sai, MinHyuk | **Planned Sep 20, nothing built yet.** A second Crazyflie, props off and motors never armed, rides on the subject's head as a pose beacon; both drones carry Lighthouse decks; the difference between the two poses, rotated into the follower's body frame, is where the subject truly was. Truth minus what the network said is the training signal. **The property that makes this worth doing: ground truth exists for frames the network misses entirely**, which no other labelling method we have can give us. The thesis setup's Flow deck could not do this even in principle, because optical flow gives relative motion and never tells you where the subject is. Plan and prerequisites: `docs/hardware/before_the_next_session.md` §3 | Build the pose-to-label pipeline against CrazySim first, where exact ground truth already exists. Email MinHyuk the seven hardware questions (§3.4). Run the static taped-mark calibration case before collecting anything |
-| The yaw-sign chain, still unverified | Sai | Named in `lab_session_runbook.md` as the reason Lighthouse was scoped out of the first session. It now has to be settled, because a sign error here does not fail loudly: it produces a confidently mirrored label set, which would train the drone to steer away from people | Verify inside the pose-to-label pipeline against the simulator, where the answer is known. Extend the existing left/right mirror check to cover it |
+| Lighthouse ground truth from a head-mounted second drone | Sai, MinHyuk | **Planned Sep 20; the desk half built Sep 22 (PR, not yet merged).** `tools/lighthouse/pose_to_label.py` turns the two poses into the x-bin and size bucket the network should output, and `align_clocks.py` lines up the frame and pose clocks from a still-then-sidestep at the start and end of each recording. Validated on 267 archived simulator flights: `docs/eval_results/2026-09-22-pose-to-label-sim-validation/`. A second Crazyflie, props off and motors never armed, rides on the subject's head as a pose beacon; both drones carry Lighthouse decks; the difference between the two poses, rotated into the follower's body frame, is where the subject truly was. Truth minus what the network said is the training signal. **The property that makes this worth doing: ground truth exists for frames the network misses entirely**, which no other labelling method we have can give us. The thesis setup's Flow deck could not do this even in principle, because optical flow gives relative motion and never tells you where the subject is. Plan and prerequisites: `docs/hardware/before_the_next_session.md` §3 | Team signs off the head-to-body convention (label target at half the subject's height below the head) in DECISIONS.md. Email MinHyuk the seven hardware questions (§3.4). Run the static taped-mark case in `tools/lighthouse/README.md`, including the yawed step, before collecting anything |
+| The yaw-sign chain | Sai | **Settled in the simulator Sep 22; still open on hardware.** Labels from the follower's logged pose and the subject's true position agree with the network on which side the person is in 99.0% of clearly-left and 100% of clearly-right frames (267 flights). With the yaw sign flipped, that falls to 24% and 20% on frames where the drone had turned. The follower's own command sign (-1) turned the drone the right way in 99.9% of 24,528 tracking frames. Two caveats: the yaw sign is only tested when the drone has actually turned, and a crash or a frozen pose log makes correct labels look mirrored, so the pipeline now drops those frames | On hardware: the static case with the follower turned 30 degrees on its stand, and check the lab drone's firmware protocol version (the command sign flips on old firmware) |
 | First hands-on session with the hardware | Sai | **Happened Sep 17, 1 pm. Half a result.** Confirmed from the bench: AI-deck 1.1, Rev D or newer, so over-the-air flashing is supported, closing an open question in `flash_runbook.md` §8. The deck already carries the WiFi streamer, so nothing needs flashing to capture frames. No power button exists; the Crazyflie powers up when the battery is connected. The afternoon went almost entirely to things nobody had written down, and ended on a flat battery with no charging cable. Written up in `docs/hardware/powering_the_drone.md` | Buy the cable, then run the capture. Nothing else is in the way |
 
 ## Results and their status
@@ -199,7 +199,8 @@ things in here.
 - A tested C decoder for the firmware team, verified against the Python decode on
   14,579 checks and catching all 7 deliberate bugs in a mutation test.
 - `rescore_chip.py`, which rescores any folder of frames on the network that
-  actually flies, in about twenty seconds.
+  actually flies, in about twenty seconds. *(Sep 22: it preprocessed twice and
+  is superseded by `score_real_frames.py --backend chip`, now the default.)*
 - **Two method rules that came out of being wrong**, and that now apply to
   everything here: compare models at **matched recall**, never at different
   thresholds, and always run the threshold-dial control on the baseline before
@@ -324,8 +325,8 @@ things in here.
 
 ### Corrections and withdrawals
 
-Kept deliberately visible. Five results were published and then pulled or
-rewritten after checking:
+Kept deliberately visible. Six results were published and then pulled or
+rewritten after checking (five until 2026-09-22):
 
 1. **Chip validation, withdrawn Sep 10.** The integer networks ignored their
    input; the old check compared the chip against a reference built from the same
@@ -343,6 +344,11 @@ rewritten after checking:
 5. **The Sep 16 on-axis bearing gain, downgraded to an upper bound.** The opaque
    subject card throws a shadow visible only off-axis. Two attempts to remove it
    failed, one of them by collapsing detection everywhere including the control.
+6. **The Sep 17 "chip arm" rescore, corrected Sep 22.** My `rescore_chip.py` ran
+   the firmware preprocess twice, so its chip numbers came from a blurred frame.
+   It overstated the float-versus-chip gap about sixfold: -0.124 against a real
+   -0.020 in confidence. Its conclusion, that the scorer must default to the chip
+   arm, stands and is now done.
 
 Also corrected in place rather than argued: a 208-flight entry that understated
 my own error, a miscount of seven failures as eight, an invalid floor argument,
@@ -420,6 +426,89 @@ Worth keeping in one place, because several of these are easy to assume:
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-22.** The micro-USB cable arrived, along with a second Crazyflie and
+  two Lighthouse base stations. Four pieces of desk work, none needing the drone
+  powered. Three are on branches with PRs (#4, #5, #6), none merged yet.
+
+  **Plan for a dorm room** (`docs/hardware/dorm_setup.md`). The cable is also a
+  full data link (`usb://0`), so deck inventory, battery and the whole Lighthouse
+  geometry setup need no Crazyradio. Nothing flies in the dorm: Session A (real
+  people) and the Lighthouse ground-truth session are both capture-only, and the
+  follower can sit on a taped pose. The 3.5 m capture row probably needs a hallway.
+  Checked the firmware source on whether the AI-deck and Lighthouse deck can share
+  one drone: the deck drivers use different UARTs (AI-deck UART2, Lighthouse
+  UART1), so the 2020 forum's "they conflict" answer is out of date. One doubt
+  remains unverified: our GAP8 builds use `io=uart`, and the GAP8's UART is wired
+  to UART1. A bench test is written into the plan.
+
+  **A read-only preflight check** (`tools/hardware/preflight.py`, PR #4). Reports
+  link, firmware, decks, battery, radio config and Lighthouse status, and cannot
+  arm or write anything: it disables 40 cflib methods before connecting. 41 unit
+  tests, plus a live run against the CrazySim firmware. Not yet run on the real
+  drone.
+
+  **The scorer now uses the chip network** (PR #5), from `before_the_next_session.md` §2.1 and §2.2:
+
+  `score_real_frames.py` now takes `--backend {float,chip}` and defaults to chip,
+  the network the drone actually flies. It reuses the simulator's own chip
+  perception rather than a new copy of it. Every scored folder records which arm
+  scored it, the model's hash and the output scale. The tests show three things.
+  The chip scorer gives the same integers as the flight path on every frame. The
+  float scorer's output is byte-identical to the old tool. And the Sep 17 rescore
+  script, which I wrote, ran the image preprocess twice.
+
+  That last point changes the Sep 17 story. Re-running my own script reproduces
+  its table almost cell for cell, so the table was produced by the bug. The real
+  gap between the laptop model and the chip is about a sixth of what I reported:
+  -0.020 in confidence, not -0.124. It is still large for individual cells, which
+  is why the default had to change.
+
+  The Sep 16 frames had been deleted with a scratch directory, so I re-rendered
+  them. On the float arm they match the originals on 13,000 of 13,000 frames.
+  Then I scored them on the chip arm. Most Sep 16 conclusions survive. Two do not
+  survive in full: the 25-degree left/right asymmetry disappears, and two of the
+  four hard subjects only partly recover at 1.5 m. Everything is in
+  `docs/eval_results/2026-09-22-sep16-chip-rescore/`. Still nothing on hardware.
+
+  **The desk half of the Lighthouse ground-truth plan** (PR #6).
+  simulator runs and no hardware: everything was checked against flights already
+  on disk.
+
+  `tools/lighthouse/pose_to_label.py` takes the follower's pose and the head
+  beacon's position and gives the bearing, the range, where the person lands in
+  the image, the x-bin and size bucket the network should output, and whether the
+  person is in view at all. The head-to-body offset is written down in the code
+  and its README: the label target sits half the subject's height below the top
+  of the head, because that is the centre of a standing person's COCO box. It
+  needs the team's sign-off.
+
+  Checked against 267 archived simulator flights, the labels land within one
+  x-bin of what the network said on every one of 81,368 frames, and on the same
+  side of the image on 99-100% of frames where the person was clearly to one side.
+  A flipped yaw sign, a flipped bearing sign or a mirrored room frame each drops
+  that to between 0% and 38%, and the new left/right check refuses the labels.
+  The joining mistake from Sep 13 (the follower's clock against the simulator's)
+  reproduces as a 27 degree error at the 90th percentile, so the tool joins on
+  the wall clock.
+
+  The most useful finding was one I was not looking for. Eleven flights had
+  crashed and five had a pose log that froze, and in both cases the camera kept
+  streaming. Without throwing those frames away, the *correct* convention failed
+  the left/right check. A Lighthouse dropout on the real rig is the same failure,
+  so the pipeline now drops frames whose pose froze or jumped instead of guessing.
+
+  `tools/lighthouse/align_clocks.py` finds the still-then-sidestep at the start
+  and end of a recording and fits both the offset and the drift between the frame
+  clock and the pose clock. In tests it recovers a planted offset to within 25 ms
+  on synthetic data, and within a few ms on frames really sent through the mock
+  streamer and cpx_grab. A tenth of a second of offset is about 3 degrees of error
+  on someone walking at 1 m/s at 2 m, and zero on someone standing still. That is
+  why the static marks alone would never find a clock error.
+
+  Still unknown, and only the lab can answer: the real camera's field of view,
+  where the lens sits relative to the Lighthouse deck, the real clock offset, and
+  whether the lab drone's firmware flips the yaw command sign.
 
 - **2026-09-20.** No experiments. Took stock, planned the ground-truth rig, and
   wrote down two things that should have been written down already.
