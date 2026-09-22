@@ -80,6 +80,26 @@ level, on a tripod or a stack of books, pointing down a taped centre line.
 Thirty seconds a clip is plenty. Label every clip with its distance and bearing,
 which `cpx_grab.py` takes as flags, and note the lighting in the folder name.
 
+> **UPDATED 2026-09-22: ONE COMMAND NOW.** `score_real_frames.py` runs the **chip**
+> arm by default: the firmware preprocess plus `model_id_dory.onnx`, which is what
+> the drone flies. It prints `BACKEND chip` at the top and records the arm, the
+> model sha1 and the eps in `scores.json`. It needs `~/Downloads/drone/doryenv`
+> on the laptop and starts it by itself. **Do not run command 2 below.**
+> `rescore_chip.py` ran the preprocess twice, so its numbers are not the chip arm
+> (see `docs/eval_results/2026-09-22-sep16-chip-rescore/`). The warning box
+> below is superseded, and its -0.124 / -0.239 figures are wrong: the real gap is
+> -0.020 / -0.043. Compare against the `frac_chip` column, bearing 0, of
+> `docs/eval_results/2026-09-22-sep16-chip-rescore/tables/cells_three_arms.tsv`.
+> Add `--backend float` only to see the laptop model for comparison.
+
+```bash
+~/Downloads/drone/trainenv/bin/python \
+  ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py \
+  ~/drone_frames/2026-09-17
+```
+
+*The original Sep 17 instructions, kept as the record (superseded above):*
+
 Then score the folder. **You must run BOTH commands.** The first gives the mirror
 check, the bins and the labels. The second gives the confidence the drone actually
 sees.
@@ -96,7 +116,7 @@ sees.
   ~/drone_frames/2026-09-17
 ```
 
-> # ⚠ THE FIRST COMMAND ALONE WILL MISLEAD YOU
+> # ⚠ THE FIRST COMMAND ALONE WILL MISLEAD YOU *(superseded 2026-09-22, see above)*
 >
 > `score_real_frames.py` has no backend switch and is hardwired to the **float**
 > PyTorch model. Every flight this project has run, and the GAP8 itself, uses the
@@ -116,7 +136,9 @@ sees.
 > **not** the float table from 2026-09-16. Found at 02:20 the same morning; see
 > that directory for the full story.
 
-**A second caution, superseded by the one above but still true.** The rendered comparison in
+**A second caution, superseded by the one above but still true.** *(2026-09-22: on
+the chip arm the 250127 figure below is 0.175, not 0.450, against 0.007 flown. Most
+of that gap was the float arm.)* The rendered comparison in
 `docs/eval_results/2026-09-16-protocol-geometry/tables/reference_table.tsv` is the
 right shape but is approximate at the margin. For at least one subject it reads
 0.450 where the simulator at the same nominal geometry gives 0.007, which is being
