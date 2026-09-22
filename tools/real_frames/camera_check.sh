@@ -12,7 +12,8 @@
 #      then its RIGHT (+25 deg), with a countdown so you can be the subject yourself
 #   4. scores the mirror folder on the chip network and prints the MIRROR CHECK line
 #
-# Setup: drone on a stack of books or a chair, lens ~0.8 m up, level, props off.
+# Setup: drone on a stack of books or a chair, lens ~0.8 m up, level. Props may stay on:
+# nothing here talks to the motors (no radio, no cfclient, WiFi camera only).
 # "Drone's LEFT" = your left if you stand BEHIND the drone looking where it looks.
 # At 2.5 m, 25 degrees is ~1.17 m to the side of the centre line.
 #
