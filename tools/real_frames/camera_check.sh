@@ -18,7 +18,7 @@
 # nothing here talks to the motors (no radio, no cfclient, WiFi camera only).
 # "Drone's LEFT" = your left if you stand BEHIND the drone looking where it looks.
 # At 2.5 m: 15 degrees = 0.67 m to the side, 25 degrees = 1.17 m. Layout sketch:
-# docs/hardware/dorm_layout.svg
+# docs/hardware/dorm_camera_check.svg
 #
 # Usage:  zsh tools/real_frames/camera_check.sh            (real drone)
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/camera_check.sh
