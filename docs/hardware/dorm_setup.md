@@ -137,6 +137,27 @@ From Bitcraze's Lighthouse guide:
   and the +x mark on the floor and leave them there**, so the frame can be
   re-established on any later day.
 
+### The actual room (from Sai's photos, 2026-09-22)
+
+A long rectangle: door at one short wall, window and radiator at the other, a loft
+bed with a desk underneath along each long wall, and an open aisle down the middle
+(the rug). The aisle is the working volume. Photos are NOT committed (the repo is
+public and they show a shared room).
+
+Lighthouse placement decided:
+- Two light stands with ball heads (already owned). **Diagonal corners:** stand 1 in
+  the fridge corner by the window, stand 2 in the door-end corner on the roommate's
+  side. Not side by side: two stations in one corner are occluded together.
+- Stations **above the loft mattresses** (~2 m+), tilted 30-45 degrees down, aimed at
+  the middle of the rug, ball heads locked. Check: stand mid-rug, both fronts visible.
+- Suspected **mirror on the back of the door**: cover it. Blinds and curtain closed.
+- Door-end station likely needs an extension cord, run along the wall.
+- Origin: taped X mid-rug, +x mark exactly 1 m toward the window. Permanent.
+- Still needed: a photo of the back of a station (V1 = mode button + sync jack;
+  V2 = power + USB only).
+- Session A: 1.5 m and 2.5 m fit along the aisle; the +-25 degree marks at 2.5 m need
+  ~2.3 m of width, which the aisle may not have. 3.5 m goes in the hallway.
+
 ### Flight
 
 **Nothing in this plan flies in the dorm.** Session A and Session B are both
