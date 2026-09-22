@@ -1,0 +1,5 @@
+906104257726879ae9d42d7f278512399b215067aa564c8a1982b73228274aed  tools/lighthouse/pose_to_label.py
+07f3b53f84cd4714fe3778ea83777e82e401f2780cde113f531db5dd5c47fe90  tools/lighthouse/align_clocks.py
+8824cbacc9f0a1182e88d0a9fdd3e47385f330b8ed7eaaa3fa0dde35b875c710  docs/eval_results/2026-09-22-pose-to-label-sim-validation/scripts/validate_on_sim.py
+e0d7cbe50dd1976f97205ddaa20f92679a2869ccd4197745a7f969e8e488214d  tools/crazysim_macos/scoreboard.py
+git base: a37c8cf808a00210064144a1b66ec94b3013b436
