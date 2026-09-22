@@ -153,8 +153,18 @@ Lighthouse placement decided:
 - Suspected **mirror on the back of the door**: cover it. Blinds and curtain closed.
 - Door-end station likely needs an extension cord, run along the wall.
 - Origin: taped X mid-rug, +x mark exactly 1 m toward the window. Permanent.
-- Still needed: a photo of the back of a station (V1 = mode button + sync jack;
-  V2 = power + USB only).
+- **Base stations are V2** (label: "SteamVR Base Station 2.0, Model 1004", seen
+  2026-09-22 on one unit; the second looks identical, confirm its label). V2 steps,
+  matching cfclient 2026.8 in `../cfloaderenv`:
+  1. Channels, one station at a time: station powered + its micro-USB to the laptop
+     via the hub, `~/Downloads/drone/cfloaderenv/bin/cfclient`, Lighthouse tab ->
+     **Set BS channel** -> Scan base station -> set **1**; swap, set the other to **2**.
+     Stored on the station; one-time.
+  2. Mount on the stands (above), power only.
+  3. Drone on the hub cable -> Lighthouse tab geometry wizard: origin X, 1 m mark,
+     floor spots, held still in the air. Leave "Switch BS version" on V2.
+  4. `preflight.py` for station visibility and position noise, then the taped-mark
+     check.
 - Session A: 1.5 m and 2.5 m fit along the aisle; the +-25 degree marks at 2.5 m need
   ~2.3 m of width, which the aisle may not have. 3.5 m goes in the hallway.
 
