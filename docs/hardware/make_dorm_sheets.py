@@ -66,7 +66,7 @@ def steps(lines, x=580, y=96):
 cx, lens_y, mark_y = xmid(3), ycol(1), ycol(9)
 xl, xr = xmid(1), xmid(5)
 t = [HEAD.format(title="Tonight: camera + mirror check, tile layout", color="#1d8a4a",
-                 h1="TONIGHT: camera check, 4 pieces of tape (count tiles)",
+                 h1="TONIGHT: tape ONLY the 3 green X's (count tiles)",
                  h2="Seen from BEHIND the drone looking at the door, so the drone's left = the page's left."), room()]
 # chair + drone
 t.append(f'<rect x="{cx-22}" y="{ycol(1)-4}" width="44" height="{F+2}" rx="6" fill="#e3c79b" stroke="#a07a45" stroke-width="2"/>')
@@ -84,20 +84,24 @@ t.append(f'<line x1="{cx-10}" y1="{mark_y+18}" x2="{xl+10}" y2="{mark_y+18}" str
 t.append(f'<line x1="{cx+10}" y1="{mark_y+18}" x2="{xr-10}" y2="{mark_y+18}" stroke="#c0392b" stroke-width="1.5" marker-start="url(#r)" marker-end="url(#r)"/>')
 t.append(f'<text x="{(cx+xl)/2}" y="{mark_y+34}" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">2 tiles</text>')
 t.append(f'<text x="{(cx+xr)/2}" y="{mark_y+34}" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">2 tiles</text>')
+t.append(f'<rect x="{X0-4}" y="{mark_y-20}" width="{W*F+8}" height="40" fill="#fff6b3" stroke="#e0b400" stroke-width="2" rx="6"/>')
+t.append(f'<text x="{X0-10}" y="{mark_y+5}" text-anchor="end" fill="#b08600" font-weight="bold" font-size="13">TAPE HERE →</text>')
+t.append(f'<text x="{X0-10}" y="{mark_y+21}" text-anchor="end" fill="#b08600" font-size="11">9 tiles from window</text>')
 for x, lab in ((cx, "② CENTER"), (xl, "③ LEFT"), (xr, "④ RIGHT")):
-    t.append(X(x, mark_y, "#1d8a4a"))
-    t.append(f'<text x="{x}" y="{mark_y-14}" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="12">{lab}</text>')
-t.append(f'<text x="{xl}" y="{mark_y-30}" text-anchor="middle" fill="#555" font-size="11" font-weight="bold">clip 1</text>')
-t.append(f'<text x="{xr}" y="{mark_y-30}" text-anchor="middle" fill="#555" font-size="11" font-weight="bold">clip 2</text>')
+    t.append(X(x, mark_y, "#1d8a4a", s=11, w=5))
+    t.append(f'<text x="{x}" y="{mark_y-27}" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="12">{lab}</text>')
+t.append(f'<text x="{xl}" y="{mark_y-43}" text-anchor="middle" fill="#555" font-size="11" font-weight="bold">clip 1</text>')
+t.append(f'<text x="{xr}" y="{mark_y-43}" text-anchor="middle" fill="#555" font-size="11" font-weight="bold">clip 2</text>')
 t.append(steps([
     ('h', 'Step by step, counting tiles'),
     ('g', '① Drone'), ('t', 'Chair at the window end, in the MIDDLE column (col 3).'),
     ('t', 'Drone on books on the seat, lens ~2 ft 7½ in off the floor,'),
     ('t', 'lens right above the joint between row 1 and row 2,'),
-    ('t', 'camera pointing straight at the door. (No tape needed.)'), ('gap', ''),
-    ('g', '② CENTER'), ('t', 'Count 8 tiles from the lens toward the door: the joint'),
-    ('t', 'between row 9 and row 10, middle of col 3. Tape an X.'), ('gap', ''),
-    ('g', '③ LEFT  ④ RIGHT'), ('t', 'Same joint, 2 tiles sideways: middle of col 1 (LEFT)'),
+    ('t', 'camera pointing straight at the door. NO tape for the drone.'), ('gap', ''),
+    ('g', '② CENTER (tape #1)'), ('t', 'Count 9 tiles from the window wall toward the door'),
+    ('t', '(= 8 tiles past the lens). On the line where tile 9 ends,'),
+    ('t', 'middle of col 3. Tape an X.'), ('gap', ''),
+    ('g', '③ LEFT  ④ RIGHT (tapes #2 and #3)'), ('t', 'Same line, 2 tiles sideways: middle of col 1 (LEFT)'),
     ('t', 'and middle of col 5 (RIGHT). Tape an X on each.'),
     ('t', 'LEFT = your left when you stand behind the drone.'),
     ('t', 'Move chairs / the basket if they are in the way.'), ('gap', ''),
