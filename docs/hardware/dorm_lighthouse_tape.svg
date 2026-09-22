@@ -1,69 +1,89 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 700" width="940" height="700" font-family="Helvetica, Arial, sans-serif" font-size="13">
-  <title>Tomorrow: Lighthouse base stations and permanent origin tape</title>
-  <rect width="940" height="700" fill="#ffffff"/>
-  <defs>
-    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
-    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fbf"/></marker>
-    <pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#d8c29c" stroke-width="2"/></pattern>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" font-family="Helvetica, Arial, sans-serif" font-size="13">
+<title>Tomorrow: Lighthouse stations + permanent origin tape, tile layout</title><rect width="1000" height="640" fill="#fff"/>
+<defs>
+<marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d8a4a"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fbf"/></marker>
+<pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#d8c29c" stroke-width="2"/></pattern>
+</defs>
+<text x="24" y="32" font-size="20" font-weight="bold" fill="#1f5fbf">TOMORROW: Lighthouse setup, 2 pieces of permanent tape</text>
+<text x="24" y="54" fill="#555">Same view and grid as tonight's sheet: door end at the top, window end at the bottom.</text>
 
-  <text x="24" y="32" font-size="20" font-weight="bold" fill="#1f5fbf">TOMORROW: Lighthouse setup (2 pieces of tape, permanent)</text>
-  <text x="24" y="54" fill="#555">Same view as tonight's sheet: door at the top, window at the bottom.</text>
-
-  <rect x="60" y="90" width="385" height="506" fill="#fbfbfb" stroke="#333" stroke-width="4"/>
-  <line x1="200" y1="90" x2="300" y2="90" stroke="#fbfbfb" stroke-width="6"/>
-  <text x="250" y="80" text-anchor="middle" font-weight="bold" fill="#333">DOOR</text>
-  <line x1="90" y1="596" x2="420" y2="596" stroke="#6fb3e0" stroke-width="7"/>
-  <text x="252" y="620" text-anchor="middle" font-weight="bold" fill="#2a7ab0">WINDOW WALL (curtains closed)</text>
-  <rect x="63" y="170" width="104" height="250" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
-  <text x="115" y="300" text-anchor="middle" fill="#8a6a35" font-size="12">loft</text>
-  <rect x="338" y="170" width="104" height="250" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
-  <text x="390" y="300" text-anchor="middle" fill="#8a6a35" font-size="12">loft</text>
-
-  <!-- centre-finding dimensions -->
-  <line x1="66" y1="470" x2="439" y2="470" stroke="#c0392b" stroke-width="1.2" marker-start="url(#a)" marker-end="url(#a)"/>
-  <rect x="84" y="460" width="94" height="18" fill="#fff"/><text x="131" y="473" text-anchor="middle" fill="#c0392b" font-size="11">room width ÷ 2</text>
-  <line x1="215" y1="96" x2="215" y2="590" stroke="#c0392b" stroke-width="1.2" marker-start="url(#a)" marker-end="url(#a)" opacity="0.6"/>
-  <rect x="148" y="170" width="62" height="32" fill="#fff"/><text x="178" y="183" text-anchor="middle" fill="#c0392b" font-size="11">room length</text><text x="178" y="197" text-anchor="middle" fill="#c0392b" font-size="11">÷ 2</text>
-
-  <!-- stations -->
-  <line x1="410" y1="125" x2="258" y2="336" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <line x1="95" y1="560" x2="246" y2="346" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <circle cx="410" cy="125" r="17" fill="#e07b00" stroke="#8a4a00" stroke-width="2"/><text x="410" y="131" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">1</text>
-  <text x="392" y="112" text-anchor="end" fill="#8a4a00" font-weight="bold">Station 1 (door end, by your chair)</text>
-  <circle cx="95" cy="560" r="17" fill="#e07b00" stroke="#8a4a00" stroke-width="2"/><text x="95" y="566" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">2</text>
-  <text x="118" y="548" fill="#8a4a00" font-weight="bold">Station 2 (window end, opposite side)</text>
-
-  <!-- origin + x -->
-  <g stroke="#1f5fbf" stroke-width="4"><line x1="244" y1="332" x2="260" y2="348"/><line x1="260" y1="332" x2="244" y2="348"/></g>
-  <text x="268" y="335" fill="#1f5fbf" font-weight="bold">TAPE ① ORIGIN</text>
-  <text x="268" y="351" fill="#1f5fbf" font-size="11">middle of the floor</text>
-  <line x1="252" y1="350" x2="252" y2="446" stroke="#1f5fbf" stroke-width="2.5" marker-end="url(#b)"/>
-  <line x1="240" y1="452" x2="264" y2="452" stroke="#1f5fbf" stroke-width="4"/>
-  <text x="268" y="404" fill="#1f5fbf" font-weight="bold">3 ft 3⅜ in (1.00 m)</text>
-  <text x="268" y="420" fill="#1f5fbf" font-size="11">straight toward the window</text>
-  <text x="272" y="457" fill="#1f5fbf" font-weight="bold">TAPE ② +x mark</text>
-
-  <g transform="translate(480,100)">
-    <text x="0" y="0" font-size="15" font-weight="bold" fill="#222">Step by step (after the hub arrives)</text>
-    <text x="0" y="28" font-weight="bold" fill="#8a4a00">Stations</text>
-    <text x="0" y="46" fill="#333">One at each END of the room, opposite sides</text>
-    <text x="0" y="63" fill="#333">(diagonal). Raise above the loft mattresses,</text>
-    <text x="0" y="80" fill="#333">tilt 30-45° down, aim at ① ORIGIN, lock tight.</text>
-    <text x="0" y="97" fill="#333">Channels in cfclient: station 1 → 1, station 2 → 2.</text>
-    <text x="0" y="127" font-weight="bold" fill="#1f5fbf">① ORIGIN</text>
-    <text x="0" y="145" fill="#333">Middle of the floor: half the room's width,</text>
-    <text x="0" y="162" fill="#333">half its length. Tape an X.</text>
-    <text x="0" y="192" font-weight="bold" fill="#1f5fbf">② +x mark</text>
-    <text x="0" y="210" fill="#333">From ① measure exactly 3 ft 3⅜ in straight</text>
-    <text x="0" y="227" fill="#333">toward the window. Tape a line.</text>
-    <text x="0" y="257" font-weight="bold" fill="#1f5fbf">Leave both forever</text>
-    <text x="0" y="275" fill="#333">They define the room's coordinates. If they</text>
-    <text x="0" y="292" fill="#333">move, every Lighthouse position shifts with them.</text>
-    <text x="0" y="322" font-weight="bold" fill="#222">cfclient geometry wizard</text>
-    <text x="0" y="340" fill="#333">Drone on ① → drone on ② → a few floor spots →</text>
-    <text x="0" y="357" fill="#333">hold it still in the air. Both stations go green.</text>
-    <text x="0" y="387" fill="#888" font-size="11">Tonight's green camera-check tape is a DIFFERENT sheet</text>
-    <text x="0" y="403" fill="#888" font-size="11">(dorm_camera_check.svg). It can be peeled up afterwards.</text>
-  </g>
+<rect x="102" y="262" width="84" height="266" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
+<rect x="384" y="262" width="84" height="266" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
+<text x="144" y="391.2" text-anchor="middle" fill="#8a6a35" font-size="11">bed</text>
+<text x="144" y="405.2" text-anchor="middle" fill="#8a6a35" font-size="11">~7 ft</text>
+<text x="426" y="391.2" text-anchor="middle" fill="#8a6a35" font-size="11">bed</text>
+<text x="426" y="405.2" text-anchor="middle" fill="#8a6a35" font-size="11">~7 ft</text>
+<rect x="190" y="110" width="190" height="418" fill="#f7f7f4" stroke="#333" stroke-width="3"/>
+<line x1="228" y1="110" x2="228" y2="528" stroke="#d6d6cf"/>
+<line x1="266" y1="110" x2="266" y2="528" stroke="#d6d6cf"/>
+<line x1="304" y1="110" x2="304" y2="528" stroke="#d6d6cf"/>
+<line x1="342" y1="110" x2="342" y2="528" stroke="#d6d6cf"/>
+<line x1="190" y1="148" x2="380" y2="148" stroke="#d6d6cf"/>
+<line x1="190" y1="186" x2="380" y2="186" stroke="#d6d6cf"/>
+<line x1="190" y1="224" x2="380" y2="224" stroke="#d6d6cf"/>
+<line x1="190" y1="262" x2="380" y2="262" stroke="#d6d6cf"/>
+<line x1="190" y1="300" x2="380" y2="300" stroke="#d6d6cf"/>
+<line x1="190" y1="338" x2="380" y2="338" stroke="#d6d6cf"/>
+<line x1="190" y1="376" x2="380" y2="376" stroke="#d6d6cf"/>
+<line x1="190" y1="414" x2="380" y2="414" stroke="#d6d6cf"/>
+<line x1="190" y1="452" x2="380" y2="452" stroke="#d6d6cf"/>
+<line x1="190" y1="490" x2="380" y2="490" stroke="#d6d6cf"/>
+<text x="492" y="513.0" text-anchor="middle" fill="#999" font-size="10">row 1</text>
+<text x="492" y="475.0" text-anchor="middle" fill="#999" font-size="10">row 2</text>
+<text x="492" y="437.0" text-anchor="middle" fill="#999" font-size="10">row 3</text>
+<text x="492" y="399.0" text-anchor="middle" fill="#999" font-size="10">row 4</text>
+<text x="492" y="361.0" text-anchor="middle" fill="#999" font-size="10">row 5</text>
+<text x="492" y="323.0" text-anchor="middle" fill="#999" font-size="10">row 6</text>
+<text x="492" y="285.0" text-anchor="middle" fill="#999" font-size="10">row 7</text>
+<text x="492" y="247.0" text-anchor="middle" fill="#999" font-size="10">row 8</text>
+<text x="492" y="209.0" text-anchor="middle" fill="#999" font-size="10">row 9</text>
+<text x="492" y="171.0" text-anchor="middle" fill="#999" font-size="10">row 10</text>
+<text x="492" y="133.0" text-anchor="middle" fill="#999" font-size="10">row 11</text>
+<text x="209.0" y="544" text-anchor="middle" fill="#999" font-size="10">col 1</text>
+<text x="247.0" y="544" text-anchor="middle" fill="#999" font-size="10">col 2</text>
+<text x="285.0" y="544" text-anchor="middle" fill="#999" font-size="10">col 3</text>
+<text x="323.0" y="544" text-anchor="middle" fill="#999" font-size="10">col 4</text>
+<text x="361.0" y="544" text-anchor="middle" fill="#999" font-size="10">col 5</text>
+<line x1="170" y1="532" x2="400" y2="532" stroke="#6fb3e0" stroke-width="7"/>
+<text x="285.0" y="564" text-anchor="middle" font-weight="bold" fill="#2a7ab0">WINDOW END (curtains closed)</text>
+<text x="285.0" y="100" text-anchor="middle" font-weight="bold" fill="#333">DOOR END</text>
+<text x="180" y="610" fill="#888" font-size="11">Each square = one 1 ft floor tile. 5 wide x 11 long, to scale. Beds approximate.</text>
+<line x1="440" y1="80" x2="291.0" y2="313.0" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<line x1="130" y1="550" x2="279.0" y2="325.0" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<circle cx="440" cy="80" r="16" fill="#e07b00" stroke="#8a4a00" stroke-width="2"/><text x="440" y="86" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">1</text>
+<circle cx="130" cy="550" r="16" fill="#e07b00" stroke="#8a4a00" stroke-width="2"/><text x="130" y="556" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">2</text>
+<text x="418" y="85" text-anchor="end" fill="#8a4a00" font-weight="bold" font-size="12">Station 1: door end, by your chair</text>
+<text x="40" y="592" fill="#8a4a00" font-weight="bold" font-size="12">Station 2: window end, opposite side</text>
+<g stroke="#1f5fbf" stroke-width="4"><line x1="277.0" y1="311.0" x2="293.0" y2="327.0"/><line x1="293.0" y1="311.0" x2="277.0" y2="327.0"/></g>
+<text x="299.0" y="311.0" fill="#1f5fbf" font-weight="bold">① ORIGIN</text>
+<line x1="285.0" y1="329.0" x2="285.0" y2="437.6875" stroke="#1f5fbf" stroke-width="2.5" marker-end="url(#b)"/>
+<line x1="271.0" y1="443.6875" x2="299.0" y2="443.6875" stroke="#1f5fbf" stroke-width="4"/>
+<text x="303.0" y="448.6875" fill="#1f5fbf" font-weight="bold">② +x</text>
+<rect x="293.0" y="370.6" width="92" height="32" fill="#fff" opacity="0.95"/>
+<text x="297.0" y="383.6" fill="#1f5fbf" font-weight="bold" font-size="12">3 ft 3⅜ in</text>
+<text x="297.0" y="397.6" fill="#1f5fbf" font-size="11">(1.00 m) exactly</text>
+<g transform="translate(580,96)">
+<text x="0" y="0" font-size="15" font-weight="bold" fill="#222">Step by step (after the hub arrives)</text>
+<text x="0" y="18" font-weight="bold" fill="#8a4a00">Stations</text>
+<text x="0" y="36" fill="#333">One at each END of the room, on opposite sides (diagonal),</text>
+<text x="0" y="54" fill="#333">just outside the tile rectangle. Raise them above the bed</text>
+<text x="0" y="72" fill="#333">mattresses, tilt 30-45° down, aim at ① ORIGIN, lock tight.</text>
+<text x="0" y="90" fill="#333">Channels in cfclient: station 1 → 1, station 2 → 2.</text>
+<text x="0" y="122" font-weight="bold" fill="#1f5fbf">① ORIGIN</text>
+<text x="0" y="140" fill="#333">Dead centre of the rectangle: middle of col 3,</text>
+<text x="0" y="158" fill="#333">middle of row 6 (5½ tiles from either end). Tape an X.</text>
+<text x="0" y="190" font-weight="bold" fill="#1f5fbf">② +x mark</text>
+<text x="0" y="208" fill="#333">From the ORIGIN toward the window: 3 tiles, then 3⅜ in</text>
+<text x="0" y="226" fill="#333">more with the ruler (= 3 ft 3⅜ in = 1.00 m). Tape a line.</text>
+<text x="0" y="244" fill="#333">Check a tile really is 12 in with the ruler first.</text>
+<text x="0" y="276" font-weight="bold" fill="#1f5fbf">Leave both forever</text>
+<text x="0" y="294" fill="#333">They define the room's coordinates. If they move,</text>
+<text x="0" y="312" fill="#333">every Lighthouse position moves with them.</text>
+<text x="0" y="344" font-size="15" font-weight="bold" fill="#222">cfclient geometry wizard</text>
+<text x="0" y="362" fill="#333">Drone on ① → drone on ② → a few floor spots →</text>
+<text x="0" y="380" fill="#333">hold it still in the air. Both stations show as seen.</text>
+<text x="0" y="412" fill="#888" font-size="11">Tonight's green tape (dorm_camera_check.svg) can be peeled up first.</text>
+</g>
 </svg>

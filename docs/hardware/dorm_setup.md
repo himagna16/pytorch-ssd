@@ -152,8 +152,10 @@ Lighthouse placement decided:
 - **Two sheets, one job each** (the first combined sketch mixed them and was
   confusing; replaced 2026-09-22). Both are drawn from behind the drone / door at
   the top, with every distance in feet and inches:
-  - [`dorm_camera_check.svg`](dorm_camera_check.svg): tonight, 4 pieces of green
-    tape (chair spot, CENTER 8 ft 2½ in from the lens, LEFT/RIGHT 2 ft 2½ in either side).
+  - [`dorm_camera_check.svg`](dorm_camera_check.svg): tonight, green tape counted in
+    floor tiles (1 ft each; the open floor is 5 x 11 tiles, measured by Sai): lens above
+    the row 1/row 2 joint in the middle column, CENTER 8 tiles out (2.44 m), LEFT/RIGHT
+    2 tiles either side (14 deg). `camera_check.sh` defaults match (2.44 m, 14 deg).
   - [`dorm_lighthouse_tape.svg`](dorm_lighthouse_tape.svg): after the hub, the two
     permanent blue marks (ORIGIN mid-floor, +x exactly 3 ft 3⅜ in toward the window)
     and the station corners.
@@ -241,9 +243,10 @@ runs unattended and prints the verdict:
 
     zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/camera_check.sh
 
-Stream check (5 frames), then two 10 s mirror clips at 2.5 m (drone's LEFT then
-RIGHT; default +-15 deg = 0.67 m, because +-25 deg lands under the lofts in this aisle;
-`CAMERA_CHECK_BEARING=25` restores the lab value) with a countdown so Sai can be the subject, then an offline chip
+Stream check (5 frames), then two 10 s mirror clips (drone's LEFT then
+RIGHT; defaults 2.44 m / +-14 deg = 8 tiles out, 2 tiles sideways on the 5-tile-wide
+floor, because +-25 deg lands under the lofts; `CAMERA_CHECK_DIST=2.5
+CAMERA_CHECK_BEARING=25` restores the lab values) with a countdown so Sai can be the subject, then an offline chip
 score and the MIRROR CHECK line. Frames go to `~/drone_frames/<date>/camera_check_*`
 and are never committed. Rehearsed against `mock_streamer.py`
 (`CAMERA_CHECK_GRAB_ARGS=--mock`): plumbing OK end to end; the mock served one
