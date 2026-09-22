@@ -11,8 +11,27 @@ Frames are named by cpx_grab.py (tools/crazysim_macos/), e.g.
     recordings share labels and folder (re-recorded without --take N+1), the
     frames are split into separate runs by time wherever f starts over.
 
-Preprocessing is identical to follow_person.py: grayscale, center square
-crop, resize to 128x128 (bilinear), divide by 255, float PyTorch on CPU.
+WHICH NETWORK SCORES THE FRAMES (--backend, since 2026-09-22):
+  chip   (DEFAULT) what the drone flies and the GAP8 runs: the firmware's own
+         integer preprocess (port of crazyflie_ssd/src/preprocess.c: centre
+         square crop, each 128x128 pixel = rounded mean of the 2x2 block at the
+         nearest-neighbour source index) feeding the integer network
+         model_id_dory.onnx, whose outputs are decoded with the release's own
+         id_output_eps (champion: 2.009823510888964e-4, read from
+         release_summary.json - never the old hard-coded 1/32768). The follower
+         replay uses the firmware's integer thresholds derived from that eps
+         (enter raw >= 5467 = p 0.75, lost raw < -998 = p 0.45, confirm 3).
+         Reuses tools/crazysim_macos/perception_backends.ChipPerception, the
+         same code every simulator flight used; onnxruntime runs in doryenv,
+         which that class starts for you.
+  float  the laptop model: grayscale, centre square crop, PIL BILINEAR resize to
+         128x128, /255, float PyTorch checkpoint (--ckpt) on CPU - identical to
+         follow_person.py's float perception. This was the ONLY arm before
+         2026-09-22. On the same rendered frames the two arms disagree by a
+         non-constant amount (docs/eval_results/2026-09-22-sep16-chip-rescore/),
+         so float numbers are NOT what the drone will do.
+scores.json records the backend, the model file and its sha1, and (chip) the
+eps and raw thresholds, so a scored folder always says which arm scored it.
 
 What it reports (per clip, then grouped by distance, bearing, light, subject):
   vis acc     fraction of frames where (confidence >= 0.5) matches the label
@@ -69,15 +88,24 @@ Usage (absolute paths: this works from ANY directory, which the relative form
 in the protocol does not):
   ~/Downloads/drone/trainenv/bin/python \
       ~/Downloads/drone/pytorch_ssd/tools/real_frames/score_real_frames.py <frames_dir> \
-      [--ckpt path.pth] [--crop-hfov 70 | --full-hfov DEG] [--csv out.csv] [--json out.json]
+      [--backend chip | --backend float [--ckpt path.pth]] \
+      [--crop-hfov 70 | --full-hfov DEG] [--csv out.csv] [--json out.json]
 """
-import argparse, collections, csv, json, math, re, sys
+import argparse, collections, csv, hashlib, json, math, re, sys
 from pathlib import Path
 import numpy as np
 from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 DRONE_ROOT = HERE.parents[2]
+# The chip arm is perception_backends.ChipPerception, reused, not reimplemented.
+# Importing it pulls in numpy and the stdlib only; torch/onnxruntime stay lazy.
+sys.path.insert(0, str(HERE.parent / "crazysim_macos"))
+import perception_backends as PB  # noqa: E402
+BACKENDS = PB.BACKENDS                       # ("float", "chip")
+DEFAULT_BACKEND = "chip"                     # what the drone flies (2026-09-22)
+DEFAULT_CKPT = DRONE_ROOT / "pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth"
+DEFAULT_UNSTABLE = DRONE_ROOT / "pytorch_ssd_unstable"
 EXTS = {".png", ".jpg", ".jpeg", ".pgm", ".bmp"}
 JPEG_EXTS = {".jpg", ".jpeg"}
 MIRROR_THIN_N = 10        # fewer detected frames than this on a side: say so, do not trust it
@@ -179,7 +207,24 @@ def size_to_bucket(s):
     return bucketize(s, SIZE4_INNER)
 
 
+def sha1_of(path):
+    try:
+        return hashlib.sha1(Path(path).read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def raw_threshold(p, eps):
+    """Firmware integer threshold for probability p: follow_raw_thresh() in
+    tools/firmware_decode (ceil(logit(p) / eps)). Champion eps: 0.75 -> 5467,
+    0.45 -> -998."""
+    return math.ceil(math.log(p / (1.0 - p)) / eps)
+
+
 class Model:
+    """FLOAT arm: PIL bilinear staging + the float PyTorch checkpoint."""
+    backend = "float"
+
     def __init__(self, unstable_root: Path, ckpt: Path):
         sys.path.insert(0, str(unstable_root))
         import torch
@@ -216,6 +261,47 @@ class Model:
             else:
                 res[i]["x_soft"] = res[i]["x_value"]
         return res
+
+    def close(self):
+        pass
+
+
+class ChipModel:
+    """CHIP arm: the firmware's preprocess + model_id_dory.onnx, through
+    perception_backends.ChipPerception (the class every simulator flight used).
+
+    preprocess() is the firmware port and __call__ sends the ALREADY-preprocessed
+    128x128 input with infer_net_input(), so the staging is applied exactly once.
+    (ChipPerception.__call__ takes a raw camera frame and preprocesses it itself;
+    handing it a preprocessed frame blurs it a second time. That is what
+    docs/eval_results/2026-09-17-chip-arm-rescore/scripts/rescore_chip.py did.)
+    """
+    backend = "chip"
+    preprocess = staticmethod(PB.firmware_preprocess)
+
+    def __init__(self, onnx: Path, dory_python: Path):
+        self._p = PB.ChipPerception(onnx=onnx, dory_python=dory_python)
+        self.eps = float(self._p.eps)
+        self.info = {k: v for k, v in self._p.info.items()
+                     if k in ("onnx", "onnx_sha1", "eps", "onnxruntime", "python", "threads")}
+
+    def __call__(self, batch: np.ndarray) -> list:
+        out = []
+        for net_in in batch:
+            p = self._p.infer_net_input(np.ascontiguousarray(net_in, dtype=np.uint8))
+            p["vis_raw"] = int(p["raw_i32"][9])      # the firmware's visibility integer
+            out.append(p)
+        return out
+
+    def close(self):
+        self._p.close()
+
+
+def load_model(a):
+    """The model --backend asked for. Tests swap Model / ChipModel for stubs."""
+    if a.backend == "float":
+        return Model(a.unstable_root, a.ckpt)
+    return ChipModel(a.chip_onnx, a.chip_python)
 
 
 def bayer_phase_spread(gray):
@@ -273,9 +359,19 @@ def summarize(rows):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("frames", type=Path, help="folder of labelled frames (searched recursively)")
-    ap.add_argument("--unstable-root", type=Path, default=DRONE_ROOT / "pytorch_ssd_unstable")
-    ap.add_argument("--ckpt", type=Path,
-                    default=DRONE_ROOT / "pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth")
+    ap.add_argument("--backend", choices=BACKENDS, default=DEFAULT_BACKEND,
+                    help="'chip' (default): the firmware preprocess + model_id_dory.onnx, what the "
+                         "drone flies. 'float': the float PyTorch checkpoint, the pre-2026-09-22 "
+                         "behaviour")
+    ap.add_argument("--chip-onnx", type=Path, default=PB.DEFAULT_ONNX,
+                    help="chip: the integer network; its release_summary.json (two levels up) "
+                         "supplies id_output_eps (default: the champion release)")
+    ap.add_argument("--chip-python", type=Path, default=PB.DEFAULT_DORY_PYTHON,
+                    help="chip: a python with onnxruntime (doryenv)")
+    ap.add_argument("--unstable-root", type=Path, default=None,
+                    help=f"float only: the model code (default {DEFAULT_UNSTABLE})")
+    ap.add_argument("--ckpt", type=Path, default=None,
+                    help=f"float only: the checkpoint (default {DEFAULT_CKPT})")
     fov = ap.add_mutually_exclusive_group()
     fov.add_argument("--crop-hfov", type=float, default=None,
                      help="horizontal field of view of the model's square crop, degrees (default 70)")
@@ -304,10 +400,19 @@ def main():
         # a straight-ahead clip would drag the verdict towards MIRRORED for nothing.
         sys.exit(f"--mirror-min-bearing must be greater than 0 (got {a.mirror_min_bearing:g}); "
                  f"frames at 0 deg are on neither side and cannot answer a left/right question")
-    if not a.ckpt.exists():
+    if a.backend == "chip" and (a.ckpt is not None or a.unstable_root is not None):
+        # Silently ignoring --ckpt would score the chip network while the operator
+        # believes they scored their checkpoint: refuse instead.
+        sys.exit("--ckpt / --unstable-root choose the FLOAT arm's model, but --backend is chip "
+                 "(the default since 2026-09-22), which runs model_id_dory.onnx.\n"
+                 "  To score a checkpoint: add --backend float.  To pick another chip network: "
+                 "--chip-onnx <model_id_dory.onnx>.")
+    a.ckpt = a.ckpt if a.ckpt is not None else DEFAULT_CKPT
+    a.unstable_root = a.unstable_root if a.unstable_root is not None else DEFAULT_UNSTABLE
+    if a.backend == "float" and not a.ckpt.exists():
         sys.exit(f"checkpoint not found: {a.ckpt}\n"
                  f"pass --ckpt <file>; the ones we have are in {a.unstable_root / 'artifacts'}")
-    if not (a.unstable_root / "models/follow_model_factory.py").exists():
+    if a.backend == "float" and not (a.unstable_root / "models/follow_model_factory.py").exists():
         sys.exit(f"--unstable-root does not hold the model code: {a.unstable_root}")
     all_imgs = sorted(p for p in a.frames.rglob("*") if p.suffix.lower() in EXTS)
     # macOS writes ._name sidecars next to real files on FAT/exFAT sticks and in
@@ -360,8 +465,14 @@ def main():
         crop_hfov = a.crop_hfov if a.crop_hfov is not None else 70.0
 
     try:
-        model = Model(a.unstable_root, a.ckpt)
+        model = load_model(a)
     except Exception as exc:                      # wrong artifact for this code path
+        if a.backend == "chip":
+            # ChipPerception's own messages already name the missing piece
+            # (ONNX, doryenv python, release_summary.json / eps).
+            sys.exit(f"could not start the chip arm: {str(exc).splitlines()[0][:300]}\n"
+                     f"  (--backend float scores the float checkpoint instead, but that is NOT "
+                     f"what the drone flies)")
         # artifacts/ holds both training and eval copies of the same run, e.g.
         # successor_qat_ep3.pth (quantization observers attached, will NOT load)
         # and successor_qat_ep3_eval.pth (will). Do not make the reader parse a
@@ -379,23 +490,47 @@ def main():
         if pool:
             msg.append(f"  Checkpoints in {a.unstable_root / 'artifacts'}: {', '.join(pool)}")
         sys.exit("\n".join(msg))
+    # Which arm scored this folder: printed and written to scores.json.
+    info = dict(getattr(model, "info", {}) or {})
+    if a.backend == "chip":
+        eps = getattr(model, "eps", info.get("eps"))
+        arm = {"backend": "chip", "model_file": info.get("onnx", str(a.chip_onnx)),
+               "model_sha1": info.get("onnx_sha1") or sha1_of(a.chip_onnx),
+               "id_output_eps": eps,
+               "preprocess": "firmware preprocess.c port (centre crop, 2x2 block mean at "
+                             "nearest-neighbour index, uint8)",
+               "onnxruntime": info.get("onnxruntime")}
+        if eps:
+            # The follower is replayed on the firmware's own integers, exactly as
+            # follow_decode.c does: enter on raw >= enter_raw, lost on raw < exit_raw.
+            arm["raw_thresholds"] = {"enter": raw_threshold(a.vis_enter, eps),
+                                     "exit": raw_threshold(a.vis_exit, eps),
+                                     "confirm_frames": a.confirm_frames}
+    else:
+        arm = {"backend": "float", "model_file": str(a.ckpt), "model_sha1": sha1_of(a.ckpt),
+               "id_output_eps": None,
+               "preprocess": "PIL BILINEAR centre-crop resize to 128x128, /255"}
     rows, bayer = [], []
     every = max(1, len(labelled) // 24)      # a sample is enough for the Bayer check
-    for i in range(0, len(labelled), a.batch):
-        chunk, imgs = [], []
-        for j, (p, lab) in enumerate(labelled[i:i + a.batch], i):
-            gray = load_gray(p)
-            if gray is None:
+    try:
+        for i in range(0, len(labelled), a.batch):
+            chunk, imgs = [], []
+            for j, (p, lab) in enumerate(labelled[i:i + a.batch], i):
+                gray = load_gray(p)
+                if gray is None:
+                    continue
+                if j % every == 0:
+                    bayer.append(bayer_phase_spread(gray))
+                imgs.append(model.preprocess(gray))
+                chunk.append((p, lab))
+            if not imgs:
                 continue
-            if j % every == 0:
-                bayer.append(bayer_phase_spread(gray))
-            imgs.append(model.preprocess(gray))
-            chunk.append((p, lab))
-        if not imgs:
-            continue
-        for (p, lab), pred in zip(chunk, model(np.stack(imgs))):
-            rows.append({"file": str(p.relative_to(a.frames)), "dir": str(p.parent.relative_to(a.frames)),
-                         **lab, "pred": pred})
+            for (p, lab), pred in zip(chunk, model(np.stack(imgs))):
+                rows.append({"file": str(p.relative_to(a.frames)),
+                             "dir": str(p.parent.relative_to(a.frames)), **lab, "pred": pred})
+    finally:
+        if hasattr(model, "close"):          # the chip arm owns a doryenv child process
+            model.close()
     if unreadable:
         print(f"note: {len(unreadable)} image(s) unreadable and skipped, e.g. "
               f"{unreadable[0][0].name} ({type(unreadable[0][1]).__name__})")
@@ -424,8 +559,14 @@ def main():
             clips[gkey + (i,)] = run
     for key, cr in clips.items():
         cr.sort(key=lambda r: (r["frame"] if r["frame"] is not None else -1, r["time"] or 0.0, r["file"]))
-        starts, flags = follower_track([r["pred"]["visibility_confidence"] for r in cr],
-                                       a.vis_enter, a.vis_exit, a.confirm_frames)
+        raw_thr = arm.get("raw_thresholds")
+        if raw_thr and all("vis_raw" in r["pred"] for r in cr):
+            # chip: the firmware's integer rule on the chip's integer output
+            starts, flags = follower_track([r["pred"]["vis_raw"] for r in cr],
+                                           raw_thr["enter"], raw_thr["exit"], a.confirm_frames)
+        else:
+            starts, flags = follower_track([r["pred"]["visibility_confidence"] for r in cr],
+                                           a.vis_enter, a.vis_exit, a.confirm_frames)
         for r, f in zip(cr, flags):
             p = r["pred"]
             r["conf"] = p["visibility_confidence"]
@@ -454,7 +595,17 @@ def main():
         cr[0]["_starts"] = starts
 
     # ---- per-clip table
-    print(f"\nmodel {a.ckpt.name} | {len(rows)} frames in {len(clips)} clips | crop HFOV {crop_hfov:.1f} deg | "
+    sha = (arm["model_sha1"] or "?")[:12]
+    if arm["backend"] == "chip":
+        thr = arm.get("raw_thresholds") or {}
+        print(f"\nBACKEND chip (what the drone flies): {Path(arm['model_file']).name} sha1 {sha} | "
+              f"eps {arm['id_output_eps']!r} | follower raw enter >= {thr.get('enter')}, "
+              f"lost < {thr.get('exit')}, confirm {a.confirm_frames}")
+    else:
+        print(f"\nBACKEND float (NOT what the drone flies; --backend chip is): "
+              f"{Path(arm['model_file']).name} sha1 {sha}")
+    print(f"model {Path(arm['model_file']).name} | {len(rows)} frames in {len(clips)} clips | "
+          f"crop HFOV {crop_hfov:.1f} deg | "
           f"expected size assumes a {a.person_height:g} m person, camera at {a.cam_height:g} m")
     hdr = (f"{'clip (subject/light/take)':32s} {'d':>4s} {'b':>5s} {'vis':>3s} {'n':>4s} {'conf':>5s} "
            f"{'visacc':>6s} {'track%':>6s} {'starts':>6s} {'expbin':>6s} {'bins seen':18s} {'binacc':>6s} "
@@ -765,7 +916,8 @@ def main():
             for r in rows:
                 wr.writerow({k: (f"{r[k]:.4f}" if isinstance(r[k], float) else r[k]) for k in cols})
         json_path.write_text(json.dumps({
-            "ckpt": str(a.ckpt), "frames_dir": str(a.frames), "n_frames": len(rows), "crop_hfov_deg": crop_hfov,
+            "backend": arm["backend"], "model": arm,
+            "ckpt": str(a.ckpt) if arm["backend"] == "float" else None, "frames_dir": str(a.frames), "n_frames": len(rows), "crop_hfov_deg": crop_hfov,
             "vis_threshold": a.vis_threshold, "follower": {"enter": a.vis_enter, "exit": a.vis_exit,
                                                            "confirm_frames": a.confirm_frames},
             "jpeg_frames": len(jpegs), "unreadable_files": len(unreadable),

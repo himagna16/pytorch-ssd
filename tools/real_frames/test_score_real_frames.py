@@ -18,6 +18,18 @@ Two layers:
                   pinhole camera would put a person at. No torch, no checkpoint,
                   a few seconds.
 
+  backend checks  (added 2026-09-22, run by default, skipped with a note if
+                  doryenv / the champion ONNX / the checkpoint are missing)
+                  score_real_frames.py defaults to --backend chip. These run
+                  the REAL chip arm on a fixed synthetic frame set and require
+                  its integers to equal, frame for frame, what the simulator's
+                  flight path (perception_backends.ChipPerception on the raw
+                  frame) computes; they run the committed Sep 17
+                  rescore_chip.py on the same frames and pin down exactly why
+                  it does NOT match (it preprocesses twice); and they run the
+                  pre-backend scorer (git b1a0108) next to --backend float and
+                  require byte-identical CSVs. A few seconds.
+
   --real          Renders a person with MuJoCo at known distances/bearings
                   (the simulator's own scene and camera) and scores them with
                   the real checkpoint through the real scorer, end to end -
@@ -38,6 +50,7 @@ camera - only frames from the AI-deck can do that.
 import argparse
 import contextlib
 import csv
+import hashlib
 import io
 import json
 import math
@@ -192,9 +205,14 @@ class ParanoidModel(StubModel):
 # running the scorer in-process
 # --------------------------------------------------------------------------
 def run_scorer(argv, model_cls=StubModel):
-    """Returns (exit_code_or_None, stdout, parsed scores.json or None)."""
-    old_model, old_argv = S.Model, sys.argv
-    S.Model = model_cls
+    """Returns (exit_code_or_None, stdout, parsed scores.json or None).
+
+    model_cls replaces BOTH arms (S.Model = float, S.ChipModel = chip, the
+    default since 2026-09-22), so every stub check runs whichever --backend the
+    argv picks. model_cls=None runs the real networks, unpatched."""
+    old_model, old_chip, old_argv = S.Model, S.ChipModel, sys.argv
+    if model_cls is not None:
+        S.Model = S.ChipModel = model_cls
     buf = io.StringIO()
     code = None
     try:
@@ -204,7 +222,7 @@ def run_scorer(argv, model_cls=StubModel):
     except SystemExit as e:
         code = e.code
     finally:
-        S.Model, sys.argv = old_model, old_argv
+        S.Model, S.ChipModel, sys.argv = old_model, old_chip, old_argv
     out = buf.getvalue()
     jf = Path(argv[0]) / "scores.json"
     data = json.loads(jf.read_text()) if jf.exists() else None
@@ -825,13 +843,55 @@ def t_runs(tmp):
 
 @check("a wrong --ckpt or --unstable-root says so instead of a traceback")
 def t_bad_ckpt(tmp):
+    # --ckpt / --unstable-root belong to the float arm, so (since 2026-09-22,
+    # when chip became the default) this check names --backend float.
     d = tmp / "ckpt"
     write_clip(d, 2.5, -25, 1, n=2, take=1, seed=19)
-    code, out, js = run_scorer([d, "--ckpt", tmp / "nope.pth"])
+    code, out, js = run_scorer([d, "--backend", "float", "--ckpt", tmp / "nope.pth"])
     need(isinstance(code, str) and "checkpoint not found" in code, f"exit was {code!r}")
-    code, out, js = run_scorer([d, "--unstable-root", tmp])
+    code, out, js = run_scorer([d, "--backend", "float", "--unstable-root", tmp])
     need(isinstance(code, str) and "model code" in code, f"exit was {code!r}")
     return "missing checkpoint and wrong --unstable-root both exit with a plain message"
+
+
+@check("--backend defaults to chip, and --ckpt under chip is refused, not ignored")
+def t_backend_default(tmp):
+    d = tmp / "backend_default"
+    write_clip(d, 2.5, -25, 1, n=2, take=1, seed=31)
+    write_clip(d, 2.5, 25, 1, n=2, take=2, seed=32)
+    code, out, js = run_scorer([d])
+    need(code is None and js is not None, f"scorer exited: {code}")
+    need(js["backend"] == "chip" and js["model"]["backend"] == "chip", f"backend {js.get('backend')}")
+    need(Path(js["model"]["model_file"]).name == "model_id_dory.onnx", f"model {js['model']}")
+    need(js["ckpt"] is None, "a chip-scored folder must not name a float checkpoint")
+    need("BACKEND chip" in out, "the printed header does not say which arm scored the folder")
+    # Silently ignoring --ckpt would score the chip network while the operator
+    # believes they scored their checkpoint.
+    for flag, val in (("--ckpt", tmp / "x.pth"), ("--unstable-root", tmp)):
+        code, out, js = run_scorer([d, flag, val])
+        need(isinstance(code, str) and "--backend float" in code, f"{flag} under chip: exit {code!r}")
+    code, out, js = run_scorer([d, "--backend", "float"])
+    need(js["backend"] == "float" and js["model"]["backend"] == "float" and js["ckpt"],
+         f"float json {js.get('backend')} {js.get('ckpt')}")
+    need("BACKEND float (NOT what the drone flies" in out, "float run is not labelled as such")
+    return "default = chip (model_id_dory.onnx); --ckpt/--unstable-root under chip exit naming --backend float"
+
+
+@check("chip thresholds: the champion eps (not 1/32768) gives raw 5467 / -998")
+def t_chip_thresholds(tmp):
+    summary = S.PB.DEFAULT_RELEASE_SUMMARY
+    if not summary.exists():
+        return f"skipped: {summary} not on this machine"
+    eps = float(json.loads(summary.read_text())["id_output_eps"]["value"])
+    need(eps == 2.009823510888964e-4, f"release eps {eps!r}, want the champion 2.009823510888964e-4")
+    need(abs(eps - 1 / 32768) > 1e-6, "eps is the legacy 1/32768")
+    got = (S.raw_threshold(0.75, eps), S.raw_threshold(0.45, eps))
+    need(got == (5467, -998), f"raw thresholds {got}, want (5467, -998) as in app_config.h")
+    need(S.PB.VIS_ENTER_RAW == got[0], f"perception_backends VIS_ENTER_RAW {S.PB.VIS_ENTER_RAW}")
+    # the integer rule and the probability rule agree on either side of each bar
+    sig = lambda r: 1.0 / (1.0 + math.exp(-r * eps))
+    need(sig(5466) < 0.75 <= sig(5467) and sig(-999) < 0.45 <= sig(-998), "p/raw bars disagree")
+    return f"eps {eps!r} -> enter raw {got[0]}, exit raw {got[1]}, confirm 3"
 
 
 @check("a read-only folder still prints the verdict")
@@ -883,7 +943,8 @@ def t_qat_ckpt(tmp):
     if not bad.exists():
         return "skipped: successor_qat_ep3.pth not on this machine"
     d = standard_folder(tmp / "qat", n=2)
-    cmd = [sys.executable, str(HERE / "score_real_frames.py"), str(d), "--ckpt", str(bad)]
+    cmd = [sys.executable, str(HERE / "score_real_frames.py"), str(d), "--backend", "float",
+           "--ckpt", str(bad)]
     pr = subprocess.run(cmd, capture_output=True, text=True)
     blob = pr.stdout + pr.stderr
     need(pr.returncode != 0, "loading the training checkpoint should fail")
@@ -985,6 +1046,131 @@ def t_centre_bias(tmp):
 
 
 # --------------------------------------------------------------------------
+# backend equivalence on a fixed frame set (real networks; skipped if absent)
+# --------------------------------------------------------------------------
+PRE_BACKEND_COMMIT = "b1a0108"   # last score_real_frames.py before --backend existed
+RESCORE_CHIP = HERE.parents[1] / "docs/eval_results/2026-09-17-chip-arm-rescore/scripts/rescore_chip.py"
+
+
+def chip_available():
+    for p in (S.PB.DEFAULT_ONNX, S.PB.DEFAULT_DORY_PYTHON, S.PB.DEFAULT_RELEASE_SUMMARY):
+        if not Path(p).exists():
+            return f"{p} not on this machine"
+    return None
+
+
+class RecordingChip(S.ChipModel):
+    """The REAL chip arm, unchanged, remembering every integer it returned."""
+    seen = []
+
+    def __call__(self, batch):
+        out = super().__call__(batch)
+        RecordingChip.seen.extend(out)
+        return out
+
+
+@check("--backend chip = the flight path (ChipPerception on the raw frame), integer for integer")
+def t_chip_equals_flight(tmp):
+    why = chip_available()
+    if why:
+        return f"skipped: {why}"
+    d = standard_folder(tmp / "chip_eq", n=3)
+    RecordingChip.seen = []
+    code, out, js = run_scorer([d], model_cls=RecordingChip)
+    need(code is None, f"scorer exited: {code}")
+    need(js["model"]["id_output_eps"] == 2.009823510888964e-4, f"eps {js['model']['id_output_eps']}")
+    need(js["model"]["raw_thresholds"] == {"enter": 5467, "exit": -998, "confirm_frames": 3},
+         f"raw thresholds {js['model'].get('raw_thresholds')}")
+    sha = hashlib.sha1(Path(S.PB.DEFAULT_ONNX).read_bytes()).hexdigest()
+    need(js["model"]["model_sha1"] == sha, "scores.json sha1 is not the ONNX's")
+    with open(d / "scores.csv", newline="") as f:
+        files = [r["file"] for r in csv.DictReader(f)]
+    need(len(files) == len(RecordingChip.seen), f"{len(files)} rows vs {len(RecordingChip.seen)} preds")
+    flight = S.PB.ChipPerception()
+    try:
+        bad = 0
+        for name, got in zip(files, RecordingChip.seen):   # CSV order = scoring order
+            g = np.asarray(Image.open(d / name).convert("L"))
+            want = flight(g)                       # exactly what follow_person.py --backend chip calls
+            bad += not np.array_equal(want["raw_i32"], got["raw_i32"])
+    finally:
+        flight.close()
+    need(bad == 0, f"{bad} of {len(files)} frames differ from the flight path")
+    return (f"{len(files)} frames: all 14 raw int32 outputs identical to the flight path; "
+            f"sha1 {sha[:12]}, eps {js['model']['id_output_eps']!r}, raw 5467/-998/3")
+
+
+@check("Sep 17 rescore_chip.py: its numbers are reproduced exactly, and they are NOT the chip arm")
+def t_rescore_chip_repro(tmp):
+    why = chip_available()
+    if why or not RESCORE_CHIP.exists():
+        return f"skipped: {why or RESCORE_CHIP}"
+    d = standard_folder(tmp / "rescore_eq", n=3)
+    out_csv = tmp / "rescore_chip_out.csv"
+    pr = subprocess.run([str(S.PB.DEFAULT_DORY_PYTHON), str(RESCORE_CHIP), str(d), str(out_csv)],
+                        capture_output=True, text=True)
+    need(pr.returncode == 0, f"rescore_chip.py failed: {pr.stderr[-300:]}")
+    with open(out_csv, newline="") as f:
+        theirs = {Path(r["file"]).name: r for r in csv.DictReader(f)}
+    chip = S.PB.ChipPerception()
+    try:
+        exact_twice = exact_once = 0
+        deltas = []
+        for name, r in sorted(theirs.items()):
+            g = np.asarray(Image.open(d / name).convert("L"))
+            once = chip.infer_net_input(S.PB.firmware_preprocess(g))            # what flies
+            twice = chip.infer_net_input(S.PB.firmware_preprocess(S.PB.firmware_preprocess(g)))
+            key = lambda p: (round(float(p["visibility_confidence"]), 6), int(p["x_bin_index"]),
+                             int(p["size_bucket_index"]))
+            ref = (float(r["conf_chip"]), int(r["x_bin_chip"]), int(r["size_bucket_chip"]))
+            exact_twice += key(twice) == ref
+            exact_once += key(once) == ref
+            deltas.append(float(r["conf_chip"]) - once["visibility_confidence"])
+    finally:
+        chip.close()
+    n = len(theirs)
+    # The script calls ChipPerception(firmware_preprocess(g)), and ChipPerception
+    # preprocesses again: its "chip" column is the network on a 2x2-blurred copy.
+    need(exact_twice == n, f"double-preprocess model reproduces only {exact_twice}/{n} of its rows")
+    return (f"rescore_chip.py reproduced on {exact_twice}/{n} frames ONLY by preprocessing twice; "
+            f"the real chip arm matches it on {exact_once}/{n}, mean conf gap "
+            f"{float(np.mean(deltas)):+.4f} (rescore minus chip)")
+
+
+@check("--backend float reproduces the pre-backend scorer byte for byte")
+def t_float_unchanged(tmp):
+    ckpt = S.DEFAULT_CKPT
+    if not ckpt.exists():
+        return f"skipped: {ckpt} not on this machine"
+    old_src = subprocess.run(["git", "-C", str(HERE), "show",
+                              f"{PRE_BACKEND_COMMIT}:tools/real_frames/score_real_frames.py"],
+                             capture_output=True, text=True)
+    if old_src.returncode != 0:
+        return f"skipped: git cannot show {PRE_BACKEND_COMMIT} here"
+    old = tmp / "old_scorer" / "score_real_frames_pre_backend.py"
+    old.parent.mkdir(parents=True, exist_ok=True)
+    old.write_text(old_src.stdout)
+    d = standard_folder(tmp / "float_eq", n=3)
+    common = [str(d), "--ckpt", str(ckpt), "--unstable-root", str(S.DEFAULT_UNSTABLE)]
+    pr = subprocess.run([sys.executable, str(old), *common, "--csv", str(tmp / "old.csv"),
+                         "--json", str(tmp / "old.json")], capture_output=True, text=True)
+    need(pr.returncode == 0, f"old scorer failed: {pr.stderr[-300:]}")
+    pr = subprocess.run([sys.executable, str(HERE / "score_real_frames.py"), *common,
+                         "--backend", "float", "--csv", str(tmp / "new.csv"),
+                         "--json", str(tmp / "new.json")], capture_output=True, text=True)
+    need(pr.returncode == 0, f"new scorer failed: {pr.stderr[-300:]}")
+    a, b = (tmp / "old.csv").read_bytes(), (tmp / "new.csv").read_bytes()
+    need(a == b, "per-frame CSV differs from the pre-backend scorer")
+    jo, jn = json.loads((tmp / "old.json").read_text()), json.loads((tmp / "new.json").read_text())
+    added = set(jn) - set(jo)
+    need(added == {"backend", "model"}, f"unexpected JSON key changes: +{added} -{set(jo) - set(jn)}")
+    need(all(jo[k] == jn[k] for k in jo), "a pre-existing JSON value changed: "
+         + ", ".join(k for k in jo if jo[k] != jn[k]))
+    n = a.count(b"\n") - 1
+    return f"{n} frames: CSV byte-identical to git {PRE_BACKEND_COMMIT}; JSON identical plus backend/model"
+
+
+# --------------------------------------------------------------------------
 # --real: MuJoCo renders + the real checkpoint, end to end
 # --------------------------------------------------------------------------
 def render_real_dataset(out, n, dists=(1.5, 2.5, 3.5), bearings=(0, -10, 10, -25, 25), flip=False):
@@ -1040,37 +1226,53 @@ def render_real_dataset(out, n, dists=(1.5, 2.5, 3.5), bearings=(0, -10, 10, -25
 
 
 def real_checks(tmp, n):
-    """Same folder twice: upright must be PASS, flipped must be MIRRORED."""
+    """Same folder twice: upright must be PASS, flipped must be MIRRORED - on the
+    float arm (the pre-2026-09-22 check, unchanged) and on the chip arm, which is
+    the scorer's default and what the drone flies."""
     results = []
     ckpt = DRONE_ROOT / "pytorch_ssd_unstable/artifacts/successor_qat_ep3_eval.pth"
     if not ckpt.exists():
         return [("real model: checkpoint present", False, f"missing {ckpt}")]
     results.append(("real model: checkpoint present", True, f"{ckpt} ({ckpt.stat().st_size} bytes)"))
+    arms = [("float", "real checkpoint")]
+    why = chip_available()
+    if why:
+        results.append(("real chip arm: ONNX + doryenv present", False, why))
+    else:
+        arms.append(("chip", "real chip arm (model_id_dory.onnx)"))
     for flip, want in ((False, "PASS"), (True, "MIRRORED")):
-        name = f"real MuJoCo render + real checkpoint -> {want}"
         try:
             d = render_real_dataset(tmp / ("real_flip" if flip else "real"), n, flip=flip)
-            code, out, js = run_scorer([d], model_cls=S.Model)
-            got = js["mirror_check"]["verdict"]
-            ok = got == want
-            detail = mirror_line(out)[:150]
-            if not flip:
-                ok = ok and js["empty_false_tracks"] == 0 and "Bayer" not in out
-                detail += (f" | bin acc {js['overall']['bin_acc']:.0%} "
-                           f"(+-1 {js['overall']['bin_acc1']:.0%}), "
-                           f"bearing err {js['overall']['bear_err']:+.1f} deg, "
-                           f"false tracks {js['empty_false_tracks']}, n={js['n_frames']}, "
-                           f"bayer {js['bayer_phase_spread_dn']:.2f} DN")
-            results.append((name, ok, detail))
-            if not flip:                      # the command the protocol tells you to type
-                cmd = [sys.executable, str(HERE / "score_real_frames.py"), str(d)]
-                pr = subprocess.run(cmd, capture_output=True, text=True)
-                line = [l for l in pr.stdout.splitlines() if l.startswith("MIRROR CHECK")]
-                results.append(("protocol command line runs and prints a verdict",
-                                pr.returncode == 0 and bool(line) and "-> PASS" in line[0],
-                                f"rc={pr.returncode} | {(line or ['<none>'])[0][:110]}"))
         except Exception:
-            results.append((name, False, traceback.format_exc().splitlines()[-1]))
+            results.append((f"real MuJoCo render -> {want}", False,
+                            traceback.format_exc().splitlines()[-1]))
+            continue
+        for backend, label in arms:
+            name = f"real MuJoCo render + {label} -> {want}"
+            try:
+                code, out, js = run_scorer([d, "--backend", backend], model_cls=None)
+                got = js["mirror_check"]["verdict"]
+                ok = got == want and js["backend"] == backend
+                detail = mirror_line(out)[:150]
+                if not flip:
+                    ok = ok and js["empty_false_tracks"] == 0 and "Bayer" not in out
+                    detail += (f" | bin acc {js['overall']['bin_acc']:.0%} "
+                               f"(+-1 {js['overall']['bin_acc1']:.0%}), "
+                               f"bearing err {js['overall']['bear_err']:+.1f} deg, "
+                               f"mean conf {js['overall']['mean_conf']:.3f}, "
+                               f"false tracks {js['empty_false_tracks']}, n={js['n_frames']}, "
+                               f"bayer {js['bayer_phase_spread_dn']:.2f} DN")
+                results.append((name, ok, detail))
+            except Exception:
+                results.append((name, False, traceback.format_exc().splitlines()[-1]))
+        if not flip:                      # the command the protocol tells you to type
+            cmd = [sys.executable, str(HERE / "score_real_frames.py"), str(d)]
+            pr = subprocess.run(cmd, capture_output=True, text=True)
+            line = [l for l in pr.stdout.splitlines() if l.startswith("MIRROR CHECK")]
+            chip_hdr = any(l.startswith("BACKEND chip") for l in pr.stdout.splitlines())
+            results.append(("protocol command line runs on the chip arm and prints a verdict",
+                            pr.returncode == 0 and bool(line) and "-> PASS" in line[0] and chip_hdr,
+                            f"rc={pr.returncode} chip={chip_hdr} | {(line or ['<none>'])[0][:110]}"))
     return results
 
 
