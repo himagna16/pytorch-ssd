@@ -85,8 +85,8 @@ is not, is in `docs/hardware/before_the_next_session.md`.
 | Scoring tool runs the wrong network | Sai | **Found Sep 17, deliberately not fixed that night.** `tools/real_frames/score_real_frames.py` is hardwired to the float model while the drone flies the int8 chip export. On 13,003 frames they disagree by -0.124 mean confidence and -0.239 in the fraction above the 0.75 bar, 122 of 325 cells moving by 0.25 or more, so it cannot be corrected after the fact. Left alone because it is a shared tool and the repo's rules put that on a branch with a PR, hours before a hardware session. Workaround in place: the first-hour guide runs both scorers and says to believe the chip one | **The first code job now.** Add `--backend {float,chip}` defaulting to chip, on a branch with a PR |
 | The Sep 16 bearing work was scored on the float arm | Sai | Flagged, not quietly corrected, because some conclusions will not survive. Affects `docs/eval_results/2026-09-16-onaxis/` and `2026-09-16-protocol-geometry/` | Rescore both with `2026-09-17-chip-arm-rescore/scripts/rescore_chip.py`, about twenty seconds per folder. Then re-read the conclusions |
 | Separating bearing from the card's own shadow | Sai | **The simulator cannot answer this. Two attempts dead.** The subject panel is opaque and throws a box shadow on the far wall that is visible off-axis (-30.0 DN on 13/13 subjects) and hidden on-axis (+2.3 DN on 13/13), so the Sep 16 on-axis gain is an upper bound. Attempt 1 (`2026-09-16-noshadow`, 156 flights) removed the shadow and collapsed detection everywhere including the control, 0.991 to 0.048, because `camera_model.py` holds every frame at `AE_TARGET_DN = 60.0` and lightening the room made the exposure loop take the contrast back out of the subject. Attempt 2 (`2026-09-17-panel-noshadow`) aborted after one flight | Stop trying in simulation. It is a lab measurement now. Say so to the team before the session, not in the room |
-| Lighthouse ground truth from a head-mounted second drone | Sai, MinHyuk | **Planned Sep 20; the desk half built Sep 22 (PR, not yet merged).** `tools/lighthouse/pose_to_label.py` turns the two poses into the x-bin and size bucket the network should output, and `align_clocks.py` lines up the frame and pose clocks from a still-then-sidestep at the start and end of each recording. Validated on 267 archived simulator flights: `docs/eval_results/2026-09-22-pose-to-label-sim-validation/`. A second Crazyflie, props off and motors never armed, rides on the subject's head as a pose beacon; both drones carry Lighthouse decks; the difference between the two poses, rotated into the follower's body frame, is where the subject truly was. Truth minus what the network said is the training signal. **The property that makes this worth doing: ground truth exists for frames the network misses entirely**, which no other labelling method we have can give us. The thesis setup's Flow deck could not do this even in principle, because optical flow gives relative motion and never tells you where the subject is. Plan and prerequisites: `docs/hardware/before_the_next_session.md` §3 | Team signs off the head-to-body convention (label target at half the subject's height below the head) in DECISIONS.md. Email MinHyuk the seven hardware questions (§3.4). Run the static taped-mark case in `tools/lighthouse/README.md`, including the yawed step, before collecting anything |
-| The yaw-sign chain | Sai | **Settled in the simulator Sep 22; still open on hardware.** Labels from the follower's logged pose and the subject's true position agree with the network on which side the person is in 99.0% of clearly-left and 100% of clearly-right frames (267 flights). With the yaw sign flipped, that falls to 24% and 20% on frames where the drone had turned. The follower's own command sign (-1) turned the drone the right way in 99.9% of 24,528 tracking frames. Two caveats: the yaw sign is only tested when the drone has actually turned, and a crash or a frozen pose log makes correct labels look mirrored, so the pipeline now drops those frames | On hardware: the static case with the follower turned 30 degrees on its stand, and check the lab drone's firmware protocol version (the command sign flips on old firmware) |
+| Lighthouse ground truth from a head-mounted second drone | Sai, MinHyuk | **Planned Sep 20, nothing built yet.** A second Crazyflie, props off and motors never armed, rides on the subject's head as a pose beacon; both drones carry Lighthouse decks; the difference between the two poses, rotated into the follower's body frame, is where the subject truly was. Truth minus what the network said is the training signal. **The property that makes this worth doing: ground truth exists for frames the network misses entirely**, which no other labelling method we have can give us. The thesis setup's Flow deck could not do this even in principle, because optical flow gives relative motion and never tells you where the subject is. Plan and prerequisites: `docs/hardware/before_the_next_session.md` §3 | Build the pose-to-label pipeline against CrazySim first, where exact ground truth already exists. Email MinHyuk the seven hardware questions (§3.4). Run the static taped-mark calibration case before collecting anything |
+| The yaw-sign chain, still unverified | Sai | Named in `lab_session_runbook.md` as the reason Lighthouse was scoped out of the first session. It now has to be settled, because a sign error here does not fail loudly: it produces a confidently mirrored label set, which would train the drone to steer away from people | Verify inside the pose-to-label pipeline against the simulator, where the answer is known. Extend the existing left/right mirror check to cover it |
 | First hands-on session with the hardware | Sai | **Happened Sep 17, 1 pm. Half a result.** Confirmed from the bench: AI-deck 1.1, Rev D or newer, so over-the-air flashing is supported, closing an open question in `flash_runbook.md` §8. The deck already carries the WiFi streamer, so nothing needs flashing to capture frames. No power button exists; the Crazyflie powers up when the battery is connected. The afternoon went almost entirely to things nobody had written down, and ended on a flat battery with no charging cable. Written up in `docs/hardware/powering_the_drone.md` | Buy the cable, then run the capture. Nothing else is in the way |
 
 ## Results and their status
@@ -420,45 +420,6 @@ Worth keeping in one place, because several of these are easy to assume:
 ## Session log
 
 Newest first. One entry per working session.
-
-- **2026-09-22.** Built the desk half of the Lighthouse ground-truth plan. No
-  simulator runs and no hardware: everything was checked against flights already
-  on disk.
-
-  `tools/lighthouse/pose_to_label.py` takes the follower's pose and the head
-  beacon's position and gives the bearing, the range, where the person lands in
-  the image, the x-bin and size bucket the network should output, and whether the
-  person is in view at all. The head-to-body offset is written down in the code
-  and its README: the label target sits half the subject's height below the top
-  of the head, because that is the centre of a standing person's COCO box. It
-  needs the team's sign-off.
-
-  Checked against 267 archived simulator flights, the labels land within one
-  x-bin of what the network said on every one of 81,368 frames, and on the same
-  side of the image on 99-100% of frames where the person was clearly to one side.
-  A flipped yaw sign, a flipped bearing sign or a mirrored room frame each drops
-  that to between 0% and 38%, and the new left/right check refuses the labels.
-  The joining mistake from Sep 13 (the follower's clock against the simulator's)
-  reproduces as a 27 degree error at the 90th percentile, so the tool joins on
-  the wall clock.
-
-  The most useful finding was one I was not looking for. Eleven flights had
-  crashed and five had a pose log that froze, and in both cases the camera kept
-  streaming. Without throwing those frames away, the *correct* convention failed
-  the left/right check. A Lighthouse dropout on the real rig is the same failure,
-  so the pipeline now drops frames whose pose froze or jumped instead of guessing.
-
-  `tools/lighthouse/align_clocks.py` finds the still-then-sidestep at the start
-  and end of a recording and fits both the offset and the drift between the frame
-  clock and the pose clock. In tests it recovers a planted offset to within 25 ms
-  on synthetic data, and within a few ms on frames really sent through the mock
-  streamer and cpx_grab. A tenth of a second of offset is about 3 degrees of error
-  on someone walking at 1 m/s at 2 m, and zero on someone standing still. That is
-  why the static marks alone would never find a clock error.
-
-  Still unknown, and only the lab can answer: the real camera's field of view,
-  where the lens sits relative to the Lighthouse deck, the real clock offset, and
-  whether the lab drone's firmware flips the yaw command sign.
 
 - **2026-09-20.** No experiments. Took stock, planned the ground-truth rig, and
   wrote down two things that should have been written down already.
