@@ -149,10 +149,18 @@ Lighthouse placement decided:
   end.** Final choice (Sai, 2026-09-22, by the outlets): station 1 at the door end by
   Sai's chair, station 2 at the window end on the roommate's side. Not side by side:
   two stations in one corner are occluded together.
-- **Sketch: [`dorm_layout.svg`](dorm_layout.svg)**, which shows the stations, the permanent
-  blue Lighthouse tape (origin X + 1 m +x mark) and the green camera-check marks.
+- **Two sheets, one job each** (the first combined sketch mixed them and was
+  confusing; replaced 2026-09-22). Both are drawn from behind the drone / door at
+  the top, with every distance in feet and inches:
+  - [`dorm_camera_check.svg`](dorm_camera_check.svg): tonight, 4 pieces of green
+    tape (chair spot, CENTER 8 ft 2½ in from the lens, LEFT/RIGHT 2 ft 2½ in either side).
+  - [`dorm_lighthouse_tape.svg`](dorm_lighthouse_tape.svg): after the hub, the two
+    permanent blue marks (ORIGIN mid-floor, +x exactly 3 ft 3⅜ in toward the window)
+    and the station corners.
 
-![Dorm layout](dorm_layout.svg)
+![Tonight: camera check](dorm_camera_check.svg)
+
+![Tomorrow: Lighthouse tape](dorm_lighthouse_tape.svg)
 - Stations **above the loft mattresses** (~2 m+), tilted 30-45 degrees down, aimed at
   the middle of the rug, ball heads locked. Check: stand mid-rug, both fronts visible.
 - Suspected **mirror on the back of the door**: cover it. Blinds and curtain closed.
