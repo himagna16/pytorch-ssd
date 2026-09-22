@@ -1,5 +1,12 @@
 # Where the person stands in the frame is doing more work than who the person is
 
+> **2026-09-22: RESCORED ON THE CHIP ARM. Read `../2026-09-22-sep16-chip-rescore/`.**
+> Most of this page survives on the chip arm: the pose/hard split, the bearing-cost
+> shape, the 2.5 m finding, the 3.5 m reference and the mirror check. The 25-degree
+> left/right asymmetry does not (+0.059 becomes -0.007). The "second correction"
+> below is itself wrong in size: its chip numbers came from a script that ran the
+> preprocess twice. The real gap to float is -0.020 mean confidence, not -0.124.
+
 2026-09-16. 13,003 frames, 325 clips, 13 subjects at 5 distances and 5 bearings,
 rendered and scored through the same chain tomorrow's real capture will use:
 mock streamer, `cpx_grab.py`, `score_real_frames.py`. Built as the reference

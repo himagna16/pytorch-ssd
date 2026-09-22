@@ -1,5 +1,11 @@
 # Turn the person to face the drone and it follows twice as many of them
 
+> **2026-09-22: the rendered-grid numbers quoted here were float. On the chip arm, see
+> `../2026-09-22-sep16-chip-rescore/`.** The flights on this page ran chip and are
+> unchanged. On the chip arm, the hard four sit at 0.750, 0.950, 0.400 and 0.400 at
+> 1.5 m, not 0.950, 1.000, 0.800 and 0.675. The 250127 grid-vs-flight gap is 0.175
+> vs 0.007, not 0.450 vs 0.007.
+
 104 flights, 2026-09-16, all VALID. Simulation only. One hang on the watchdog,
 re-flown and valid, the same 1% rate the other suites saw.
 

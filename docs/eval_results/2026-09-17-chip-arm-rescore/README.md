@@ -1,5 +1,15 @@
 # The reference table was scored on the wrong network, and so would tomorrow's real frames
 
+> **2026-09-22: THIS PAGE'S CHIP NUMBERS ARE WRONG. See `../2026-09-22-sep16-chip-rescore/`.**
+> `scripts/rescore_chip.py` calls `ChipPerception(firmware_preprocess(g))`, and
+> `ChipPerception` preprocesses again, so every "chip" value below is the network
+> on a 2x2-blurred copy of the frame. On the real chip arm the gap to float is
+> **-0.020** mean confidence and **-0.043** fraction above the bar, not -0.124 and
+> -0.239. **45** of 325 cells move by 0.25, not 122. `reference_table_chip.tsv` is
+> superseded. The direction of this page stands: float is not the chip, and the
+> fix it asked for, `score_real_frames.py --backend chip` as the default, is now
+> in place.
+
 2026-09-17, 02:20. Found by an adversarial check on an unrelated discrepancy.
 **This is the most important thing in the last two days and it needs acting on
 before the hardware session.**

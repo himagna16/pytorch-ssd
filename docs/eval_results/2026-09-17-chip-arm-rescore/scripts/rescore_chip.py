@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Re-score a folder of captured frames on the CHIP arm, the one the drone flies.
 
+SUPERSEDED 2026-09-22, DO NOT USE: main() below passes firmware_preprocess(g) to
+ChipPerception, which preprocesses AGAIN, so these are not chip-arm numbers. Use
+tools/real_frames/score_real_frames.py (chip is its default). Kept unmodified
+below as the record of what produced the Sep 17 table; see
+docs/eval_results/2026-09-22-sep16-chip-rescore/.
+
 WHY THIS EXISTS. tools/real_frames/score_real_frames.py has no backend switch. It
 is hardwired to the FLOAT arm: a PIL BILINEAR 244->128 resize and the float
 PyTorch checkpoint successor_qat_ep3_eval.pth (score_real_frames.py:194-198,
