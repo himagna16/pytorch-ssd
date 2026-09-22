@@ -11,6 +11,76 @@ risky.
 
 Props off the whole time. Nothing flies.
 
+## Step 0, added 2026-09-22: run the preflight check first
+
+> Added 2026-09-22, when the micro-USB cable arrived. Everything below this
+> section is unchanged. This step answers facts 2 and 3 of "Before you power
+> anything" (the radio address and the STM32 firmware version) without guessing.
+
+Battery plugged in so the drone is on, micro-USB cable from the drone to the
+Mac, cfclient closed. Then, from `~/Downloads/drone/pytorch_ssd`:
+
+```bash
+../cfloaderenv/bin/python tools/hardware/preflight.py
+```
+
+There is no `python` on this Mac's PATH, so always type the venv path as above.
+The USB cable is enough: it is a full link to the drone, no Crazyradio needed.
+The tool tries USB first and the Crazyradio second. To name the link yourself,
+add `--uri usb://0` or `--uri radio://0/80/2M/E7E7E7E7E7`.
+
+**It is read-only.** It never arms the motors, sends a setpoint, writes a
+parameter or changes the radio address. It reads, listens for five seconds (keep
+the drone still), prints a checklist and saves a JSON file to
+`~/Downloads/drone/logs/preflight/<date-time>.json`. The last line says where.
+
+**Reading the checklist.** Each line starts with a tag:
+
+| tag | meaning |
+|---|---|
+| `OK` | fine |
+| `WARN` | read the line, it says what to do |
+| `FAIL` | fix it before a session. A flat battery is the usual one |
+| `INFO` | for the record, nothing to do |
+| `SKIP` | not applicable, e.g. the Lighthouse lines when there is no Lighthouse deck |
+
+What to look at, in order:
+
+1. **Link**: which way it connected. If it says `No Crazyflie found`, the line
+   under it lists the three usual causes: drone off, a charge-only cable, or
+   cfclient still connected.
+2. **Firmware**: the version and git revision. Write it down. It is fact 3 above.
+3. **Decks**: `yes` or `no` for each deck, the AI-deck and Lighthouse deck always
+   listed. A `!` line means a deck is physically on but its driver did not start:
+   reseat it and power-cycle.
+4. **Battery**: under 3.7 V says "charge before a session". Remember 350 mAh is
+   about 5-7 minutes with the AI-deck streaming. While USB is charging, the
+   voltage reads high.
+5. **Radio**: the channel and address stored on the drone, as a ready-made
+   `radio://` URI. That is fact 2 above. **Run it on both drones.** Two drones on
+   one Crazyradio need different addresses, and from the second run on the tool
+   warns if it has seen another drone with the same one. It never changes the
+   address itself; that is done in cfclient.
+6. **Lighthouse** (only with a Lighthouse deck): which base station type the
+   drone expects, then one line per base station: seen or not, calibrated,
+   geometry OK or MISSING, in use. "Geometry missing" means run the geometry
+   step in cfclient's Lighthouse tab.
+7. **AI-deck**: only confirms the deck's driver started. Camera frames never come
+   over this link; they come over the deck's own WiFi at `192.168.4.1:5000`.
+8. **UART1 clash** (only with both decks on): evidence for an **unverified**
+   theory that our GAP8 apps' serial output (`io=uart`) collides with the
+   Lighthouse deck on the Crazyflie's UART1. The tool prints how to test it: one
+   run with the GAP8 app running, one with the AI-deck off, then
+   `--compare <first run's json>` puts the two side by side.
+
+Exit code 0 means nothing failed, 1 means a `FAIL` line, 2 means it could not
+connect.
+
+Tested on 2026-09-22 against the CrazySim simulator (`--uri udp://127.0.0.1:19850`)
+and 41 fake-drone tests (`../cfloaderenv/bin/python tools/hardware/test_preflight.py`).
+**Not yet run on a real drone.** The simulator's firmware pretends to carry a Flow
+deck, a Multi-ranger and LED decks, so do not expect its deck list to match yours.
+
 ## Before you power anything
 
 Three facts decide whether an over-the-air flash is even possible, and none of
