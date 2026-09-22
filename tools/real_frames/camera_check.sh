@@ -30,9 +30,11 @@ REPO=~/Downloads/drone/pytorch_ssd
 grab()  { $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} "$@"; }
 score() { $PY $REPO/tools/real_frames/score_real_frames.py "$@"; }
 COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-10}
+speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && say "$@" & }
 B=${CAMERA_CHECK_BEARING:-14}
 DIST=${CAMERA_CHECK_DIST:-2.44}
-D=~/drone_frames/$(date +%F)/camera_check_$(date +%H%M%S)
+ROOT=~/drone_frames; [[ -n "${CAMERA_CHECK_GRAB_ARGS:-}" ]] && ROOT=~/drone_frames/_rehearsal   # mock runs never land next to real data
+D=$ROOT/$(date +%F)/camera_check_$(date +%H%M%S)
 mkdir -p "$D" || exit 1
 LOG="$D/camera_check.log"
 exec > >(tee -a "$LOG") 2>&1
@@ -52,9 +54,11 @@ clip() {  # $1 bearing  $2 words
   echo
   echo "== mirror clip: stand $DIST m out, on the drone's $2 (bearing $1), facing the drone"
   read "?   press Enter, then walk to the mark (${COUNTDOWN} s countdown) "
-  for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; sleep 1; done; printf "\r   recording 10 s...\n"
+  speak "Go to the $2 mark."
+  for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; ((s<=5)) && speak "$s"; sleep 1; done; speak "Recording. Stay still."; printf "\r   recording 10 s...\n"
   grab --seconds 10 --every 1 --dist $DIST --bearing $1 --vis 1 --subject p01 \
        --light room --out "$D/mirror" || { echo "FAIL: clip $2"; exit 4; }
+  speak "Done. Come back."
 }
 echo "== 3. mirror check"
 echo "   marks: $DIST m out, $($PY -c "import math;print(f'{$DIST*math.tan(math.radians($B)):.2f}')") m either side of the centre line (bearing +-$B)"

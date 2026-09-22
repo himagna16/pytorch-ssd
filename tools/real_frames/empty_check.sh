@@ -16,8 +16,10 @@ REPO=~/Downloads/drone/pytorch_ssd
 grab()  { $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} "$@"; }
 score() { $PY $REPO/tools/real_frames/score_real_frames.py "$@"; }
 COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-10}
+speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && say "$@" & }
 SECS=${EMPTY_CHECK_SECONDS:-20}
-D=~/drone_frames/$(date +%F)/empty_check_$(date +%H%M%S)
+ROOT=~/drone_frames; [[ -n "${CAMERA_CHECK_GRAB_ARGS:-}" ]] && ROOT=~/drone_frames/_rehearsal   # mock runs never land next to real data
+D=$ROOT/$(date +%F)/empty_check_$(date +%H%M%S)
 mkdir -p "$D" || exit 1
 exec > >(tee -a "$D/empty_check.log") 2>&1
 echo "== empty-room check, $(date)  folder: $D"
@@ -32,10 +34,11 @@ fi
 echo
 echo "== EMPTY ROOM: nobody in front of the camera. Stand BEHIND the drone."
 read "?   press Enter, then get out of view (${COUNTDOWN} s countdown) "
-for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; sleep 1; done; printf "\r   recording ${SECS} s, stay out of view...\n"
+  speak "Get out of view."
+for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; ((s<=5)) && speak "$s"; sleep 1; done; speak "Recording. Stay still."; printf "\r   recording ${SECS} s, stay out of view...\n"
 grab --seconds $SECS --every 1 --vis 0 --subject empty --light room --out "$D/empty" \
   || { echo "FAIL: recording. Send this log."; exit 3; }
-printf '\a'
+speak "Done."
 echo
 echo "== scoring on the chip network (offline)"
 score "$D/empty" --json "$D/empty_scores.json" | tee "$D/empty_score.txt"
