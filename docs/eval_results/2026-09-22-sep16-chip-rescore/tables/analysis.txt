@@ -1,0 +1,120 @@
+================================================================================================
+1. ARE THE RE-RENDERED FRAMES THE SEP 16 FRAMES?  (float arm, both sides)
+================================================================================================
+Sep 16 per-frame rows 13003, re-rendered 13000
+frames matched by (subject, dist, bearing, frame#): 13000; float conf identical to 4 dp: 13000 of 13000
+cells whose Sep 16 mean conf AND frac>=0.75 reproduce exactly: 322 of 325
+cells Sep 16 captured with 41 frames (one repeated by the grab): 3 ['124442 d3 b0', '401446 d2.5 b25', 'control d3.5 b10']
+largest per-cell mean-conf difference: 0.0017
+aggregate float mean conf: Sep 16 0.7065, re-rendered 0.7065
+
+================================================================================================
+2. IS THE SEP 17 'CHIP' COLUMN THE CHIP ARM?
+================================================================================================
+committed rescore_chip.py re-run on the re-rendered frames reproduces the Sep 17 table (mean AND frac, 4 dp) on 322 of 325 cells
+rescore_chip.py vs score_real_frames --backend chip, same frames: identical conf on 7 of 13000 frames
+reason: rescore_chip.py calls ChipPerception(firmware_preprocess(g)) and ChipPerception
+        preprocesses AGAIN, so its network input is a 2x2-blurred copy of what the chip sees
+        (reproduced frame-for-frame in tools/real_frames/test_score_real_frames.py)
+boundary check: chip frames whose 4-dp conf is exactly 0.7500 or 0.4500: 0
+
+AGGREGATE, 13,000 frames               float  Sep17 chip  chip (real)
+mean confidence                       0.7065      0.5826       0.6865
+fraction of frames >= 0.75            0.5384      0.2989       0.4956
+chip minus float: mean conf -0.0200, frac -0.0428   (Sep 17 claimed -0.1238 / -0.2394)
+cells moving by >= 0.25 in frac, float -> chip: 45 of 325 (Sep 17 method on the same frames: 122; Sep 17 claimed 122)
+  largest falls float -> chip:
+      250127 d2.0 b+0   0.925 -> 0.100
+      157365 d1.5 b-10   0.800 -> 0.150
+      356427 d1.5 b-10   0.950 -> 0.300
+      556158 d2.5 b+10   0.975 -> 0.325
+      250127 d2.0 b-10   0.825 -> 0.175
+      401446 d2.5 b-25   0.650 -> 0.075
+  largest rises:
+     control d3.5 b+25   0.325 -> 0.875
+       61747 d3.0 b+0   0.475 -> 0.975
+       61747 d2.5 b+10   0.000 -> 0.500
+       61747 d2.5 b+25   0.075 -> 0.550
+
+================================================================================================
+3. THE SEP 16 CONCLUSIONS, ON THE CHIP ARM
+================================================================================================
+3a. Headline: fraction of frames >= 0.75 at bearing 0 (float -> chip), with flown M1
+ subject index flown off flown on          1.5 m            2 m          2.5 m            3 m          3.5 m
+  124442  28.4     0.000    0.000  0.950>0.750    0.000>0.000    0.000>0.000    0.000>0.000    0.000>0.000  
+  527750  34.3     0.000    0.000  1.000>0.950    0.275>0.075    0.000>0.000    0.000>0.000    0.000>0.000  
+  157365  34.6     0.000    0.000  0.675>0.400    0.000>0.000    0.000>0.000    0.000>0.000    0.000>0.000  
+  356427  37.8     0.000    0.000  0.800>0.400    0.050>0.250    0.000>0.000    0.000>0.000    0.000>0.000  
+  250127  52.1     0.000    0.007  0.250>0.300    0.925>0.100    0.125>0.000    0.550>0.025    0.450>0.175  
+   61747  86.8     0.722    0.991  1.000>1.000    1.000>1.000    0.800>0.775    0.475>0.975    0.975>0.975  
+  161875  87.0     0.000    0.613  1.000>1.000    0.975>0.900    0.725>0.325    0.850>0.975    0.950>0.950  
+  401446  88.8     0.106    0.990  1.000>1.000    1.000>1.000    1.000>1.000    0.975>0.975    1.000>0.975  
+  374369  90.3     0.000    0.990  1.000>1.000    0.950>0.850    0.625>0.200    1.000>0.975    1.000>0.975  
+  266409  92.1     0.098    0.990  1.000>1.000    1.000>1.000    1.000>0.975    0.975>0.975    1.000>0.975  
+  280779  92.7     0.986    0.987  1.000>1.000    1.000>1.000    0.975>0.975    1.000>1.000    1.000>1.000  
+  556158  93.9     0.879    0.990  1.000>1.000    1.000>1.000    0.975>0.825    1.000>0.975    1.000>1.000  
+ control  99.2     0.991    0.990  1.000>1.000    1.000>1.000    1.000>0.900    1.000>1.000    1.000>1.000  
+  genuinely hard four: chip frac at b0, 3.5 m = 124442 0.000, 527750 0.000, 157365 0.000, 356427 0.000 | 1.5 m = 0.750, 0.950, 0.400, 0.400
+  'failing on pose' four: chip frac at b0, 3.5 m = 161875 0.950, 374369 0.975, 266409 0.975, 401446 0.975 | 1.5 m = 1.000, 1.000, 1.000, 1.000
+  hard four at exactly 0.000 at every b0 range past 2.0 m on chip: True
+
+3b. Mean confidence pooled over the 13 subjects, by distance x bearing (chip; float in brackets)
+  dist             b-25             b-10              b+0             b+10             b+25
+   1.5    0.824 [0.843]    0.869 [0.905]    0.881 [0.915]    0.877 [0.899]    0.841 [0.850]
+   2.0    0.824 [0.830]    0.766 [0.811]    0.793 [0.820]    0.767 [0.792]    0.823 [0.774]
+   2.5    0.618 [0.653]    0.641 [0.688]    0.631 [0.689]    0.560 [0.598]    0.557 [0.524]
+   3.0    0.541 [0.586]    0.632 [0.657]    0.698 [0.706]    0.609 [0.632]    0.444 [0.405]
+   3.5    0.335 [0.429]    0.686 [0.686]    0.737 [0.759]    0.696 [0.719]    0.511 [0.496]
+  chip  cost of +-25 deg at 1.5 m: +0.057 (left) +0.040 (right)
+  float cost of +-25 deg at 1.5 m: +0.071 (left) +0.065 (right)
+  chip  cost of +-25 deg at 3.5 m: +0.401 (left) +0.226 (right)
+  float cost of +-25 deg at 3.5 m: +0.330 (left) +0.263 (right)
+
+3c. Left/right asymmetry, pooled (negative bearing minus positive)
+  +-10 deg chip : left 0.719 right 0.702 diff +0.017
+  +-10 deg float: left 0.749 right 0.728 diff +0.021
+  +-25 deg chip : left 0.628 right 0.636 diff -0.007
+  +-25 deg float: left 0.668 right 0.610 diff +0.059
+
+3d. The 2.5 m rung: pooled mean conf by distance (all subjects, all bearings)
+  chip : 1.5 m 0.858, 2 m 0.795, 2.5 m 0.601, 3 m 0.585, 3.5 m 0.593 | interior minima [3.0] | subjects dipping at 2.5 m (b0): 9 of 13
+  float: 1.5 m 0.882, 2 m 0.805, 2.5 m 0.630, 3 m 0.597, 3.5 m 0.618 | interior minima [3.0] | subjects dipping at 2.5 m (b0): 8 of 13
+
+3e. 'What a real person must beat': 3.5 m, bearing 0, frac >= 0.75 across subjects
+  chip : min 0.000 median 0.975 max 1.000, at exactly 0.000: 4 of 13, at >= 0.9: 8
+  float: min 0.000 median 0.975 max 1.000, at exactly 0.000: 4 of 13, at >= 0.9: 8
+
+3f. On-axis flights (chip, flown) against the grid at 3.5 m, bearing 0
+ subject flown on M1  grid float  grid chip
+  124442       0.000       0.000      0.000
+  527750       0.000       0.000      0.000
+  157365       0.000       0.000      0.000
+  356427       0.000       0.000      0.000
+  250127       0.007       0.450      0.175
+   61747       0.991       0.975      0.975
+  161875       0.613       0.950      0.950
+  401446       0.990       1.000      0.975
+  374369       0.990       1.000      0.975
+  266409       0.990       1.000      0.975
+  280779       0.987       1.000      1.000
+  556158       0.990       1.000      1.000
+ control       0.990       1.000      1.000
+  float grid vs flown on-axis M1: mean |grid - flown| 0.066, max 0.443 (250127)
+  chip  grid vs flown on-axis M1: mean |grid - flown| 0.046, max 0.337 (161875)
+
+3g. Off-axis flights (people-plural, -15.9 deg, 3.64 m) against the grid, 3.5 m
+    (the grid has no -15.9 deg column; -10 and -25 bracket it)
+ subject flown off chip b-10 chip b-25  chip b0
+  124442     0.000     0.000     0.000    0.000
+  527750     0.000     0.000     0.000    0.000
+  157365     0.000     0.000     0.000    0.000
+  356427     0.000     0.000     0.000    0.000
+  250127     0.000     0.000     0.000    0.175
+   61747     0.722     0.700     0.175    0.975
+  161875     0.000     0.800     0.000    0.950
+  401446     0.106     0.500     0.000    0.975
+  374369     0.000     0.950     0.000    0.975
+  266409     0.098     0.950     0.000    0.975
+  280779     0.986     1.000     0.000    1.000
+  556158     0.879     0.975     0.000    1.000
+ control     0.991     1.000     0.000    1.000

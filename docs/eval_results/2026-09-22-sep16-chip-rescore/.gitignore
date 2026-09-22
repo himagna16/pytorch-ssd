@@ -1,0 +1,8 @@
+# Frames are re-rendered into a scratch dir by scripts/run_rescore.sh and never committed.
+*.png
+*.jpg
+frames/
+grid_frames/
+# Uncompressed per-frame scores; the .csv.gz copies are what is committed.
+tables/scores_chip.csv
+tables/scores_float.csv
