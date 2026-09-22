@@ -233,7 +233,24 @@ class ChipPerception:
             f"before it was ready.\n{err}")
 
     def __call__(self, gray: np.ndarray) -> dict:
-        net_in = firmware_preprocess(gray)
+        res = self.infer_net_input(firmware_preprocess(gray))
+        if self._shadow is not None:
+            s = self._shadow(gray)
+            res.update({
+                "shadow_conf": s["visibility_confidence"], "shadow_x_value": s["x_value"],
+                "shadow_x_soft": s["x_soft"], "shadow_x_bin_index": s["x_bin_index"],
+                "shadow_size_value": s["size_value"], "shadow_size_bucket_index": s["size_bucket_index"],
+            })
+        return res
+
+    def infer_net_input(self, net_in: np.ndarray) -> dict:
+        """Run ONE already-preprocessed network input (the 128x128 uint8 that
+        firmware_preprocess returns) and decode it. __call__ is this plus the
+        preprocess; it exists separately so a batch scorer can stage frames
+        itself without the preprocess being applied twice (2026-09-22)."""
+        if net_in.shape != (NET_H, NET_W) or net_in.dtype != np.uint8:
+            raise ValueError(f"chip backend: expected a {NET_H}x{NET_W} uint8 network input, "
+                             f"got {net_in.shape} {net_in.dtype}")
         t0 = time.perf_counter()
         try:
             self._sock.sendall(net_in.tobytes())
@@ -260,13 +277,6 @@ class ChipPerception:
         res["vis_gate"] = int(raw_i32[9] >= VIS_ENTER_RAW)
         res["infer_ms"] = float(vals[N_OUT])
         res["round_trip_ms"] = (time.perf_counter() - t0) * 1000.0
-        if self._shadow is not None:
-            s = self._shadow(gray)
-            res.update({
-                "shadow_conf": s["visibility_confidence"], "shadow_x_value": s["x_value"],
-                "shadow_x_soft": s["x_soft"], "shadow_x_bin_index": s["x_bin_index"],
-                "shadow_size_value": s["size_value"], "shadow_size_bucket_index": s["size_bucket_index"],
-            })
         return res
 
     def close(self):
