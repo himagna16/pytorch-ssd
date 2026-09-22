@@ -471,6 +471,20 @@ Newest first. One entry per working session.
   four hard subjects only partly recover at 1.5 m. Everything is in
   `docs/eval_results/2026-09-22-sep16-chip-rescore/`. Still nothing on hardware.
 
+  **First real camera frames, same evening** (`docs/eval_results/2026-09-22-first-real-frames/`).
+  I taped the dorm floor, ran `camera_check.sh` on the real drone over its own WiFi,
+  and stood on the marks myself. The stream worked: 49 of 49 frames. By eye, the
+  camera is not mirrored. The scorer's check read FAIL, "NOT a mirror". The model
+  said "right side" in 41 of 44 frames wherever I stood, because it was calling the
+  loft ladder, office chair and blinds on the right of the frame a person, strongly
+  enough to latch. Blanking that region moved its answer to centre, and mirroring the
+  frame moved it to the far left, so the model is responding to the image, not
+  stuck. With the distractor removed I was detected only weakly at 2.44 m (median
+  confidence 0.23). That is one person and 44 frames, so a first data point, not a
+  rate. The real stream also differs from what the simulator assumed: 162 x 122 not
+  324 x 244, pixels 0-191 not 0-255, about 2 fps over WiFi. Next: a re-run with the
+  right side cleared plus an empty-room clip, and ask MinHyuk about the stream mode.
+
   **The desk half of the Lighthouse ground-truth plan** (PR #6).
   simulator runs and no hardware: everything was checked against flights already
   on disk.

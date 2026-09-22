@@ -1,0 +1,29 @@
+
+BACKEND chip (what the drone flies): model_id_dory.onnx sha1 d90555c8462b | eps 0.0002009823510888964 | follower raw enter >= 5467, lost < -998, confirm 3
+model model_id_dory.onnx | 44 frames in 2 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+p01/room/take1                   2.44   -14   1   22  0.58    77%    32%      1      2 2:1 7:21               5%    5%   +20.7    3/1   
+p01/room/take1                   2.44    14   1   22  0.65    77%     5%      1      6 4:1 6:1 7:20           5%   95%    -5.5    3/1   
+
+by dist:
+            2.44: n=  44  vis acc   77%  track   18%  bin acc    5% (+-1   50%)  bearing err  +7.6 (|err| 13.1)  size acc    9% (+-1 52%)
+
+by bearing:
+           -14.0: n=  22  vis acc   77%  track   32%  bin acc    5% (+-1    5%)  bearing err +20.7 (|err| 20.7)  size acc   14% (+-1 55%)
+            14.0: n=  22  vis acc   77%  track    5%  bin acc    5% (+-1   95%)  bearing err  -5.5 (|err| 5.6)  size acc    5% (+-1 50%)
+
+by light:
+            room: n=  44  vis acc   77%  track   18%  bin acc    5% (+-1   50%)  bearing err  +7.6 (|err| 13.1)  size acc    9% (+-1 52%)
+
+by subject:
+             p01: n=  44  vis acc   77%  track   18%  bin acc    5% (+-1   50%)  bearing err  +7.6 (|err| 13.1)  size acc    9% (+-1 52%)
+
+EMPTY / NO-PERSON clips: 0 clips, 0 frames, confirmed (false) tracks = 0  -> NONE RECORDED: this says nothing yet. Record the empty room and the stuffed animal (vis0).
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 6% of 17; RIGHT frames with bin > 4: 94% of 17  -> FAIL: x-bin 7 for every labelled position - NOT a mirror
+  ^ the x head answers bin 7 for every target bin [2, 6] while its x-bin and size bucket and confidence still move(s), so the network is running. Two things do this and neither is a mirror: the person actually stood in the same spot for every clip and the bearing labels / floor marks are wrong, or the x head alone is stuck. Check a frame against its label first, then --ckpt.
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: /Users/saimaruvada/drone_frames/2026-09-22/camera_check_181258/mirror/scores.csv
+summary JSON:  /Users/saimaruvada/drone_frames/2026-09-22/camera_check_181258/mirror_scores.json
