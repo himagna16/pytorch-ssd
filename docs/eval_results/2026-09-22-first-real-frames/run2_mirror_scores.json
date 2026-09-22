@@ -1,0 +1,210 @@
+{
+  "backend": "chip",
+  "model": {
+    "backend": "chip",
+    "model_file": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx",
+    "model_sha1": "d90555c8462b6dd6c3432d184b427d4d3e653fda",
+    "id_output_eps": 0.0002009823510888964,
+    "preprocess": "firmware preprocess.c port (centre crop, 2x2 block mean at nearest-neighbour index, uint8)",
+    "onnxruntime": "1.19.2",
+    "raw_thresholds": {
+      "enter": 5467,
+      "exit": -998,
+      "confirm_frames": 3
+    }
+  },
+  "ckpt": null,
+  "frames_dir": "/Users/saimaruvada/drone_frames/2026-09-22/camera_check_182858/mirror",
+  "n_frames": 44,
+  "crop_hfov_deg": 70.0,
+  "vis_threshold": 0.5,
+  "follower": {
+    "enter": 0.75,
+    "exit": 0.45,
+    "confirm_frames": 3
+  },
+  "jpeg_frames": 0,
+  "unreadable_files": 0,
+  "bayer_phase_spread_dn": 0.6852874755859375,
+  "unlabelled_files": 0,
+  "sidecar_files": 0,
+  "overall": {
+    "n": 44.0,
+    "vis_acc": 0.8181818181818182,
+    "mean_conf": 0.6242376620367661,
+    "track_frac": 0.38636363636363635,
+    "bin_n": 44.0,
+    "bin_acc": 0.36363636363636365,
+    "bin_acc1": 0.5227272727272727,
+    "bear_err": 3.1390206377206256,
+    "bear_abs_err": 12.608974201290948,
+    "size_acc": 0.1590909090909091,
+    "size_acc1": 0.20454545454545456
+  },
+  "empty_false_tracks": 0,
+  "mirror_check": {
+    "left_n": 15,
+    "right_n": 21,
+    "left_ok": 0.3333333333333333,
+    "right_ok": 0.8095238095238095,
+    "one_side_only": false,
+    "thin_sides": [],
+    "jpeg_frames_used": 0,
+    "outside_crop_n": 0,
+    "centre_bin_frac": 0.08333333333333333,
+    "target_bins": [
+      2,
+      6
+    ],
+    "target_bin_span": 4,
+    "x_bin_stuck": false,
+    "stuck_bin": null,
+    "model_dead": false,
+    "outputs_that_vary": [
+      "x-bin",
+      "size bucket",
+      "confidence"
+    ],
+    "reason": "the two sides disagree",
+    "verdict": "FAIL"
+  },
+  "groups": {
+    "dist": {
+      "2.44": {
+        "n": 44.0,
+        "vis_acc": 0.8181818181818182,
+        "mean_conf": 0.6242376620367661,
+        "track_frac": 0.38636363636363635,
+        "bin_n": 44.0,
+        "bin_acc": 0.36363636363636365,
+        "bin_acc1": 0.5227272727272727,
+        "bear_err": 3.1390206377206256,
+        "bear_abs_err": 12.608974201290948,
+        "size_acc": 0.1590909090909091,
+        "size_acc1": 0.20454545454545456
+      }
+    },
+    "bearing": {
+      "-14.0": {
+        "n": 22.0,
+        "vis_acc": 0.6818181818181818,
+        "mean_conf": 0.5647359952515477,
+        "track_frac": 0.045454545454545456,
+        "bin_n": 22.0,
+        "bin_acc": 0.18181818181818182,
+        "bin_acc1": 0.22727272727272727,
+        "bear_err": 15.74799483901157,
+        "bear_abs_err": 15.74799483901157,
+        "size_acc": 0.22727272727272727,
+        "size_acc1": 0.22727272727272727
+      },
+      "14.0": {
+        "n": 22.0,
+        "vis_acc": 0.9545454545454546,
+        "mean_conf": 0.6837393288219844,
+        "track_frac": 0.7272727272727273,
+        "bin_n": 22.0,
+        "bin_acc": 0.5454545454545454,
+        "bin_acc1": 0.8181818181818182,
+        "bear_err": -9.469953563570323,
+        "bear_abs_err": 9.469953563570323,
+        "size_acc": 0.09090909090909091,
+        "size_acc1": 0.18181818181818182
+      }
+    },
+    "light": {
+      "room": {
+        "n": 44.0,
+        "vis_acc": 0.8181818181818182,
+        "mean_conf": 0.6242376620367661,
+        "track_frac": 0.38636363636363635,
+        "bin_n": 44.0,
+        "bin_acc": 0.36363636363636365,
+        "bin_acc1": 0.5227272727272727,
+        "bear_err": 3.1390206377206256,
+        "bear_abs_err": 12.608974201290948,
+        "size_acc": 0.1590909090909091,
+        "size_acc1": 0.20454545454545456
+      }
+    },
+    "subject": {
+      "p01": {
+        "n": 44.0,
+        "vis_acc": 0.8181818181818182,
+        "mean_conf": 0.6242376620367661,
+        "track_frac": 0.38636363636363635,
+        "bin_n": 44.0,
+        "bin_acc": 0.36363636363636365,
+        "bin_acc1": 0.5227272727272727,
+        "bear_err": 3.1390206377206256,
+        "bear_abs_err": 12.608974201290948,
+        "size_acc": 0.1590909090909091,
+        "size_acc1": 0.20454545454545456
+      }
+    }
+  },
+  "clips": [
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 2.44,
+      "bearing": -14.0,
+      "vis": 1,
+      "take": 1,
+      "dir": ".",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 2,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 3,
+      "bins": {
+        "2": 4,
+        "3": 1,
+        "7": 17
+      },
+      "n": 22.0,
+      "vis_acc": 0.6818181818181818,
+      "mean_conf": 0.5647359952515477,
+      "track_frac": 0.045454545454545456,
+      "bin_n": 22.0,
+      "bin_acc": 0.18181818181818182,
+      "bin_acc1": 0.22727272727272727,
+      "bear_err": 15.74799483901157,
+      "bear_abs_err": 15.74799483901157,
+      "size_acc": 0.22727272727272727,
+      "size_acc1": 0.22727272727272727
+    },
+    {
+      "subject": "p01",
+      "light": "room",
+      "dist": 2.44,
+      "bearing": 14.0,
+      "vis": 1,
+      "take": 1,
+      "dir": ".",
+      "run": 1,
+      "starts": 1,
+      "expected_bin": 6,
+      "expected_size_bucket": 1,
+      "size_bucket_mode": 3,
+      "bins": {
+        "1": 1,
+        "4": 3,
+        "5": 2,
+        "6": 12,
+        "7": 4
+      },
+      "n": 22.0,
+      "vis_acc": 0.9545454545454546,
+      "mean_conf": 0.6837393288219844,
+      "track_frac": 0.7272727272727273,
+      "bin_n": 22.0,
+      "bin_acc": 0.5454545454545454,
+      "bin_acc1": 0.8181818181818182,
+      "bear_err": -9.469953563570323,
+      "bear_abs_err": 9.469953563570323,
+      "size_acc": 0.09090909090909091,
+      "size_acc1": 0.18181818181818182
+    }
+  ]
+}

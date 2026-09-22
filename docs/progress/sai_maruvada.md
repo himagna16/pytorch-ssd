@@ -485,6 +485,14 @@ Newest first. One entry per working session.
   324 x 244, pixels 0-191 not 0-255, about 2 fps over WiFi. Next: a re-run with the
   right side cleared plus an empty-room clip, and ask MinHyuk about the stream mode.
 
+  **Run 2, 18:27** (same folder, chairs moved out). An empty-room clip gave **0 false
+  locks**; confidence peaked at 0.71, just under the 0.75 bar. The mirror check
+  again printed FAIL, but going frame by frame shows why: I left the left mark
+  early, and the empty frames read like the empty room. Every confident frame
+  (>= 0.75) while I was on the left mark said left, and 10 of 12 confident frames
+  overall were on the correct side. So the camera is not mirrored. The automatic
+  check did not give a clean PASS because of this scene, not because of the camera.
+
   **The desk half of the Lighthouse ground-truth plan** (PR #6).
   simulator runs and no hardware: everything was checked against flights already
   on disk.

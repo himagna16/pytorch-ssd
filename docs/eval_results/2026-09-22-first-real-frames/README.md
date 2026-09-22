@@ -87,3 +87,53 @@ which streamer build and camera mode is on this deck, and was it deliberately bi
 2. Settle the stream format with MinHyuk (162 x 122, max 191) before collecting the
    Session A protocol at scale.
 3. Retry the mirror check scoring once the scene has no competing detection.
+
+---
+
+## Run 2, 18:27-18:30: chairs moved out, empty room, mirror check again
+
+Sai moved every chair out of view and re-ran both scripts. The room was noticeably
+darker in these frames than in run 1.
+
+### Empty room (`empty_check.sh`, 43 frames, nobody in view)
+
+`confirmed (false) tracks = 0`, so **the drone would not have moved.** But 22 of 43
+frames were at confidence >= 0.5 (max 0.71, just under the 0.75 enter bar), and 38 of
+43 pointed at x-bin 7. A weaker version of run 1's right-side pull is still there with
+the chairs gone. The candidate is the bright diagonal of the loft bedding and the
+ladder in the top-right of the crop. The window blinds at the far right edge fall
+outside the 122 px centre crop (columns 20-141), so the network never sees them.
+
+### Mirror check, again (`camera_check.sh`, 44 frames)
+
+The scorer printed `FAIL: the two sides DISAGREE`. Checking each frame against the
+empty-room median (a person counts as present when enough pixels differ by more than
+25 DN; analysis run by hand) explains it:
+
+- **LEFT clip:** Sai is in view for frames 1-14 at image x ~ 56-58 (image centre 81,
+  so left) and **out of view for frames 15-22**. He left the mark early. The 8 empty
+  frames read bin 7 at about 0.5, the same as the empty-room clip.
+- While Sai was in view on the LEFT mark, **every frame at conf >= 0.75 said bin 2 or
+  3, the correct side (4 of 4)**. The bin-7 answers were at conf 0.32-0.59.
+- **RIGHT clip:** in view throughout at x ~ 86-88. Frames at conf >= 0.75: bins 5, 6,
+  6, 6, 6, 5 (right, correct), one bin 4 (centre), one bin 1 (wrong side, conf 0.83).
+  The follower confirmed a track on 73% of frames.
+- Pooled over confident frames: **10 of 12 on the correct side**, 1 centre, 1 wrong.
+- The marks are not symmetric in the image: LEFT sits ~24 px left of centre, RIGHT
+  only ~6 px right. So the camera was aimed a few degrees right of the taped centre
+  line. That is a setup offset, not a mirror.
+
+### Verdict after both runs
+
+- **The camera image is not mirrored.** This rests on two things: Sai's position by
+  eye in both runs, and the confident network outputs in run 2. The automatic check
+  never produced a clean PASS, because the scene contained a competing detection in
+  run 1 and an early exit in run 2. That is a limit of this scene, not of the camera.
+- **Empty-room false tracks: 0 of 1 clip** with the chairs removed, peak 0.71. With
+  the chairs present (run 1), the follower latched on the furniture.
+- **A real person at 2.44 m in a dim dorm is detected on some frames, not all:**
+  LEFT in-view frames median ~0.5, RIGHT median ~0.66. This is one person in one room
+  on one night, so it is not a rate.
+- To improve the automatic check next time: stay on each mark for the whole 10 s, aim
+  the lens down the taped centre line, turn on more light, and put a plain surface or
+  sheet over the bright bedding edge at top right.

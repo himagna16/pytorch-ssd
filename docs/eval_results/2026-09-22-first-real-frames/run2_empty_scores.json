@@ -1,0 +1,130 @@
+{
+  "backend": "chip",
+  "model": {
+    "backend": "chip",
+    "model_file": "/Users/saimaruvada/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx",
+    "model_sha1": "d90555c8462b6dd6c3432d184b427d4d3e653fda",
+    "id_output_eps": 0.0002009823510888964,
+    "preprocess": "firmware preprocess.c port (centre crop, 2x2 block mean at nearest-neighbour index, uint8)",
+    "onnxruntime": "1.19.2",
+    "raw_thresholds": {
+      "enter": 5467,
+      "exit": -998,
+      "confirm_frames": 3
+    }
+  },
+  "ckpt": null,
+  "frames_dir": "/Users/saimaruvada/drone_frames/2026-09-22/empty_check_182746/empty",
+  "n_frames": 43,
+  "crop_hfov_deg": 70.0,
+  "vis_threshold": 0.5,
+  "follower": {
+    "enter": 0.75,
+    "exit": 0.45,
+    "confirm_frames": 3
+  },
+  "jpeg_frames": 0,
+  "unreadable_files": 0,
+  "bayer_phase_spread_dn": 0.7292022705078125,
+  "unlabelled_files": 0,
+  "sidecar_files": 0,
+  "overall": {
+    "n": 43.0,
+    "vis_acc": 0.4883720930232558,
+    "mean_conf": 0.5113811301196333,
+    "track_frac": 0.0,
+    "bin_n": 0.0,
+    "bin_acc": null,
+    "bin_acc1": null,
+    "bear_err": null,
+    "bear_abs_err": null,
+    "size_acc": null,
+    "size_acc1": null
+  },
+  "empty_false_tracks": 0,
+  "mirror_check": {
+    "left_n": 0,
+    "right_n": 0,
+    "left_ok": null,
+    "right_ok": null,
+    "one_side_only": false,
+    "thin_sides": [],
+    "jpeg_frames_used": 0,
+    "outside_crop_n": 0,
+    "centre_bin_frac": null,
+    "target_bins": [],
+    "target_bin_span": 0,
+    "x_bin_stuck": false,
+    "stuck_bin": null,
+    "model_dead": false,
+    "outputs_that_vary": [],
+    "reason": "no detected person frames off-center",
+    "verdict": "NO DATA"
+  },
+  "groups": {
+    "dist": {},
+    "bearing": {},
+    "light": {
+      "room": {
+        "n": 43.0,
+        "vis_acc": 0.4883720930232558,
+        "mean_conf": 0.5113811301196333,
+        "track_frac": 0.0,
+        "bin_n": 0.0,
+        "bin_acc": null,
+        "bin_acc1": null,
+        "bear_err": null,
+        "bear_abs_err": null,
+        "size_acc": null,
+        "size_acc1": null
+      }
+    },
+    "subject": {
+      "empty": {
+        "n": 43.0,
+        "vis_acc": 0.4883720930232558,
+        "mean_conf": 0.5113811301196333,
+        "track_frac": 0.0,
+        "bin_n": 0.0,
+        "bin_acc": null,
+        "bin_acc1": null,
+        "bear_err": null,
+        "bear_abs_err": null,
+        "size_acc": null,
+        "size_acc1": null
+      }
+    }
+  },
+  "clips": [
+    {
+      "subject": "empty",
+      "light": "room",
+      "dist": null,
+      "bearing": null,
+      "vis": 0,
+      "take": 1,
+      "dir": ".",
+      "run": 1,
+      "starts": 0,
+      "expected_bin": null,
+      "expected_size_bucket": null,
+      "size_bucket_mode": 3,
+      "bins": {
+        "1": 2,
+        "2": 3,
+        "7": 38
+      },
+      "n": 43.0,
+      "vis_acc": 0.4883720930232558,
+      "mean_conf": 0.5113811301196333,
+      "track_frac": 0.0,
+      "bin_n": 0.0,
+      "bin_acc": null,
+      "bin_acc1": null,
+      "bear_err": null,
+      "bear_abs_err": null,
+      "size_acc": null,
+      "size_acc1": null
+    }
+  ]
+}
