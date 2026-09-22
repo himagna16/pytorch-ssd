@@ -221,6 +221,20 @@ Lighthouse deck: its pose is the taped mark.
 
 ---
 
+## 4b. One drone, no hub, no internet: the camera check (added 2026-09-22)
+
+Joining the deck's WiFi takes the laptop offline, so the check is one script that
+runs unattended and prints the verdict:
+
+    zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/camera_check.sh
+
+Stream check (5 frames), then two 10 s mirror clips at 2.5 m (drone's LEFT -25,
+then RIGHT +25) with a countdown so Sai can be the subject, then an offline chip
+score and the MIRROR CHECK line. Frames go to `~/drone_frames/<date>/camera_check_*`
+and are never committed. Rehearsed against `mock_streamer.py`
+(`CAMERA_CHECK_GRAB_ARGS=--mock`): plumbing OK end to end; the mock served one
+position for both clips and the scorer correctly said FAIL "NOT a mirror".
+
 ## 5. Session order
 
 | # | session | needs | where | answers |
