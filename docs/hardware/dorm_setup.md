@@ -145,9 +145,14 @@ bed with a desk underneath along each long wall, and an open aisle down the midd
 public and they show a shared room).
 
 Lighthouse placement decided:
-- Two light stands with ball heads (already owned). **Diagonal corners:** stand 1 in
-  the fridge corner by the window, stand 2 in the door-end corner on the roommate's
-  side. Not side by side: two stations in one corner are occluded together.
+- Two light stands with ball heads (already owned). **Diagonal corners, one at each
+  end.** Final choice (Sai, 2026-09-22, by the outlets): station 1 at the door end by
+  Sai's chair, station 2 at the window end on the roommate's side. Not side by side:
+  two stations in one corner are occluded together.
+- **Sketch: [`dorm_layout.svg`](dorm_layout.svg)**, which shows the stations, the permanent
+  blue Lighthouse tape (origin X + 1 m +x mark) and the green camera-check marks.
+
+![Dorm layout](dorm_layout.svg)
 - Stations **above the loft mattresses** (~2 m+), tilted 30-45 degrees down, aimed at
   the middle of the rug, ball heads locked. Check: stand mid-rug, both fronts visible.
 - Suspected **mirror on the back of the door**: cover it. Blinds and curtain closed.
@@ -228,8 +233,9 @@ runs unattended and prints the verdict:
 
     zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/camera_check.sh
 
-Stream check (5 frames), then two 10 s mirror clips at 2.5 m (drone's LEFT -25,
-then RIGHT +25) with a countdown so Sai can be the subject, then an offline chip
+Stream check (5 frames), then two 10 s mirror clips at 2.5 m (drone's LEFT then
+RIGHT; default +-15 deg = 0.67 m, because +-25 deg lands under the lofts in this aisle;
+`CAMERA_CHECK_BEARING=25` restores the lab value) with a countdown so Sai can be the subject, then an offline chip
 score and the MIRROR CHECK line. Frames go to `~/drone_frames/<date>/camera_check_*`
 and are never committed. Rehearsed against `mock_streamer.py`
 (`CAMERA_CHECK_GRAB_ARGS=--mock`): plumbing OK end to end; the mock served one

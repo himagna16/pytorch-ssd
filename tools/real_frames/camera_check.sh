@@ -8,14 +8,17 @@
 # What it does:
 #   1. waits until the deck answers at 192.168.4.1:5000
 #   2. grabs 5 frames (stream check: read fmt= on each line)
-#   3. mirror check: two 10 s clips at 2.5 m, first on the drone's LEFT (-25 deg),
-#      then its RIGHT (+25 deg), with a countdown so you can be the subject yourself
+#   3. mirror check: two 10 s clips at 2.5 m, first on the drone's LEFT (-B deg),
+#      then its RIGHT (+B deg), with a countdown so you can be the subject yourself.
+#      B = CAMERA_CHECK_BEARING, default 15 (marks 0.67 m either side of the centre
+#      line; fits a dorm aisle). The lab protocol uses 25 (1.17 m).
 #   4. scores the mirror folder on the chip network and prints the MIRROR CHECK line
 #
 # Setup: drone on a stack of books or a chair, lens ~0.8 m up, level. Props may stay on:
 # nothing here talks to the motors (no radio, no cfclient, WiFi camera only).
 # "Drone's LEFT" = your left if you stand BEHIND the drone looking where it looks.
-# At 2.5 m, 25 degrees is ~1.17 m to the side of the centre line.
+# At 2.5 m: 15 degrees = 0.67 m to the side, 25 degrees = 1.17 m. Layout sketch:
+# docs/hardware/dorm_layout.svg
 #
 # Usage:  zsh tools/real_frames/camera_check.sh            (real drone)
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/camera_check.sh
@@ -26,6 +29,7 @@ REPO=~/Downloads/drone/pytorch_ssd
 grab()  { $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} "$@"; }
 score() { $PY $REPO/tools/real_frames/score_real_frames.py "$@"; }
 COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-10}
+B=${CAMERA_CHECK_BEARING:-15}
 D=~/drone_frames/$(date +%F)/camera_check_$(date +%H%M%S)
 mkdir -p "$D" || exit 1
 LOG="$D/camera_check.log"
@@ -51,8 +55,9 @@ clip() {  # $1 bearing  $2 words
        --light room --out "$D/mirror" || { echo "FAIL: clip $2"; exit 4; }
 }
 echo "== 3. mirror check"
-clip -25 LEFT
-clip 25 RIGHT
+echo "   marks: 2.5 m out, $($PY -c "import math;print(f'{2.5*math.tan(math.radians($B)):.2f}')") m either side of the centre line (bearing +-$B)"
+clip -$B LEFT
+clip $B RIGHT
 
 echo
 echo "== 4. scoring on the chip network (offline)"
