@@ -7,14 +7,20 @@ Lighthouse hardware. Now Sai has:
 | item | status 2026-09-22 |
 |---|---|
 | Drone 1 (Crazyflie 2.x + AI-deck 1.1, streamer already flashed) | charging |
-| Drone 2 | in hand, **decks fitted unknown** |
+| Drone 2 | in hand. **Identical to drone 1** (confirmed by Sai 2026-09-22) |
 | micro-USB cable | **one**, in hand. This clears the Sep 17 blocker |
 | Two Lighthouse base stations | in hand, **V1 or V2 unknown** |
-| Lighthouse **decks** (the boards that go on the drone) | **unknown. The base stations do nothing without them** |
+| Lighthouse **decks** (the boards that go on the drone) | **Lighthouse deck ("LH4") fitted on every drone, stacked with the AI-deck on the same drone** (confirmed by Sai 2026-09-22) |
 | Crazyradio 2.0 + USB-A to USB-C adapter | dongle yes, adapter unknown |
 | Room | a small dorm room. Dimensions not yet measured |
 
 The unknowns are what the first 20 minutes below are for.
+
+*Update 2026-09-22 (evening):* Sai confirmed the deck question. Both drones are
+identical, each carries an AI-deck **and** a Lighthouse deck on the same body,
+and that stack is already assembled. So both drones can serve as either the
+follower or the head beacon in Session B. Still unknown: base stations V1/V2
+and the room (photos coming).
 
 ---
 
@@ -149,6 +155,11 @@ positioning. It is optional and does not come first.
 
 ## 4. A hardware conflict to check, not assume
 
+*Update 2026-09-22 (evening):* the physical question is answered. Both decks are
+stacked on both of Sai's drones today. What remains below is one narrow software
+detail, and `preflight.py` checks it automatically on a stacked drone. Nothing needs
+unstacking.
+
 Can one drone carry both the AI-deck and a Lighthouse deck? The 2020 Bitcraze
 forum answer was **no**: both used the Crazyflie's UART1. That answer is out of
 date. In the current firmware:
@@ -202,7 +213,7 @@ rule, and it still holds.
 2. **The Lighthouse base stations.** Front, back and any label, plus
    everything that came in the box (power adapters, mounts). This tells V1
    from V2.
-3. **Drone 2 from above and the side**, plus any small boards in anti-static
-   bags. A Lighthouse deck is a small square board with four small sensors
-   on its top face.
+3. ~~Drone 2 from above~~ (not needed: both drones identical, AI-deck +
+   Lighthouse deck each, confirmed 2026-09-22). A photo of the Lighthouse
+   decks is still welcome.
 4. **The Crazyradio** and whatever USB-C adapter or hub is around.
