@@ -380,6 +380,12 @@ class CflibLink:
         for lc in list(self._active_logs):
             self._stop_log(lc)
         if self.scf is not None:
+            # cflib's close_link() sends a zero setpoint first; the write guard raised there and the
+            # link was never actually closed (found 2026-09-23). A no-op that sends nothing fixes it.
+            try:
+                self.cf.commander.send_setpoint = lambda *a, **k: None
+            except Exception:
+                pass
             try:
                 self.scf.close_link()
             except Exception:

@@ -156,9 +156,11 @@ Lighthouse placement decided:
     floor tiles (1 ft each; the open floor is 5 x 11 tiles, measured by Sai): lens above
     the row 1/row 2 joint in the middle column, CENTER 8 tiles out (2.44 m), LEFT/RIGHT
     2 tiles either side (14 deg). `camera_check.sh` defaults match (2.44 m, 14 deg).
-  - [`dorm_lighthouse_tape.svg`](dorm_lighthouse_tape.svg): after the hub, the two
-    permanent blue marks (ORIGIN mid-floor, +x exactly 3 ft 3⅜ in toward the window)
-    and the station corners.
+  - [`dorm_lighthouse_tape.svg`](dorm_lighthouse_tape.svg): Lighthouse night, three
+    blue marks (ORIGIN mid row 6 / col 3; +x 3 tiles + 3⅜ in toward the window; SIDE
+    mid row 6 / col 5 = +y 0.61 m), the station corners, and the evening's steps in order.
+    Verification: `tools/lighthouse/tape_check.py` (read-only; A origin, B +x, C side,
+    D origin turned 90 deg left = first real-hardware yaw-sign check).
 
 ![Tonight: camera check](dorm_camera_check.svg)
 
