@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" font-family="Helvetica, Arial, sans-serif" font-size="13">
+<title>Grid capture: 9 marks + empty room, tile layout</title><rect width="1000" height="640" fill="#fff"/>
+<defs>
+<marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d8a4a"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fbf"/></marker>
+<pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#d8c29c" stroke-width="2"/></pattern>
+</defs>
+<text x="24" y="32" font-size="20" font-weight="bold" fill="#1d8a4a">GRID CAPTURE: 9 green marks (3 rows x 3), you are the subject</text>
+<text x="24" y="54" fill="#555">Seen from BEHIND the drone looking at the door: the drone's left = the page's left.</text>
+
+<rect x="102" y="224" width="84" height="266" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
+<rect x="384" y="224" width="84" height="266" fill="url(#h)" stroke="#b8975f" stroke-width="2"/>
+<text x="144" y="353.2" text-anchor="middle" fill="#8a6a35" font-size="11">bed</text>
+<text x="144" y="367.2" text-anchor="middle" fill="#8a6a35" font-size="11">~7 ft</text>
+<text x="426" y="353.2" text-anchor="middle" fill="#8a6a35" font-size="11">bed</text>
+<text x="426" y="367.2" text-anchor="middle" fill="#8a6a35" font-size="11">~7 ft</text>
+<rect x="190" y="110" width="190" height="380" fill="#f7f7f4" stroke="#333" stroke-width="3"/>
+<line x1="228" y1="110" x2="228" y2="490" stroke="#d6d6cf"/>
+<line x1="266" y1="110" x2="266" y2="490" stroke="#d6d6cf"/>
+<line x1="304" y1="110" x2="304" y2="490" stroke="#d6d6cf"/>
+<line x1="342" y1="110" x2="342" y2="490" stroke="#d6d6cf"/>
+<line x1="190" y1="148" x2="380" y2="148" stroke="#d6d6cf"/>
+<line x1="190" y1="186" x2="380" y2="186" stroke="#d6d6cf"/>
+<line x1="190" y1="224" x2="380" y2="224" stroke="#d6d6cf"/>
+<line x1="190" y1="262" x2="380" y2="262" stroke="#d6d6cf"/>
+<line x1="190" y1="300" x2="380" y2="300" stroke="#d6d6cf"/>
+<line x1="190" y1="338" x2="380" y2="338" stroke="#d6d6cf"/>
+<line x1="190" y1="376" x2="380" y2="376" stroke="#d6d6cf"/>
+<line x1="190" y1="414" x2="380" y2="414" stroke="#d6d6cf"/>
+<line x1="190" y1="452" x2="380" y2="452" stroke="#d6d6cf"/>
+<text x="492" y="475.0" text-anchor="middle" fill="#999" font-size="10">row 1</text>
+<text x="492" y="437.0" text-anchor="middle" fill="#999" font-size="10">row 2</text>
+<text x="492" y="399.0" text-anchor="middle" fill="#999" font-size="10">row 3</text>
+<text x="492" y="361.0" text-anchor="middle" fill="#999" font-size="10">row 4</text>
+<text x="492" y="323.0" text-anchor="middle" fill="#999" font-size="10">row 5</text>
+<text x="492" y="285.0" text-anchor="middle" fill="#999" font-size="10">row 6</text>
+<text x="492" y="247.0" text-anchor="middle" fill="#999" font-size="10">row 7</text>
+<text x="492" y="209.0" text-anchor="middle" fill="#999" font-size="10">row 8</text>
+<text x="492" y="171.0" text-anchor="middle" fill="#999" font-size="10">row 9</text>
+<text x="492" y="133.0" text-anchor="middle" fill="#999" font-size="10">row 10</text>
+<text x="209.0" y="506" text-anchor="middle" fill="#999" font-size="10">col 1</text>
+<text x="247.0" y="506" text-anchor="middle" fill="#999" font-size="10">col 2</text>
+<text x="285.0" y="506" text-anchor="middle" fill="#999" font-size="10">col 3</text>
+<text x="323.0" y="506" text-anchor="middle" fill="#999" font-size="10">col 4</text>
+<text x="361.0" y="506" text-anchor="middle" fill="#999" font-size="10">col 5</text>
+<line x1="170" y1="494" x2="400" y2="494" stroke="#6fb3e0" stroke-width="7"/>
+<text x="285.0" y="526" text-anchor="middle" font-weight="bold" fill="#2a7ab0">WINDOW END (curtains closed)</text>
+<text x="285.0" y="100" text-anchor="middle" font-weight="bold" fill="#333">DOOR END</text>
+<text x="180" y="572" fill="#888" font-size="11">Each square = one 1 ft floor tile. 5 wide x 10 long, to scale. Beds approximate.</text>
+<g stroke="#9db8e8" stroke-width="3"><line x1="278.0" y1="293.0" x2="292.0" y2="307.0"/><line x1="292.0" y1="293.0" x2="278.0" y2="307.0"/></g>
+<g stroke="#9db8e8" stroke-width="3"><line x1="202.0" y1="293.0" x2="216.0" y2="307.0"/><line x1="216.0" y1="293.0" x2="202.0" y2="307.0"/></g>
+<line x1="273.0" y1="175.3125" x2="297.0" y2="175.3125" stroke="#9db8e8" stroke-width="4"/>
+<text x="388" y="304.0" fill="#8aa6d8" font-size="10">blue = Lighthouse tape</text>
+<text x="388" y="316.0" fill="#8aa6d8" font-size="10">(leave it, ignore it)</text>
+<rect x="263.0" y="448" width="44" height="40" rx="6" fill="#e3c79b" stroke="#a07a45" stroke-width="2"/>
+<rect x="270.0" y="450" width="30" height="20" rx="4" fill="#1d8a4a"/>
+<text x="285.0" y="464" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">drone</text>
+<line x1="285.0" y1="449" x2="285.0" y2="426" stroke="#1d8a4a" stroke-width="3" marker-end="url(#g)"/>
+<rect x="186" y="132" width="198" height="32" fill="#eaf7ee" stroke="#1d8a4a" stroke-width="1" rx="5" opacity="0.8"/>
+<g stroke="#1d8a4a" stroke-width="3"><line x1="200.0" y1="139" x2="218.0" y2="157"/><line x1="218.0" y1="139" x2="200.0" y2="157"/></g>
+<g stroke="#1d8a4a" stroke-width="3"><line x1="276.0" y1="139" x2="294.0" y2="157"/><line x1="294.0" y1="139" x2="276.0" y2="157"/></g>
+<g stroke="#1d8a4a" stroke-width="3"><line x1="352.0" y1="139" x2="370.0" y2="157"/><line x1="370.0" y1="139" x2="352.0" y2="157"/></g>
+<text x="180" y="152" text-anchor="end" fill="#1d8a4a" font-weight="bold" font-size="12">8 tiles  2.44 m</text>
+<text x="180" y="165" text-anchor="end" fill="#888" font-size="10">already taped</text>
+<rect x="186" y="170" width="198" height="32" fill="#eaf7ee" stroke="#1d8a4a" stroke-width="1" rx="5" opacity="0.8"/>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="200.0" y1="177" x2="218.0" y2="195"/><line x1="218.0" y1="177" x2="200.0" y2="195"/></g>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="276.0" y1="177" x2="294.0" y2="195"/><line x1="294.0" y1="177" x2="276.0" y2="195"/></g>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="352.0" y1="177" x2="370.0" y2="195"/><line x1="370.0" y1="177" x2="352.0" y2="195"/></g>
+<text x="180" y="190" text-anchor="end" fill="#1d8a4a" font-weight="bold" font-size="12">7 tiles  2.13 m</text>
+<text x="180" y="203" text-anchor="end" fill="#888" font-size="10">NEW tape: 3 X</text>
+<rect x="186" y="246" width="198" height="32" fill="#eaf7ee" stroke="#1d8a4a" stroke-width="1" rx="5" opacity="0.8"/>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="200.0" y1="253" x2="218.0" y2="271"/><line x1="218.0" y1="253" x2="200.0" y2="271"/></g>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="276.0" y1="253" x2="294.0" y2="271"/><line x1="294.0" y1="253" x2="276.0" y2="271"/></g>
+<g stroke="#1d8a4a" stroke-width="4"><line x1="352.0" y1="253" x2="370.0" y2="271"/><line x1="370.0" y1="253" x2="352.0" y2="271"/></g>
+<text x="180" y="266" text-anchor="end" fill="#1d8a4a" font-weight="bold" font-size="12">5 tiles  1.52 m</text>
+<text x="180" y="279" text-anchor="end" fill="#888" font-size="10">NEW tape: 3 X</text>
+<text x="209.0" y="126" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">LEFT</text>
+<text x="285.0" y="126" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">CENTRE</text>
+<text x="361.0" y="126" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">RIGHT</text>
+<g transform="translate(580,96)">
+<text x="0" y="0" font-size="15" font-weight="bold" fill="#222">Set up (10 min)</text>
+<text x="0" y="18" font-weight="bold" fill="#1d8a4a">Drone</text>
+<text x="0" y="36" fill="#333">Same as the camera check: chair at the window end, middle column,</text>
+<text x="0" y="54" fill="#333">lens ~2 ft 7½ in up, above the row 1 / row 2 line, facing the door.</text>
+<text x="0" y="86" font-weight="bold" fill="#1d8a4a">Tape: 6 NEW green X (3 are already there)</text>
+<text x="0" y="104" fill="#333">Count tiles from the LENS toward the door. Each X goes on the</text>
+<text x="0" y="122" fill="#333">tile line, in the MIDDLE of col 1, col 3 and col 5:</text>
+<text x="0" y="140" fill="#333">  5 tiles out  = the line where row 6 ends</text>
+<text x="0" y="158" fill="#333">  7 tiles out  = the line where row 8 ends</text>
+<text x="0" y="176" fill="#333">  8 tiles out  = already taped (row 9 line)</text>
+<text x="0" y="194" fill="#333">The 7-tile CENTRE X sits ~3 in from the blue +x tape. Fine.</text>
+<text x="0" y="226" font-weight="bold" fill="#1d8a4a">Run it (drone battery in, WiFi "WiFi streaming example")</text>
+<rect x="0" y="229" width="405" height="23" rx="4" fill="#f2f2f2" stroke="#ccc"/>
+<text x="7" y="245" font-family="Menlo, monospace" font-size="11" fill="#222">zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/grid_capture.sh</text>
+<text x="0" y="262" fill="#333">Clip 0: empty room, stay behind the drone.</text>
+<text x="0" y="280" fill="#333">Clips 1-9: far row first (8, then 7, then 5 tiles), L / C / R.</text>
+<text x="0" y="298" fill="#333">The laptop SAYS where to go and counts down. Face the drone,</text>
+<text x="0" y="316" fill="#333">stand still until it says "Done". ~5 min on one battery.</text>
+<text x="0" y="348" font-weight="bold" fill="#c0392b">Then rejoin normal WiFi and send Claude the table it prints.</text>
+</g>
+</svg>

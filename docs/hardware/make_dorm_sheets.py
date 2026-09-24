@@ -167,8 +167,56 @@ u.append(steps([
 ]))
 u.append('</svg>')
 
+# ---------- grid capture (2026-09-24) ----------
+g = [HEAD.format(title="Grid capture: 9 marks + empty room, tile layout", color="#1d8a4a",
+                 h1="GRID CAPTURE: 9 green marks (3 rows x 3), you are the subject",
+                 h2="Seen from BEHIND the drone looking at the door: the drone's left = the page's left."), room()]
+# faded Lighthouse tape for orientation (already on the floor)
+for (x, y, lab) in ((cx, ycol(5.0), "blue ORIGIN"), (xmid(1), ycol(5.0), "blue SIDE")):
+    g.append(X(x, y, "#9db8e8", s=7, w=3))
+g.append(f'<line x1="{cx-12}" y1="{ycol(8.28125)}" x2="{cx+12}" y2="{ycol(8.28125)}" stroke="#9db8e8" stroke-width="4"/>')
+g.append(f'<text x="{X0+W*F+8}" y="{ycol(5.0)+4}" fill="#8aa6d8" font-size="10">blue = Lighthouse tape</text>')
+g.append(f'<text x="{X0+W*F+8}" y="{ycol(5.0)+16}" fill="#8aa6d8" font-size="10">(leave it, ignore it)</text>')
+# drone
+g.append(f'<rect x="{cx-22}" y="{ycol(1)-4}" width="44" height="{F+2}" rx="6" fill="#e3c79b" stroke="#a07a45" stroke-width="2"/>')
+g.append(f'<rect x="{cx-15}" y="{lens_y-2}" width="30" height="20" rx="4" fill="#1d8a4a"/>')
+g.append(f'<text x="{cx}" y="{lens_y+12}" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">drone</text>')
+g.append(f'<line x1="{cx}" y1="{lens_y-3}" x2="{cx}" y2="{lens_y-26}" stroke="#1d8a4a" stroke-width="3" marker-end="url(#g)"/>')
+rows_ = ((8, "8 tiles  2.44 m", True), (7, "7 tiles  2.13 m", False), (5, "5 tiles  1.52 m", False))
+for tiles, lab, old in rows_:
+    y = ycol(1 + tiles)
+    g.append(f'<rect x="{X0-4}" y="{y-16}" width="{W*F+8}" height="32" fill="#eaf7ee" stroke="#1d8a4a" stroke-width="1" rx="5" opacity="0.8"/>')
+    for x in (xmid(1), cx, xmid(5)):
+        g.append(X(x, y, "#1d8a4a", s=9, w=4 if not old else 3))
+    g.append(f'<text x="{X0-10}" y="{y+4}" text-anchor="end" fill="#1d8a4a" font-weight="bold" font-size="12">{lab}</text>')
+    g.append(f'<text x="{X0-10}" y="{y+17}" text-anchor="end" fill="#888" font-size="10">{"already taped" if old else "NEW tape: 3 X"}</text>')
+g.append(f'<text x="{xmid(1)}" y="{ycol(9)-22}" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">LEFT</text>')
+g.append(f'<text x="{cx}" y="{ycol(9)-22}" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">CENTRE</text>')
+g.append(f'<text x="{xmid(5)}" y="{ycol(9)-22}" text-anchor="middle" fill="#1d8a4a" font-weight="bold" font-size="11">RIGHT</text>')
+g.append(steps([
+    ('h', 'Set up (10 min)'),
+    ('g', 'Drone'), ('t', 'Same as the camera check: chair at the window end, middle column,'),
+    ('t', 'lens ~2 ft 7½ in up, above the row 1 / row 2 line, facing the door.'), ('gap', ''),
+    ('g', 'Tape: 6 NEW green X (3 are already there)'),
+    ('t', 'Count tiles from the LENS toward the door. Each X goes on the'),
+    ('t', 'tile line, in the MIDDLE of col 1, col 3 and col 5:'),
+    ('t', '  5 tiles out  = the line where row 6 ends'),
+    ('t', '  7 tiles out  = the line where row 8 ends'),
+    ('t', '  8 tiles out  = already taped (row 9 line)'),
+    ('t', 'The 7-tile CENTRE X sits ~3 in from the blue +x tape. Fine.'), ('gap', ''),
+    ('g', 'Run it (drone battery in, WiFi "WiFi streaming example")'),
+    ('code', 'zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/grid_capture.sh'),
+    ('t', 'Clip 0: empty room, stay behind the drone.'),
+    ('t', 'Clips 1-9: far row first (8, then 7, then 5 tiles), L / C / R.'),
+    ('t', 'The laptop SAYS where to go and counts down. Face the drone,'),
+    ('t', 'stand still until it says "Done". ~5 min on one battery.'), ('gap', ''),
+    ('r', 'Then rejoin normal WiFi and send Claude the table it prints.'),
+]))
+g.append('</svg>')
+
 import sys
 out = sys.argv[1]
 open(f'{out}/dorm_camera_check.svg', 'w').write('\n'.join(t))
 open(f'{out}/dorm_lighthouse_tape.svg', 'w').write('\n'.join(u))
+open(f'{out}/dorm_grid_capture.svg', 'w').write('\n'.join(g))
 print("written; lens y", lens_y, "marks y", mark_y, "L/C/R x", xl, cx, xr, "origin y", oy, "+x y", xy)
