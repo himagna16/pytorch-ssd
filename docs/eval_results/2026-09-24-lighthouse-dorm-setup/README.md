@@ -110,8 +110,9 @@ project**, for the camera and for Lighthouse alike.
 - [x] preflight on drone 1
 - [x] base station channels
 - [x] geometry wizard, clean (attempt 3)
-- [ ] export the geometry from cfclient (Lighthouse tab -> Export configuration), so
-      drone 2 can import it with no wizard
+- [x] geometry exported, 11:21 -> `docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`
+      (verified: V2; the channel-2 uid is 0xF469DDEB, the station set to channel 2; stations at
+      x -1.43 / +1.45, 1.77 / 1.76 m high, 3.26 m apart). Stand feet taped on the floor.
 - [x] `tools/lighthouse/tape_check.py`, run 1 (bare floor): **4 of 4 PASS, yaw sign confirmed** (section 7)
 - [x] tape check run 2 (on the book): 4 of 4 PASS on the rerun (section 8). **Floor vs book: no difference.**
 - [ ] preflight on drone 2
