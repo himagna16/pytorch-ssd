@@ -63,7 +63,7 @@ is not, is in `docs/hardware/before_the_next_session.md`.
 | Semantic release gates, so this cannot recur | Sai | Done Sep 10 | Run on every release |
 | Withdraw chip-validation claims in docs and resume | Sai | Done Sep 10 | None |
 | Tested C decoder for the firmware team | Sai | Done Sep 10 | Frontend trio builds against it |
-| How well the drone follows people | Sai | **Not yet known, and the published figures are about one person.** Every tracking number in this project (97-99%) came from scenes built around a photograph that turns out to sit near the 98th percentile of how easily this model detects a person. Rebuilt the same scenes around a typical person and a somewhat-below-average person: the drone never starts following at all, in 11 of 12 flights, while the original subject still reproduces 99% on the same rig. Rendered cutouts are harder than real people, so the truth lies between the two, and neither end is the drone's real behaviour | This is the question the lab session answers. Capture real frames of real people and measure where they fall |
+| How well the drone follows people | Sai | **First real data Sep 24 (one person, 5 grid positions): seen and locked off to the side (71-88%), never locked dead centre in front of a dark door. Contrast looks like the driver** (`docs/eval_results/2026-09-24-grid-capture/`). *Earlier status:* **Not yet known, and the published figures are about one person.** Every tracking number in this project (97-99%) came from scenes built around a photograph that turns out to sit near the 98th percentile of how easily this model detects a person. Rebuilt the same scenes around a typical person and a somewhat-below-average person: the drone never starts following at all, in 11 of 12 flights, while the original subject still reproduces 99% on the same rig. Rendered cutouts are harder than real people, so the truth lies between the two, and neither end is the drone's real behaviour | This is the question the lab session answers. Capture real frames of real people and measure where they fall |
 | Simulator demo for Prof. Mok | Sai | Sent Sep 12; Prof. Mok replied "Great progress, team!" and David called the simulation's prediction of the AI-deck behaviour impressive | Live demo slot still unset: he said Tue/Thu after 3:30 pm, I offered after 5 pm - needs one confirming email |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
@@ -473,6 +473,21 @@ Newest first. One entry per working session.
   reflection is ruled out**, and I corrected my own earlier claim in the log. A left
   turn read +89 to +95 deg in all three runs. Still to do: export the geometry,
   preflight drone 2.
+
+  **Afternoon.**
+  - Drone 2 (address ...05, different from drone 1's ...09, so no re-addressing) passed
+    the preflight and took the imported room geometry.
+  - **First real-person detection grid, run by me alone with spoken cues**
+    (`docs/eval_results/2026-09-24-grid-capture/`, partial: the battery died at clip 6).
+    Standing off to the side at 2.1-2.4 m, I was seen strongly (median 0.77-0.88) and
+    the drone would have locked on 71-88% of the time. Standing dead centre, it never
+    locked.
+  - The frames show why. At centre I was in front of the dark door, so my dark clothes
+    merged into it. At the sides I was in front of bright wardrobe panels. **Background
+    contrast matters a lot.** Position and background change together in this room, so
+    the clean test is centre with a light sheet over the door.
+  - The empty room gave 0 false locks again. The script now scores what it has when
+    the battery dies, and can resume.
 
 - **2026-09-23.** The USB-C hub arrived; hands-on work waited until Sep 24. Desk work
   to make the Lighthouse evening go smoothly:

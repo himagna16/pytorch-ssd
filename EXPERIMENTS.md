@@ -1,5 +1,17 @@
 # Experiment Log
 
+## Sep 24, 2026 — First real-person detection grid (partial): contrast beats position (Sai)
+
+`tools/real_frames/grid_capture.sh`, one subject, dorm, chip arm. The empty clip plus 5
+of 9 positions were captured before the battery died. At 2.13 and 2.44 m off-centre
+(+-14 to 16 deg): median conf 0.77-0.88, follower locked 71-88%, correct side. Dead
+centre at both distances: median 0.52 and 0.66, **locked 0%**, and the model reads the
+room's right-side background instead. The frames show the subject against a dark door
+at centre and against bright wardrobe panels at the sides. So subject/background
+contrast is the likely driver. It is confounded with position in this room; the planned
+control is centre with a light sheet over the door. Empty room: 0 false locks (max
+0.65). Evidence: `docs/eval_results/2026-09-24-grid-capture/`.
+
 ## Sep 24, 2026 — Lighthouse in the dorm: frame matches the tape, yaw sign confirmed on hardware (Sai)
 
 Two SteamVR 2.0 base stations (channel 1 at the window end, channel 2 at the door end)
