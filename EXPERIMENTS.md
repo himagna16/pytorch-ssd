@@ -11,6 +11,7 @@ at centre and against bright wardrobe panels at the sides. So subject/background
 contrast is the likely driver. It is confounded with position in this room; the planned
 control is centre with a light sheet over the door. Empty room: 0 false locks (max
 0.65). Evidence: `docs/eval_results/2026-09-24-grid-capture/`.
+*Update 18:47 (resumed run):* 8 of 9 positions captured, but the resumed clips were **2.3x brighter** (mean 94 vs 40), so there are two lighting conditions. In the bright run, centre at 1.52 m was detected (0.93, locked 14/17), consistent with contrast but confounded with distance and light. 2.13 m RIGHT (bright) was weak (0.54, 0 locked) and is unexplained. Next: a full grid in one sitting at one lighting level.
 
 ## Sep 24, 2026 — Lighthouse in the dorm: frame matches the tape, yaw sign confirmed on hardware (Sai)
 

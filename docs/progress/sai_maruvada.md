@@ -488,6 +488,11 @@ Newest first. One entry per working session.
     the clean test is centre with a light sheet over the door.
   - The empty room gave 0 false locks again. The script now scores what it has when
     the battery dies, and can resume.
+  - **Resumed at 18:46:** 8 of 9 positions. But the resumed clips were 2.3x brighter
+    (something changed the light), so they are a second condition, not a continuation.
+    In the bright light I was detected dead centre at 1.52 m (0.93), which is
+    consistent with contrast but not proof. 2.13 m right was weak and is unexplained.
+    Next time: the whole grid in one sitting, lights fixed.
 
 - **2026-09-23.** The USB-C hub arrived; hands-on work waited until Sep 24. Desk work
   to make the Lighthouse evening go smoothly:

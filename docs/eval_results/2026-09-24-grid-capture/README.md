@@ -52,3 +52,51 @@ clothing.
 - **Empty room:** 0 false locks. Confidence peaked at 0.65, lower than Sep 22's 0.71.
 - **The aim is good this time.** The door sits centred in the frame (the Sep 22 run 2
   aim was a few degrees right).
+
+---
+
+## Run 1b (resumed at 18:46, `GRID_START=6`): 8 of 9 positions, BUT A LIGHTING CHANGE
+
+The resume worked: clips 6-8 were added to the same folder and everything was re-scored.
+Clip 9 (1.52 m RIGHT) got 0 frames, the same flat-battery signature. The script now
+reports this, scores what it has, and prints the resume command, as designed.
+
+**The frames are not one condition.** Mean frame brightness per clip (0-255):
+
+| time | clips | mean brightness |
+|---|---|---|
+| 18:31-18:34 | empty; 2.44 L/C/R; 2.13 L/C | **38-42 (dim)** |
+| 18:47 | 2.13 R; 1.52 L/C | **93-95 (bright)** |
+
+Something between the two runs, such as a light switched on or auto-exposure settling
+differently on a fresh battery, raised the brightness about 2.3x. The two groups must
+not be pooled.
+
+| position | condition | median conf | locked | x-bin (expected) |
+|---|---|---|---|---|
+| empty room | dim | 0.56 | **0 / 26** | 7 (-) |
+| 2.44 m LEFT | dim | 0.90 | 15 / 17 | 1 (2) |
+| 2.44 m CENTRE | dim | 0.51 | **0 / 17** | 7 (4) |
+| 2.44 m RIGHT | dim | 0.87 | 15 / 17 | 4 (6) |
+| 2.13 m LEFT | dim | 0.81 | 12 / 17 | 2 (2) |
+| 2.13 m CENTRE | dim | 0.66 | **0 / 17** | 7 (4) |
+| 2.13 m RIGHT | bright | 0.54 | **0 / 17** | 6 (6) |
+| 1.52 m LEFT | bright | 0.78 | 14 / 17 | 1 (1) |
+| 1.52 m CENTRE | bright | **0.93** | **14 / 17** | 3 (4) |
+| 1.52 m RIGHT | - | not captured (battery) | | |
+
+**What survives:**
+- **Within the dim run:** off-centre is strongly detected and locked; dead centre, in
+  front of the dark door, is never locked. That comparison is within one condition.
+- **In the bright run, centre IS detected** at 1.52 m (0.93, locked 14/17). With the door
+  lit, Sai's dark trousers and hair contrast against it. This is consistent with the
+  contrast explanation, but distance (1.52 vs 2.1-2.4 m) and lighting changed at the
+  same time, so it does not prove it.
+- **2.13 m RIGHT in the bright run is weak** (0.54, never locked) even though its x-bin is
+  right. Simple contrast does not obviously explain this. Sai stands between the lit
+  door and the dark loft and ladder region. Unexplained, n = 17.
+- **The empty room gave 0 false locks** (peak 0.65, dim run).
+
+**Next:** a complete grid in **one sitting at one lighting level** (room lights on, fresh
+battery), then the same grid with a light sheet over the door. Record which lights are
+on.

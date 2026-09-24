@@ -1,34 +1,40 @@
 
 BACKEND chip (what the drone flies): model_id_dory.onnx sha1 d90555c8462b | eps 0.0002009823510888964 | follower raw enter >= 5467, lost < -998, confirm 3
-model model_id_dory.onnx | 111 frames in 6 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+model model_id_dory.onnx | 162 frames in 9 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
 clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
 ----------------------------------------------------------------------------------------------------------------------------------------
 empty/room/take1                    -     -   0   26  0.54    27%     0%      0      - 7:26                    -     -       -    3/-   
+p01/room/take1                   1.52 -21.8   1   17  0.77   100%    82%      1      1 1:17                 100%  100%    +4.4    3/3   
+p01/room/take1                   1.52     0   1   17  0.92   100%    82%      1      4 3:8 4:6 7:3           35%   82%    -1.5    3/3   
 p01/room/take1                   2.13 -15.9   1   17  0.77   100%    71%      1      2 1:1 2:13 7:3          76%   82%   +13.5    3/2   
 p01/room/take1                   2.13     0   1   17  0.66    94%     0%      0      4 7:17                   0%    0%    +5.8    3/2   
+p01/room/take1                   2.13  15.9   1   17  0.55    71%     0%      0      6 0:3 1:3 4:1 6:5 7:    29%   59%   -14.5    3/2   
 p01/room/take1                   2.44   -14   1   17  0.88   100%    88%      1      2 1:9 2:7 7:1           41%   94%    +8.3    3/1   
 p01/room/take1                   2.44     0   1   17  0.52    59%     0%      0      4 4:1 7:16               6%    6%    +3.0    1/1   
 p01/room/take1                   2.44    14   1   17  0.87   100%    88%      1      6 4:9 6:3 7:5           18%   47%    -6.1    2/1   
 
 by dist:
-            2.13: n=  34  vis acc   97%  track   35%  bin acc   38% (+-1   41%)  bearing err  +9.6 (|err| 9.6)  size acc   15% (+-1 100%)
+            1.52: n=  34  vis acc  100%  track   82%  bin acc   68% (+-1   91%)  bearing err  +1.5 (|err| 3.7)  size acc   97% (+-1 100%)
+            2.13: n=  51  vis acc   88%  track   24%  bin acc   35% (+-1   47%)  bearing err  +1.6 (|err| 11.3)  size acc   20% (+-1 94%)
             2.44: n=  51  vis acc   86%  track   59%  bin acc   22% (+-1   49%)  bearing err  +1.7 (|err| 5.9)  size acc   18% (+-1 53%)
 
 by bearing:
+           -21.8: n=  17  vis acc  100%  track   82%  bin acc  100% (+-1  100%)  bearing err  +4.4 (|err| 4.4)  size acc   94% (+-1 100%)
            -15.9: n=  17  vis acc  100%  track   71%  bin acc   76% (+-1   82%)  bearing err +13.5 (|err| 13.5)  size acc    0% (+-1 100%)
            -14.0: n=  17  vis acc  100%  track   88%  bin acc   41% (+-1   94%)  bearing err  +8.3 (|err| 8.3)  size acc    0% (+-1 0%)
-             0.0: n=  34  vis acc   76%  track    0%  bin acc    3% (+-1    3%)  bearing err  +4.4 (|err| 4.5)  size acc   38% (+-1 88%)
+             0.0: n=  51  vis acc   84%  track   27%  bin acc   14% (+-1   29%)  bearing err  +2.4 (|err| 4.0)  size acc   59% (+-1 92%)
             14.0: n=  17  vis acc  100%  track   88%  bin acc   18% (+-1   47%)  bearing err  -6.1 (|err| 6.1)  size acc    6% (+-1 82%)
+            15.9: n=  17  vis acc   71%  track    0%  bin acc   29% (+-1   59%)  bearing err -14.5 (|err| 14.5)  size acc   29% (+-1 82%)
 
 by light:
-            room: n= 111  vis acc   76%  track   38%  bin acc   28% (+-1   46%)  bearing err  +4.9 (|err| 7.4)  size acc   16% (+-1 72%)
+            room: n= 162  vis acc   80%  track   43%  bin acc   38% (+-1   59%)  bearing err  +1.6 (|err| 7.4)  size acc   38% (+-1 80%)
 
 by subject:
            empty: n=  26  vis acc   27%  track    0%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
-             p01: n=  85  vis acc   91%  track   49%  bin acc   28% (+-1   46%)  bearing err  +4.9 (|err| 7.4)  size acc   16% (+-1 72%)
+             p01: n= 136  vis acc   90%  track   51%  bin acc   38% (+-1   59%)  bearing err  +1.6 (|err| 7.4)  size acc   38% (+-1 80%)
 
 EMPTY / NO-PERSON clips: 1 clips, 26 frames, confirmed (false) tracks = 0, frames with conf >= 0.5: 19, max conf 0.65  -> OK
-MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 88% of 34; RIGHT frames with bin > 4: 47% of 17  -> FAIL: the two sides DISAGREE - a mirror cannot do that
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 92% of 51; RIGHT frames with bin > 4: 48% of 29  -> FAIL: the two sides DISAGREE - a mirror cannot do that
   ^ one side reads correctly and the other does not. A mirrored image gets BOTH sides wrong and a correct one gets both right, so this is not the camera: check the bearing labels and the floor marks (is b negative on the drone's LEFT?) and the crop FOV / --full-hfov.
   convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
   If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
