@@ -193,3 +193,14 @@ share one Crazyradio on channel 80 with no re-addressing. Lighthouse: no base st
 received, because the stations were unplugged over lunch. It still carries the **lab
 geometry**, like drone 1 did. Next: import `docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`,
 then the tape check.
+
+**Drone 2 after importing the geometry** (`preflight_drone2_after_import.json`).
+cfclient "Import configuration" with `dorm_lighthouse_2026-09-24.yaml`. On the desk the
+position reads **(0.69, -1.47, 0.70) m**, steady (std < 1 mm): z = 0.70 m is desk height
+above the book plane, and the reading is plausible in this room, which the lab geometry
+would not give. Only base station 1 was received at that spot; station 2 (door end, the
+same side as the desk) was blocked or out of view. The tape check on the open floor is
+still to do.
+- [x] drone 2 preflight + geometry imported
+- [ ] drone 2 tape check
+- [ ] grid capture (`tools/real_frames/grid_capture.sh`, sheet `docs/hardware/dorm_grid_capture.svg`)
