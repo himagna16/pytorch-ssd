@@ -42,12 +42,12 @@ YAW_TOL = 12.0           # deg
 NOISE_WARN = 0.02        # m: position std above this while the drone sits still
 
 STEPS = [
-    ("A", "Put the drone flat on the ORIGIN X, camera facing the WINDOW.", dict(x=0.0, y=0.0, yaw=0.0)),
-    ("B", "Move it onto the +x mark (3 tiles + 3 3/8 in toward the window), camera facing the window.",
+    ("A", "Put the drone flat on the ORIGIN X, camera facing the +x MARK.", dict(x=0.0, y=0.0, yaw=0.0)),
+    ("B", "Move it onto the +x mark (1.00 m from the origin), camera facing the same way (away from the origin).",
      dict(x=1.0, y=0.0, yaw=0.0)),
-    ("C", "Move it onto the SIDE mark (col 5, same tile line as the origin), camera facing the window.",
+    ("C", "Move it onto the SIDE mark (2 tiles to the LEFT of the origin when you face the +x mark), camera facing the +x direction.",
      dict(x=0.0, y=SIDE_Y, yaw=0.0)),
-    ("D", "Back on the ORIGIN X, then TURN it 90 deg to its LEFT (camera now faces the col-5 side).",
+    ("D", "Back on the ORIGIN X, then TURN it 90 deg to its LEFT (camera now faces the SIDE mark).",
      dict(x=0.0, y=0.0, yaw=90.0)),
 ]
 
