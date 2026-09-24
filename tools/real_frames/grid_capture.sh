@@ -15,6 +15,7 @@
 #
 # Usage:  zsh tools/real_frames/grid_capture.sh
 #         GRID_SUBJECT=p02 zsh tools/real_frames/grid_capture.sh     (another person)
+#         GRID_LIGHT=night_lights | day_blinds_open | ...   (label the lighting; one per grid)
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/grid_capture.sh   (rehearsal)
 #         GRID_DIR=<existing folder> GRID_START=6 zsh tools/real_frames/grid_capture.sh
 #             (resume after a flat battery: skips the empty clip and clips < 6, adds to the
@@ -107,6 +108,24 @@ for key in sorted(cells, key=lambda k: (k[0] == "empty", k)):
     print(f"{name:<22}{len(rs):>7}{st.median(conf):>13.2f}{hi:>5}/{len(rs):<3}{lock:>4}/{len(rs):<4}{mode:>9} ({exp})")
 print("\nlocked = frames where the drone's follower would be tracking (3 in a row >= 0.75).")
 print("For the EMPTY ROOM row, locked should be 0.")
+
+# brightness guard: one grid = one lighting condition (added after the 2026-09-24 run, where
+# a resumed half came out 2.3x brighter than the first half and could not be pooled)
+import glob, os, re
+import numpy as np
+from PIL import Image
+means = defaultdict(list)
+for p in glob.glob(sys.argv[1] + "/*.png"):
+    means[re.sub(r"_f\d+_t.*", "", os.path.basename(p))].append(np.asarray(Image.open(p).convert("L")).mean())
+per = {k: float(np.mean(v)) for k, v in means.items()}
+if per:
+    lo, hi = min(per.values()), max(per.values())
+    print(f"\nframe brightness per clip: {lo:.0f} to {hi:.0f} (0-255)")
+    if lo > 0 and hi / lo > 1.3:
+        print("!! BRIGHTNESS CHANGED during this grid (more than 30%). These clips are not one lighting")
+        print("!! condition. Do not pool them; re-run the whole grid in one sitting.")
+        for k, v in sorted(per.items(), key=lambda kv: kv[1]):
+            print(f"   {v:6.1f}  {k}")
 PYEOF
 echo
 echo "== done. Rejoin normal WiFi, then tell Claude:  grid done, folder $D"
