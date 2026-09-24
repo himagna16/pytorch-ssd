@@ -183,3 +183,13 @@ z: floor -0.02, book -0.00. The book is about 2 cm thick, and z = 0 was set at b
    +94.6 deg across runs 1, 2a and 2b.
 4. Heading at rest, facing +x, reads -1 to -5 deg. That is consistent with hand
    placement, not a bias worth chasing. C's y reads 0.58-0.61 against a 0.61 tape.
+
+## 9. Drone 2 (address ...05), afternoon (live)
+
+Read-only preflight (`preflight_drone2.json`): Crazyflie 2.1, firmware 2026.08 (same git
+54f31e243a0b as drone 1), unmodified; AI-deck and Lighthouse deck present; battery 4.01 V
+charging; **radio address E7E7E7E705**, distinct from drone 1's E7E7E7E709, so both can
+share one Crazyradio on channel 80 with no re-addressing. Lighthouse: no base stations
+received, because the stations were unplugged over lunch. It still carries the **lab
+geometry**, like drone 1 did. Next: import `docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`,
+then the tape check.
