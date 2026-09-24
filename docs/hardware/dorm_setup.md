@@ -282,3 +282,16 @@ rule, and it still holds.
    Lighthouse deck each, confirmed 2026-09-22). A photo of the Lighthouse
    decks is still welcome.
 4. **The Crazyradio** and whatever USB-C adapter or hub is around.
+
+## Lighthouse geometry: take floor samples on a book, not the tile (added 2026-09-24)
+
+The dorm floor is glossy vinyl. With the drone flat on it, the origin and SIDE samples
+were about 79 mm off, and the frame came out displaced by more than a metre. A sample
+held over the origin read x 1.29. Retaking the three floor samples with the drone on the
+same book each time gave errors of 0.3-2.0 mm, and SIDE read exactly 0.61 m. Floor
+reflection is the strong hypothesis; the fix also changed the sample spread, so it is
+not isolated. Full log: `docs/eval_results/2026-09-24-lighthouse-dorm-setup/`.
+
+Procedure: same matte book under the drone for origin, +x and SIDE. First XYZ sample
+over the origin must read about (0, 0). Spread XYZ samples over both halves of the room.
+Every row should be under 15 mm. Do not move the stands after setup.

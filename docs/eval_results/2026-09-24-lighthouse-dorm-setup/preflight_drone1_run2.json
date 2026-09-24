@@ -1,0 +1,473 @@
+{
+  "tool": "tools/hardware/preflight.py",
+  "format": 1,
+  "started": "2026-09-24T09:48:20",
+  "read_only": true,
+  "args": {
+    "uri": "usb://0",
+    "out": null,
+    "seconds": 5.0,
+    "period_ms": 100,
+    "connect_timeout": 15.0,
+    "gap8": "unknown",
+    "compare": null
+  },
+  "gap8_state": "unknown",
+  "checks": {
+    "link": {
+      "status": "OK",
+      "summary": "usb://0 via USB cable, connected in 0.2 s",
+      "details": {
+        "uri": "usb://0",
+        "connect_seconds": 0.16,
+        "attempts": [
+          {
+            "uri": "usb://0",
+            "ok": true,
+            "seconds": 0.16
+          }
+        ],
+        "write_guards": 40
+      }
+    },
+    "firmware": {
+      "status": "OK",
+      "summary": "2026.08, git 54f31e243a0b, unmodified, Crazyflie 2.1, protocol 12; serial 003E003B3433510D37373237",
+      "details": {
+        "tag": "2026.08",
+        "git_revision": "54f31e243a0b",
+        "modified": false,
+        "device_type": "Crazyflie 2.1",
+        "protocol_version": 12,
+        "serial": "003E003B3433510D37373237"
+      }
+    },
+    "decks": {
+      "status": "INFO",
+      "summary": "present: AI-deck (camera, GAP8, WiFi), Lighthouse positioning deck",
+      "details": {
+        "decks": {
+          "bcAI": true,
+          "bcActiveMarker": false,
+          "bcBuzzer": false,
+          "bcCam": false,
+          "bcCamLink": false,
+          "bcColorLedBot": false,
+          "bcColorLedTop": false,
+          "bcDWM1000": false,
+          "bcFlow": false,
+          "bcFlow2": false,
+          "bcLedRing": false,
+          "bcLighthouse4": true,
+          "bcLoco": false,
+          "bcMultiranger": false,
+          "bcOA": false,
+          "bcUSD": false,
+          "bcZRanger": false,
+          "bcZRanger2": false
+        },
+        "present": [
+          "bcAI",
+          "bcLighthouse4"
+        ],
+        "boards_on_1wire": [
+          "bcAI",
+          "bcLighthouse4"
+        ],
+        "notes": [],
+        "firmware_knows": [
+          "bcAI",
+          "bcActiveMarker",
+          "bcBuzzer",
+          "bcCam",
+          "bcCamLink",
+          "bcColorLedBot",
+          "bcColorLedTop",
+          "bcDWM1000",
+          "bcFlow",
+          "bcFlow2",
+          "bcLedRing",
+          "bcLighthouse4",
+          "bcLoco",
+          "bcMultiranger",
+          "bcOA",
+          "bcUSD",
+          "bcZRanger",
+          "bcZRanger2"
+        ]
+      }
+    },
+    "radio": {
+      "status": "OK",
+      "summary": "stored config: channel 80, 2M, address E7E7E7E709 -> radio://0/80/2M/E7E7E7E709. Two drones on one Crazyradio need different addresses; run this on the other drone and compare.",
+      "details": {
+        "uri": "usb://0",
+        "from_uri": null,
+        "eeprom": {
+          "channel": 80,
+          "speed": "2M",
+          "address": "E7E7E7E709",
+          "pitch_trim": 0.0,
+          "roll_trim": 0.0
+        },
+        "address_shared_with": []
+      }
+    },
+    "battery": {
+      "status": "OK",
+      "summary": "4.03 V (charging): the voltage reads higher than the real charge while USB is charging it; unplug and re-check if you need the true level. A full 350 mAh pack gives only about 5-7 minutes with the AI-deck streaming, and about 40 minutes to recharge over micro-USB.",
+      "details": {
+        "vbat_mean": 4.028,
+        "vbat_min": 4.017,
+        "n": 50,
+        "state": 1,
+        "state_name": "charging",
+        "state_counts": {
+          "1": 50
+        },
+        "charge_current": 0.239
+      }
+    },
+    "lighthouse": {
+      "status": "OK",
+      "summary": "expects Lighthouse V2 base stations; working: base station data is going to the position estimator; position noise 7.5 mm (max axis std, drone sitting still)",
+      "details": {
+        "present": true,
+        "system_type": 2,
+        "system_type_name": "Lighthouse V2 base stations",
+        "method": 1,
+        "stats": {
+          "status_last": 2,
+          "status_fraction": {
+            "2": 1.0
+          },
+          "status2_fraction": 1.0,
+          "bsAvailable": {
+            "last": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "ever": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "bsReceive": {
+            "last": [
+              1
+            ],
+            "ever": [
+              1
+            ]
+          },
+          "bsCalVal": {
+            "last": [
+              1,
+              2
+            ],
+            "ever": [
+              1,
+              2
+            ]
+          },
+          "bsGeoVal": {
+            "last": [
+              1,
+              2
+            ],
+            "ever": [
+              1,
+              2
+            ]
+          },
+          "bsActive": {
+            "last": [
+              1
+            ],
+            "ever": [
+              1
+            ]
+          },
+          "bsCalCon": {
+            "last": [],
+            "ever": []
+          },
+          "bsCalUd": {
+            "last": [],
+            "ever": []
+          },
+          "receive_fraction_per_bs": {
+            "1": 1.0
+          },
+          "receive_count_mean": 1.0,
+          "comSync_fraction": 1.0,
+          "posRt_mean": 390.4,
+          "estBs0Rt_mean": 397.4,
+          "estBs1Rt_mean": 0.0,
+          "position": {
+            "x": {
+              "mean": -1.1043,
+              "std_mm": 3.39
+            },
+            "y": {
+              "mean": -1.6236,
+              "std_mm": 7.53
+            },
+            "z": {
+              "mean": 0.2858,
+              "std_mm": 2.27
+            }
+          },
+          "position_std_mm_max": 7.53,
+          "n_samples": 50
+        },
+        "base_stations": [
+          "base station 1: seen, calibrated, geometry OK, in use for position, received in 100% of samples",
+          "base station 2: NOT seen right now, calibrated, geometry OK, not used for position",
+          "base station 3: NOT seen right now, calibration MISSING, geometry MISSING, not used for position",
+          "base station 4: NOT seen right now, calibration MISSING, geometry MISSING, not used for position"
+        ]
+      }
+    },
+    "aideck": {
+      "status": "OK",
+      "summary": "AI-deck driver running. Stock firmware exposes no WiFi/CPX settings as parameters (only deck.bcAI), which is normal. Camera frames do NOT come over this link: they come over the deck's own WiFi access point ('WiFi streaming example', then 192.168.4.1:5000), captured with tools/crazysim_macos/cpx_grab.py. This link only proves the deck's driver started.",
+      "details": {
+        "present": true,
+        "cpx_wifi_params": [],
+        "cpx_wifi_logs": []
+      }
+    },
+    "uart_conflict": {
+      "status": "INFO",
+      "summary": "both decks on: collected UART1 evidence (theory UNVERIFIED). No symptoms in this run.",
+      "details": {
+        "applicable": true,
+        "metrics": {
+          "gap8_state": "unknown",
+          "status2_fraction": 1.0,
+          "comSync_fraction": 1.0,
+          "posRt_mean_hz": 390.4,
+          "serRt_mean_hz": null,
+          "receive_count_mean": 1.0,
+          "position_std_mm_max": 7.53
+        },
+        "symptoms": [],
+        "theory": "Why this section exists. Current Crazyflie firmware gives the two decks\ndifferent serial ports: the AI-deck driver takes UART2 (that is the ESP32 /\nWiFi link, used by CPX) and the Lighthouse deck takes UART1. So the deck\ndrivers do not clash. BUT our GAP8 programs are built with `io=uart`\n(crazyflie_ssd/Makefile line 4, and line 1 of the wifi-img-streamer Makefile\nin aideck-gap8-examples), so the GAP8 prints its debug output on its own UART,\nand on the AI-deck that UART is wired to the Crazyflie's UART1 - the same line\nthe Lighthouse deck's FPGA uses to send its sweep data. If both transmit, the\nLighthouse stream could get corrupted.\n\nThis is a THEORY, not a verified fault. This tool only collects the evidence:\nhow often the Lighthouse serial link is in sync (comSync), the position rate\n(posRt), which base stations are received, and how noisy the position is.\nTo test the theory, run preflight twice with the drone sitting still in the\nsame spot: once with the GAP8 app running (normal power-on) and once with the\nAI-deck taken off, then compare the two JSON files:\n\n  preflight.py --gap8 running   -> saves run A\n  preflight.py --gap8 no-deck --compare <run A json>\n\nA clear drop in comSync or posRt, or a jump in position noise, only in the\n\"running\" run, supports the theory. No difference argues against it."
+      }
+    }
+  },
+  "errors": [],
+  "sampled": {
+    "pm.vbat": 50,
+    "pm.state": 50,
+    "pm.batteryLevel": 50,
+    "pm.chargeCurrent": 50,
+    "lighthouse.status": 50,
+    "lighthouse.bsReceive": 50,
+    "lighthouse.bsActive": 50,
+    "lighthouse.bsAvailable": 50,
+    "lighthouse.bsCalVal": 50,
+    "lighthouse.bsGeoVal": 50,
+    "lighthouse.bsCalCon": 50,
+    "lighthouse.bsCalUd": 50,
+    "lighthouse.comSync": 50,
+    "lighthouse.posRt": 50,
+    "lighthouse.estBs0Rt": 50,
+    "lighthouse.estBs1Rt": 50,
+    "stateEstimate.x": 50,
+    "stateEstimate.y": 50,
+    "stateEstimate.z": 50
+  },
+  "toc": {
+    "param_groups": [
+      "activeMarker",
+      "colAv",
+      "colorLedBot",
+      "colorLedTop",
+      "commander",
+      "cppm",
+      "cpu",
+      "crtpsrv",
+      "ctrlAtt",
+      "ctrlINDI",
+      "ctrlLee",
+      "ctrlMel",
+      "deck",
+      "deckTest",
+      "firmware",
+      "flightmode",
+      "flowdeck",
+      "health",
+      "hlCommander",
+      "imu_sensors",
+      "imu_tests",
+      "kalman",
+      "led",
+      "led_deck_ctrl",
+      "lighthouse",
+      "locSrv",
+      "loco",
+      "memTst",
+      "motion",
+      "motorPowerSet",
+      "multiranger",
+      "pid_attitude",
+      "pid_rate",
+      "pm",
+      "posCtlPid",
+      "posCtrlIndi",
+      "posEstAlt",
+      "powerDist",
+      "radiotest",
+      "ring",
+      "sensfusion6",
+      "sound",
+      "stabilizer",
+      "supervisor",
+      "syslink",
+      "system",
+      "tdoa2",
+      "tdoa3",
+      "tdoaEngine",
+      "usd",
+      "usec",
+      "velCtlPid"
+    ],
+    "log_groups": [
+      "DTR_P2P",
+      "acc",
+      "activeMarker",
+      "baro",
+      "bcCam",
+      "colAv",
+      "colorLedBot",
+      "colorLedTop",
+      "controller",
+      "crtp",
+      "ctrlINDI",
+      "ctrlLee",
+      "ctrlMel",
+      "ctrltarget",
+      "ctrltargetZ",
+      "deckStatus",
+      "estimator",
+      "ext_pos",
+      "extrx",
+      "extrx_raw",
+      "gyro",
+      "health",
+      "kalman",
+      "kalman_pred",
+      "lighthouse",
+      "locSrv",
+      "locSrvZ",
+      "loco",
+      "mag",
+      "memTst",
+      "motion",
+      "motor",
+      "oa",
+      "outlierf",
+      "pid_attitude",
+      "pid_rate",
+      "pm",
+      "posCtl",
+      "posCtrlIndi",
+      "posEstAlt",
+      "radio",
+      "range",
+      "ranging",
+      "ring",
+      "rpm",
+      "sensfusion6",
+      "stabilizer",
+      "stateEstimate",
+      "stateEstimateZ",
+      "supervisor",
+      "sys",
+      "tdoa2",
+      "tdoaEngine",
+      "twr",
+      "usd"
+    ],
+    "deck_params": [
+      "bcAI",
+      "bcActiveMarker",
+      "bcBuzzer",
+      "bcCam",
+      "bcCamLink",
+      "bcColorLedBot",
+      "bcColorLedTop",
+      "bcDWM1000",
+      "bcFlow",
+      "bcFlow2",
+      "bcLedRing",
+      "bcLighthouse4",
+      "bcLoco",
+      "bcMultiranger",
+      "bcOA",
+      "bcUSD",
+      "bcZRanger",
+      "bcZRanger2"
+    ],
+    "lighthouse_log": [
+      "angle0x",
+      "angle0x_0lh2",
+      "angle0x_1",
+      "angle0x_2",
+      "angle0x_3",
+      "angle0y",
+      "angle0y_0lh2",
+      "angle0y_1",
+      "angle0y_2",
+      "angle0y_3",
+      "angle1x",
+      "angle1x_0lh2",
+      "angle1x_1",
+      "angle1x_2",
+      "angle1x_3",
+      "angle1y",
+      "angle1y_0lh2",
+      "angle1y_1",
+      "angle1y_2",
+      "angle1y_3",
+      "bsActive",
+      "bsAvailable",
+      "bsCalCon",
+      "bsCalUd",
+      "bsCalVal",
+      "bsGeoVal",
+      "bsReceive",
+      "comSync",
+      "delta",
+      "disProb",
+      "estBs0Rt",
+      "estBs1Rt",
+      "posRt",
+      "rawAngle0x",
+      "rawAngle0xlh2",
+      "rawAngle0y",
+      "rawAngle0ylh2",
+      "rawAngle1x",
+      "rawAngle1xlh2",
+      "rawAngle1y",
+      "rawAngle1ylh2",
+      "status",
+      "validAngles",
+      "width0",
+      "width1",
+      "width2",
+      "width3",
+      "x",
+      "y",
+      "z"
+    ]
+  },
+  "overall": "OK",
+  "finished": "2026-09-24T09:48:27"
+}

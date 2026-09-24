@@ -427,6 +427,29 @@ Worth keeping in one place, because several of these are easy to assume:
 
 Newest first. One entry per working session.
 
+- **2026-09-24.** Lighthouse set up in the dorm, with the hub, in person. Log:
+  `docs/eval_results/2026-09-24-lighthouse-dorm-setup/`.
+
+  First real preflight on the drone. The laptop sees both the Crazyflie and the
+  Crazyradio through the hub, closing the Sep 17 radio question. Crazyflie 2.1, firmware
+  2026.08, AI-deck and Lighthouse deck both detected, radio address E7E7E7E709. It
+  still carried MinHyuk's lab geometry. I set the base-station channels: channel 1 at
+  the window end, channel 2 at the door end.
+
+  The first two geometry attempts were wrong, and I kept them in the log. Samples on
+  the bare floor were about 79 mm off. A sample held over the origin read x = 1.29 m
+  instead of 0, so the room frame was displaced by more than a metre, while the in-air
+  samples agreed with each other to a few mm. The cause is most likely the glossy tile
+  floor reflecting the base stations' light, which Bitcraze warns about. Retaking the
+  floor samples on a book dropped every sample to 0.3-2.0 mm, and the SIDE mark then
+  read exactly 0.61 m. That fix also changed how the samples were spread, so the
+  reflection cause is a strong hypothesis, not an isolated one; a one-minute
+  floor-versus-book test would settle it. It is the same hazard as the simulator's
+  mirrored floor on Sep 12, this time on a real sensor.
+
+  Still to do: export the geometry, run the tape check (the first real-hardware check
+  of the yaw sign), and preflight on drone 2.
+
 - **2026-09-22.** The micro-USB cable arrived, along with a second Crazyflie and
   two Lighthouse base stations. Four pieces of desk work, none needing the drone
   powered. Three are on branches with PRs (#4, #5, #6), none merged yet.
