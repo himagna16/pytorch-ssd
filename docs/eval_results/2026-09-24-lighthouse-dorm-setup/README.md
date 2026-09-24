@@ -67,7 +67,7 @@ starting directly above the origin and spread over both halves of the room.
 - z = 0 now sits at the book's height, not the floor. That does not matter for labels,
   which use x, y and yaw.
 
-## 5. What caused it: floor reflections? **WEAKENED at 11:12, see section 7**
+## 5. What caused it: floor reflections? **RULED OUT for positioning at 11:18, see section 8**
 
 *Update 11:12: the tape check on the bare floor passed at every mark (section 7), which
 argues against reflection as the cause. The text below is the reasoning as it stood at
@@ -113,7 +113,7 @@ project**, for the camera and for Lighthouse alike.
 - [ ] export the geometry from cfclient (Lighthouse tab -> Export configuration), so
       drone 2 can import it with no wizard
 - [x] `tools/lighthouse/tape_check.py`, run 1 (bare floor): **4 of 4 PASS, yaw sign confirmed** (section 7)
-- [ ] tape check run 2 (on the book), to complete the floor-vs-book comparison
+- [x] tape check run 2 (on the book): 4 of 4 PASS on the rerun (section 8). **Floor vs book: no difference.**
 - [ ] preflight on drone 2
 
 ## 7. Tape check, run 1: drone on the BARE FLOOR, 11:12 (`tape_check_run1_bare_floor.json`)
@@ -150,3 +150,35 @@ z read -0.02 m at every mark: the floor sits about 2 cm below the book-height pl
 
 The Sep 12 simulator-mirror parallel drawn in section 5 is therefore **withdrawn** for
 this case, until the book-vs-floor comparison says otherwise.
+
+## 8. Tape check, run 2: drone ON THE BOOK, 11:16-11:18
+
+- **Run 2a** (`tape_check_run2a_book_misplaced.json`): 3 of 4. **B read x 0.92**, because
+  the book hid the tape and the drone sat about 8 cm short of the +x mark (Sai's account,
+  consistent with y and yaw both being fine). Kept as evidence that the check catches an
+  8 cm placement error.
+- **Run 2b** (`tape_check_run2b_book.json`), re-placed: **4 of 4 PASS.**
+
+| step | bare floor (run 1) x, y / yaw | book (run 2b) x, y / yaw |
+|---|---|---|
+| A origin | +0.01, +0.01 / -4.6 | +0.02, +0.01 / -4.9 |
+| B +x | +1.00, -0.00 / -2.3 | +1.00, -0.01 / -1.1 |
+| C SIDE | +0.01, +0.61 / +1.6 | +0.01, +0.58 / -5.3 |
+| D origin, 90 deg left | +0.01, +0.01 / **+89.1** | +0.01, +0.03 / **+94.6** |
+
+z: floor -0.02, book -0.00. The book is about 2 cm thick, and z = 0 was set at book height.
+
+**Conclusions (as of 11:18)**
+
+1. **Floor vs book makes no measurable difference** to live Lighthouse positioning
+   (every x, y within 3 cm on both surfaces). **The floor-reflection hypothesis is ruled
+   out** as a cause of positioning error in this room. Sections 5 and 6 are superseded
+   on that point.
+2. The bad wizard attempts 1-2 are therefore best explained by **XYZ samples bunched at
+   the door end**. They were not isolated, but they are the only candidate left. The
+   rule that stands is to start over the origin and spread samples across the room. The
+   book is unnecessary.
+3. **Yaw sign confirmed three times on hardware:** a left turn reads +89.1 / +91.4 /
+   +94.6 deg across runs 1, 2a and 2b.
+4. Heading at rest, facing +x, reads -1 to -5 deg. That is consistent with hand
+   placement, not a bias worth chasing. C's y reads 0.58-0.61 against a 0.61 tape.

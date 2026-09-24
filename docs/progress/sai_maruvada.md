@@ -451,8 +451,12 @@ Newest first. One entry per working session.
   real hardware** (a left turn reads +89.1 deg). The room frame matches the tape to
   about 1 cm. The same run weakens my floor-reflection explanation: the drone sat on the
   bare tile and read its position correctly. The likelier cause of the bad attempts is
-  in-air samples bunched at one end, which a spread-out restart fixed. A book run is
-  next to finish the comparison. Still to do: export the geometry, preflight drone 2.
+  in-air samples bunched at one end, which a spread-out restart fixed. **11:18: the
+  book run also passed 4 of 4 (after one rerun, when I had the drone 8 cm short of the
+  mark and the check caught it), with the same numbers as the bare floor. So floor
+  reflection is ruled out**, and I corrected my own earlier claim in the log. A left
+  turn read +89 to +95 deg in all three runs. Still to do: export the geometry,
+  preflight drone 2.
 
 - **2026-09-22.** The micro-USB cable arrived, along with a second Crazyflie and
   two Lighthouse base stations. Four pieces of desk work, none needing the drone

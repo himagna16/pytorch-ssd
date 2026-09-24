@@ -291,7 +291,9 @@ held over the origin read x 1.29. Retaking the three floor samples with the dron
 same book each time gave errors of 0.3-2.0 mm, and SIDE read exactly 0.61 m. *Update
 11:12: the tape check then passed 4/4 with the drone on the bare floor, which weakens the
 reflection idea. The leading suspect is now XYZ samples bunched at one end of the room
-(the redo also spread them out).* Full log: `docs/eval_results/2026-09-24-lighthouse-dorm-setup/`.
+(the redo also spread them out).* *Update 11:18: book vs bare floor gave identical
+tape-check results, so floor reflection is ruled out. The book is unnecessary; spreading
+the XYZ samples from the origin outward is the rule.* Full log: `docs/eval_results/2026-09-24-lighthouse-dorm-setup/`.
 
 Procedure: same matte book under the drone for origin, +x and SIDE. First XYZ sample
 over the origin must read about (0, 0). Spread XYZ samples over both halves of the room.
