@@ -67,7 +67,11 @@ starting directly above the origin and spread over both halves of the room.
 - z = 0 now sits at the book's height, not the floor. That does not matter for labels,
   which use x, y and yaw.
 
-## 5. What caused it: floor reflections (strong hypothesis, not isolated)
+## 5. What caused it: floor reflections? **WEAKENED at 11:12, see section 7**
+
+*Update 11:12: the tape check on the bare floor passed at every mark (section 7), which
+argues against reflection as the cause. The text below is the reasoning as it stood at
+about 11:00. It is kept, not rewritten.*
 
 Bitcraze's setup guide says to remove reflective surfaces from the Lighthouse volume. The
 dorm floor is glossy vinyl tile. With the deck a few cm above it, the base stations'
@@ -106,7 +110,41 @@ project**, for the camera and for Lighthouse alike.
 - [x] geometry wizard, clean (attempt 3)
 - [ ] export the geometry from cfclient (Lighthouse tab -> Export configuration), so
       drone 2 can import it with no wizard
-- [ ] `tools/lighthouse/tape_check.py`: A origin, B +x, C SIDE, D origin turned 90 deg left
-      (the first hardware yaw-sign check)
+- [x] `tools/lighthouse/tape_check.py`, run 1 (bare floor): **4 of 4 PASS, yaw sign confirmed** (section 7)
+- [ ] tape check run 2 (on the book), to complete the floor-vs-book comparison
 - [ ] preflight on drone 2
-- [ ] controlled floor-vs-book sample (optional, settles section 5)
+
+## 7. Tape check, run 1: drone on the BARE FLOOR, 11:12 (`tape_check_run1_bare_floor.json`)
+
+Read-only `tools/lighthouse/tape_check.py` against the attempt-3 geometry.
+
+| step | placement | measured x, y (m) | yaw (deg) | verdict |
+|---|---|---|---|---|
+| A | ORIGIN, camera toward +x | +0.01, +0.01 | -4.6 | PASS |
+| B | +x mark | +1.00, -0.00 | -2.3 | PASS |
+| C | SIDE mark | +0.01, +0.61 | +1.6 | PASS |
+| D | ORIGIN, turned 90 deg LEFT | +0.01, +0.01 | **+89.1** | PASS |
+
+z read -0.02 m at every mark: the floor sits about 2 cm below the book-height plane.
+
+**Two results.**
+
+1. **Yaw sign CONFIRMED on real hardware.** A left turn reads +89.1 deg, 0.9 deg from
+   the expected +90. Together with the Sep 22 simulator validation (99-100% side
+   agreement, PR #6), this closes the yaw-sign chain first flagged on Sep 10. The
+   Lighthouse labels will not come out mirrored. The room frame matches the tape to
+   about 1 cm in x and y.
+2. **The floor-reflection hypothesis is WEAKENED.** With the drone flat on the bare
+   tile, the live position at the origin is (0.01, 0.01), not metres off. If floor
+   reflections corrupted the sweep angles near the floor, this run should have failed.
+   The better-supported explanation for attempts 1-2 is the geometry solve itself. Every
+   XYZ sample sat at the door end (x 1.1-1.95 in the bad frame), and the solver picks
+   the station positions by clustering mirror-image candidate solutions across samples.
+   Bunched samples let it settle on a wrong cluster, and the floor samples then showed
+   up as 79 mm misfits. Attempt 3 was a clean restart with samples spread from the
+   origin outward. This is still not isolated. The book run (run 2) completes the
+   comparison. A wizard attempt on the bare floor with well-spread samples would settle
+   it outright.
+
+The Sep 12 simulator-mirror parallel drawn in section 5 is therefore **withdrawn** for
+this case, until the book-vs-floor comparison says otherwise.

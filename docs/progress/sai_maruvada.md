@@ -447,8 +447,12 @@ Newest first. One entry per working session.
   floor-versus-book test would settle it. It is the same hazard as the simulator's
   mirrored floor on Sep 12, this time on a real sensor.
 
-  Still to do: export the geometry, run the tape check (the first real-hardware check
-  of the yaw sign), and preflight on drone 2.
+  **11:12, tape check on the bare floor: 4 of 4 PASS, and the yaw sign is confirmed on
+  real hardware** (a left turn reads +89.1 deg). The room frame matches the tape to
+  about 1 cm. The same run weakens my floor-reflection explanation: the drone sat on the
+  bare tile and read its position correctly. The likelier cause of the bad attempts is
+  in-air samples bunched at one end, which a spread-out restart fixed. A book run is
+  next to finish the comparison. Still to do: export the geometry, preflight drone 2.
 
 - **2026-09-22.** The micro-USB cable arrived, along with a second Crazyflie and
   two Lighthouse base stations. Four pieces of desk work, none needing the drone
