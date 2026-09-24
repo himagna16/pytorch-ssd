@@ -16,6 +16,11 @@
 # Usage:  zsh tools/real_frames/grid_capture.sh
 #         GRID_SUBJECT=p02 zsh tools/real_frames/grid_capture.sh     (another person)
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/grid_capture.sh   (rehearsal)
+#         GRID_DIR=<existing folder> GRID_START=6 zsh tools/real_frames/grid_capture.sh
+#             (resume after a flat battery: skips the empty clip and clips < 6, adds to the
+#              same folder, then re-scores everything in it)
+# If a clip gets no frames (usually the battery), the script stops recording but STILL scores
+# whatever it captured, and prints the resume command.
 set -u
 PY=~/Downloads/drone/trainenv/bin/python
 REPO=~/Downloads/drone/pytorch_ssd
@@ -27,7 +32,9 @@ SECS=${GRID_SECONDS:-8}
 SUBJ=${GRID_SUBJECT:-p01}
 LIGHT=${GRID_LIGHT:-room}
 ROOT=~/drone_frames; [[ -n "${CAMERA_CHECK_GRAB_ARGS:-}" ]] && ROOT=~/drone_frames/_rehearsal   # mock runs never land next to real data
-D=$ROOT/$(date +%F)/grid_capture_$(date +%H%M%S)
+D=${GRID_DIR:-$ROOT/$(date +%F)/grid_capture_$(date +%H%M%S)}
+START=${GRID_START:-0}
+STOPPED=""
 mkdir -p "$D" || exit 1
 exec > >(tee -a "$D/grid_capture.log") 2>&1
 echo "== grid capture, $(date)  subject $SUBJ  light $LIGHT  folder: $D"
@@ -43,11 +50,13 @@ countdown() { for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; ((s<=5)) 
               speak "Recording. Stay still."; printf "\r   recording ${1} s...\n"; }
 
 # --- empty room first, while you are behind the drone anyway
+if (( START == 0 )); then
 echo; echo "== clip 0 of 9: EMPTY ROOM. Stand BEHIND the drone."
 read "?   press Enter, then stay out of view "
 speak "Empty room. Stay behind the drone."; countdown 12
 grab --seconds 12 --every 1 --vis 0 --subject empty --light "$LIGHT" --out "$D" || { echo "FAIL: empty clip"; exit 3; }
 speak "Done."
+fi
 
 # --- 3 x 3 grid, far to near so you walk toward the drone
 n=0
@@ -55,17 +64,24 @@ for spec in "8 2.44 14.0" "7 2.13 15.9" "5 1.52 21.8"; do
   set -- ${=spec}; tiles=$1; dist=$2; b=$3
   for side in LEFT CENTRE RIGHT; do
     n=$((n+1))
+    (( n < START )) && continue
+    [[ -n "$STOPPED" ]] && continue
     case $side in LEFT) bear=-$b; col="col 1";; CENTRE) bear=0; col="col 3";; RIGHT) bear=$b; col="col 5";; esac
     echo; echo "== clip $n of 9: ${tiles} tiles out, ${side} ($col), ${dist} m, bearing ${bear}. Face the drone."
     read "?   press Enter, then walk to the mark "
     speak "${tiles} tiles, ${side}."
     countdown $SECS
-    grab --seconds $SECS --every 1 --dist $dist --bearing $bear --vis 1 --subject "$SUBJ" --light "$LIGHT" --out "$D" \
-      || { echo "FAIL: clip $n"; exit 4; }
+    if ! grab --seconds $SECS --every 1 --dist $dist --bearing $bear --vis 1 --subject "$SUBJ" --light "$LIGHT" --out "$D"; then
+      echo "!! clip $n got no frames: most likely the BATTERY (the camera browns out first)."
+      echo "!! Scoring what was captured. To finish later with a charged battery:"
+      echo "!!   GRID_DIR=$D GRID_START=$n zsh ~/Downloads/drone/pytorch_ssd/tools/real_frames/grid_capture.sh"
+      speak "No frames. The battery is probably flat. Scoring what we have."
+      STOPPED=$n; continue
+    fi
     speak "Done."
   done
 done
-speak "All clips done. Come back to the laptop."
+[[ -z "$STOPPED" ]] && speak "All clips done. Come back to the laptop."
 
 echo; echo "== scoring on the chip network (offline)"
 score "$D" --json "$D/grid_scores.json" > "$D/grid_score.txt" 2>&1
