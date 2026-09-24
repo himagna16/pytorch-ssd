@@ -17,6 +17,6 @@ Station spacing 3.26 m. `systemType: 2` (V2).
 Lighthouse Positioning tab -> **Import configuration** -> this file. Then run
 `tools/lighthouse/tape_check.py` on that drone to confirm.
 
-**Only valid while the stands do not move.** The stand feet were taped on the floor on
+**Only valid while the stands do not move.** Unplug the stations at the wall, not at the station, so the heads are not nudged; they keep their channels when unpowered. The stand feet were taped on the floor on
 2026-09-24. If a stand moves, redo the wizard and export a new dated file; do not
 overwrite this one.
