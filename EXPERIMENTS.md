@@ -1,5 +1,52 @@
 # Experiment Log
 
+## Sep 24, 2026 — Lighthouse in the dorm: frame matches the tape, yaw sign confirmed on hardware (Sai)
+
+Two SteamVR 2.0 base stations (channel 1 at the window end, channel 2 at the door end)
+on stands, and drone 1 (AI-deck + Lighthouse deck) on USB. The frame: +x toward the
+door, the SIDE mark at +y 0.61 m. Geometry wizard, cfclient 2026.8:
+
+| attempt | floor samples | XYZ samples | origin / SIDE error | sample held over the origin |
+|---|---|---|---|---|
+| 1-2 (FLAWED) | bare tile | bunched at the door end (x 1.1-1.95) | 78-79 mm | read x 1.29, frame displaced |
+| 3 | on a book | spread over the room, starting over the origin | 1.2 / 1.0 mm (all rows 0.3-2.0 mm) | read (0.07, -0.03) |
+
+Tape check (`tools/lighthouse/tape_check.py`, read-only), against attempt 3:
+
+- **Bare floor: 4/4 PASS.**
+- **Book: 4/4 PASS** after one re-placement. The first book run caught the drone
+  sitting 8 cm short of the +x mark.
+- Every x, y is within 3 cm on both surfaces.
+- **The yaw sign is confirmed on hardware:** a 90-degree left turn read +89.1, +91.4
+  and +94.6 deg.
+- **Floor reflection is ruled out** as the cause of attempts 1-2. The bunched XYZ
+  samples are the remaining explanation. I had first proposed reflection mid-session,
+  then withdrew it once the bare-floor run passed. Both are kept in the log.
+
+Geometry: `docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`. Log and JSONs:
+`docs/eval_results/2026-09-24-lighthouse-dorm-setup/`.
+
+## Sep 22, 2026 — First real AI-deck frames: not mirrored; furniture false positive; stream differs from the sim (Sai)
+
+Dorm, drone on a chair with the lens about 0.8 m up, one subject (Sai), marks at
+2.44 m and +-14 deg. Chip arm throughout.
+
+- **Run 1:** the network said bin 7 in 41 of 44 frames wherever Sai stood. Probes
+  located a **false positive on furniture** in the right third of the frame: blanking
+  that region moved the answer to centre with confidence around 0.23, and mirroring the
+  frame moved it to bin 1. The follower would have latched on 32% of the LEFT-clip
+  frames.
+- **Run 2, chairs removed:**
+  - The empty room gave **0 false locks** (peak 0.71).
+  - Mirror check: on confident frames, 10 of 12 were on the correct side. The scorer's
+    FAIL came from the subject leaving the LEFT mark at frame 15.
+  - **The camera is not mirrored.**
+- **The stream is 162 x 122, pixels 0-191, about 2 fps.** That is not the simulator's
+  324 x 244 with a 0-255 range. It is mono: the Bayer phase means are all equal.
+
+Real frames stay on the laptop because they show people; only numbers are committed.
+Evidence: `docs/eval_results/2026-09-22-first-real-frames/`.
+
 ## Sep 22, 2026 — The scorer defaults to the chip arm; the Sep 17 chip rescore was wrong (Sai)
 
 `tools/real_frames/score_real_frames.py` gains `--backend {float,chip}`, default

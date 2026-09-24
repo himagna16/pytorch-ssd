@@ -3,6 +3,22 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-09-24** — **The dorm Lighthouse frame, channels and procedure.** Channel 1 is
+  at the window end (Oaj's corner) and channel 2 at the door end (Sai's side). The
+  origin is the blue ORIGIN tape (centre of the 5 x 10 tile floor); +x points to the
+  door, 1.00 m to the +x tape; +y points to the SIDE tape, 0.61 m. The geometry file of
+  record is `docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`, and the stand
+  feet are taped. Procedure: start the XYZ samples over the origin and spread them over
+  the whole room; every row must be under 15 mm; every new drone must pass
+  `tape_check.py` before it collects data. Rejected: bare-floor floor samples as the
+  cause to design around. The book-vs-floor comparison showed no difference, so the
+  book is optional. If a stand moves, redo the wizard and export a new dated file;
+  never overwrite.
+- **2026-09-22** — **Real frames of people are never committed to this public repo.**
+  They stay under `~/drone_frames/<date>/` on Sai's laptop. Scores, JSON, logs and
+  probe scripts are committed. Rehearsal (mock) runs are written under
+  `~/drone_frames/_rehearsal/`, so a cleanup can never touch real captures.
+
 - **2026-09-20** — **Lighthouse, not a Flow deck, and ground truth comes from a
   second drone on the subject's head.** The thesis setup uses a Bitcraze Flow deck,
   which gives relative motion over the floor: it cannot say where anything is in
