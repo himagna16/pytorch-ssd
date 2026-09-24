@@ -115,49 +115,55 @@ t.append(steps([
 ]))
 t.append('</svg>')
 
-# ---------- Lighthouse night ----------
-oy, xy = ycol(5.0), ycol(5.0 - 3.28125)
-sy_x = xmid(5)                       # SIDE mark: row5/row6 line, middle of col 5  (= +y, 2 tiles)
-u = [HEAD.format(title="Lighthouse night: stations + 3 pieces of blue tape, tile layout", color="#1f5fbf",
-                 h1="LIGHTHOUSE NIGHT: 3 pieces of blue tape + 2 stations (5 x 10 floor)",
-                 h2="Same view and grid as the camera sheet: door end at the top, window end at the bottom."), room()]
-s1 = (X0 + W*F + 60, Y0 - 30); s2 = (X0 - 60, YW + 22)
-u.append(f'<line x1="{s1[0]}" y1="{s1[1]}" x2="{cx+6}" y2="{oy-6}" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>')
-u.append(f'<line x1="{s2[0]}" y1="{s2[1]}" x2="{cx-6}" y2="{oy+6}" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>')
-for (x, y), n in ((s1, 1), (s2, 2)):
+# ---------- Lighthouse night, AS BUILT 2026-09-24 ----------
+# Sai taped the frame rotated 180 deg from the first plan: +x points toward the DOOR, and the
+# SIDE mark is on the left when facing +x (verified by Sai), which from above is col 1.
+# Channels as set: channel 1 = window end (Oaj's corner), channel 2 = door end (Sai's side).
+oy, xy = ycol(5.0), ycol(5.0 + 3.28125)
+sy_x = xmid(1)
+u = [HEAD.format(title="Lighthouse setup as built: stations, blue tape, wizard + tape check", color="#1f5fbf",
+                 h1="LIGHTHOUSE, AS YOU SET IT UP (5 x 10 floor)",
+                 h2="Door end at the top, window end at the bottom. +x points toward the DOOR."), room()]
+ch2 = (X0 + W*F + 60, Y0 - 30); ch1 = (X0 - 60, YW + 22)
+u.append(f'<line x1="{ch2[0]}" y1="{ch2[1]}" x2="{cx+6}" y2="{oy-6}" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>')
+u.append(f'<line x1="{ch1[0]}" y1="{ch1[1]}" x2="{cx-6}" y2="{oy+6}" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>')
+for (x, y), n in ((ch2, 2), (ch1, 1)):
     u.append(f'<circle cx="{x}" cy="{y}" r="16" fill="#e07b00" stroke="#8a4a00" stroke-width="2"/><text x="{x}" y="{y+6}" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">{n}</text>')
-u.append(f'<text x="{s1[0]-22}" y="{s1[1]+5}" text-anchor="end" fill="#8a4a00" font-weight="bold" font-size="12">Station 1 = channel 1 (door end)</text>')
-u.append(f'<text x="40" y="{s2[1]+42}" fill="#8a4a00" font-weight="bold" font-size="12">Station 2 = channel 2 (window end, other side)</text>')
+u.append(f'<text x="{ch2[0]-22}" y="{ch2[1]+5}" text-anchor="end" fill="#8a4a00" font-weight="bold" font-size="12">Channel 2: door end, your side ✓</text>')
+u.append(f'<text x="40" y="{ch1[1]+42}" fill="#8a4a00" font-weight="bold" font-size="12">Channel 1: window end, Oaj\'s corner ✓</text>')
 u.append(f'<rect x="{X0-4}" y="{oy-20}" width="{W*F+8}" height="40" fill="#e8f0ff" stroke="#1f5fbf" stroke-width="1.5" rx="6" opacity="0.9"/>')
 u.append(X(cx, oy, "#1f5fbf", s=10, w=5))
-u.append(f'<text x="{cx}" y="{oy-24}" text-anchor="middle" fill="#1f5fbf" font-weight="bold">① ORIGIN</text>')
+u.append(f'<text x="{cx}" y="{oy+36}" text-anchor="middle" fill="#1f5fbf" font-weight="bold">① ORIGIN</text>')
 u.append(X(sy_x, oy, "#1f5fbf", s=10, w=5))
-u.append(f'<text x="{sy_x}" y="{oy-24}" text-anchor="middle" fill="#1f5fbf" font-weight="bold">③ SIDE</text>')
-u.append(f'<line x1="{cx+12}" y1="{oy+14}" x2="{sy_x-12}" y2="{oy+14}" stroke="#c0392b" stroke-width="1.5" marker-start="url(#r)" marker-end="url(#r)"/>')
-u.append(f'<text x="{(cx+sy_x)/2}" y="{oy+32}" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">2 tiles</text>')
-u.append(f'<line x1="{cx}" y1="{oy+22}" x2="{cx}" y2="{xy-6}" stroke="#1f5fbf" stroke-width="2.5" marker-end="url(#b)"/>')
+u.append(f'<text x="{sy_x}" y="{oy+36}" text-anchor="middle" fill="#1f5fbf" font-weight="bold">③ SIDE</text>')
+u.append(f'<line x1="{sy_x+12}" y1="{oy-12}" x2="{cx-12}" y2="{oy-12}" stroke="#c0392b" stroke-width="1.5" marker-start="url(#r)" marker-end="url(#r)"/>')
+u.append(f'<text x="{(cx+sy_x)/2}" y="{oy-18}" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="bold">2 tiles</text>')
+u.append(f'<line x1="{cx}" y1="{oy-22}" x2="{cx}" y2="{xy+6}" stroke="#1f5fbf" stroke-width="2.5" marker-end="url(#b)"/>')
 u.append(f'<line x1="{cx-14}" y1="{xy}" x2="{cx+14}" y2="{xy}" stroke="#1f5fbf" stroke-width="5"/>')
 u.append(f'<text x="{cx+18}" y="{xy+5}" fill="#1f5fbf" font-weight="bold">② +x</text>')
-u.append(f'<text x="{cx-18}" y="{ycol(3.6)}" text-anchor="end" fill="#1f5fbf" font-weight="bold" font-size="12">3 tiles</text>')
-u.append(f'<text x="{cx-18}" y="{ycol(3.6)+14}" text-anchor="end" fill="#1f5fbf" font-size="11">+ 3⅜ in</text>')
+u.append(f'<text x="{cx+18}" y="{ycol(6.9)}" fill="#1f5fbf" font-weight="bold" font-size="12">1.00 m</text>')
+u.append(f'<text x="{cx+18}" y="{ycol(6.9)+14}" fill="#1f5fbf" font-size="11">(3 tiles + 3⅜ in)</text>')
+u.append(f'<text x="{sy_x}" y="{oy+52}" text-anchor="middle" fill="#555" font-size="10">left of +x</text>')
 u.append(steps([
-    ('h', 'Tonight, in this order'),
-    ('b', '1. Tape (blue)'), ('t', '① ORIGIN: on the line between row 5 and row 6,'),
-    ('t', '   middle of col 3 (centre of the 5 x 10 floor).'),
-    ('t', '② +x: from ①, 3 tiles + 3⅜ in toward the window.'),
-    ('t', '③ SIDE: same line as ①, middle of col 5 (2 tiles over).'), ('gap', ''),
-    ('o', '2. Station channels (one at a time)'), ('t', 'Station powered + its micro-USB into the hub.'),
-    ('t', 'cfclient → Lighthouse tab → "Set BS channel" → Scan.'),
-    ('t', 'Station 1 → 1. Unplug, plug station 2 → 2.'), ('gap', ''),
-    ('o', '3. Stands'), ('t', 'Diagonal corners as drawn, above the bed mattresses,'),
-    ('t', 'tilted down at ① ORIGIN, heads locked. Power only.'), ('gap', ''),
-    ('b', '4. Geometry wizard (cfclient, drone on the cable)'), ('t', 'Drone on ① → on ② → a few floor spots → held still'),
-    ('t', 'in the air. Camera facing the window each time.'), ('gap', ''),
-    ('b', '5. Tape check (Terminal, cfclient disconnected)'),
+    ('h', 'Done so far ✓'),
+    ('t', '✓ tape  ✓ channels (1 window end, 2 door end)  ✓ stands'), ('gap', ''),
+    ('b', 'NEXT: room setup wizard (cfclient)'),
+    ('t', 'Drone on the cable, battery in. cfclient: pick usb://0 → Connect.'),
+    ('t', 'Lighthouse Positioning tab → "Start Set Up". For each step'),
+    ('t', 'put the drone down, hands off, click "Start measurement":'),
+    ('t', '  Origin sample   → drone on ① ORIGIN'),
+    ('t', '  X-axis sample   → drone on ② +x'),
+    ('t', '  XY-plane sample → drone on ③ SIDE'),
+    ('t', '  XYZ-space (3-5) → hold it ~waist high over the floor,'),
+    ('t', '     twist left-right quickly, hold still, "Sample position".'),
+    ('t', '     Spread them out: near ①, near each end, near ③.'),
+    ('t', 'Wait for "Uploaded". Then Disconnect in cfclient.'), ('gap', ''),
+    ('b', 'THEN: tape check (Terminal)'),
     ('code', '../cfloaderenv/bin/python tools/lighthouse/tape_check.py'),
-    ('t', 'A on ①, B on ②, C on ③, D on ① turned 90° LEFT.'),
+    ('t', 'A on ①, B on ②, C on ③, D on ① turned 90° LEFT'),
+    ('t', '(camera then faces ③). Camera faces +x for A, B, C.'),
     ('r', 'All 4 PASS = room frame right + yaw sign confirmed.'), ('gap', ''),
-    ('s', 'Run commands from ~/Downloads/drone/pytorch_ssd. Green camera tape can stay.'),
+    ('s', 'Run from ~/Downloads/drone/pytorch_ssd. cfclient must be disconnected first.'),
 ]))
 u.append('</svg>')
 
