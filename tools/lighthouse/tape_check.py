@@ -45,7 +45,7 @@ STEPS = [
     ("A", "Put the drone flat on the ORIGIN X, camera facing the WINDOW.", dict(x=0.0, y=0.0, yaw=0.0)),
     ("B", "Move it onto the +x mark (3 tiles + 3 3/8 in toward the window), camera facing the window.",
      dict(x=1.0, y=0.0, yaw=0.0)),
-    ("C", "Move it onto the SIDE mark (middle of row 6, col 5), camera facing the window.",
+    ("C", "Move it onto the SIDE mark (col 5, same tile line as the origin), camera facing the window.",
      dict(x=0.0, y=SIDE_Y, yaw=0.0)),
     ("D", "Back on the ORIGIN X, then TURN it 90 deg to its LEFT (camera now faces the col-5 side).",
      dict(x=0.0, y=0.0, yaw=90.0)),

@@ -1,7 +1,7 @@
 # Generates the two dorm tape sheets to scale on Sai's 5 x 11 tile (1 ft) grid.
 F = 38                      # px per foot (one tile)
 X0, Y0 = 190, 110           # top-left of the tile rectangle (door end at top)
-W, L = 5, 11                # tiles wide, tiles long
+W, L = 5, 10                # tiles wide, tiles long (was 11; the door-end row went to station 1's stand, 2026-09-24)
 YW = Y0 + L * F             # window-end edge (bottom)
 def ycol(k): return YW - k * F          # joint k feet from the window edge
 def xmid(c): return X0 + c * F - F / 2  # middle of column c (1 = drone's left = page left)
@@ -40,7 +40,7 @@ def room():
     o.append(f'<line x1="{X0-20}" y1="{YW+4}" x2="{X0+W*F+20}" y2="{YW+4}" stroke="#6fb3e0" stroke-width="7"/>')
     o.append(f'<text x="{X0+W*F/2}" y="{YW+36}" text-anchor="middle" font-weight="bold" fill="#2a7ab0">WINDOW END (curtains closed)</text>')
     o.append(f'<text x="{X0+W*F/2}" y="{Y0-10}" text-anchor="middle" font-weight="bold" fill="#333">DOOR END</text>')
-    o.append(f'<text x="{X0-10}" y="{YW+82}" fill="#888" font-size="11">Each square = one 1 ft floor tile. 5 wide x 11 long, to scale. Beds approximate.</text>')
+    o.append(f'<text x="{X0-10}" y="{YW+82}" fill="#888" font-size="11">Each square = one 1 ft floor tile. 5 wide x 10 long, to scale. Beds approximate.</text>')
     return '\n'.join(o)
 
 def X(x, y, color, s=8, w=4):
@@ -116,10 +116,10 @@ t.append(steps([
 t.append('</svg>')
 
 # ---------- Lighthouse night ----------
-oy, xy = ycol(5.5), ycol(5.5 - 3.28125)
-sy_x = xmid(5)                       # SIDE mark: middle of row 6, col 5  (= +y, 2 tiles)
+oy, xy = ycol(5.0), ycol(5.0 - 3.28125)
+sy_x = xmid(5)                       # SIDE mark: row5/row6 line, middle of col 5  (= +y, 2 tiles)
 u = [HEAD.format(title="Lighthouse night: stations + 3 pieces of blue tape, tile layout", color="#1f5fbf",
-                 h1="LIGHTHOUSE NIGHT: 3 pieces of blue tape + 2 stations",
+                 h1="LIGHTHOUSE NIGHT: 3 pieces of blue tape + 2 stations (5 x 10 floor)",
                  h2="Same view and grid as the camera sheet: door end at the top, window end at the bottom."), room()]
 s1 = (X0 + W*F + 60, Y0 - 30); s2 = (X0 - 60, YW + 22)
 u.append(f'<line x1="{s1[0]}" y1="{s1[1]}" x2="{cx+6}" y2="{oy-6}" stroke="#e07b00" stroke-width="1.5" stroke-dasharray="6 4"/>')
@@ -142,9 +142,10 @@ u.append(f'<text x="{cx-18}" y="{ycol(3.6)}" text-anchor="end" fill="#1f5fbf" fo
 u.append(f'<text x="{cx-18}" y="{ycol(3.6)+14}" text-anchor="end" fill="#1f5fbf" font-size="11">+ 3⅜ in</text>')
 u.append(steps([
     ('h', 'Tonight, in this order'),
-    ('b', '1. Tape (blue)'), ('t', '① ORIGIN: middle of row 6, middle of col 3.'),
+    ('b', '1. Tape (blue)'), ('t', '① ORIGIN: on the line between row 5 and row 6,'),
+    ('t', '   middle of col 3 (centre of the 5 x 10 floor).'),
     ('t', '② +x: from ①, 3 tiles + 3⅜ in toward the window.'),
-    ('t', '③ SIDE: middle of row 6, middle of col 5 (2 tiles over).'), ('gap', ''),
+    ('t', '③ SIDE: same line as ①, middle of col 5 (2 tiles over).'), ('gap', ''),
     ('o', '2. Station channels (one at a time)'), ('t', 'Station powered + its micro-USB into the hub.'),
     ('t', 'cfclient → Lighthouse tab → "Set BS channel" → Scan.'),
     ('t', 'Station 1 → 1. Unplug, plug station 2 → 2.'), ('gap', ''),

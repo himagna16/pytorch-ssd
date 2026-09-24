@@ -157,8 +157,9 @@ Lighthouse placement decided:
     the row 1/row 2 joint in the middle column, CENTER 8 tiles out (2.44 m), LEFT/RIGHT
     2 tiles either side (14 deg). `camera_check.sh` defaults match (2.44 m, 14 deg).
   - [`dorm_lighthouse_tape.svg`](dorm_lighthouse_tape.svg): Lighthouse night, three
-    blue marks (ORIGIN mid row 6 / col 3; +x 3 tiles + 3⅜ in toward the window; SIDE
-    mid row 6 / col 5 = +y 0.61 m), the station corners, and the evening's steps in order.
+    blue marks (ORIGIN on the row 5/6 line, mid col 3; +x 3 tiles + 3⅜ in toward the window;
+    SIDE same line, mid col 5 = +y 0.61 m). Floor is 5 x 10 since 2026-09-24: station 1's
+    stand took the door-end row, the station corners, and the evening's steps in order.
     Verification: `tools/lighthouse/tape_check.py` (read-only; A origin, B +x, C side,
     D origin turned 90 deg left = first real-hardware yaw-sign check).
 
