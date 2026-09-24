@@ -96,8 +96,10 @@ project**, for the camera and for Lighthouse alike.
 
 ## 6. Procedure going forward (also in `docs/hardware/dorm_setup.md`)
 
-- Take floor samples on a matte, flat object (a book), never on the bare tile. Use the
-  same object for all three.
+- *(11:12: the book is now a precaution, not a proven fix; see section 7.)* Taking the floor
+  samples on the same book is harmless, so keep doing it until the book run settles it.
+- **Most important:** start the in-air samples right over the origin and spread them
+  over the whole room. Bunching them at one end is the leading suspect for attempts 1-2.
 - Take the first XYZ sample over the origin and check it reads about (0, 0).
 - Spread the in-air samples over both halves of the room. Target every row under 15 mm.
 - **The geometry is only valid while the stations do not move.** A bumped stand means
