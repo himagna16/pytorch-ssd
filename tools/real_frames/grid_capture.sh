@@ -66,7 +66,17 @@ if (( B < 15 )); then
   speak "The camera is black. Unplug and replug the battery."
   exit 6
 fi
-(( B > 70 )) && echo "   note: bright exposure mode (~90). Detection was weaker in this mode on 2026-09-24. Recording anyway; it is labelled by brightness."
+# Exposure is effectively random per power-up (22:12-22:16 test: 42-146 with nothing changed), so
+# only record inside one band to keep runs comparable. 30-60 matches the one clean grid (~40).
+LO=${GRID_MIN_BRIGHT:-30}; HI=${GRID_MAX_BRIGHT:-60}
+if (( B < LO || B > HI )) && [[ -z "${GRID_ACCEPT_ANY:-}" ]]; then
+  echo "!! Brightness $B is outside the target band $LO-$HI. Unplug and replug the battery, wait 30 s,"
+  echo "!! rejoin the WiFi and run again (usually 1-3 tries). Nothing was recorded."
+  echo "!! (GRID_ACCEPT_ANY=1 records anyway.)"
+  speak "Brightness out of range. Unplug and replug the battery."
+  echo "$(date '+%F %T') drone=$DRONE brightness=$B source=grid_capture rejected" >> ~/drone_frames/exposure_log.txt 2>/dev/null
+  exit 7
+fi
 echo "$(date '+%F %T') drone=$DRONE brightness=$B source=grid_capture" >> ~/drone_frames/exposure_log.txt 2>/dev/null
 
 countdown() { for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; ((s<=5)) && speak "$s"; sleep 1; done

@@ -202,3 +202,34 @@ at every position. The script's new near-black warning fired as intended.
 
 Only `204502` (7 of 9, brightness 38-41) and the dim half of `183109` are usable,
 and they agree (see the night section). No valid complete 9-position grid exists yet.
+
+---
+
+## 22:12-22:16 power-cycle test: exposure is effectively RANDOM per power-up (`exposure_log_powercycle.txt`)
+
+Drone 09 sat on the chair facing the room, at night with room lights only. Only the
+battery was unplugged and replugged, 5 times in 4 minutes, with an 8-frame
+`exposure_check.sh` after each power-up.
+
+| power-up | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| mean brightness | **146** | 76 | **42** | 78 | 74 |
+
+With the scene and light held fixed, the power-up alone moves brightness across a
+**3.5x range**. Including tonight's grid runs, the range is **4 to 146**. The "two
+modes (~40 / ~90)" framing above was too simple: **it is a continuum set at
+power-up.** This confirms the mechanism read from the code: the stock streamer
+runs `PI_CAMERA_CMD_AEG_INIT` once at start-up and starts and stops the sensor for
+every frame.
+
+**Our flight app has the same problem.** `crazyflie_ssd/src/camera_if.c` (lines 28-44,
+83-88) copies the Bitcraze pattern exactly: `AEG_INIT` once, then start/stop per
+frame. So a real flight would inherit a random exposure per power-up, including the
+near-black case where the champion locks on noise. **For the firmware lane:** a fixed
+manual exposure, or re-running or continuously updating AE, plus the brightness-floor
+guard.
+
+**For data collection now:** `grid_capture.sh` only records when the pre-flight
+brightness is inside 30-60 (the band of the one clean grid). Otherwise it tells the
+user to power-cycle and records nothing. Override with `GRID_ACCEPT_ANY=1`. Each check
+is logged. `exposure_check.sh` now reports against the same band.

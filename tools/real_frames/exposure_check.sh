@@ -17,7 +17,7 @@ $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} --n 8 --
   || { echo "FAIL: no frames (on the drone's WiFi? battery in for 30 s?)"; exit 2; }
 M=$($PY -c "import glob,numpy as n;from PIL import Image;fs=glob.glob('$T/*.png')+glob.glob('$T/*.jpg');print(f'{n.mean([n.asarray(Image.open(f).convert(\"L\")).mean() for f in fs]):.1f} {len(fs)}')")
 set -- ${=M}
-MODE="dim (~40)"; (( ${1%.*} > 65 )) && MODE="bright (~90)"; (( ${1%.*} < 15 )) && MODE="NEAR-BLACK: do not record"
+MODE="in the grid band 30-60: OK to record"; (( ${1%.*} > 60 )) && MODE="too bright for the grid band: power-cycle"; (( ${1%.*} < 30 )) && MODE="too dark for the grid band: power-cycle"; (( ${1%.*} < 15 )) && MODE="NEAR-BLACK: do not record"
 echo "drone $DRONE: mean brightness $1 over $2 frames -> $MODE"
 mkdir -p ~/drone_frames && echo "$(date '+%F %T') drone=$DRONE brightness=$1 frames=$2 mode=$MODE" >> ~/drone_frames/exposure_log.txt
 echo "logged to ~/drone_frames/exposure_log.txt"

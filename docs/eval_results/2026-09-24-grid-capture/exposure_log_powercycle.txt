@@ -1,0 +1,5 @@
+2026-09-24 22:12:45 drone=09 brightness=146.0 frames=8 mode=bright (~90)
+2026-09-24 22:13:35 drone=09 brightness=75.8 frames=6 mode=bright (~90)
+2026-09-24 22:14:19 drone=09 brightness=41.8 frames=8 mode=dim (~40)
+2026-09-24 22:15:09 drone=09 brightness=78.1 frames=8 mode=bright (~90)
+2026-09-24 22:15:57 drone=09 brightness=73.7 frames=8 mode=bright (~90)

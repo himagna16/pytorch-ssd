@@ -1,5 +1,16 @@
 # Experiment Log
 
+## Sep 24, 2026 (22:15) — Camera exposure is random per power-up, in our flight app too (Sai)
+
+Drone 09, untouched on the chair, room lights, 5 battery power-cycles in 4 minutes:
+mean brightness **146 / 76 / 42 / 78 / 74**. Counting the night's runs, the range is
+**4-146** for the same scene. The cause is the one-time `PI_CAMERA_CMD_AEG_INIT` plus
+per-frame start/stop in the stock streamer, and the same code is in
+`crazyflie_ssd/src/camera_if.c`, so real flights would inherit it. Firmware fix
+proposed: fixed or continuous exposure, plus a brightness-floor guard. Data
+collection now only records inside a 30-60 brightness band (`grid_capture.sh`
+pre-flight check). Evidence: `docs/eval_results/2026-09-24-grid-capture/`.
+
 ## Sep 24, 2026 (22:00) — A complete grid recorded only noise; the champion locks on noise (Sai)
 
 The first complete 9-position grid on one full battery (`grid_capture_215739`, drone 09)
