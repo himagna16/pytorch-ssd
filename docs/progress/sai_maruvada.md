@@ -501,6 +501,13 @@ Newest first. One entry per working session.
     (2) The camera starts in one of two brightness modes (~40 or ~90) under the same
     lights, and detection changes a lot between them. A script to pin down the cause
     (which drone, or each power-up) is ready.
+  - **22:00, a complete grid, but the camera recorded only noise.** All 9 positions on a
+    full battery, yet every frame was black (brightness 4). The model still called it a
+    person (0.84) and the drone would have locked on, which makes the safety finding solid
+    (169 black frames over two runs). It also means my "dying battery" explanation was
+    wrong. The camera software sets its exposure once at start-up, and tonight the same
+    room came out at brightness 4, 7, 40 or 90 depending on the power-up. Next: a
+    power-cycle test to confirm, then a brightness check before every run.
 
 - **2026-09-23.** The USB-C hub arrived; hands-on work waited until Sep 24. Desk work
   to make the Lighthouse evening go smoothly:

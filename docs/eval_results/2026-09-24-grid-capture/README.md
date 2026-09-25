@@ -137,8 +137,9 @@ scorer JSON. The frames stay local.
 
 ### Finding 1 (safety): near-black frames make the model see a person
 
-In run `204144` the camera delivered frames at mean brightness **6.6**, most likely on a
-dying battery. The chip network scored the empty room at **median 0.83** and the
+In run `204144` the camera delivered frames at mean brightness **6.6**. *(At first this was put
+down to a dying battery. That is WITHDRAWN at 22:05: run `215739` below produced near-black
+frames for a complete run on a fully charged battery.)* The chip network scored the empty room at **median 0.83** and the
 follower **locked on 19 of 21 frames**. A drone flying that frame stream would chase
 nothing. **Recommended guard:** the firmware or follower should refuse to steer on
 frames whose mean brightness is implausibly low, and count them as "no target".
@@ -159,3 +160,45 @@ LEFT) dropped from **0.86-0.90 to 0.29**. Possible causes: **which drone** was u
 
 - Clips are now 6 s with a 6 s countdown (was 8 + 8), so a full grid fits one battery.
 - A drone label, and a near-black frame warning.
+
+---
+
+## 21:57 run (`grid_capture_215739`, drone 09, full charge): all 9 clips recorded, every frame BLACK
+
+The first complete grid in one sitting, on one battery. All 10 clips were recorded
+(143 frames), but **every frame is near-black: mean 4.1, per-frame 2.4-10.3, max pixel
+44**. Contrast-stretched, a frame shows only sensor noise and horizontal readout
+banding. There is no scene in it. The most any frame differs from the first frame is
+7.2 DN, so a person walking between 9 positions left no trace. **The camera captured
+nothing for the whole run.**
+
+The chip network still output **~0.84 and x-bin 6 on every frame** (the constant
+answer), and the follower **locked on 24 of 26 empty-room frames** and 11 of 13 frames
+at every position. The script's new near-black warning fired as intended.
+
+### What this changes
+
+1. **The safety finding is now solid.** Across two runs (`204144` and `215739`,
+   **169 near-black frames**), the champion reads sensor noise as a confident person
+   (0.83-0.84) and the follower locks on. A drone must refuse to steer on frames it
+   cannot see. **Firmware guard, strongly recommended:** treat frames with mean
+   brightness below a floor (e.g. 15 DN) as "no target".
+2. **The "dying battery" explanation is withdrawn.** This run was on a full battery
+   and completed.
+3. **The cause is most likely camera exposure set once at power-up.** The stock
+   `wifi-img-streamer` (aideck-gap8-examples, `open_pi_camera_himax`) calls
+   `PI_CAMERA_CMD_AEG_INIT` **once at startup**, then starts and stops the sensor for
+   every frame. Tonight, under the same room lights, power-ups came out at mean
+   brightness **4, 7, 40 and 90**. **Hypothesis (unverified):** the exposure is fixed
+   by whatever the camera sees during the first seconds after power-up (a hand, the
+   ceiling light, the room) and never corrects itself.
+4. **Test:** leave the drone untouched on the chair, facing the room, and only
+   unplug and replug the battery 4-5 times, running `exposure_check.sh` each time. If
+   the level still varies, it is startup randomness. If it is stable, what the camera
+   sees at power-up is the driver. Either way, the durable fix is on the firmware
+   side: a fixed manual exposure, or continuous auto-exposure.
+
+### Valid data so far (the only single-condition dim grid is `204502`)
+
+Only `204502` (7 of 9, brightness 38-41) and the dim half of `183109` are usable,
+and they agree (see the night section). No valid complete 9-position grid exists yet.

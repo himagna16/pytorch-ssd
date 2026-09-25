@@ -1,5 +1,18 @@
 # Experiment Log
 
+## Sep 24, 2026 (22:00) — A complete grid recorded only noise; the champion locks on noise (Sai)
+
+The first complete 9-position grid on one full battery (`grid_capture_215739`, drone 09)
+was **all near-black** (mean 4.1): sensor noise and banding, no scene. The champion
+scored every frame ~0.84 and the follower locked (24/26 on the empty room). Together
+with run `204144`, that is 169 near-black frames read as a confident person, so a
+brightness-floor guard in the firmware is recommended. The earlier "dying battery"
+cause is withdrawn (full battery here). Likely cause: the stock streamer sets exposure
+once at startup (`PI_CAMERA_CMD_AEG_INIT`) and starts and stops the sensor per frame.
+The same room gave brightness 4 / 7 / 40 / 90 across power-ups. Test: repeated
+power-cycles with nothing else changed, logged with `exposure_check.sh`. Evidence:
+`docs/eval_results/2026-09-24-grid-capture/`.
+
 ## Sep 24, 2026 (night) — Dim-grid replication; near-black frames lock; two camera exposure modes (Sai)
 
 - **Clean dim run** (`grid_capture_204502`, brightness 38-41, 7 of 9 positions)

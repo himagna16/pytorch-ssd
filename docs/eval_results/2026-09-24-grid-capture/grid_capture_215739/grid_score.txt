@@ -1,0 +1,45 @@
+
+BACKEND chip (what the drone flies): model_id_dory.onnx sha1 d90555c8462b | eps 0.0002009823510888964 | follower raw enter >= 5467, lost < -998, confirm 3
+model model_id_dory.onnx | 143 frames in 10 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+empty/night-lights/take1            -     -   0   26  0.83     0%    92%      1      - 4:5 6:21                -     -       -    1/-   
+p01/night-lights/take1           1.52 -21.8   1   13  0.84   100%    85%      1      1 4:1 6:12               0%    0%   +23.7    1/3   
+p01/night-lights/take1           1.52     0   1   13  0.84   100%    85%      1      4 4:2 6:11              15%   15%    +2.6    1/3   
+p01/night-lights/take1           1.52  21.8   1   13  0.83   100%    85%      1      7 4:3 6:10               0%   77%   -19.6    1/3   
+p01/night-lights/take1           2.13 -15.9   1   13  0.84   100%    85%      1      2 2:1 6:12               8%    8%   +18.2    1/2   
+p01/night-lights/take1           2.13     0   1   13  0.83   100%    85%      1      4 4:2 6:11              15%   15%    +2.2    1/2   
+p01/night-lights/take1           2.13  15.9   1   13  0.84   100%    85%      1      6 4:2 6:11              85%   85%   -13.8    1/2   
+p01/night-lights/take1           2.44   -14   1   13  0.83   100%    85%      1      2 2:1 6:12               8%    8%   +16.6    1/1   
+p01/night-lights/take1           2.44     0   1   13  0.84   100%    85%      1      4 4:1 6:12               8%    8%    +2.5    1/1   
+p01/night-lights/take1           2.44    14   1   13  0.84   100%    85%      1      6 4:2 6:11              85%   85%   -11.8    1/1   
+
+by dist:
+            1.52: n=  39  vis acc  100%  track   85%  bin acc    5% (+-1   31%)  bearing err  +2.2 (|err| 15.3)  size acc    3% (+-1 3%)
+            2.13: n=  39  vis acc  100%  track   85%  bin acc   36% (+-1   36%)  bearing err  +2.2 (|err| 11.4)  size acc    0% (+-1 100%)
+            2.44: n=  39  vis acc  100%  track   85%  bin acc   33% (+-1   33%)  bearing err  +2.4 (|err| 10.3)  size acc   97% (+-1 97%)
+
+by bearing:
+           -21.8: n=  13  vis acc  100%  track   85%  bin acc    0% (+-1    0%)  bearing err +23.7 (|err| 23.7)  size acc    0% (+-1 0%)
+           -15.9: n=  13  vis acc  100%  track   85%  bin acc    8% (+-1    8%)  bearing err +18.2 (|err| 18.2)  size acc    0% (+-1 100%)
+           -14.0: n=  13  vis acc  100%  track   85%  bin acc    8% (+-1    8%)  bearing err +16.6 (|err| 16.6)  size acc  100% (+-1 100%)
+             0.0: n=  39  vis acc  100%  track   85%  bin acc   13% (+-1   13%)  bearing err  +2.5 (|err| 2.5)  size acc   31% (+-1 64%)
+            14.0: n=  13  vis acc  100%  track   85%  bin acc   85% (+-1   85%)  bearing err -11.8 (|err| 11.8)  size acc  100% (+-1 100%)
+            15.9: n=  13  vis acc  100%  track   85%  bin acc   85% (+-1   85%)  bearing err -13.8 (|err| 13.8)  size acc    0% (+-1 100%)
+            21.8: n=  13  vis acc  100%  track   85%  bin acc    0% (+-1   77%)  bearing err -19.6 (|err| 19.6)  size acc    8% (+-1 8%)
+
+by light:
+    night-lights: n= 143  vis acc   82%  track   86%  bin acc   25% (+-1   33%)  bearing err  +2.3 (|err| 12.3)  size acc   33% (+-1 67%)
+
+by subject:
+           empty: n=  26  vis acc    0%  track   92%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+             p01: n= 117  vis acc  100%  track   85%  bin acc   25% (+-1   33%)  bearing err  +2.3 (|err| 12.3)  size acc   33% (+-1 67%)
+
+EMPTY / NO-PERSON clips: 1 clips, 26 frames, confirmed (false) tracks = 1, frames with conf >= 0.5: 26, max conf 0.86  -> FALSE TRACKS: the drone would move
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 5% of 39; RIGHT frames with bin > 4: 82% of 39  -> FAIL: x-bin 6 for every labelled position - NOT a mirror
+  ^ the x head answers bin 6 for every target bin [1, 2, 4, 6, 7] while its x-bin and size bucket and confidence still move(s), so the network is running. Two things do this and neither is a mirror: the person actually stood in the same spot for every clip and the bearing labels / floor marks are wrong, or the x head alone is stuck. Check a frame against its label first, then --ckpt.
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: ~/drone_frames/2026-09-24/grid_capture_215739/scores.csv
+summary JSON:  ~/drone_frames/2026-09-24/grid_capture_215739/grid_scores.json
