@@ -493,6 +493,14 @@ Newest first. One entry per working session.
     In the bright light I was detected dead centre at 1.52 m (0.93), which is
     consistent with contrast but not proof. 2.13 m right was weak and is unexplained.
     Next time: the whole grid in one sitting, lights fixed.
+  - **Night runs (19:42-20:48).** One clean dim-light grid, 7 of 9 positions. It
+    repeated the pattern: left side seen and locked, dead centre in front of the door
+    missed at 2.1-2.4 m. Two new findings came out of the failed attempts. (1) On a
+    dying battery the camera sent near-black frames, the model called the empty room a
+    person (0.83), and the drone would have locked on. That is a safety guard to add.
+    (2) The camera starts in one of two brightness modes (~40 or ~90) under the same
+    lights, and detection changes a lot between them. A script to pin down the cause
+    (which drone, or each power-up) is ready.
 
 - **2026-09-23.** The USB-C hub arrived; hands-on work waited until Sep 24. Desk work
   to make the Lighthouse evening go smoothly:

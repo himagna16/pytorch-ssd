@@ -1,0 +1,24 @@
+
+BACKEND chip (what the drone flies): model_id_dory.onnx sha1 d90555c8462b | eps 0.0002009823510888964 | follower raw enter >= 5467, lost < -998, confirm 3
+model model_id_dory.onnx | 21 frames in 1 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+empty/night-lights/take1            -     -   0   21  0.82     0%    90%      1      - 2:1 4:11 6:9            -     -       -    1/-   
+
+by dist:
+
+by bearing:
+
+by light:
+    night-lights: n=  21  vis acc    0%  track   90%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+
+by subject:
+           empty: n=  21  vis acc    0%  track   90%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+
+EMPTY / NO-PERSON clips: 1 clips, 21 frames, confirmed (false) tracks = 1, frames with conf >= 0.5: 21, max conf 0.85  -> FALSE TRACKS: the drone would move
+MIRROR CHECK: no detected person frames with |bearing| >= 8 deg  -> NO DATA (the model saw nobody, or no clip is off-center): stop and report
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: ~/drone_frames/2026-09-24/grid_capture_204144/scores.csv
+summary JSON:  ~/drone_frames/2026-09-24/grid_capture_204144/grid_scores.json

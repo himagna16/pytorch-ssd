@@ -100,3 +100,62 @@ not be pooled.
 **Next:** a complete grid in **one sitting at one lighting level** (room lights on, fresh
 battery), then the same grid with a light sheet over the door. Record which lights are
 on.
+
+---
+
+## Night runs, 19:42-20:48: one clean dim grid, and two new findings
+
+Four attempts. Per-run numbers are in the subfolders, which hold scores, logs and the
+scorer JSON. The frames stay local.
+
+| run | frames | brightness | what happened |
+|---|---|---|---|
+| `grid_capture_194556` (19:45) | 44 | **89-95** | empty + 2.44 L + 1 frame of 2.44 C, then the link dropped. **2.44 L median 0.29, 0 locked** in this bright mode |
+| `grid_capture_204144` (20:41) | 21 | **7 (near-black)** | empty only, then dropped. **Near-black empty frames scored 0.83 and the follower LOCKED (19/21)** |
+| 20:43 | 0 | - | no data |
+| **`grid_capture_204502` (20:45)** | 145 | **38-41, consistent** | empty + **7 of 9** positions; clip 8 (1.52 C) got 0 frames (battery) |
+
+### The clean dim grid (`grid_capture_204502`) vs the 18:31 dim run (same brightness level)
+
+| position | 20:45 median / locked | 18:31 median / locked |
+|---|---|---|
+| 2.44 m LEFT | 0.86 / 15 of 17 | 0.90 / 15 |
+| 2.44 m CENTRE | 0.54 / **0** | 0.51 / **0** |
+| 2.44 m RIGHT | 0.78 / 3 | 0.87 / 15 |
+| 2.13 m LEFT | 0.87 / 15 | 0.81 / 12 |
+| 2.13 m CENTRE | 0.72 / **1** | 0.66 / **0** |
+| 2.13 m RIGHT | 0.77 / 8 | (not in the dim run) |
+| 1.52 m LEFT | 0.83 / 15 | (not in the dim run) |
+| empty room | 0 locks, peak 0.79 (3 frames >= 0.75, never 3 in a row) | 0 locks, peak 0.65 |
+
+- **It replicates.** In two separate dim runs, the left side is strongly detected and
+  locked, and **dead centre at 2.1-2.4 m (in front of the dark door) is missed both
+  times**. The right side is detected but less reliably. The mirror check read
+  `WEAK: both sides mostly correct (84% / 94%), NOT mirrored`.
+- The empty room still never locks. But in this run its peak (0.79) crossed the 0.75
+  enter bar on single frames, so the margin is thin.
+
+### Finding 1 (safety): near-black frames make the model see a person
+
+In run `204144` the camera delivered frames at mean brightness **6.6**, most likely on a
+dying battery. The chip network scored the empty room at **median 0.83** and the
+follower **locked on 19 of 21 frames**. A drone flying that frame stream would chase
+nothing. **Recommended guard:** the firmware or follower should refuse to steer on
+frames whose mean brightness is implausibly low, and count them as "no target".
+`grid_capture.sh` now flags near-black runs. This is n = 1 clip and needs a deliberate
+test (lens covered, full battery).
+
+### Finding 2: the camera starts in one of two exposure modes, and it matters
+
+Same room and same room lights, but the runs came out at mean **~40** (18:31, 20:45) or
+**~90-95** (18:46 resumed, 19:45). In the bright mode, the one comparable cell (2.44 m
+LEFT) dropped from **0.86-0.90 to 0.29**. Possible causes: **which drone** was used
+(each has its own camera), or the auto-exposure state at power-up. **Test:**
+`tools/real_frames/exposure_check.sh` records the brightness per drone and power-up in
+`~/drone_frames/exposure_log.txt`. Run it on each drone over a few power cycles.
+`grid_capture.sh` now takes `GRID_DRONE=09|05` to record the drone.
+
+### Script changes
+
+- Clips are now 6 s with a 6 s countdown (was 8 + 8), so a full grid fits one battery.
+- A drone label, and a near-black frame warning.

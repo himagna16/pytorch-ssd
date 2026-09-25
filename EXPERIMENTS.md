@@ -1,5 +1,22 @@
 # Experiment Log
 
+## Sep 24, 2026 (night) — Dim-grid replication; near-black frames lock; two camera exposure modes (Sai)
+
+- **Clean dim run** (`grid_capture_204502`, brightness 38-41, 7 of 9 positions)
+  replicates the 18:31 dim run. Left is strong: 0.83-0.87 median, 15 of 17 locked.
+  **Dead centre in front of the dark door is missed again:** 2.44 m 0.54 / 0 locked,
+  2.13 m 0.72 / 1 locked. Right is middling. Empty room: 0 locks (peak 0.79). Mirror
+  check: both sides mostly correct.
+- **Safety:** a near-black run (mean 6.6, dying battery) scored the empty room at 0.83,
+  and the follower locked 19 of 21 frames. Proposed: reject near-black frames before
+  steering.
+- **Exposure:** the same room and lights gave brightness ~40 or ~90 depending on the run.
+  In the bright mode, 2.44 m LEFT fell from 0.86-0.90 to 0.29. The cause is unknown
+  (drone vs power-up); `exposure_check.sh` is added to find out.
+
+Evidence: `docs/eval_results/2026-09-24-grid-capture/` (night section and per-run
+subfolders).
+
 ## Sep 24, 2026 — First real-person detection grid (partial): contrast beats position (Sai)
 
 `tools/real_frames/grid_capture.sh`, one subject, dorm, chip arm. The empty clip plus 5

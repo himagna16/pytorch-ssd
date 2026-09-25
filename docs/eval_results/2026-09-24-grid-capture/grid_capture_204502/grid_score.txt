@@ -1,0 +1,42 @@
+
+BACKEND chip (what the drone flies): model_id_dory.onnx sha1 d90555c8462b | eps 0.0002009823510888964 | follower raw enter >= 5467, lost < -998, confirm 3
+model model_id_dory.onnx | 145 frames in 8 clips | crop HFOV 70.0 deg | expected size assumes a 1.7 m person, camera at 0.8 m
+clip (subject/light/take)           d     b vis    n  conf visacc track% starts expbin bins seen          binacc   +-1 bearErr      size
+----------------------------------------------------------------------------------------------------------------------------------------
+empty/night-lights/take1            -     -   0   26  0.66     4%     0%      0      - 1:1 6:10 7:15           -     -       -    1/-   
+p01/night-lights/take1           1.52 -21.8   1   17  0.81   100%    88%      1      1 1:17                 100%  100%   +15.3    3/3   
+p01/night-lights/take1           2.13 -15.9   1   17  0.87   100%    88%      1      2 1:14 2:2 6:1          12%   94%   +10.7    3/2   
+p01/night-lights/take1           2.13     0   1   17  0.72   100%     6%      1      4 1:1 3:1 4:1 7:14       6%   12%    +1.7    1/2   
+p01/night-lights/take1           2.13  15.9   1   17  0.78   100%    47%      1      6 6:17                 100%  100%    -8.7    3/2   
+p01/night-lights/take1           2.44   -14   1   17  0.85   100%    88%      1      2 1:9 2:1 6:6 7:1        6%   59%   +12.6    3/1   
+p01/night-lights/take1           2.44     0   1   17  0.53    82%     0%      0      4 1:1 7:16               0%    0%    +2.1    1/1   
+p01/night-lights/take1           2.44    14   1   17  0.77   100%    18%      1      6 4:2 5:2 6:13          76%   88%    -9.4    1/1   
+
+by dist:
+            1.52: n=  17  vis acc  100%  track   88%  bin acc  100% (+-1  100%)  bearing err +15.3 (|err| 15.3)  size acc  100% (+-1 100%)
+            2.13: n=  51  vis acc  100%  track   47%  bin acc   39% (+-1   69%)  bearing err  +1.3 (|err| 7.1)  size acc   20% (+-1 100%)
+            2.44: n=  51  vis acc   94%  track   35%  bin acc   27% (+-1   49%)  bearing err  +1.8 (|err| 8.2)  size acc   47% (+-1 61%)
+
+by bearing:
+           -21.8: n=  17  vis acc  100%  track   88%  bin acc  100% (+-1  100%)  bearing err +15.3 (|err| 15.3)  size acc  100% (+-1 100%)
+           -15.9: n=  17  vis acc  100%  track   88%  bin acc   12% (+-1   94%)  bearing err +10.7 (|err| 10.7)  size acc   24% (+-1 100%)
+           -14.0: n=  17  vis acc  100%  track   88%  bin acc    6% (+-1   59%)  bearing err +12.6 (|err| 12.6)  size acc   12% (+-1 35%)
+             0.0: n=  34  vis acc   91%  track    3%  bin acc    3% (+-1    6%)  bearing err  +1.9 (|err| 2.2)  size acc   50% (+-1 91%)
+            14.0: n=  17  vis acc  100%  track   18%  bin acc   76% (+-1   88%)  bearing err  -9.4 (|err| 9.4)  size acc   47% (+-1 65%)
+            15.9: n=  17  vis acc  100%  track   47%  bin acc  100% (+-1  100%)  bearing err  -8.7 (|err| 8.7)  size acc   18% (+-1 100%)
+
+by light:
+    night-lights: n= 145  vis acc   81%  track   39%  bin acc   43% (+-1   65%)  bearing err  +3.5 (|err| 8.7)  size acc   43% (+-1 83%)
+
+by subject:
+           empty: n=  26  vis acc    4%  track    0%  bin acc     - (+-1     -)  bearing err     - (|err| -)  size acc     - (+-1 -)
+             p01: n= 119  vis acc   97%  track   48%  bin acc   43% (+-1   65%)  bearing err  +3.5 (|err| 8.7)  size acc   43% (+-1 83%)
+
+EMPTY / NO-PERSON clips: 1 clips, 26 frames, confirmed (false) tracks = 0, frames with conf >= 0.5: 25, max conf 0.79  -> OK
+MIRROR CHECK (person seen, |bearing| >= 8 deg): LEFT frames with bin < 4: 84% of 51; RIGHT frames with bin > 4: 94% of 34  -> WEAK: both sides are mostly CORRECT but under 90% - NOT mirrored, NOT swapped labels
+  ^ both sides are agreeing with the labels most of the time, which rules out a mirror and rules out swapped marks - a flip or a swap would push a side BELOW half, not to 84%. This reads as a noisy model, not a wiring or labelling fault: do NOT go and re-check the floor tape. Record longer clips and re-run; if it stays here, write these numbers down and report them. It is still not a PASS: do not fly on it.
+  convention assumed: a NEGATIVE bearing (b-25) = the person stood to the drone's LEFT, seen from BEHIND the drone looking the way it faces; x-bins run 0=left..8=right.
+  If the floor marks were written with left/right backwards AND the camera image is mirrored, the two cancel and this check prints PASS. Read the marks back against the line above before believing one.
+
+per-frame CSV: ~/drone_frames/2026-09-24/grid_capture_204502/scores.csv
+summary JSON:  ~/drone_frames/2026-09-24/grid_capture_204502/grid_scores.json

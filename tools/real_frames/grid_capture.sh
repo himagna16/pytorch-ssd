@@ -15,6 +15,7 @@
 #
 # Usage:  zsh tools/real_frames/grid_capture.sh
 #         GRID_SUBJECT=p02 zsh tools/real_frames/grid_capture.sh     (another person)
+#         GRID_DRONE=09 | 05   (record which drone; its camera may matter, see 2026-09-24 night)
 #         GRID_LIGHT=night-lights | day-sun | ...   (label the lighting; one per grid; '_' becomes '-')
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/grid_capture.sh   (rehearsal)
 #         GRID_DIR=<existing folder> GRID_START=6 zsh tools/real_frames/grid_capture.sh
@@ -28,8 +29,10 @@ REPO=~/Downloads/drone/pytorch_ssd
 grab()  { $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} "$@"; }
 score() { $PY $REPO/tools/real_frames/score_real_frames.py "$@"; }
 speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && say "$@" & }
-COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-8}
-SECS=${GRID_SECONDS:-8}
+# 6 s clips + 6 s countdown (was 8 + 8): a full grid must fit one 350 mAh pack (~5 min of streaming)
+COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-6}
+SECS=${GRID_SECONDS:-6}
+DRONE=${GRID_DRONE:-unknown}   # which drone: 09 or 05 (last two digits of its radio address)
 SUBJ=${GRID_SUBJECT:-p01}
 LIGHT=${GRID_LIGHT:-room}; LIGHT=${LIGHT//[^A-Za-z0-9-]/-}   # labels allow letters, digits, "-" only
 SUBJ=${SUBJ//[^A-Za-z0-9-]/-}
@@ -39,7 +42,7 @@ START=${GRID_START:-0}
 STOPPED=""
 mkdir -p "$D" || exit 1
 exec > >(tee -a "$D/grid_capture.log") 2>&1
-echo "== grid capture, $(date)  subject $SUBJ  light $LIGHT  folder: $D"
+echo "== grid capture, $(date)  subject $SUBJ  light $LIGHT  drone $DRONE  folder: $D"
 
 if [[ -z "${CAMERA_CHECK_GRAB_ARGS:-}" ]]; then
   echo "== waiting for the deck at 192.168.4.1:5000 (join WiFi 'WiFi streaming example')"
@@ -121,6 +124,9 @@ for p in glob.glob(sys.argv[1] + "/*.png"):
 per = {k: float(np.mean(v)) for k, v in means.items()}
 if per:
     lo, hi = min(per.values()), max(per.values())
+    if lo < 15:
+        print("!! NEAR-BLACK FRAMES (mean < 15): the camera is not exposing properly (battery dying?).")
+        print("!! On 2026-09-24 near-black empty frames scored 0.83 and LOCKED: do not trust this run.")
     print(f"\nframe brightness per clip: {lo:.0f} to {hi:.0f} (0-255)")
     if lo > 0 and hi / lo > 1.3:
         print("!! BRIGHTNESS CHANGED during this grid (more than 30%). These clips are not one lighting")
