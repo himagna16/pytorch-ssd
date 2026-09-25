@@ -15,7 +15,7 @@
 #
 # Usage:  zsh tools/real_frames/grid_capture.sh
 #         GRID_SUBJECT=p02 zsh tools/real_frames/grid_capture.sh     (another person)
-#         GRID_LIGHT=night_lights | day_blinds_open | ...   (label the lighting; one per grid)
+#         GRID_LIGHT=night-lights | day-sun | ...   (label the lighting; one per grid; '_' becomes '-')
 #         CAMERA_CHECK_GRAB_ARGS=--mock zsh tools/real_frames/grid_capture.sh   (rehearsal)
 #         GRID_DIR=<existing folder> GRID_START=6 zsh tools/real_frames/grid_capture.sh
 #             (resume after a flat battery: skips the empty clip and clips < 6, adds to the
@@ -31,7 +31,8 @@ speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && say
 COUNTDOWN=${CAMERA_CHECK_COUNTDOWN:-8}
 SECS=${GRID_SECONDS:-8}
 SUBJ=${GRID_SUBJECT:-p01}
-LIGHT=${GRID_LIGHT:-room}
+LIGHT=${GRID_LIGHT:-room}; LIGHT=${LIGHT//[^A-Za-z0-9-]/-}   # labels allow letters, digits, "-" only
+SUBJ=${SUBJ//[^A-Za-z0-9-]/-}
 ROOT=~/drone_frames; [[ -n "${CAMERA_CHECK_GRAB_ARGS:-}" ]] && ROOT=~/drone_frames/_rehearsal   # mock runs never land next to real data
 D=${GRID_DIR:-$ROOT/$(date +%F)/grid_capture_$(date +%H%M%S)}
 START=${GRID_START:-0}
