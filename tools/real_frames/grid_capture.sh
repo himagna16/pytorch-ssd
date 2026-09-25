@@ -51,6 +51,24 @@ if [[ -z "${CAMERA_CHECK_GRAB_ARGS:-}" ]]; then
   echo "   deck reachable"
 fi
 
+# --- pre-flight exposure check (added 2026-09-24 22:00, after a full run recorded only black noise):
+# grab 5 frames; refuse to record if the camera is black, warn if it came up in the bright mode.
+PRE=$(mktemp -d /tmp/grid_pre_XXXX)
+grab --n 5 --every 1 --out "$PRE" >/dev/null 2>&1
+B=$($PY -c "import glob,numpy as n;from PIL import Image;fs=glob.glob('$PRE/*.png')+glob.glob('$PRE/*.jpg');print(f'{n.mean([n.asarray(Image.open(f).convert(\"L\")).mean() for f in fs]):.0f}' if fs else '-1')")
+rm -rf "$PRE"
+echo "== camera exposure check: mean brightness $B (0-255)"
+if (( B < 0 )); then echo "FAIL: no frames for the exposure check."; exit 5; fi
+if (( B < 15 )); then
+  echo "!! The camera is BLACK (it recorded nothing at this level on 2026-09-24)."
+  echo "!! Unplug the battery, plug it back in with the drone already facing the room, wait 30 s,"
+  echo "!! rejoin the WiFi and run this again. Nothing was recorded."
+  speak "The camera is black. Unplug and replug the battery."
+  exit 6
+fi
+(( B > 70 )) && echo "   note: bright exposure mode (~90). Detection was weaker in this mode on 2026-09-24. Recording anyway; it is labelled by brightness."
+echo "$(date '+%F %T') drone=$DRONE brightness=$B source=grid_capture" >> ~/drone_frames/exposure_log.txt 2>/dev/null
+
 countdown() { for ((s=COUNTDOWN; s>0; s--)); do printf "\r   %2d " $s; ((s<=5)) && speak "$s"; sleep 1; done
               speak "Recording. Stay still."; printf "\r   recording ${1} s...\n"; }
 
