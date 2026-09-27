@@ -66,6 +66,7 @@ is not, is in `docs/hardware/before_the_next_session.md`.
 | How well the drone follows people | Sai | **First real data Sep 24 (one person, 5 grid positions): seen and locked off to the side (71-88%), never locked dead centre in front of a dark door. Contrast looks like the driver** (`docs/eval_results/2026-09-24-grid-capture/`). *Earlier status:* **Not yet known, and the published figures are about one person.** Every tracking number in this project (97-99%) came from scenes built around a photograph that turns out to sit near the 98th percentile of how easily this model detects a person. Rebuilt the same scenes around a typical person and a somewhat-below-average person: the drone never starts following at all, in 11 of 12 flights, while the original subject still reproduces 99% on the same rig. Rendered cutouts are harder than real people, so the truth lies between the two, and neither end is the drone's real behaviour | This is the question the lab session answers. Capture real frames of real people and measure where they fall |
 | Simulator demo for Prof. Mok | Sai | Sent Sep 12; Prof. Mok replied "Great progress, team!" and David called the simulation's prediction of the AI-deck behaviour impressive | Live demo slot still unset: he said Tue/Thu after 3:30 pm, I offered after 5 pm - needs one confirming email |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
+| `train.py` crashes when `--model-type` is left at its default | Sai | **Fixed Sep 26 on branch `sai/fix-hybrid-follow-stage-channels-import` (PR #8, awaiting merge).** Missing import of `HYBRID_FOLLOW_BASE_STAGE_CHANNELS`; unittest added. `sai/photometric-aug` predates the fix | Merge PR #8, then rebase `sai/photometric-aug` onto it. Separately, fix the already-failing `test_plain_follow_release_promotion` |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
 | Progress report email for Prof. Mok | Sai | Sent Sep 11 and answered Sep 12. Prof. Mok asked for periodic documentation that can be edited into a final project report | Keep this record current; ask again for the specific registration process for research credit |
 | First real AI-deck camera frames, motors off | Sai, MinHyuk | **Done Sep 22, in my dorm, not the lab.** Stream works (every frame decoded). The image is not mirrored: I appear on the correct side, and 10 of 12 confident outputs point the right way. The champion called dorm furniture a person strongly enough to lock on; with the chairs removed, an empty room gave 0 false locks (peak 0.71). I am detected only some of the time at 2.44 m in a dim room (one person, not a rate). The real stream is 162 x 122, pixels 0-191, about 2 fps, which differs from the simulator's assumptions. Evidence: `docs/eval_results/2026-09-22-first-real-frames/`. *Earlier status:* **Lab session next week**: Prof. Mok asked MinHyuk to meet the team with real hardware | Rehearse capture and scoring against a mock streamer before going; run the capture protocol in the lab |
@@ -443,6 +444,19 @@ Worth keeping in one place, because several of these are easy to assume:
 ## Session log
 
 Newest first. One entry per working session.
+
+- **2026-09-26 (second session).** Fixed a crash in `train.py`: any run that left
+  `--model-type` at its default (`hybrid_follow`) died inside `parse_args()` with
+  `NameError: HYBRID_FOLLOW_BASE_STAGE_CHANNELS`. The constant already lives in
+  `models/hybrid_follow_net.py` as (24, 32, 64, 80); `train.py` had used it since David's
+  "model arch redesign" commit without ever importing it. Every run we have done passed a
+  plain_follow model type, which takes a different code path, so it never showed. Added the
+  import and a unittest (`tests/test_train_parse_args.py`) that fails without the fix and
+  passes with it. Branch `sai/fix-hybrid-follow-stage-channels-import`, PR #8 against
+  `successor-release`, awaiting review. `sai/photometric-aug` was branched before the fix and
+  still carries the bug. Separately, `tests/test_plain_follow_release_promotion.py` already
+  fails on a clean `successor-release` (a whitespace mismatch, `'1 2 3'` vs one value per
+  line). Not caused by this change and not fixed yet.
 
 - **2026-09-26.** Reading only, no experiments. Went back to the PULP-Frontnet paper
   (Palossi et al., arXiv 2103.10873), which uses the same Himax HM01B0 camera, to see how
