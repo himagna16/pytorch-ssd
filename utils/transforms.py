@@ -7,7 +7,8 @@ import torchvision.transforms.functional as F
 from PIL import Image
 
 # "frontnet" = RandomPhotometricHimax with the PULP-Frontnet settings.
-PHOTOMETRIC_AUG_CHOICES = ("none", "frontnet")
+# "exposure" = RandomExposureHimax: exposure gain with clipping plus vignetting, no blur.
+PHOTOMETRIC_AUG_CHOICES = ("none", "frontnet", "exposure")
 
 
 def _empty_boxes_like(boxes: torch.Tensor) -> torch.Tensor:
@@ -227,6 +228,53 @@ class RandomPhotometricHimax:
         return img, target
 
 
+
+class RandomExposureHimax:
+    """
+    Exposure jitter the way the AI-deck camera actually gets it wrong, plus vignetting.
+
+    Written after the PULP-Frontnet preset hurt us (docs/eval_results/2026-09-26-photometric-aug).
+    The Sep 24 frames showed auto-exposure landing on a different gain at each power-up, which
+    scales light and blows out highlights; contrast about the mean never clips. So, each with
+    probability p, on a [C, H, W] tensor in [0, 1]:
+
+      exposure    gain k, log-uniform in [k_min, k_max], applied in linear light
+                  (gamma 2.2), clipped at white, re-quantised to 8 bits
+      vignetting  as RandomPhotometricHimax
+
+    No blur: blurring small COCO people away while the label still says "person" is the
+    likeliest reason the frontnet preset lost recall.
+    """
+
+    def __init__(
+        self,
+        p: float = 0.5,
+        k_range: Tuple[float, float] = (0.25, 4.0),
+        vignette_strength: Tuple[float, float] = (0.1, 0.6),
+        vignette_radius: Tuple[float, float] = (0.0, 0.6),
+        display_gamma: float = 2.2,
+    ):
+        self.p = p
+        self.k_range = k_range
+        self.vignette_strength = vignette_strength
+        self.vignette_radius = vignette_radius
+        self.display_gamma = display_gamma
+
+    def __call__(self, img: torch.Tensor, target: Dict[str, Any]):
+        if random.random() < self.p:
+            k = math.exp(random.uniform(math.log(self.k_range[0]), math.log(self.k_range[1])))
+            linear = img.clamp(0.0, 1.0) ** self.display_gamma
+            img = (k * linear).clamp(0.0, 1.0) ** (1.0 / self.display_gamma)
+            img = torch.round(img * 255.0) / 255.0
+        if random.random() < self.p:
+            img = RandomPhotometricHimax._vignette(
+                img,
+                random.uniform(*self.vignette_strength),
+                random.uniform(*self.vignette_radius),
+            ).clamp(0.0, 1.0)
+        return img, target
+
+
 def get_train_transforms(
     model_type: str = "ssd",
     input_channels: int = 1,
@@ -251,6 +299,8 @@ def get_train_transforms(
         ]
         if photometric_aug == "frontnet":
             steps.append(RandomPhotometricHimax())
+        elif photometric_aug == "exposure":
+            steps.append(RandomExposureHimax())
         return Compose(steps)
 
     if photometric_aug != "none":

@@ -147,7 +147,8 @@ def parse_args():
         default="none",
         choices=list(PHOTOMETRIC_AUG_CHOICES),
         help="Training-only camera augmentation. 'frontnet' = PULP-Frontnet's contrast, brightness, "
-        "gamma, vignetting and blur jitter for the Himax camera (utils/transforms.py). Default: none, as before.",
+        "gamma, vignetting and blur jitter for the Himax camera; 'exposure' = linear-light exposure gain "
+        "with clipping plus vignetting, no blur (utils/transforms.py). Default: none, as before.",
     )
     ap.add_argument("--quant-aware-finetune", action="store_true")
     ap.add_argument("--qat-bits", type=int, default=8)

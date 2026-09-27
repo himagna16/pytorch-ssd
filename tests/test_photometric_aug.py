@@ -110,6 +110,34 @@ class FrontnetWiring(unittest.TestCase):
         self.assertLess(untouched / 2000, 0.17)
 
 
+class ExposurePreset(unittest.TestCase):
+    def test_wiring(self):
+        tr = T.get_train_transforms(model_type="plain_follow", photometric_aug="exposure")
+        self.assertIsInstance(tr.transforms[-1], T.RandomExposureHimax)
+        self.assertIsInstance(tr.transforms[-2], T.ToTensorGray)
+
+    def test_gain_clips_at_white_and_is_8bit(self):
+        aug = T.RandomExposureHimax(p=1.0, k_range=(4.0, 4.0), vignette_strength=(0.0, 0.0))
+        x = torch.linspace(0, 1, 256).view(1, 16, 16)
+        y = aug(x, {})[0]
+        self.assertTrue(torch.all(y[x >= 0.6] == 1.0))            # 4 * 0.6^2.2 > 1: blown out
+        self.assertTrue(torch.equal(y, torch.round(y * 255) / 255))
+        self.assertTrue(torch.all(y >= x - 1e-6))                  # gain > 1 never darkens
+
+    def test_gain_below_one_darkens_in_linear_light(self):
+        aug = T.RandomExposureHimax(p=1.0, k_range=(0.25, 0.25), vignette_strength=(0.0, 0.0))
+        y = aug(torch.full((1, 4, 4), 0.5), {})[0]
+        self.assertAlmostEqual(float(y[0, 0, 0]), round(255 * 0.25 ** (1 / 2.2) * 0.5) / 255, places=6)
+
+    def test_log_uniform_gain_is_centred_on_one(self):
+        aug = T.RandomExposureHimax(p=1.0, vignette_strength=(0.0, 0.0))
+        x = torch.full((1, 2, 2), 0.3)
+        random.seed(0)
+        brighter = sum(float(aug(x.clone(), {})[0][0, 0, 0]) > 0.3 for _ in range(2000))
+        self.assertGreater(brighter / 2000, 0.45)
+        self.assertLess(brighter / 2000, 0.55)
+
+
 class EachEffect(unittest.TestCase):
     def _only(self, **kw):
         # p=1 with every other range collapsed to its identity value.
