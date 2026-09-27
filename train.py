@@ -41,7 +41,7 @@ from utils.follow_task import (
     resolve_follow_head_type,
     visibility_confidence_from_outputs,
 )
-from utils.transforms import get_train_transforms, get_val_transforms
+from utils.transforms import PHOTOMETRIC_AUG_CHOICES, get_train_transforms, get_val_transforms
 
 
 def parse_args():
@@ -140,6 +140,15 @@ def parse_args():
         type=str,
         default=None,
         help="Comma-separated parameter prefixes to keep trainable while freezing everything else.",
+    )
+    ap.add_argument(
+        "--photometric-aug",
+        type=str,
+        default="none",
+        choices=list(PHOTOMETRIC_AUG_CHOICES),
+        help="Training-only camera augmentation. 'frontnet' = PULP-Frontnet's contrast, brightness, "
+        "gamma, vignetting and blur jitter for the Himax camera; 'exposure' = linear-light exposure gain "
+        "with clipping plus vignetting, no blur (utils/transforms.py). Default: none, as before.",
     )
     ap.add_argument("--quant-aware-finetune", action="store_true")
     ap.add_argument("--qat-bits", type=int, default=8)
@@ -625,6 +634,8 @@ def save_checkpoint(path: Path, model, args, epoch: int, extra_state=None) -> No
                 "input_channels": args.input_channels,
             }
         )
+    if getattr(args, "photometric_aug", "none") != "none":
+        state["photometric_aug"] = args.photometric_aug
     if extra_state:
         state.update(extra_state)
     torch.save(state, path)
@@ -709,6 +720,7 @@ def build_datasets(args, repo_root: Path):
                 model_type=args.model_type,
                 input_channels=1,
                 image_size=image_size,
+                photometric_aug=args.photometric_aug,
             ),
             image_mode="L",
         )
@@ -744,6 +756,7 @@ def build_datasets(args, repo_root: Path):
             model_type="ssd",
             input_channels=args.input_channels,
             image_size=image_size,
+            photometric_aug=args.photometric_aug,
         ),
         image_mode=image_mode,
     )
