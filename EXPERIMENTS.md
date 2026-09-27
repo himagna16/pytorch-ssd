@@ -1,5 +1,21 @@
 # Experiment Log
 
+## Sep 26, 2026 — PULP-Frontnet's camera augmentation makes our model worse (Sai)
+
+Copied the Himax augmentation from PULP-Frontnet (arXiv 2103.10873 Sec. IV-B: contrast
+0.7-2.0, brightness +/-0.2, gamma 0.4-2.0, vignetting, blur, each p=0.5) as
+`train.py --photometric-aug frontnet` (PR #7, default off). Pre-registered two arms from
+the champion, identical but for the flag: 5 QAT epochs, lr 2e-5, seed 0, no hard negatives.
+**AUG fails both pre-registered tests against CONTROL:** clean COCO F1 -0.016
+[-0.023, -0.008] (HARM), and under a held-out exposure change (linear-light gain with
+clipping) -0.006 [-0.012, -0.001] where +0.01 was needed. Pet FP also worse (0.316 vs 0.283).
+On the Sep 24 real frames AUG is worst on bright clips (seen 38% -> 16%, locked 41% -> 4%).
+Near-black noise frames stop locking in BOTH fine-tuned arms (fake-quant only), so that
+comes from fine-tuning, not augmentation; the firmware brightness guard is still needed.
+One seed each. Suspects, untested: blur too strong for COCO's small people; contrast about
+the mean does not model the Himax's highlight clipping. Evidence:
+`docs/eval_results/2026-09-26-photometric-aug/`.
+
 ## Sep 24, 2026 (22:15) — Camera exposure is random per power-up, in our flight app too (Sai)
 
 Drone 09, untouched on the chair, room lights, 5 battery power-cycles in 4 minutes:

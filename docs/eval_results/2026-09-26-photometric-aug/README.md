@@ -1,7 +1,8 @@
 # Photometric augmentation (PULP-Frontnet recipe) vs the Himax exposure problem, 2026-09-26
 
-**Status: PRE-REGISTERED, training not yet started.** This section was written and committed
-before either run launched. Results go below it; this section is not edited afterwards.
+**Status: DONE, both runs complete; results are at the end.** The section below was
+written and committed (6f2abb8) before either run launched and has not been edited since,
+apart from this status line.
 
 ## Why
 
@@ -52,3 +53,93 @@ numbers. Any claim is AUG vs CONTROL, not AUG vs champion. Run sequentially (MPS
 
 Nothing here touches the chip. A winning checkpoint would still need the release pipeline
 (NEMO -> DORY -> GVSOC) and the semantic gates before it could fly.
+
+---
+
+# RESULTS (added after both runs, 2026-09-26 22:00)
+
+**Verdict: the PULP-Frontnet augmentation, copied as-is, makes our model worse. It fails
+both pre-registered tests, and on real frames it is worst on exactly the bright frames it was
+meant to help.** Not recommended for the flight model. `--photometric-aug` stays an opt-in
+flag (default `none`, PR #7) so variants can be tried.
+
+Both runs completed 5/5 epochs (AUG 19:27-20:45, CONTROL 20:45-21:52), each log shows
+`PRESERVED 59 learned PACT range tensors`, and the harness reproduces the champion's recorded
+numbers exactly (clean peak F1 0.8008, pet FP 0.239 / 0.171) before scoring anything new.
+Epoch-5 checkpoints (outside the repo): AUG `training/photaug_aug/plain_follow_epoch_005.pth`
+(sha256 9c7227907b08d716...), CONTROL `training/photaug_control/plain_follow_epoch_005.pth`
+(2b015ecc61edd09c...).
+
+## Tests 1, 2, 4: COCO val2017 (n = 5,000), pre-registered form (learned QAT ranges)
+
+| model | clean peak F1 | k=0.25 | k=0.5 | k=2 | k=4 | mean over k | pets FP @0.45 |
+|---|---|---|---|---|---|---|---|
+| champion (start point) | 0.8008 | 0.7782 | 0.7936 | 0.7863 | 0.7546 | 0.7782 | 0.239 |
+| CONTROL epoch 5 | 0.8010 | 0.7777 | 0.7944 | 0.7805 | 0.7529 | 0.7764 | 0.283 |
+| AUG epoch 5 | 0.7848 | 0.7739 | 0.7841 | 0.7730 | 0.7494 | 0.7701 | 0.316 |
+
+AUG minus CONTROL, paired bootstrap over images (1,000 resamples, 95% interval):
+
+- **Test 1, clean peak F1: -0.0162 [-0.0231, -0.0083] -> HARM** (bar was -0.005).
+- **Test 2, mean F1 under exposure change: -0.0063 [-0.0124, -0.0007] -> NOT MET.** The
+  bar was +0.01 in AUG's favour; the result is in the other direction, and the interval
+  excludes zero. AUG does lose less from clean to distorted (0.015 vs 0.025), but only
+  because it starts lower; it is below CONTROL at every k.
+- **Test 4, pets:** AUG 0.316 vs CONTROL 0.283 at 0.45; at matched recall 0.316 vs 0.279.
+  Worse, not gated.
+
+Every AUG epoch (1-5) sits 0.013-0.020 below every CONTROL epoch on clean F1, so the epoch-5
+rule did not pick an unlucky point. The release form (ranges recalibrated, as the chip
+export does) gives the same picture: clean -0.0128 [-0.0189, -0.0051] HARM, mean over k
+-0.0047 [-0.0109, +0.0012] NOT MET. Full tables: `results/report_qat.txt`,
+`results/report_release.txt`.
+
+## Test 3: Sep 24 real frames (descriptive; one person, one room, 515 frames, 31 clips)
+
+Release form, which tracks the chip arm best (champion vs chip: corr 0.989, mean -0.051,
+same side of 0.75 on 87% of frames; the QAT form manages 70%). Seen = conf >= 0.75; locked =
+the follower's 3-frame rule.
+
+| clips | champion seen / locked | AUG seen / locked | CONTROL seen / locked |
+|---|---|---|---|
+| dim (about 40), person, 204 frames | 45% / 40% | 39% / 39% | **55% / 52%** |
+| bright (about 93), person, 69 frames | 38% / 41% | **16% / 4%** | 41% / 41% |
+| dim + bright, empty room, 78 frames | 0% / 0% | 0% / 0% | 0% / 0% |
+| near-black (about 4), 164 frames | 76% / 68-85% | 0% / 0% | 0% / 0% |
+
+1. **AUG is worst on bright frames** (seen 38% -> 16%, locked 41% -> 4%), the case this was
+   supposed to fix. Five clips, one session, so this is a direction, not a rate.
+2. **The near-black lock-on disappears in BOTH fine-tuned models, not just AUG.** Median
+   confidence on noise frames falls from 0.76-0.77 (champion) to 0.53-0.55 (AUG) and 0.34-0.37
+   (CONTROL). So it comes from fine-tuning, not augmentation. Two cautions: it is fake-quant
+   only (the champion in this form does reproduce the chip's lock-on, which is encouraging but
+   not proof), and near-black frames carry no scene, so the champion's answer there was
+   arbitrary and any retrain can move it either way. **The firmware brightness-floor guard is
+   still required.**
+3. CONTROL looks slightly better than the champion on dim frames (55% vs 45% seen). That was
+   not the hypothesis, n is small, and it is one seed; do not read it as a result.
+
+Per clip: `results/real_frames_report_release.txt` (and `_qat.txt`); per frame:
+`results/real_frames_per_frame_*.csv` (numbers only; frames stay on the laptop).
+
+## Why it might have failed (untested explanations, cheapest to check first)
+
+- **The blur is too strong for our task.** sigma 2.4 px at 128 px, on half of all images.
+  Frontnet sees one nearby person; COCO labels count small, distant people as "visible", and
+  a blur that erases them leaves the label saying "person", which is label noise. AUG's loss
+  of recall fits this.
+- **Contrast/gamma about the mean is not what the Himax does.** Our bright failure is
+  auto-exposure picking a different gain, which saturates highlights. The paper's
+  augmentation never clips on purpose, and Test 2 (which does) shows no benefit.
+- **Different regime.** Frontnet trained from scratch for 100 epochs on Himax frames; this is
+  5 low-lr QAT epochs on COCO with a width-0.1 network that may not have spare capacity.
+
+## Not done, and what it would take
+
+- **One seed per arm.** Paired sd from Sep 14 is 0.0024-0.0031, and the clean gap is -0.016,
+  about 5x that, so the harm is unlikely to be seed noise, but it is unreplicated.
+- **Next candidate (proposed, not run):** the same two arms with blur off and a
+  highlight-clipping exposure jitter in place of contrast, which addresses the first two
+  explanations directly. About 2.5 h of laptop time.
+- Nothing here ran on the chip. Any candidate would need the release pipeline and the
+  semantic gates, and its black-frame behaviour checked on the chip arm.
