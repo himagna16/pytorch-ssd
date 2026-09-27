@@ -194,3 +194,69 @@ frames** (conf 0.76) where CONTROL and the champion never lock. **Test 3 NOT MET
 EXPO is more willing to say "person" in dark scenes, including empty ones, which is what
 training on darkened images that still contain people would teach. Not a fix. Seed 1 decides
 whether any of this holds.
+
+---
+
+# ROUND 2 RESULTS (all four runs complete, 2026-09-27 02:30)
+
+All runs finished 5/5 epochs from commit 1c5e30b, each with `PRESERVED 59` in its log.
+Epoch-5 sha256 prefixes: CONTROL s1 af1515a6fec8ba45, EXPO s0 557a1a4a331077d6, EXPO s1
+cd0504941cf73d87, FRONTNET s1 fdb69060037f57e9. Reports: `results/round2/`.
+
+**Verdict: no camera augmentation we tried helps. The Frontnet recipe's harm replicates.
+The exposure preset does no harm on COCO but passes none of its tests.** The one consistent
+difference from the champion comes from plain fine-tuning, which neither round was designed
+to test (see the end).
+
+## COCO (qat form, the pre-registered one; release form in the reports agrees)
+
+| comparison | Test 1 clean F1 | Test 2 exposure (k) | Test 2b held-out contrast/gamma |
+|---|---|---|---|
+| FRONTNET s0 - CONTROL s0 (round 1) | **-0.0162** [-0.0231, -0.0083] HARM | -0.0063 | -0.0055 |
+| FRONTNET s1 - CONTROL s1 | **-0.0166** [-0.0223, -0.0089] HARM | -0.0076 [-0.0128, -0.0020] | -0.0064 |
+| EXPO s0 - CONTROL s0 | -0.0022 [-0.0052, +0.0025] no harm | +0.0042 (in-distribution) | -0.0053 [-0.0083, -0.0022] NOT MET |
+| EXPO s1 - CONTROL s1 | -0.0011 [-0.0048, +0.0035] no harm | +0.0035 (in-distribution) | -0.0037 [-0.0072, -0.0002] NOT MET |
+
+- **Round 1 replicates.** FRONTNET costs 0.016-0.017 clean F1 on both seeds, and loses on
+  both distortion families, including the contrast/gamma family it trains on.
+- **EXPO** is harmless on clean images and gains about 0.004 on the exposure family it trains
+  on, which is small and expected. On the held-out family it is slightly *worse* on both seeds.
+  So it does not learn a general robustness, only a narrow one.
+- Pets at 0.45: EXPO 0.284 / 0.291 vs CONTROL 0.283 / 0.300 (a wash); FRONTNET 0.316 / 0.333,
+  worse on both seeds.
+
+## Real frames (Sep 24, release form)
+
+| model | person, dim: seen / locked | person, bright: seen / locked | empty rooms: false locks | near-black: locked (median conf) |
+|---|---|---|---|---|
+| champion | 45% / 40% | 38% / 41% | 0 | 68-85% (0.76-0.77) |
+| CONTROL s0 / s1 | 55% / 52%, 57% / 57% | 41% / 41%, 45% / 42% | 0 / 0 | 0 / 0 (0.34-0.37, 0.53-0.58) |
+| FRONTNET s0 / s1 | 39% / 39%, 60% / 50% | **16% / 4%, 25% / 4%** | 0 / 0 | 0 / 0 (0.53-0.54, 0.62) |
+| EXPO s0 / s1 | 74% / 62%, 66% / 60% | 48% / 43%, 43% / 42% | **one clip 73%** / 0 | 0 / 0 (0.37-0.40, 0.46-0.48) |
+
+- **Test 3 (EXPO, bright +10 points and no empty-room locks): NOT MET on either seed.** s0:
+  +7 points but a false lock on the dim empty room (run 204502). s1: -2 points, no false locks.
+  The s0 false lock did not replicate, and neither did any bright-frame gain.
+- **FRONTNET's bright-frame loss replicates** (locked 4% on both seeds vs 41-42% for CONTROL).
+- EXPO is ahead of CONTROL on dim frames on both seeds (74/66% vs 55/57% seen), but it also
+  runs more confident on dim empty frames (seen 31% / 10% vs 0% / 4%). That looks more like a
+  shift in how willing it is to say "person" in the dark than a better detector.
+
+## What replicated that nobody designed for: plain fine-tuning
+
+Both CONTROL seeds (5 more QAT epochs from the champion, no augmentation) match the champion on
+COCO (0.8010 / 0.7991 vs 0.8008), see me more on dim frames (55% / 57% vs 45%), and **never lock
+on the near-black noise frames** that the champion locks on 68-85% of the time. Every one of the
+six fine-tuned models, augmented or not, stops that lock-on. Cautions, all important:
+
+- Fake-quant only. The chip arm reads about 0.05 higher than this form, and the seed-1 medians
+  on noise frames (0.53-0.62) leave less margin under 0.75 than seed 0 (0.34-0.40). A different
+  calibration could bring the lock back. **The firmware brightness guard is still required.**
+- The dim-frame gain is one person in one room, and it was not a pre-registered question.
+- Why fine-tuning does this is unknown. The champion's QAT run was stopped at epoch 3 by an
+  out-of-memory kill, so it may simply have been under-trained.
+
+**Suggested next step (a decision for Sai, not run):** push CONTROL s0 through the release
+pipeline (NEMO -> integer ONNX -> semantic gates) and score it on the chip arm, to check the
+near-black result where it matters. That needs the Docker export lane, which is heavier than
+laptop training and touches the release tooling.

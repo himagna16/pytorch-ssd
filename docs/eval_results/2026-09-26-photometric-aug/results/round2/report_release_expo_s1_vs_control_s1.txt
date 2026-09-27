@@ -1,0 +1,38 @@
+Fake-quant form: release (fq_forms.py)
+COCO val2017, n=5000 (2635 person-visible).
+Threshold for the k columns = that model's own clean peak threshold.
+
+model       clean peak F1    @t |  k=0.25   k=0.5   k=2.0   k=4.0 |  mean k | pets FP@.45   @.55
+champion           0.7991  0.45 |  0.7802  0.7939  0.7859  0.7558 |  0.7789 |       0.258  0.184
+control_e5         0.7976  0.40 |  0.7764  0.7915  0.7826  0.7545 |  0.7762 |       0.262  0.180
+aug_e5             0.7848  0.45 |  0.7766  0.7808  0.7760  0.7527 |  0.7715 |       0.261  0.170
+expo_s0_e5         0.7963  0.45 |  0.7838  0.7904  0.7844  0.7651 |  0.7809 |       0.301  0.206
+control_s1_e5         0.7992  0.50 |  0.7735  0.7919  0.7813  0.7526 |  0.7748 |       0.344  0.226
+expo_s1_e5         0.7992  0.50 |  0.7800  0.7933  0.7865  0.7596 |  0.7798 |       0.287  0.198
+aug_s1_e5          0.7829  0.50 |  0.7797  0.7831  0.7759  0.7483 |  0.7718 |       0.364  0.257
+
+Held-out family (round 2, Test 2b), same clean threshold:
+model         c0.7    c2.0    g0.5    g2.0 |    mean
+champion    0.7815  0.7523  0.7701  0.7733 |  0.7693
+control_e5  0.7843  0.7486  0.7822  0.7714 |  0.7716
+aug_e5      0.7709  0.7491  0.7716  0.7652 |  0.7642
+expo_s0_e5  0.7893  0.7499  0.7763  0.7735 |  0.7723
+control_s1_e5  0.7835  0.7478  0.7706  0.7748 |  0.7692
+expo_s1_e5  0.7747  0.7526  0.7595  0.7749 |  0.7654
+aug_s1_e5   0.7704  0.7483  0.7749  0.7663 |  0.7650
+
+Peak F1 at each k, each model free to pick its best threshold for that k:
+champion   k=0.25: 0.7802@0.45 k=0.5: 0.7939@0.45 k=2.0: 0.7859@0.45 k=4.0: 0.7563@0.50
+control_e5 k=0.25: 0.7780@0.35 k=0.5: 0.7915@0.40 k=2.0: 0.7833@0.45 k=4.0: 0.7579@0.45
+aug_e5     k=0.25: 0.7805@0.40 k=0.5: 0.7871@0.40 k=2.0: 0.7760@0.45 k=4.0: 0.7527@0.45
+expo_s0_e5 k=0.25: 0.7838@0.45 k=0.5: 0.7932@0.55 k=2.0: 0.7857@0.50 k=4.0: 0.7651@0.45
+control_s1_e5 k=0.25: 0.7809@0.40 k=0.5: 0.7939@0.45 k=2.0: 0.7813@0.50 k=4.0: 0.7526@0.50
+expo_s1_e5 k=0.25: 0.7854@0.45 k=0.5: 0.7938@0.45 k=2.0: 0.7879@0.45 k=4.0: 0.7667@0.40
+aug_s1_e5  k=0.25: 0.7806@0.45 k=0.5: 0.7839@0.55 k=2.0: 0.7759@0.50 k=4.0: 0.7494@0.40
+
+expo_s1_e5 minus control_s1_e5, paired bootstrap over images (1000 resamples, 95%):
+  Test 1, clean peak F1:      -0.0000  [-0.0030, +0.0048]  HARM if below -0.005 -> no harm
+  Test 2, mean F1 over k:     +0.0050  [+0.0016, +0.0081]  SUCCESS if above +0.01 -> NOT MET
+  Test 2b, mean F1 held-out:  -0.0038  [-0.0071, -0.0006]  SUCCESS if above +0.01 -> NOT MET
+  Test 4, pets FP @0.45:      expo_s1_e5 0.287 vs control_s1_e5 0.344
+          at recall >= 0.832:   expo_s1_e5 0.287 (t=0.450) vs control_s1_e5 0.307 (t=0.475)

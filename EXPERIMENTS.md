@@ -1,5 +1,18 @@
 # Experiment Log
 
+## Sep 27, 2026 — Round 2: exposure-only augmentation is harmless but useless; Frontnet harm replicates (Sai)
+
+Four more runs, pre-registered (1054838): a new `--photometric-aug exposure` preset (linear-light
+gain 0.25-4 with clipping, vignetting, no blur) on seeds 0 and 1, plus CONTROL and FRONTNET on
+seed 1. **FRONTNET's harm replicates** (clean F1 -0.0166 [-0.0223, -0.0089]; real bright frames
+locked 4% vs 42%). **EXPO does no harm** (-0.0022, -0.0011) but fails the held-out
+contrast/gamma test on both seeds (-0.005, -0.004) and the real-frame test on both (s0: +7
+points bright but false-locked an empty dim room; s1: -2 points). **Replicated but unplanned:**
+every fine-tuned model, including both plain CONTROL seeds, stops locking on near-black noise
+frames (champion 68-85%), and CONTROL sees me more on dim frames (55/57% vs 45%) at unchanged
+COCO F1. Fake-quant only; chip check proposed, not run. Evidence:
+`docs/eval_results/2026-09-26-photometric-aug/` (round 2 sections).
+
 ## Sep 26, 2026 — PULP-Frontnet's camera augmentation makes our model worse (Sai)
 
 Copied the Himax augmentation from PULP-Frontnet (arXiv 2103.10873 Sec. IV-B: contrast
