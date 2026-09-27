@@ -31,6 +31,8 @@ sys.path.insert(0, str(PYSSD / "export"))
 sys.path.insert(0, str(HERE.parent))
 
 KS = (1.0, 0.25, 0.5, 2.0, 4.0)
+# Round 2's held-out family for the exposure preset: contrast about each image's mean, gamma.
+HELDOUT = (("c0.7", "contrast", 0.7), ("c2.0", "contrast", 2.0), ("g0.5", "gamma", 0.5), ("g2.0", "gamma", 2.0))
 THRESHOLDS = np.round(np.arange(0.30, 0.751, 0.05), 2)   # sweep_fq_ckpt.py's grid
 GAMMA = 2.2
 
@@ -42,6 +44,24 @@ def expose(x_u8: np.ndarray, k: float) -> np.ndarray:
         return x
     y = np.clip(k * np.power(x, GAMMA), 0.0, 1.0) ** (1.0 / GAMMA)
     return np.round(y * 255.0).astype(np.float32) / 255.0
+
+
+def distort(x_u8: np.ndarray, kind: str, v: float) -> np.ndarray:
+    """uint8 images -> float32 in [0, 1], contrast (about each image's mean) or gamma, 8-bit."""
+    x = x_u8.astype(np.float32) / 255.0
+    if kind == "contrast":
+        m = x.mean(axis=(1, 2), keepdims=True)
+        y = np.clip(m + v * (x - m), 0.0, 1.0)
+    else:
+        y = np.power(x, v)
+    return np.round(y * 255.0).astype(np.float32) / 255.0
+
+
+def perturbations():
+    """name -> function(uint8 images) -> float images, for every column this script scores."""
+    out = {f"k{k}": (lambda x, k=k: expose(x, k)) for k in KS}
+    out.update({name: (lambda x, kind=kind, v=v: distort(x, kind, v)) for name, kind, v in HELDOUT})
+    return out
 
 
 def load_val(cache: Path):
@@ -70,25 +90,29 @@ def load_val(cache: Path):
     return x, vis, nop, conf
 
 
-def score(ckpt: Path, x_u8: np.ndarray, form: str) -> dict:
+def score(ckpt: Path, x_u8: np.ndarray, form: str, have=()) -> dict:
+    """Visibility probabilities for every perturbation not already in `have`."""
     import torch
     from fq_forms import load_fq
     from utils.follow_task import decode_follow_outputs
 
+    todo = {n: f for n, f in perturbations().items() if n not in have}
+    if not todo:
+        return {}
     payload = torch.load(ckpt, map_location="cpu")
     mq, how = load_fq(payload, form)
     print(f"  {ckpt} [{how}]", flush=True)
     out = {}
     with torch.no_grad():
-        for k in KS:
-            xk = expose(x_u8, k)
+        for name, fn in todo.items():
+            xk = fn(x_u8)
             probs = []
             for i in range(0, len(xk), 128):
                 batch = torch.from_numpy(xk[i:i + 128])[:, None]
                 probs.append(decode_follow_outputs(mq(batch), payload["follow_head_type"])
                              ["visibility_confidence"].numpy())
-            out[f"k{k}"] = np.concatenate(probs)
-            print(f"    k={k}: mean mean-pixel {xk.mean():.3f}", flush=True)
+            out[name] = np.concatenate(probs)
+            print(f"    {name}: mean pixel {xk.mean():.3f}", flush=True)
     return out
 
 
@@ -122,6 +146,14 @@ def report(runs: dict, vis, nop, conf, compare, n_boot=1000, seed=0):
         summary[label] = dict(clean=f1c, t=t, fk=fk, mean_k=float(np.mean(fk)), fp45=fp45, fp55=fp55)
         say(f"{label:<10} {f1c:>14.4f} {t:>5.2f} | " + " ".join(f"{v:>7.4f}" for v in fk)
             + f" | {np.mean(fk):>7.4f} | {fp45:>11.3f} {fp55:>6.3f}")
+    ho = [n for n, _, _ in HELDOUT]
+    if all(all(n in pr for n in ho) for pr in runs.values()):
+        say(f"\nHeld-out family (round 2, Test 2b), same clean threshold:")
+        say(f"{'model':<10} " + " ".join(f"{n:>7}" for n in ho) + f" | {'mean':>7}")
+        for label, pr in runs.items():
+            fh = [f1_at(pr[n], vis, summary[label]["t"])[0] for n in ho]
+            summary[label]["mean_ho"] = float(np.mean(fh))
+            say(f"{label:<10} " + " ".join(f"{v:>7.4f}" for v in fh) + f" | {np.mean(fh):>7.4f}")
     say(f"\nPeak F1 at each k, each model free to pick its best threshold for that k:")
     for label, pr in runs.items():
         say(f"{label:<10} " + " ".join(f"k={k}: {peak(pr[f'k{k}'], vis)[0]:.4f}@{peak(pr[f'k{k}'], vis)[1]:.2f}"
@@ -133,13 +165,17 @@ def report(runs: dict, vis, nop, conf, compare, n_boot=1000, seed=0):
         ta, tb = summary[a]["t"], summary[b]["t"]
         rng = np.random.default_rng(seed)
         n = len(vis)
-        d_clean, d_mean = [], []
+        d_clean, d_mean, d_ho = [], [], []
+        has_ho = "mean_ho" in summary[a] and "mean_ho" in summary[b]
         for _ in range(n_boot):
             idx = rng.integers(0, n, n)
             v = vis[idx]
             d_clean.append(peak(A["k1.0"][idx], v)[0] - peak(B["k1.0"][idx], v)[0])
             d_mean.append(np.mean([f1_at(A[f"k{k}"][idx], v, ta)[0] for k in ks])
                           - np.mean([f1_at(B[f"k{k}"][idx], v, tb)[0] for k in ks]))
+            if has_ho:
+                d_ho.append(np.mean([f1_at(A[n][idx], v, ta)[0] for n in ho])
+                            - np.mean([f1_at(B[n][idx], v, tb)[0] for n in ho]))
         lo = lambda d: np.percentile(d, 2.5); hi = lambda d: np.percentile(d, 97.5)
         dc = summary[a]["clean"] - summary[b]["clean"]
         dm = summary[a]["mean_k"] - summary[b]["mean_k"]
@@ -148,6 +184,10 @@ def report(runs: dict, vis, nop, conf, compare, n_boot=1000, seed=0):
             f"HARM if below -0.005 -> {'HARM' if dc < -0.005 else 'no harm'}")
         say(f"  Test 2, mean F1 over k:     {dm:+.4f}  [{lo(d_mean):+.4f}, {hi(d_mean):+.4f}]  "
             f"SUCCESS if above +0.01 -> {'SUCCESS' if dm > 0.01 else 'NOT MET'}")
+        if has_ho:
+            dh = summary[a]["mean_ho"] - summary[b]["mean_ho"]
+            say(f"  Test 2b, mean F1 held-out:  {dh:+.4f}  [{lo(d_ho):+.4f}, {hi(d_ho):+.4f}]  "
+                f"SUCCESS if above +0.01 -> {'SUCCESS' if dh > 0.01 else 'NOT MET'}")
         # Test 4 at matched recall: the same rule for both models -- the highest threshold at
         # which the model still finds at least the recall a has at 0.45 on clean images.
         _, rec_a = f1_at(A["k1.0"], vis, 0.45)
@@ -185,11 +225,17 @@ def main():
     for spec in a.models:
         label, _, ck = spec.partition("=")
         f = a.out / (f"{label}_{a.form}.npz" if not a.limit else f"{label}_{a.form}_limit{a.limit}.npz")
-        if not a.report_only and not f.exists():
-            print(f"scoring {label}", flush=True)
-            np.savez_compressed(f, ckpt=str(ck), **score(Path(ck).expanduser(), x, a.form))
-        z = np.load(f)
-        runs[label] = {k: z[k][: len(vis)] for k in z.files if k.startswith("k")}
+        have = {}
+        if f.exists():
+            z = np.load(f)
+            have = {k: z[k] for k in z.files if k != "ckpt"}
+        if not a.report_only:
+            new = score(Path(ck).expanduser(), x, a.form, have)
+            if new:
+                print(f"scored {label}: {sorted(new)}", flush=True)
+                have.update(new)
+                np.savez_compressed(f, ckpt=str(ck), **have)
+        runs[label] = {k: v[: len(vis)] for k, v in have.items()}
     print(f"form: {a.form}")
     text = f"Fake-quant form: {a.form} (fq_forms.py)\n" + report(runs, vis, nop, conf, a.compare)
     if not a.limit:
