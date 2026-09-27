@@ -1,9 +1,13 @@
+import math
 import random
 from typing import Any, Dict, Optional, Tuple
 
 import torch
 import torchvision.transforms.functional as F
 from PIL import Image
+
+# "frontnet" = RandomPhotometricHimax with the PULP-Frontnet settings.
+PHOTOMETRIC_AUG_CHOICES = ("none", "frontnet")
 
 
 def _empty_boxes_like(boxes: torch.Tensor) -> torch.Tensor:
@@ -152,11 +156,85 @@ class ToTensorGray:
         return img_t, target
 
 
+class RandomPhotometricHimax:
+    """
+    Photometric and optical augmentation for the AI-deck's Himax HM01B0 camera.
+
+    Follows PULP-Frontnet (Palossi et al. 2021, arXiv 2103.10873, Sec. IV-B), which flies
+    the same camera. Each effect is applied independently with probability p, in the
+    paper's order, to a [C, H, W] tensor in [0, 1]:
+
+      contrast    multiplicative factor in [0.7, 2.0], about the image mean
+                  (the paper's stated reason: erratic auto-exposure)
+      brightness  additive shift in [-0.2, 0.2]
+      gamma       exponent in [0.4, 2.0]
+      vignetting  radial darkening with random radius and strength
+      blur        Gaussian, sigma 3 px at the paper's 160 px input width,
+                  scaled to this image's width
+
+    The paper gives no numbers for vignetting, so the ranges here are ours: at their
+    extremes they bracket camera_model.py's Himax preset (corner gain about 0.68).
+    Runs after ToTensorGray; labels are untouched.
+    """
+
+    def __init__(
+        self,
+        p: float = 0.5,
+        contrast: Tuple[float, float] = (0.7, 2.0),
+        brightness: Tuple[float, float] = (-0.2, 0.2),
+        gamma: Tuple[float, float] = (0.4, 2.0),
+        vignette_strength: Tuple[float, float] = (0.1, 0.6),
+        vignette_radius: Tuple[float, float] = (0.0, 0.6),
+        blur_sigma_px: float = 3.0,
+        blur_reference_width: int = 160,
+    ):
+        self.p = p
+        self.contrast = contrast
+        self.brightness = brightness
+        self.gamma = gamma
+        self.vignette_strength = vignette_strength
+        self.vignette_radius = vignette_radius
+        self.blur_sigma_px = blur_sigma_px
+        self.blur_reference_width = blur_reference_width
+
+    @staticmethod
+    def _vignette(img: torch.Tensor, strength: float, radius: float) -> torch.Tensor:
+        _, height, width = img.shape
+        ys = torch.linspace(-1.0, 1.0, height, dtype=img.dtype).view(-1, 1)
+        xs = torch.linspace(-1.0, 1.0, width, dtype=img.dtype).view(1, -1)
+        # Radius normalised so the image corner sits at 1.
+        r = torch.sqrt(xs * xs + ys * ys) / (2.0 ** 0.5)
+        falloff = ((r - radius) / (1.0 - radius)).clamp(0.0, 1.0)
+        return img * (1.0 - strength * falloff * falloff)
+
+    def __call__(self, img: torch.Tensor, target: Dict[str, Any]):
+        if random.random() < self.p:
+            img = F.adjust_contrast(img, random.uniform(*self.contrast))
+        if random.random() < self.p:
+            img = (img + random.uniform(*self.brightness)).clamp(0.0, 1.0)
+        if random.random() < self.p:
+            img = F.adjust_gamma(img, random.uniform(*self.gamma))
+        if random.random() < self.p:
+            img = self._vignette(
+                img,
+                random.uniform(*self.vignette_strength),
+                random.uniform(*self.vignette_radius),
+            ).clamp(0.0, 1.0)
+        if random.random() < self.p:
+            sigma = self.blur_sigma_px * img.shape[-1] / float(self.blur_reference_width)
+            kernel = 2 * int(math.ceil(3.0 * sigma)) + 1
+            img = F.gaussian_blur(img, [kernel, kernel], [sigma, sigma])
+        return img, target
+
+
 def get_train_transforms(
     model_type: str = "ssd",
     input_channels: int = 1,
     image_size: Tuple[int, int] = (128, 128),
+    photometric_aug: str = "none",
 ):
+    if photometric_aug not in PHOTOMETRIC_AUG_CHOICES:
+        raise ValueError(f"photometric_aug must be one of {PHOTOMETRIC_AUG_CHOICES}")
     if model_type in {"hybrid_follow", "plain_follow", "plain_follow_bin", "plain_follow_v2", "plain_follow_tiny", "dronet_lite_follow"}:
         if input_channels != 1:
             raise ValueError(f"{model_type} path requires input_channels=1.")
@@ -165,14 +243,18 @@ def get_train_transforms(
             # Keep dronet-lite augmentation milder so the visibility gate settles
             # before the residual path starts chasing harder x offsets.
             flip_prob = 0.25
-        return Compose(
-            [
-                CenterCropSquare(),
-                ResizeImage(image_size),
-                RandomHorizontalFlip(flip_prob),
-                ToTensorGray(output_channels=1),
-            ]
-        )
+        steps = [
+            CenterCropSquare(),
+            ResizeImage(image_size),
+            RandomHorizontalFlip(flip_prob),
+            ToTensorGray(output_channels=1),
+        ]
+        if photometric_aug == "frontnet":
+            steps.append(RandomPhotometricHimax())
+        return Compose(steps)
+
+    if photometric_aug != "none":
+        raise ValueError("photometric_aug is only wired for the follow models.")
 
     return Compose(
         [
