@@ -143,3 +143,42 @@ Per clip: `results/real_frames_report_release.txt` (and `_qat.txt`); per frame:
   explanations directly. About 2.5 h of laptop time.
 - Nothing here ran on the chip. Any candidate would need the release pipeline and the
   semantic gates, and its black-frame behaviour checked on the chip arm.
+
+---
+
+# ROUND 2: PRE-REGISTRATION (written 2026-09-26 night, before any round-2 run launched)
+
+Everything above this line is round 1 and is not edited. Round 2 asks two things: whether a
+preset aimed at the Himax's actual failure helps, and whether round 1 replicates on a
+second seed.
+
+**New preset `exposure`** (`RandomExposureHimax`, branch `sai/photometric-aug`): with p=0.5 an
+exposure gain k, log-uniform in [0.25, 4], applied in linear light (gamma 2.2), clipped at
+white and re-quantised to 8 bits; with p=0.5 the same vignetting as `frontnet`. No blur, no
+contrast or gamma about the mean.
+
+**Runs**, queued in this order, identical to round 1 except for the flag and seed:
+1. EXPO seed 0 (`--photometric-aug exposure --seed 0`)
+2. CONTROL seed 1
+3. EXPO seed 1
+4. FRONTNET seed 1 (replication of round 1's AUG)
+
+Epoch rule unchanged: each run judged at epoch 5.
+
+**Tests.** Primary: EXPO s0 vs CONTROL s0 (round 1). Replication: the same test on s1.
+
+1. **No harm on clean images:** HARM if EXPO is more than 0.005 below CONTROL on clean
+   peak F1 (qat form).
+2. **Exposure change (k in {0.25, 0.5, 2, 4}):** reported, but it is now **in-distribution**
+   for EXPO, because this is the family it trains on. Not a pass/fail test.
+2b. **Held-out distortion:** COCO val with contrast x0.7 and x2.0 (about each image's mean)
+   and gamma 0.5 and 2.0. EXPO never trains on these. SUCCESS if EXPO beats CONTROL by more
+   than 0.01, averaged over the four.
+3. **Real frames, the target** (Sep 24, release form): on bright clips with a person
+   (69 frames, 5 clips), EXPO should be *seen* (conf >= 0.75) at least 10 points more often
+   than CONTROL, with no false locks on empty-room frames. Stated as a direction because
+   n is small and it is one person.
+4. **Pets:** reported, not gated.
+
+**Replication of round 1:** FRONTNET s1 vs CONTROL s1, round 1's Tests 1 and 2 with round 1's
+bars. **Near-black:** does CONTROL s1 also stop locking on noise frames (round 1: 0%)?
