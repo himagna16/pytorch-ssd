@@ -182,3 +182,15 @@ Epoch rule unchanged: each run judged at epoch 5.
 
 **Replication of round 1:** FRONTNET s1 vs CONTROL s1, round 1's Tests 1 and 2 with round 1's
 bars. **Near-black:** does CONTROL s1 also stop locking on noise frames (round 1: 0%)?
+
+## Round 2, interim (EXPO seed 0 only, 2026-09-26 23:15; seed-1 runs still training)
+
+EXPO s0 epoch 5 vs CONTROL s0 epoch 5, qat form: clean -0.0022 [-0.0052, +0.0025] (no
+harm); exposure change +0.0042 [+0.0010, +0.0070] (in-distribution, not gated); held-out
+contrast/gamma **-0.0053 [-0.0083, -0.0022], NOT MET**. Release form: -0.0014, +0.0047,
++0.0006 (NOT MET). Real frames (release form): person seen dim 74% vs 55%, bright 48% vs 41%
+(+7 points, bar +10), but the dim empty-room clip from run 204502 now **false-locks 73% of
+frames** (conf 0.76) where CONTROL and the champion never lock. **Test 3 NOT MET.** Reading:
+EXPO is more willing to say "person" in dark scenes, including empty ones, which is what
+training on darkened images that still contain people would teach. Not a fix. Seed 1 decides
+whether any of this holds.
