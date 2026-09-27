@@ -17,6 +17,7 @@ from models.follow_model_factory import (
     follow_checkpoint_metadata,
 )
 from models.hybrid_follow_net import (
+    HYBRID_FOLLOW_BASE_STAGE_CHANNELS,
     HYBRID_FOLLOW_STAGE4_VARIANTS,
     HybridFollowNet,
     adapt_hybrid_follow_state_dict_to_model,
