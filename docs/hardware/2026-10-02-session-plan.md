@@ -53,12 +53,20 @@ Use **drone 05's AI-deck only**, and leave drone 09 untouched. Flashing goes ove
 radio, so your laptop keeps its internet and I can help live. Steps are in
 `docs/hardware/flash_runbook.md`, and the images are already built.
 
-1. **Bench image:** look for `match=1` and `mismatches=0`. Write down `infer` and `period`.
-2. **Live-camera image:** look for `hz` around 10-15. Walk in and out and check `trk`
-   goes 0→1→0, and that left/right are correct.
-3. **Cover the lens.** Expect a **false lock**: today's image locks onto dark noise.
-   That's the hazard we are documenting. Tonight's firmware branch adds a dark-frame
-   guard. That gets flashed on a later day, after you OK it.
+1. **Bench image** (the known one, `_prebuilt_champion/champion_bench.img`): look for
+   `match=1` and `mismatches=0`. Write down `infer` and `period`.
+2. **Flight image with tonight's dark-frame guard**
+   (`_prebuilt_dark_guard/`, flight sha `ce9fa7b9…`, PR #12):
+   - look for `hz` around 10-15;
+   - walk in and out and check `trk` goes 0→1→0, and that left/right are correct.
+3. **Five power-ups** (unplug and replug the battery, don't touch the drone). Each
+   time, write down the `exposure …` line and three `mean=` values. This is the first
+   look at exposure from inside the chip.
+4. **Cover the lens** with a cap or tape for 10 s.
+   - Expect `dark=` counting up and `trk=0`.
+   - **`trk=1` must never appear.**
+   - Write down the covered `mean=`. It tells us whether the guard's floor of 12 is
+     right. Full procedure: HANDOFF §5.6 in PR #12.
 
 Side effect: drone 05 stops being a WiFi camera. That also fixes the problem of two
 drones broadcasting the same WiFi name. **Correction to an earlier claim:** the
