@@ -291,6 +291,32 @@ build is verified and reproducible; the flash is not, because there has been no
 deck to flash. Treat it as a recovery path that is very likely to work rather
 than one that is known to.
 
+> **CORRECTION 2026-10-01: this restores *a* working streamer, not the one on the decks
+> now.** The recovery image `handoff_private/aideck_images/wifi-img-streamer.flash.img`
+> (`de11368d...`) is built from the local source, which captures **324x244** frames:
+> `aideck-gap8-examples/examples/other/wifi-img-streamer/wifi-img-streamer.c` lines 38-39
+> (`#define CAM_WIDTH 324`, `#define CAM_HEIGHT 244`) and line 62
+> (`cam_conf.format = PI_CAMERA_QVGA`), sent raw by default (line 146,
+> `streamerMode = RAW_ENCODING`). The decks currently stream **162x122** frames with pixel
+> values 0-191 at about 2 fps (`EXPERIMENTS.md`, Sep 22). So after flashing the champion app
+> and then this image, you get a working WiFi streamer that is **not identical** to the
+> current one. What that means for data capture:
+> - frames arrive as full-resolution **324x244** (the same sensor format the flight app
+>   uses: `crazyflie_ssd` `camera_if.c` also opens `PI_CAMERA_QVGA`, 324x244), so they are
+>   likely closer to what the flight app sees than the current 162x122 stream. Their pixel
+>   range and brightness scale have not been measured, so do not assume 0-191 or 0-255;
+> - capture and scoring tools written for 162x122 frames must handle 324x244 (for the
+>   flight-path comparison, run them through the firmware's 244x244 crop and 2x2 box,
+>   `tools/preprocess_host_harness.c`), and a raw 324x244 frame is about 4x the bytes, so
+>   expect a lower frame rate than the current ~2 fps (unmeasured);
+> - brightness numbers, thresholds and grids recorded on the 162x122 stream (for example
+>   the 30-60 band in `tools/real_frames/grid_capture.sh` and the dark-frame floor
+>   discussed in `docs/firmware_integration/HANDOFF.md` section 2 item 16) do not carry
+>   over without re-measurement;
+> - the camera setup is the same Bitcraze pattern (`PI_CAMERA_CMD_AEG_INIT` once, line 81),
+>   so the exposure is still set once per power-up.
+> Still UNVERIFIED on hardware, as above.
+
 ### 3b. Never run these
 
 The GAP SDK `all` and `flash` make targets **flash over JTAG and overwrite the
