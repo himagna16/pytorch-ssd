@@ -84,6 +84,45 @@ Use `--skip-application-promotion` if a validation run should not replace the
 active app. `--skip-gvsoc` also prevents promotion because a simulated runtime
 pass is the release gate.
 
+### Releasing a QAT checkpoint
+
+A checkpoint saved by quant-aware training (`train.py --quant-aware-finetune`)
+carries the PACT ranges it learned. There are two ways to release it:
+
+- **Recalibrated (default).** Strip it first with
+  `export/prepare_follow_qat_eval_checkpoint.py` and release the stripped copy.
+  The release throws the learned ranges away and recalibrates on 128 COCO
+  images.
+- **Learned ranges kept.** Pass the full QAT checkpoint with
+  `--preserve-qat-alphas`:
+
+```bash
+bash ./run_plain_follow.sh \
+  --ckpt ../training/<run>/plain_follow_epoch_00N.pth \
+  --preserve-qat-alphas \
+  --output-dir logs/<name> \
+  --skip-application-promotion --overwrite
+```
+
+The driver strips a float copy for the float-model steps itself and builds
+every quantized stage (FQ, QD, ID) from the one learned state. It refuses to
+run if the two checkpoints' float weights differ by a single bit, or if the
+learned state does not load strictly. `quant_eval/summary.json` (under
+`calibration.qat_alpha_preservation`) and `release_summary.json` (under
+`quantization_ranges`) record the policy, both SHA-256s, the learned and the
+would-be-calibrated range of every layer, and every range NEMO's QD stage
+changed. Passing a QAT checkpoint *without* the flag now stops early with this
+choice instead of crashing in the float step.
+
+Known limit: NEMO's `PACT_Linear.harden_weights` resets the output layer's
+weight range from its weights at the QD stage, so that one learned range (the
+`output_head` `W_alpha`/`W_beta`) does not reach the chip either way. The
+summary lists it under `qd_stage_weight_range_changes`.
+
+Kept ranges change the network's integer output scale, so the firmware's raw
+visibility thresholds (`docs/firmware_contract.md` on `main`) must be
+recomputed from the new release's `id_output_eps` before it is flashed.
+
 ## Source Map
 
 - `docs/collaborator_handoff_2026_08.md`: reproduction inventory, external
