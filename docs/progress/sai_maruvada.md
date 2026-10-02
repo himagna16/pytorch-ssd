@@ -445,6 +445,15 @@ Worth keeping in one place, because several of these are easy to assume:
 
 Newest first. One entry per working session.
 
+- **2026-10-01 (evening, planning after midterms).** No experiments. Reviewed where the project
+  stands after a four-day break, with nothing changed in the repo since Sep 27. Wrote the running order for a
+  full day of hardware work: `docs/hardware/2026-10-02-session-plan.md` (charge the batteries, put
+  the moved base station back and re-verify the geometry with the tape check on both drones,
+  finish the real-person grid at controlled exposure plus a light-sheet-over-the-door control,
+  then the first Lighthouse-labelled recording). Started building the missing piece for that
+  last step, a recorder that logs both drones' positions alongside the camera frames, on
+  branch `sai/lighthouse-session-recorder` (PR, not merged, not yet run on hardware).
+
 - **2026-09-27 (overnight, laptop training).** Round 2 of the camera-augmentation test,
   pre-registered before launch: a new exposure-only preset that copies what the Himax actually
   does (brighter or darker with blown highlights, no blur), on two seeds, plus second-seed
