@@ -97,6 +97,17 @@ with the wrong side, and the scorer prints a FAIL that means nothing.
 
 Add --flip to rehearse the genuinely failing verdict (-> MIRRORED).
 
+TIME LINE MODE (--timeline FILE.npz), for the Lighthouse session rehearsal.
+Instead of cycling a bank, every frame sent shows what the subject was doing at a
+WALL-CLOCK instant: content time = (send time - --epoch - --content-lag). The .npz
+holds `frames` (M, h, w) uint8, `t` (N,) content times in seconds and `idx` (N,)
+which frame is the content at each t (the last t at or before the content time is
+used). tools/lighthouse/render_timeline.py writes one. --content-lag S is a KNOWN
+injected delay - the frame shows the scene S seconds before it is sent, like a
+camera plus WiFi latency - and --stamp-time writes the content time (ms, int32 +
+2^31, big-endian) into the first 4 pixels of row 0, so a test can read back exactly
+which instant every received frame shows. Rehearsal only: a real deck does neither.
+
 Exit: Ctrl-C, or --once to stop after the first client disconnects.
 """
 import argparse
@@ -417,6 +428,12 @@ def build_banks(a):
     single mock process: connection 1 gets the first bearing, connection 2 the
     second. With one bearing (the default) this is the old single bank.
     """
+    if getattr(a, "timeline", None):
+        a._timeline = load_timeline(a.timeline)
+        n = len(a._timeline["frames"])
+        return [(a.bearings[0], list(a._timeline["frames"]),
+                 f"time line {a.timeline} ({n} frames, {a._timeline['t'][-1] - a._timeline['t'][0]:.0f} s; "
+                 f"content lag {a.content_lag:g} s{', stamped' if a.stamp_time else ''})")]
     if a.frames and len(a.bearings) > 1:
         sys.exit("--frames serves images from disk, so --bearing cannot change what they "
                  "show; pass --bearing once, or use two folders and two mock runs.")
@@ -456,6 +473,37 @@ def hold_socket_open(conn, seconds, log=_log):
     return f"the {seconds:g} s stall ran out"
 
 
+STAMP_OFFSET = 2 ** 31
+
+
+def load_timeline(path):
+    """{'t', 'idx', 'frames'} from a render_timeline.py .npz, checked."""
+    d = np.load(path)
+    t, idx, frames = np.asarray(d["t"], float), np.asarray(d["idx"], np.int64), np.asarray(d["frames"], np.uint8)
+    if frames.ndim != 3 or len(t) != len(idx) or len(t) == 0 or np.any(np.diff(t) <= 0):
+        sys.exit(f"{path}: not a time line (need frames (M,h,w), t increasing, idx same length as t)")
+    if idx.min() < 0 or idx.max() >= len(frames):
+        sys.exit(f"{path}: idx points outside frames")
+    return dict(t=t, idx=idx, frames=frames)
+
+
+def timeline_frame(tl, content_t, stamp=False):
+    """The frame showing content time `content_t` (seconds); clamps at both ends."""
+    k = int(np.clip(np.searchsorted(tl["t"], content_t, side="right") - 1, 0, len(tl["t"]) - 1))
+    gray = tl["frames"][tl["idx"][k]]
+    if stamp:
+        gray = np.array(gray, copy=True)
+        v = int(round(tl["t"][k] * 1000.0)) + STAMP_OFFSET
+        gray[0, :4] = [(v >> 24) & 255, (v >> 16) & 255, (v >> 8) & 255, v & 255]
+    return gray
+
+
+def read_stamp(gray):
+    """Content time (seconds) written by --stamp-time, from a received frame."""
+    b = [int(x) for x in np.asarray(gray)[0, :4]]
+    return (((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) - STAMP_OFFSET) / 1000.0
+
+
 def send_stream(conn, bank, a, log=_log):
     """Stream frames to one connected client. Returns the number of frames sent."""
     period = 1.0 / a.fps if a.fps > 0 else 0.0
@@ -463,8 +511,14 @@ def send_stream(conn, bank, a, log=_log):
     i = 0
     joined = not a.join_mid
     t_next = time.time()
+    tl = getattr(a, "_timeline", None)
+    if tl is not None and getattr(a, "epoch", None) is None:
+        a.epoch = time.time()              # no --epoch: the time line starts at the first client
     while a.count is None or sent < a.count:
-        gray = bank[i % len(bank)]
+        if tl is not None:
+            gray = timeline_frame(tl, time.time() - a.epoch - a.content_lag, a.stamp_time)
+        else:
+            gray = bank[i % len(bank)]
         i += 1
         n = sent + 1                            # 1-based frame number, for the flags
         w, h, depth, fmt, payload = encode_frame(gray, a.image_format, a.jpeg_quality)
@@ -706,6 +760,14 @@ def build_parser():
                    help="mirror every frame left-right, as a back-to-front camera would: "
                         "use it to see a FAILING mirror check before the lab")
     g.add_argument("--save-bank", default=None, help="also write the frames here as .png")
+    g.add_argument("--timeline", default=None, metavar="NPZ",
+                   help="serve frames by wall clock from a time line (see TIME LINE MODE)")
+    g.add_argument("--epoch", type=float, default=None,
+                   help="with --timeline: unix time of content time 0 (default: first connection)")
+    g.add_argument("--content-lag", type=float, default=0.0, metavar="S",
+                   help="with --timeline: each frame shows the scene S seconds before it is sent")
+    g.add_argument("--stamp-time", action="store_true",
+                   help="with --timeline: write the content time into the first 4 pixels")
 
     g = ap.add_argument_group("wire format")
     g.add_argument("--image-format", type=int, choices=(0, 1), default=0,
@@ -785,6 +847,10 @@ def main(argv=None):
         sys.exit("--stall-seconds bounds a --stall-after stall; pass --stall-after N too")
     if a.stall_seconds is not None and a.stall_seconds < 0:
         sys.exit("--stall-seconds must be >= 0")
+    if (a.epoch is not None or a.content_lag or a.stamp_time) and not a.timeline:
+        sys.exit("--epoch / --content-lag / --stamp-time only mean something with --timeline")
+    if a.timeline and a.frames:
+        sys.exit("--timeline and --frames are two different frame sources; pick one")
     a.bearings = parse_bearings(ap, a.bearing)
     a.bearing = a.bearings[0]        # what the single-bank helpers still read
     banks = build_banks(a)
