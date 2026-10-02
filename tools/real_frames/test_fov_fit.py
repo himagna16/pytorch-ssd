@@ -255,6 +255,39 @@ class Flags(Base):
         self.assertTrue(p["usable"])
         self.assertEqual(p["take"], 2)
 
+    def test_object_in_the_first_empty_clip_falls_back_to_the_second(self):
+        # what the rehearsal produced when a stray connection shifted the mock's clips:
+        # empty_start holds the bottle on the centre mark
+        d, truth = self.session(f=84.0, heading_deg=-6.0, seed=49)
+        shutil.rmtree(d / "empty_start")
+        shutil.copytree(d / "y+0.00", d / "empty_start")
+        for p in (d / "empty_start").glob("*.png"):
+            p.rename(p.with_name(p.name.replace("subj-bottle", "subj-empty")))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code, res = F.run_fit(d)
+        self.assertIn("two EMPTY clips differ", buf.getvalue())
+        self.assertEqual(code, 0)
+        self.assertEqual(res["fit_quality"], "good")
+        self.assertLess(abs(res["camera"]["focal_px_per_rad_stream"] - 84.0) / 84.0, 0.005)
+        self.assertTrue(all(p["reference"] == "empty_end" for p in res["positions"] if p.get("usable")))
+
+    def test_marks_in_the_wrong_order_is_a_poor_fit_exit_5(self):
+        # the bottle went to the marks in a different order than FOV_OFFSETS says
+        d, truth = self.session(f=84.0, heading_deg=0.0, seed=50)
+        s = json.loads((d / F.SESSION_FILE).read_text())
+        wrong = [0.0, 0.5, -0.5, 0.25, -0.25, 0.7, -0.7]
+        for p, y in zip(s["positions"], wrong):
+            p["offset_m"], p["bearing_deg"] = y, F.bearing_deg(y, 1.0)
+        (d / F.SESSION_FILE).write_text(json.dumps(s))
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code, res = F.run_fit(d)
+        self.assertEqual(code, 5)
+        self.assertEqual(res["fit_quality"], "POOR")
+        self.assertIn("POOR FIT", buf.getvalue())
+        self.assertNotIn("THE IMAGE IS MIRRORED", buf.getvalue())
+
     def test_no_empty_reference_is_exit_2(self):
         d, _ = self.session(seed=48)
         shutil.rmtree(d / "empty_start")

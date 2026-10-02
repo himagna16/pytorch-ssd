@@ -72,7 +72,8 @@ Usage
                                           write fov_session.json and print the capture
                                           plan (used by fov_capture.sh)
 Exit codes: 0 fit done (or check found the object), 1 check: object not usable,
-2 bad input, 3 fewer than --min-usable usable marks (4 by default), 4 selftest failed.
+2 bad input, 3 fewer than --min-usable usable marks (4 by default), 4 selftest failed,
+5 POOR fit (marks disagree by > 2.5 px RMS at 162 px: wrong marks, drone moved, ...).
 
 Session folder (what fov_capture.sh writes):
   fov_session.json   geometry: distance, offsets, lens height, object size if given
@@ -631,6 +632,10 @@ def run_fit(d: Path, min_usable: int = MIN_USABLE, json_out: Path | None = None,
                (f"a {dr.get('blob_area')} px change at columns {dr.get('blob_cols')}"
                 if dr["found"] else "no localised change"))
         say(f"   empty_end vs empty_start (drift over the session): {msg}")
+        if dr["found"] and dr.get("blob_area", 0) >= max(8.0, 15.0 * (W / DECK_STREAM_W) ** 2):
+            say("!! the two EMPTY clips differ in one place: something in view moved, or the object (or "
+                "you) was in view during one of them. Each mark uses whichever empty clip is cleaner; "
+                "read the fit quality below before trusting it.")
 
     rows = []
     for p in sess["positions"]:
@@ -645,6 +650,13 @@ def run_fit(d: Path, min_usable: int = MIN_USABLE, json_out: Path | None = None,
             rec.update(n_frames=c["n"], take=c["take"], mean_brightness=round(c["mean"], 1))
         rows.append(rec)
 
+    bri = [rc["mean"] for _, rc in refs] + [r["mean_brightness"] for r in rows if r.get("mean_brightness")]
+    if bri:
+        say(f"   brightness per clip: {min(bri):.1f} to {max(bri):.1f} (0-255)" +
+            ("  !! more than 30% apart: the exposure changed during the run (gain-matched; check the fit)"
+             if min(bri) > 0 and max(bri) / min(bri) > 1.3 else ""))
+        if min(bri) < 15:
+            say("!! NEAR-BLACK clips (mean < 15): the camera is not exposing properly; do not trust this run.")
     say("")
     say(f"   {'mark':>8} {'bearing':>8} {'frames':>6} {'column':>8} {'quality':>8}  notes")
     for rec in rows:
@@ -712,9 +724,17 @@ def run_fit(d: Path, min_usable: int = MIN_USABLE, json_out: Path | None = None,
         say(f"   dropped {dropped['dir']} as an outlier: {dropped['flags'][-1]}")
     say(f"   usable marks: {len(use)} of {len(rows)}")
     say("")
-    say(f"== RESULT ({best['model']} model; residual RMS {best['rms']:.2f} px, "
-        f"max {np.max(np.abs(best['resid'])):.2f} px)")
-    if cam["mirrored"]:
+    s_px = W / float(DECK_STREAM_W)
+    rms = best["rms"]
+    quality = "good" if rms <= 1.5 * s_px else ("fair" if rms <= 2.5 * s_px else "POOR")
+    say(f"== RESULT ({best['model']} model; residual RMS {rms:.2f} px, "
+        f"max {np.max(np.abs(best['resid'])):.2f} px: fit quality {quality})")
+    if quality == "POOR":
+        say(f"!! POOR FIT: the marks disagree with any one lens by {rms:.1f} px RMS (careful placement gives")
+        say(f"!! under {1.5 * s_px:.1f}). Something is off: the object on the wrong marks (+ = the drone's LEFT),")
+        say("!! a FOV_OFFSETS list that does not match the tape, the drone moved, or an empty clip that")
+        say("!! contains the object. Do NOT use the numbers below; fix it and run again.")
+    if cam["mirrored"] and quality != "POOR":
         say("!! THE IMAGE IS MIRRORED: the object on the drone's LEFT appeared on the RIGHT of the image")
         say("!! (or the marks were taped with left and right swapped: + must be the drone's LEFT,")
         say("!! seen from BEHIND the drone). The FOV numbers below still hold; the side does not.")
@@ -768,13 +788,14 @@ def run_fit(d: Path, min_usable: int = MIN_USABLE, json_out: Path | None = None,
         f"   |   pose_to_label.py ... --crop-hfov {v['measured_crop_hfov_deg']:.1f}")
     say("   (one forward distance: f carries the error in FOV_DIST; 1 cm at 1 m = 1 %)")
 
-    result.update(status="ok", n_usable=len(use), dropped=dropped["dir"] if dropped else None,
+    result.update(status="ok" if quality != "POOR" else "poor_fit", fit_quality=quality,
+                  n_usable=len(use), dropped=dropped["dir"] if dropped else None,
                   fit={"headline": best["model"],
                        "linear": _fitjson(lin), "yaw": _fitjson(yaw)},
                   camera=cam)
     _write(json_out or d / RESULT_FILE, result)
     say(f"\n   written: {json_out or d / RESULT_FILE}")
-    return 0, result
+    return (5 if quality == "POOR" else 0), result
 
 
 def _fitjson(fit):
