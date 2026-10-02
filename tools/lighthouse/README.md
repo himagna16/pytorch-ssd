@@ -19,7 +19,12 @@ method we have can do.
 |---|---|
 | `pose_to_label.py` | two poses in, the label out: bearing, range, image x, x-bin, size bucket, "in view?" |
 | `align_clocks.py` | lines up the frame timestamps with the pose timestamps (they come from different clocks) |
-| `test_pose_to_label.py`, `test_align_clocks.py` | the tests; run them before trusting anything |
+| `record_session.py` | **records a session**: both drones' poses + the follower's frames + `meta.json` (cfloaderenv) |
+| `label_session.py` | turns a recorded session into `labels.csv` + `report.md` (trainenv) |
+| `session_common.py` | the cue schedule, brightness gate, file layout and rate statistics both use |
+| `run_pair_sim.sh`, `render_timeline.py` | the no-hardware rehearsal: two CrazySim drones, and frames of a scripted subject |
+| `test_pose_to_label.py`, `test_align_clocks.py`, `test_record_session.py`, `test_label_session.py` | the tests; run them before trusting anything |
+| `test_session_rehearsal.py` | the end-to-end rehearsal (opt-in, Docker, ~3 min) |
 
 ```
 ~/Downloads/drone/trainenv/bin/python -m unittest tools/lighthouse/test_pose_to_label.py tools/lighthouse/test_align_clocks.py
@@ -184,7 +189,8 @@ fits the offset only and says the drift was **not** measured.
 In tests, a synthetic 5-minute run with a known offset is re-aligned to within 25 ms
 everywhere (worst seen 15.7 ms). Frames really served by `mock_streamer.py` and stamped
 by `cpx_grab.py` recover an injected offset to within a few ms. Real WiFi and radio
-latency have **not** been measured.
+latency have **not** been measured. **Those numbers are at 10-15 fps. At the real deck's
+~2 fps the rehearsal gives about +-40 ms** ("Recording a session", below).
 
 ## Dropouts and crashes: labels to throw away
 
@@ -200,6 +206,193 @@ latency have **not** been measured.
 `check_not_mirrored(bearings, network_bins)` is the last line of defence. Run it on
 every labelled session before using the labels. It raises unless the poses and the
 network agree on the side for at least 90% of clearly-left **and** clearly-right frames.
+
+## Recording a session
+
+`record_session.py` records everything a session needs in one unattended run;
+`label_session.py` turns it into labels afterwards, offline. Neither ever arms a motor
+or sends a setpoint: both drones get `tools/hardware/preflight.py`'s write guards before
+anything is sent.
+
+### Pre-flight checklist (every session)
+
+1. **Beacon (drone 05): props OFF** (pinch the hub, pull straight up). Its motors are
+   never armed by these tools, but a prop on a head is not worth the risk.
+2. **Beacon: AI-deck unplugged or removed.** Both AI-decks run Bitcraze's stock
+   `wifi-img-streamer`, which names its access point **`WiFi streaming example`**
+   (`aideck-gap8-examples/examples/other/wifi-img-streamer/wifi-img-streamer.c`, line 179;
+   open, no password, deck at `192.168.4.1:5000`). Two powered decks = two identical
+   networks, and macOS will join (or roam to) either one: the frames could silently
+   come from the **beacon's** camera. `record_session.py` reads the beacon's
+   `deck.bcAI` and **refuses** if it reports an AI-deck (`--allow-beacon-aideck`
+   overrides; then `--follower-deck-mac` is the only protection). Removing it also
+   helps the battery: with the AI-deck powered, the beacon's 350 mAh pack lasts about
+   5-7 min (`docs/hardware/powering_the_drone.md`); without it, longer (not measured).
+3. **Know the follower's deck by its MAC.** Once, with ONLY drone 09 powered and the
+   laptop on its WiFi, run `--identify-deck` (below) and write the MAC down. Pass it as
+   `--follower-deck-mac` on every run: the recorder refuses if the deck at
+   192.168.4.1 is a different one, and logs a warning if it changes mid-session.
+   (Unverified on hardware: this reads the deck's soft-AP MAC from the Mac's ARP table.)
+4. **Follower (drone 09) on its stand**, feet on their tape, camera level. It may run on
+   the **USB hub cable instead of its battery**: `--follower-uri usb://0`. Then only the
+   beacon uses the Crazyradio, so its log rate is not shared. (Unverified: that the
+   AI-deck streams normally when the drone is powered from USB alone.)
+5. **Both drones passed `tape_check.py`** against the geometry of record
+   (`docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`; its sha256 goes into
+   `meta.json`, and that is all that is checked - the drones' stored geometry is not
+   read back).
+6. **Brightness band.** The recorder grabs 5 frames first and refuses outside **30-60**
+   (exposure is random per power-up). Power-cycle the follower and run again (on USB:
+   unplug the cable). `GRID_ACCEPT_ANY=1` records anyway; a black camera (< 15) is
+   always refused.
+7. **The laptop goes offline.** Joining the deck's WiFi drops the internet; turn off
+   auto-join for `eduroam` / `utexas-iot`, plug the laptop in, volume up. Nobody touches
+   it during a run: start the command, walk to the start mark, follow the voice.
+8. **Measure and write down**: the subject's height (`--height`), the beacon deck's
+   height above the top of the head (`--beacon-above-head`), and the lens position on
+   the follower (`--mount`, body frame: x forward, y left, z up).
+
+### What the subject does (the spoken cues)
+
+`record_session.py` waits for the first frame, then says: **"Stand still"** (4 s) ->
+**"Step"** (one quick sidestep, ~0.4 m) -> **"Stand still"** -> **"Walk around"** ->
+... -> **"Stand still"** (4 s) -> **"Step"** -> **"Stand still"** -> **"Done"**. The end
+block starts 10 s before the end. Before the recording starts it says "Get to your
+start mark and stand still". `CAMERA_CHECK_QUIET=1` mutes all of it.
+
+During "Walk around", **walk side to side across the camera's view, upright, between
+about 1.5 and 3.5 m**, and go clearly left and clearly right of the centre line (the
+left/right check needs at least 10 confident frames on each side). At ~2 fps the clock
+alignment is carried by this sideways walking, not by the single sidestep.
+
+### Commands (zsh; paste as is)
+
+```zsh
+R=~/Downloads/drone/pytorch_ssd           # until the PR is merged: R=~/Downloads/drone/wt_lh_recorder
+CF=~/Downloads/drone/cfloaderenv/bin/python
+TR=~/Downloads/drone/trainenv/bin/python
+MOUNT=(0.03 0 0)                           # MEASURE IT: lens in the follower's body frame, m
+DECK=aa:bb:cc:dd:ee:ff                     # from --identify-deck, drone 09 alone
+
+# 0. once per drone, only that drone powered, laptop on its WiFi
+$CF $R/tools/lighthouse/record_session.py --identify-deck
+
+# 1. a session: 90 s, follower over the radio
+$CF $R/tools/lighthouse/record_session.py --seconds 90 --subject p01 --height 1.75 \
+    --beacon-above-head 0.02 --mount $MOUNT --follower-deck-mac $DECK
+#    ... or with the follower on the hub cable (and battery out):
+$CF $R/tools/lighthouse/record_session.py --follower-uri usb://0 --seconds 90 --subject p01 \
+    --height 1.75 --beacon-above-head 0.02 --mount $MOUNT --follower-deck-mac $DECK
+
+# 2. afterwards (offline is fine): labels + report. The folder is printed at the end of step 1.
+$TR $R/tools/lighthouse/label_session.py ~/drone_frames/<date>/lh_session_<HHMMSS>
+```
+
+`zsh` does not split an unquoted `$VAR` into words, so multi-number options use an
+array (`MOUNT=(0.03 0 0)`, then `--mount $MOUNT`).
+
+The session folder (`~/drone_frames/<date>/lh_session_<HHMMSS>/`, never committed):
+
+| file | contents |
+|---|---|
+| `poses_follower.csv`, `poses_beacon.csv` | one row per pose packet: `t_cf_ms` (the Crazyflie's own timestamp), `t_laptop` (receive time), `x y z roll pitch yaw`, then the latest status sample (`lighthouse_status`, `lighthouse_bs*`, `kalman_varP*`, `pm_vbat`, ... whatever the TOC has) and `status_t_cf_ms` |
+| `frames/` | `frame_<n>_<unix arrival time>.png` from `cpx_grab.py` |
+| `meta.json` | URIs, firmware tag/protocol/revision, decks, battery start/end/min, geometry sha256, subject/height/mount, rate probe and achieved rates, missing samples, link quality, cue times, deck SSID/MAC, brightness, tool git sha, why it stopped |
+| `labels.csv`, `report.md`, `label_summary.json`, `network_chip.csv` | written by `label_session.py` |
+
+**Rate.** Before recording, both links log poses together for 3 s per rate, fastest
+first (100, 50, 33, 25, 20, 10 Hz), and the fastest one delivering >= 95% on both is
+used. The achieved rate, missing samples (from gaps in the Crazyflie's own timestamps)
+and receive jitter go into `meta.json`. **Two links on one Crazyradio has not been
+measured**: in the rehearsal both links are UDP to the simulator, which says nothing
+about the radio.
+
+**Stopping.** At the end, on Ctrl-C, when either drone's link drops, or when a drone
+sends nothing for 2 s (flat battery), it stops the grabber, closes both links cleanly
+and still writes everything; `meta.json` says why (`stopped_because`). Voltages are
+printed every 10 s; under 3.4 V it warns.
+
+### The static taped-mark case with the new tool (plan section 3.5)
+
+Follower only, on its stand, nobody touching it. `--static` logs it for 30 s, averages
+the pose (circular mean for yaw) and, given the subject's mark in the room frame,
+prints the label exactly as `pose_to_label.py` would:
+
+```zsh
+# unyawed: camera along the taped centre line
+$CF $R/tools/lighthouse/record_session.py --static --follower-uri usb://0 \
+    --mark 2.0 0.5 --height 1.75 --mount $MOUNT
+# then turn the follower 30 deg to its LEFT on the stand, nothing else moved, and repeat
+$CF $R/tools/lighthouse/record_session.py --static --follower-uri usb://0 \
+    --mark 2.0 0.5 --height 1.75 --mount $MOUNT
+```
+
+`--mark X Y` is the subject's feet in the **Lighthouse room frame** (metres; the dorm
+frame is the 2026-09-24 one: origin on the blue ORIGIN tape, +x toward the door, +y
+toward the SIDE mark). The subject's head is taken as `height + beacon-above-head` above
+z = 0 (in the dorm frame z = 0 is ~2 cm above the tile; irrelevant to the x-bin). With
+the follower at the worked example's pose (lens at the origin, 0.8 m up, facing +x,
+`--mount 0 0 0`), the first run prints **-14.04 deg, x-bin 2** and the yawed run must
+print a **logged yaw about 30 deg HIGHER** and **+15.96 deg, x-bin 6** (the unit test
+`test_record_session.py` checks the first number through this exact code path). Anywhere else in the
+room the numbers differ, but the rule does not: **turning the drone LEFT must raise the
+logged yaw by ~30 and move the subject ~30 deg to the RIGHT (bearing up).** If the yaw
+went down, or the bearing went left / "not in view": the yaw sign is backwards. Stop.
+Both runs leave a folder with `poses_follower.csv` and `meta.json` (`static_pose`).
+
+### Rehearsal without hardware
+
+```zsh
+bash $R/tools/lighthouse/run_pair_sim.sh                 # two CrazySim drones (Docker)
+CAMERA_CHECK_QUIET=1 $CF $R/tools/lighthouse/record_session.py --mock --seconds 90 \
+    --height 1.75 --mount 0 0 0
+$TR $R/tools/lighthouse/label_session.py ~/drone_frames/_rehearsal/<date>/lh_session_<HHMMSS>
+bash $R/tools/lighthouse/run_pair_sim.sh stop
+# the same, as a test that checks the clocks against the truth (~3 min):
+LH_REHEARSAL=1 $TR -m unittest $R/tools/lighthouse/test_session_rehearsal.py -v
+```
+
+`--mock` uses the SITL follower over real cflib (read-only, the probe, the writers), a
+**scripted beacon** (a SITL drone that never flies never moves, so it cannot make a
+sync step; the scripted one has its own clock with a known 37.25 s boot offset, +50 ppm
+drift and 2-8 ms receive latency, and walks the cue schedule), and `mock_streamer.py
+--timeline` serving simulator renders of that subject at **2 fps, 162 x 122** (what the
+real deck sent) **0.15 s late**, each stamped with the instant it shows.
+`--mock-beacon sitl` uses both SITL drones instead (plumbing only: `label_session.py`
+then refuses, correctly, because nothing moved). Mock runs go under
+`~/drone_frames/_rehearsal/`.
+
+**What the rehearsal measured** (2026-10-01, 90 s runs, current code):
+
+| quantity | result |
+|---|---|
+| pose log rate, two links at once (SITL follower or scripted, scripted beacon) | 100 Hz requested, 99.87-100.00 Hz achieved; 29-210 samples "missing" per run from SITL stalls / thread timing (UDP, **not a radio**) |
+| beacon's Crazyflie clock -> laptop clock | +2.2 ms everywhere (= the injected minimum latency); +50 ppm drift recovered as +49.6 to +50.9 |
+| frame -> pose offset vs the stamped truth, 8 runs (2 with the SITL follower) | -35, -20, -19, -16, -7, -6, +5, +16 ms: **rms 18 ms, worst 35 ms** |
+| same, 40 s recorded | +46 ms: too few walking frames |
+| left/right check; x-bin exact / within one bin | PASS on all 8; 88-98% / 100% |
+| size bucket | 0% agreement - the rendered person is not 1.75 m; meaningless in the rehearsal |
+
+So at the deck's ~2 fps, **expect the clock offset to be good to about +-40 ms, not the
+25 ms quoted above** (that was at 10-15 fps). 40 ms is 1.1 deg for a subject crossing at
+1 m/s at 2 m, inside the 70 ms budget the "Clocks" table sets for 2 deg. Two things in
+the rehearsal made it worse: a short recording (keep >= 60 s; 90 s is the default) and
+alignment on weak detections (`label_session.py` uses confidence >= 0.5 frames and only
+falls back to >= 0.3 if that finds no sync step; an earlier 0.3-only version was 43 ms
+off). The start and end events agreeing with each other is **not** an error bar: in
+that run they agreed to 0 ms and were both 43 ms off.
+
+### What only hardware can settle (none of this was tested)
+
+* Whether two links on one Crazyradio sustain 100 Hz poses each, and what drops.
+* The Lighthouse status / quality variable names in firmware 2026.08: the recorder logs
+  whatever of `lighthouse.status`, `lighthouse.bs*`, `kalman.varP*` the TOC has. SITL
+  has no `lighthouse` group, so the status-based drops are tested on synthetic data only.
+* Real WiFi + camera latency (the rehearsal injected 0.15 s) and its jitter.
+* Whether the beacon on a head keeps both base stations in view, and how often the
+  subject blocks the static follower's deck.
+* The deck MAC check, the SSID read (recent macOS may hide it), and the follower
+  streaming on USB power alone.
 
 ## What is not known yet (only hardware can settle it)
 
