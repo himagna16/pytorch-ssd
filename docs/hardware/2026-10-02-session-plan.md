@@ -68,9 +68,21 @@ works, just not identically.
 ## 4. Lighthouse static check (10 min)
 
 `tools/lighthouse/README.md`, "static taped-mark case": stand on the marks, then turn
-the follower 30° left on its stand. You should move to the RIGHT side of the label. One
-short walking recording is fine, but only to prove the pipeline (if tonight's recorder
-PR is ready). Don't build a dataset yet.
+the follower 30° left on its stand. You should move to the RIGHT side of the label.
+This needs only drone 09; the README shows where to type your position by hand.
+
+**Optional: one walking recording to prove the pipeline.** It uses the new recorder
+(PR #9, not merged yet). Don't build a dataset yet. Before you start:
+
+- **Unplug drone 05's AI-deck from its stack,** after step 3 if you did it. Both decks
+  broadcast the same WiFi name, and the recorder refuses if the beacon has a deck.
+- Run `--identify-deck` once, with only drone 09 powered.
+- Make the recording at least 60 s long.
+- Walk side to side, clearly left and right of centre, 1.5-3.5 m away.
+- Measure your height and the beacon's height above your head.
+
+The commands are in the PR's `tools/lighthouse/README.md`, "Recording a session". Until
+the PR is merged, use `R=~/Downloads/drone/wt_lh_recorder`.
 
 **End of day:** run the tape check again.
 
