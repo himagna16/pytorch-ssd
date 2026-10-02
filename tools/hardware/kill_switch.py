@@ -356,6 +356,10 @@ class TerminalKeys:
         import tty
         self.saved = termios.tcgetattr(self.fd)
         tty.setcbreak(self.fd)
+        # no XON/XOFF: a stray Ctrl-S would otherwise freeze the screen output
+        attrs = termios.tcgetattr(self.fd)
+        attrs[0] &= ~(termios.IXON | termios.IXOFF)
+        termios.tcsetattr(self.fd, termios.TCSANOW, attrs)
         return self
 
     def __exit__(self, *exc):
@@ -377,46 +381,62 @@ class Abort(Exception):
 
 
 def run(ks, link, uri, keys, out=sys.stdout, color=True, redraw_s=0.2, confirm_s=2.0, clear=True):
-    """The interactive loop. Returns the exit code."""
+    """The interactive loop. Returns the exit code.
+
+    Three threads, so nothing can hold up the stop key: the pinger sends the watchdog, the drawer
+    redraws the screen (a terminal that stops reading blocks only the drawer), and this thread
+    only reads keys and acts on them."""
     stop_flag = threading.Event()
+    out_lock = threading.Lock()
+
+    def draw():
+        text = ("\033[H\033[2J" if clear else "") + "\n".join(screen(ks, link, uri, color)) + "\n"
+        with out_lock:
+            out.write(text)
+            out.flush()
 
     def pinger():
         while not stop_flag.is_set():
             ks.tick()
             stop_flag.wait(0.02)
 
-    th = threading.Thread(target=pinger, daemon=True)
+    first_drawn = threading.Event()
+
+    def drawer():
+        while True:
+            try:
+                draw()
+            except Exception:
+                pass
+            first_drawn.set()
+            if stop_flag.wait(max(redraw_s, 0.01)):
+                return
+
     ks.arm()
-    th.start()
-
-    def draw():
-        if clear:
-            out.write("\033[H\033[2J")
-        out.write("\n".join(screen(ks, link, uri, color)) + "\n")
-        out.flush()
-
+    threading.Thread(target=pinger, daemon=True).start()
+    dth = threading.Thread(target=drawer, daemon=True)
+    dth.start()
+    first_drawn.wait(0.5)                    # never longer: a stuck terminal must not delay the keys
     quitting = False
     try:
-        last = 0.0
         while True:
             try:
                 ch = keys.get(0.05)
                 if ch is not None and ks.on_key(ch) == "quit":
                     quitting = True
                     break
-                if time.monotonic() - last >= redraw_s:
-                    draw()
-                    last = time.monotonic()
             except (KeyboardInterrupt, Abort) as e:
                 if ks.stopped:
-                    break                    # second Ctrl-C after a stop: quit
+                    break                    # Ctrl-C after a stop: quit
                 ks.on_interrupt("Ctrl-C" if isinstance(e, KeyboardInterrupt) else "terminal closed / SIGTERM")
-                draw()
                 break
     finally:
         stop_flag.set()
         if not ks.stopped:                   # any other way out (an exception) also stops the drone
             ks.stop("kill switch exiting")
+    dth.join(0.5)
+    if dth.is_alive():                       # the terminal is not taking output: skip the final screen
+        return 0 if is_locked(link.supervisor_info()[0] if hasattr(link, "supervisor_info") else None) else 1
     # wait briefly for the supervisor to confirm the lock
     t0 = time.monotonic()
     while not quitting and time.monotonic() - t0 < confirm_s:

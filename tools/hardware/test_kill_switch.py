@@ -231,6 +231,32 @@ class TestRunLoop(unittest.TestCase):
         self.assertEqual(ks.stop_reason, "kill switch exiting")
         self.assertEqual(link.events.count("stop"), K.STOP_REPEATS)
 
+    def test_blocked_terminal_cannot_hold_up_the_stop(self):
+        """The screen stops taking output (terminal frozen): SPACE must still stop the motors."""
+        import threading
+
+        class Frozen(io.StringIO):
+            def __init__(self):
+                super().__init__()
+                self.release = threading.Event()
+
+            def write(self, text):
+                self.release.wait(10)           # every write blocks until released
+                return super().write(text)
+
+        ks, link, _ = make()
+        out = Frozen()
+        keys = Keys([None, None, " ", None, "q"])
+        th = threading.Thread(target=K.run, args=(ks, link, "udp://test", keys),
+                              kwargs=dict(out=out, color=False, redraw_s=0.01, confirm_s=0.0, clear=False),
+                              daemon=True)
+        th.start()
+        th.join(3.0)
+        self.assertTrue(ks.stopped)
+        self.assertEqual(link.events.count("stop"), K.STOP_REPEATS)
+        self.assertFalse(th.is_alive())         # and it still exits
+        out.release.set()
+
     def test_unconfirmed_lock_exit_1(self):
         code, ks, link, _ = self.run_keys([" ", "q"], link=FakeLink(locked_after_stop=False))
         self.assertEqual(code, 1)
