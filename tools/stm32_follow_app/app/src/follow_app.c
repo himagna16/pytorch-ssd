@@ -212,6 +212,12 @@ static uint8_t readPose(fa_pose_t *p, float zEst, float varLimit)
   p->y = 0.0f;
   p->z = zEst;
   p->var = 0.0f;
+#ifndef CONFIG_ESTIMATOR_KALMAN_ENABLE
+  (void)varLimit;
+  (void)vx;
+  (void)vy;
+  return FA_POS_NO_EST;   /* firmware built without the Kalman filter (Kconfig default is y) */
+#else
   if (stateEstimatorGetType() != StateEstimatorTypeKalman || !logVarIdIsValid(logIdZ) ||
       !logVarIdIsValid(logIdX) || !logVarIdIsValid(logIdY) ||
       !logVarIdIsValid(logIdVarX) || !logVarIdIsValid(logIdVarY)) {
@@ -229,6 +235,7 @@ static uint8_t readPose(fa_pose_t *p, float zEst, float varLimit)
     return FA_POS_UNCERTAIN;
   }
   return FA_FENCE_OK;
+#endif
 }
 
 static uint8_t fenceCheck(const fa_pose_t *p)
