@@ -31,21 +31,38 @@ chip. It is not about collecting a dataset.
      the geometry and import it on drone 05.
 5. Run the same tape check on drone 05. It has been pending since Sep 24.
 
-## 2. Camera facts (45 min). These unblock all future data.
+## 2. Camera facts (30 min, drone 09). These unblock all future data.
 
-1. **Field of view and aim, with the 2-minute bottle test.** Stand a bottle 2.0 m in
-   front of the lens. Slide it sideways until it just leaves the frame, then write down
-   how far left it went and how far right. Commands are in
-   `lab_session_runbook.md` §4.0a (a).
-   - Every label we compute assumes a 70° view nobody has measured.
-   - The camera also looks aimed about 6° left of the tape line.
-2. **The dark-door question, as 4 clips of 6 s** at the CENTRE mark (2.13 m):
-   {door bare, light sheet over the door} × {dark shirt, light shirt}. This settles
-   contrast versus position.
-3. **An empty-room clip at the start and at the end.**
-4. **Skip finishing the 9-cell grid.** The WiFi stream (162×122, about 2 fps) is not
-   the image the flight app uses (324×244, about 15 fps), so more grid frames answer
-   the wrong question.
+Both scripts run alone with spoken cues. Each needs one battery and one power-up. The
+laptop loses internet while it's on the drone's WiFi, so tell me the folder afterwards.
+Until PR #14 is merged, run them from `R=~/Downloads/drone/wt_solo_capture`.
+
+1. **Field of view and aim (3-4 min).**
+   - **Why:** every label we compute assumes a 70° view nobody has measured, and the
+     camera looks aimed about 6° left.
+   - **Setup:** tape 7 marks 1.00 m in front of the lens, at 0, ±0.25, ±0.5 and
+     ±0.7 m sideways (+ = the drone's left, seen from behind it). Use a dark, matte
+     bottle. If the camera can't see it on the floor, raise it on something round, like
+     an upturned round bin. Not a box.
+   - **Run:**
+     ```bash
+     GRID_DRONE=09 zsh $R/tools/real_frames/fov_capture.sh
+     ```
+   - It checks each mark on the spot. Place the bottle within about 5 mm of the mark.
+2. **The dark-door question (4-5 min).**
+   - **What it records:** an empty-room clip, then 4 clips of 6 s at the CENTRE mark
+     (2.13 m): {door bare, light sheet over the door} × {dark top, light top}. Then a
+     closing empty-room clip.
+   - **Setup:** before you plug the battery in, hang the sheet so it covers the door in
+     one pull, and have a light top that pulls on over the dark one.
+   - **Run:**
+     ```bash
+     GRID_DRONE=09 zsh $R/tools/real_frames/door_control.sh
+     ```
+   - It prints a 2×2 table at the end. That settles contrast versus position.
+3. **Skip finishing the 9-cell grid.** The WiFi stream (162×122, about 2 fps) is not the
+   image the flight app uses (324×244, about 15 fps), so more grid frames answer the
+   wrong question.
 
 ## 3. Put the model on the chip (about 1 h, only if you say yes in the morning)
 
