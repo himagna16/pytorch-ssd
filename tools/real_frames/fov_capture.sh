@@ -40,7 +40,8 @@
 #   FOV_DIST=1.0  FOV_OFFSETS="0 0.25 -0.25 0.5 -0.5 0.7 -0.7"  (metres, + = LEFT)
 #   FOV_LENS_H=0.8  FOV_OBJECT=bottle  FOV_OBJECT_H=0.27 FOV_OBJECT_W=0.075 FOV_STAND_H=0.4
 #   FOV_SECONDS=3 (per mark)  FOV_EMPTY_SECONDS=4  FOV_PRE=3 ("step out" countdown)
-#   FOV_WAIT=0 (wait for Enter; N = Enter OR start by itself after N s)  FOV_RETAKES=1
+#   FOV_WAIT=0 (wait for Enter; N = every prompt is Enter OR start by itself after N s;
+#               a failed check then SKIPS the mark after N s)  FOV_RETAKES=1
 #   CAMERA_CHECK_GRAB_ARGS="--mock --port 5057" ...   rehearsal against mock_streamer.py
 # No resume: a new battery is a new power-up, i.e. a new exposure, and the empty reference
 # would no longer match. Re-run the whole thing (~4 min).
@@ -78,11 +79,18 @@ for line in "${plan[@]}"; do parts=("${(@ps:\t:)line}"); echo "     ${parts[4]}"
 wait_for_deck
 exposure_gate fov_capture
 
+# Enter, or (FOV_WAIT=N) Enter-or-N-seconds. $1 = prompt; the answer lands in $ans.
+ask() {
+  ans=""
+  if (( WAIT > 0 )); then read -t $WAIT "ans?$1 (starts by itself in ${WAIT} s) " || { ans=""; echo; }
+  else read "ans?$1 "; fi
+}
+
 STOPPED=""
 echo
 echo "== EMPTY ROOM reference: the $OBJ OUT of view (behind the drone), you behind the drone."
 speak "Empty room first. Put the $OBJ behind the drone and stay there."
-read "?   press Enter when the $OBJ and you are out of view "
+ask "   press Enter when the $OBJ and you are out of view"
 countdown $PRE "Recording."
 grab --seconds $EMPTY_SECS --every 1 --vis 0 --subject empty --light "$LIGHT" --out "$D/empty_start" \
   || { echo "FAIL: no frames for the empty reference (battery? WiFi?). Nothing usable was recorded."; exit 3; }
@@ -98,11 +106,7 @@ for line in "${plan[@]}"; do
     echo "== mark $n of ${#plan}: $desc"
     (( take > 1 )) && echo "   (retake $take)"
     speak "Put the $OBJ on $words."
-    if (( WAIT > 0 )); then
-      read -t $WAIT "?   put the $OBJ on the mark, come back behind the drone, press Enter (starts by itself in ${WAIT} s) " || echo
-    else
-      read "?   put the $OBJ on the mark, come back behind the drone, press Enter "
-    fi
+    ask "   put the $OBJ on the mark, come back behind the drone, press Enter"
     speak "Step out of frame."
     countdown $PRE "Recording."
     if ! grab --seconds $SECS --every 1 --vis 0 --subject "$OBJ" --light "$LIGHT" --take $take --out "$D/$dir"; then
@@ -121,11 +125,10 @@ for line in "${plan[@]}"; do
       break
     fi
     speak "I can't see the $OBJ. Fix it, then press Enter to retake, or type s to skip."
-    ans=""
     if (( WAIT > 0 )); then
-      read -t $WAIT "ans?   Enter = retake this mark, s then Enter = skip it (skips by itself in ${WAIT} s): " || ans=s
+      read -t $WAIT "ans?   Enter = retake this mark, s then Enter = skip it (skips by itself in ${WAIT} s): " || { ans=s; echo; }
     else
-      read "ans?   Enter = retake this mark, s then Enter = skip it: "
+      ans=""; read "ans?   Enter = retake this mark, s then Enter = skip it: "
     fi
     [[ "$ans" == [sS]* ]] && { echo "   skipped"; break; }
     take=$((take+1))
@@ -136,7 +139,7 @@ if [[ -z "$STOPPED" ]]; then
   echo
   echo "== EMPTY ROOM again: the $OBJ OUT of view, you behind the drone (checks nothing drifted)."
   speak "Last one. Take the $OBJ out of view and stay behind the drone."
-  read "?   press Enter when the $OBJ and you are out of view "
+  ask "   press Enter when the $OBJ and you are out of view"
   countdown $PRE "Recording."
   grab --seconds $EMPTY_SECS --every 1 --vis 0 --subject empty --light "$LIGHT" --out "$D/empty_end" \
     || echo "!! no frames for the closing empty clip; the fit uses the first one only"
