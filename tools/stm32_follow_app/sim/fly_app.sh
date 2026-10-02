@@ -10,6 +10,7 @@
 # Set FLY_LOCK=/path/to/lockdir to serialize with other simulator users (mkdir lock).
 # CRAZYSIM_CONTAINER / CRAZYSIM_PORT / CRAZYSIM_CAM_PORT / FOLLOW_APP_IMAGE (see run_sim_follow_app.sh)
 # run this flight beside another simulator; the emulator's --uri / --frame-port follow them.
+# CRAZYSIM_EXTRA="--wind-speed 0.5 --turbulence light" adds crazysim.py flags (disturbances, noise).
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CS="$(cd "$HERE/../../crazysim_macos" && pwd)"
@@ -32,7 +33,9 @@ if docker ps -a --format '{{.Names}}' | grep -qx "$CNAME" || pgrep -f "crazysim_
   echo "A simulator is already running (container $CNAME or crazysim.py on port $PORT); stop it first."; exit 3; fi
 export CRAZYSIM_TRUTH_LOG="$OUT/truth_$name.csv"; rm -f "$CRAZYSIM_TRUTH_LOG"; rm -rf "$OUT/run_$name"
 cd "$CS"
-"$HERE/run_sim_follow_app.sh" --camera --scene "$CS/scenes/$scene/scene_person.xml" > "$OUT/sim_$name.log" 2>&1 &
+# shellcheck disable=SC2086  # CRAZYSIM_EXTRA is a list of flags
+"$HERE/run_sim_follow_app.sh" --camera --scene "$CS/scenes/$scene/scene_person.xml" ${CRAZYSIM_EXTRA:-} \
+  > "$OUT/sim_$name.log" 2>&1 &
 sim=$!
 for i in $(seq 1 40); do grep -q "firmware connected" "$OUT/sim_$name.log" 2>/dev/null && break; sleep 1; done
 sleep 2
