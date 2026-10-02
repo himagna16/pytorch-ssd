@@ -88,6 +88,11 @@ from export_nemo_quant_core import (  # noqa: E402
     set_id_output_eps,
 )
 from hybrid_follow_image_artifacts import stage_image_artifacts  # noqa: E402
+from models.follow_model_factory import (  # noqa: E402
+    build_follow_model,
+    checkpoint_state_dict,
+    follow_model_kwargs_from_metadata,
+)
 from utils.follow_task import follow_output_metadata, follow_runtime_decode_summary  # noqa: E402
 
 
@@ -195,6 +200,16 @@ def parse_args() -> argparse.Namespace:
         help="Optional image path to use for the GVSOC smoke. Defaults to the first visible rep16 example.",
     )
     parser.add_argument("--skip-gvsoc", action="store_true")
+    parser.add_argument(
+        "--preserve-qat-alphas",
+        action="store_true",
+        help=(
+            "Release with the PACT ranges learned during quant-aware training instead of recalibrating "
+            "them. Pass the FULL QAT checkpoint as --ckpt (not its stripped *_eval.pth copy): the driver "
+            "strips a float copy for the float-model steps and hands both to the quant export. Default "
+            "(flag absent) is unchanged: strip beforehand and the release recalibrates."
+        ),
+    )
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -310,6 +325,19 @@ def resolve_context(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(
             f"run_plain_follow_release.py only supports plain_follow checkpoints, got {model_type!r}."
         )
+    qat_only_keys = checkpoint_qat_only_keys(payload)
+    preserve_qat_alphas = bool(getattr(args, "preserve_qat_alphas", False))
+    if preserve_qat_alphas and not any(key.endswith(".alpha") for key in qat_only_keys):
+        raise ValueError(
+            f"--preserve-qat-alphas needs the full QAT checkpoint, but {ckpt_path} has no learned PACT "
+            "alphas (is it an already-stripped *_eval.pth?)."
+        )
+    if qat_only_keys and not preserve_qat_alphas:
+        raise ValueError(
+            f"{ckpt_path} is a QAT checkpoint ({len(qat_only_keys)} PACT keys). Either pass "
+            "--preserve-qat-alphas to keep its learned ranges, or strip it with "
+            "export/prepare_follow_qat_eval_checkpoint.py and release the stripped copy (recalibrated)."
+        )
 
     head_type = str(payload.get("follow_head_type") or "xbin9_size_bucket4")
     checkpoint_vis_thresh = float(((payload.get("val_stats") or {}).get("selected_vis_threshold")) or 0.5)
@@ -350,7 +378,18 @@ def resolve_context(args: argparse.Namespace) -> dict[str, Any]:
         "gvsoc_image": (Path(args.gvsoc_image).expanduser().resolve() if args.gvsoc_image else None),
         "image_size": image_size,
         "output_metadata": output_metadata,
+        "preserve_qat_alphas": preserve_qat_alphas,
+        "qat_only_key_count": int(len(qat_only_keys)),
     }
+
+
+def checkpoint_qat_only_keys(payload: dict[str, Any]) -> list[str]:
+    """Keys a QAT checkpoint carries that the float model does not (PACT ranges + statistics)."""
+    state = checkpoint_state_dict(payload)
+    if not isinstance(state, dict):
+        return []
+    float_keys = set(build_follow_model(**follow_model_kwargs_from_metadata(payload)).state_dict().keys())
+    return sorted(str(key) for key in state.keys() if key not in float_keys)
 
 
 def materialize_file(src: Path, dst: Path, *, copy_mode: str) -> str:
@@ -1250,6 +1289,31 @@ def run_gvsoc_smoke(
     return summary
 
 
+def quantization_ranges_record(
+    quant_summary: dict[str, Any],
+    *,
+    preserve_qat_alphas: bool,
+    float_ckpt_path: Path,
+) -> dict[str, Any]:
+    """Which PACT ranges the released network was built with, and where they came from."""
+    calibration = quant_summary.get("calibration") or {}
+    policy = str(calibration.get("alpha_policy") or "calibrated")
+    expected = "learned_qat" if preserve_qat_alphas else "calibrated"
+    if policy != expected:
+        raise RuntimeError(
+            f"Quant export reports alpha_policy={policy!r} but this release asked for {expected!r}."
+        )
+    preservation = calibration.get("qat_alpha_preservation") or {}
+    return {
+        "alpha_policy": policy,
+        "float_checkpoint_path": str(float_ckpt_path),
+        "qat_checkpoint_sha256": preservation.get("qat_checkpoint_sha256"),
+        "float_checkpoint_sha256": preservation.get("float_checkpoint_sha256"),
+        "qat_only_key_count": preservation.get("qat_only_key_count"),
+        "qd_stage_activation_alpha_changes": preservation.get("qd_stage_activation_alpha_changes"),
+    }
+
+
 def build_release_summary_markdown(summary: dict[str, Any]) -> str:
     checkpoint_metrics = summary["metrics"]["checkpoint_val"]
     float_metrics = summary["metrics"]["float_validation"]
@@ -1269,6 +1333,7 @@ def build_release_summary_markdown(summary: dict[str, Any]) -> str:
         "",
         "## Contract",
         f"- checkpoint: `{summary['checkpoint_path']}`",
+        f"- quantization ranges: `{(summary.get('quantization_ranges') or {}).get('alpha_policy') or 'calibrated'}`",
         f"- model_type: `{summary['model_type']}`",
         f"- follow_head_type: `{summary['follow_head_type']}`",
         f"- checkpoint_vis_thresh: `{summary['checkpoint_vis_thresh']}`",
@@ -1418,6 +1483,10 @@ def main() -> None:
 
     python_bin = str(context["python"])
     ckpt_path = Path(context["ckpt_path"])
+    preserve_qat_alphas = bool(context["preserve_qat_alphas"])
+    # Every float-model step (overlays, compare) loads checkpoints strictly, so it needs the
+    # float-key copy; the quant export additionally gets the full QAT state to preserve.
+    float_ckpt_path = ckpt_path
     follow_head_type = str(context["follow_head_type"])
     checkpoint_vis_thresh = float(context["checkpoint_vis_thresh"])
     quant_eval_vis_thresh = float(context["quant_eval_vis_thresh"])
@@ -1425,6 +1494,23 @@ def main() -> None:
 
     command_dir = output_dir / "commands"
     calibration_manifest_path = output_dir / "calibration_manifest_128.json"
+
+    if preserve_qat_alphas:
+        float_ckpt_path = output_dir / "checkpoints" / f"{ckpt_path.stem}_float.pth"
+        run_logged(
+            [
+                python_bin,
+                str(SCRIPT_DIR / "prepare_follow_qat_eval_checkpoint.py"),
+                "--ckpt",
+                str(ckpt_path),
+                "--output",
+                str(float_ckpt_path),
+                "--report-json",
+                str(output_dir / "checkpoints" / "qat_eval_filter_report.json"),
+                "--overwrite",
+            ],
+            log_path=command_dir / "00_strip_qat_checkpoint.log",
+        )
     expanded_pack_manifest_path = output_dir / "expanded_eval_manifest.json"
 
     build_calibration_manifest_cmd = [
@@ -1506,7 +1592,7 @@ def main() -> None:
             python_bin,
             str(SCRIPT_DIR / "validate_follow_rep16_overlays.py"),
             "--ckpt",
-            str(ckpt_path),
+            str(float_ckpt_path),
             "--output-dir",
             str(dataset_output_dir),
             "--images-dir",
@@ -1527,7 +1613,7 @@ def main() -> None:
         python_bin,
         str(SCRIPT_DIR / "evaluate_quant_native_follow.py"),
         "--ckpt",
-        str(ckpt_path),
+        str(float_ckpt_path),
         "--output-dir",
         str(quant_output_dir),
         "--rep16-dir",
@@ -1548,6 +1634,8 @@ def main() -> None:
         str(quant_eval_vis_thresh),
         "--overwrite",
     ]
+    if preserve_qat_alphas:
+        quant_command.extend(["--preserve-qat-alphas", "--qat-ckpt", str(ckpt_path)])
     run_logged(quant_command, log_path=command_dir / "06_quant_eval.log")
     quant_summary = read_json(quant_output_dir / "summary.json")
 
@@ -1675,7 +1763,7 @@ def main() -> None:
             python_bin,
             str(SCRIPT_DIR / "compare_quant_native_follow_rep16_overlays.py"),
             "--ckpt",
-            str(ckpt_path),
+            str(float_ckpt_path),
             "--onnx",
             str(dory_onnx_path),
             "--post-predictions-json",
@@ -1736,6 +1824,11 @@ def main() -> None:
                         "size_bytes": ckpt_path.stat().st_size,
                         "sha256": checkpoint_sha256,
                     },
+                    "quantization_ranges": quantization_ranges_record(
+                        quant_summary,
+                        preserve_qat_alphas=preserve_qat_alphas,
+                        float_ckpt_path=float_ckpt_path,
+                    ),
                     "gvsoc": {
                         "docker_image": DEFAULT_AIDECK_IMAGE,
                         "layer_checks": "{}/{} exact".format(
@@ -1759,6 +1852,11 @@ def main() -> None:
 
     release_summary = {
         "checkpoint_path": str(ckpt_path),
+        "quantization_ranges": quantization_ranges_record(
+            quant_summary,
+            preserve_qat_alphas=preserve_qat_alphas,
+            float_ckpt_path=float_ckpt_path,
+        ),
         "model_type": "plain_follow",
         "follow_head_type": follow_head_type,
         "checkpoint_vis_thresh": checkpoint_vis_thresh,

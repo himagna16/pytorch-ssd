@@ -30,7 +30,11 @@ EXPORTER_DIR = PROJECT_DIR / "nemo"
 if str(EXPORTER_DIR) not in sys.path:
     sys.path.insert(0, str(EXPORTER_DIR))
 
-from models.follow_model_factory import build_follow_model_from_checkpoint, load_checkpoint_payload  # noqa: E402
+from models.follow_model_factory import (  # noqa: E402
+    build_follow_model_from_checkpoint,
+    checkpoint_state_dict,
+    load_checkpoint_payload,
+)
 from models.quant_native_follow_net import (  # noqa: E402
     ConvBN,
     ConvBNReLU,
@@ -180,8 +184,33 @@ def parse_args() -> argparse.Namespace:
         help="Percentile used when --stem-activation-policy=percentile.",
     )
     parser.add_argument("--qd-id-operator-threshold", type=float, default=QD_ID_OPERATOR_DRIFT_THRESHOLD)
+    parser.add_argument(
+        "--preserve-qat-alphas",
+        action="store_true",
+        help=(
+            "Keep the PACT activation/weight ranges learned during quant-aware training instead of "
+            "recalibrating them on the calibration set. Requires --qat-ckpt. --ckpt must hold the same "
+            "float weights (e.g. the prepare_follow_qat_eval_checkpoint.py copy of --qat-ckpt); this is "
+            "verified tensor by tensor. Calibration images are still used for the QD-stage BatchNorm "
+            "range calibration, which NEMO performs either way."
+        ),
+    )
+    parser.add_argument(
+        "--qat-ckpt",
+        default=None,
+        help="Full QAT checkpoint (with its PACT state) whose learned ranges --preserve-qat-alphas loads.",
+    )
     parser.add_argument("--overwrite", action="store_true")
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.preserve_qat_alphas and not args.qat_ckpt:
+        parser.error("--preserve-qat-alphas requires --qat-ckpt")
+    if args.qat_ckpt and not args.preserve_qat_alphas:
+        parser.error("--qat-ckpt is only used with --preserve-qat-alphas")
+    if args.preserve_qat_alphas and args.stem_activation_policy != "none":
+        parser.error(
+            "--stem-activation-policy would overwrite a learned stem range; use 'none' with --preserve-qat-alphas"
+        )
+    return args
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -527,6 +556,126 @@ def stem_per_channel_support_report(
     }
 
 
+def sha256_file(path: Path) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def load_learned_qat_state(
+    qat_ckpt_path: Path,
+    model_fp: torch.nn.Module,
+    *,
+    float_ckpt_path: Path,
+) -> tuple[dict[str, torch.Tensor], dict[str, Any]]:
+    """Load a QAT checkpoint's full state and prove it belongs to ``model_fp``.
+
+    The QAT-only entries (PACT ``alpha``/``W_alpha``/``W_beta``/``x_alpha`` and the
+    activation statistics) are the keys the float model does not have. Every float
+    key must be present and bit-identical, so a release can never pair one
+    checkpoint's weights with another checkpoint's ranges.
+    """
+    if not qat_ckpt_path.is_file():
+        raise FileNotFoundError(f"QAT checkpoint not found: {qat_ckpt_path}")
+    payload = torch.load(qat_ckpt_path, map_location=torch.device("cpu"))
+    state = checkpoint_state_dict(payload if isinstance(payload, dict) else {"state_dict": payload})
+    if not isinstance(state, dict):
+        raise TypeError(f"QAT checkpoint has no state_dict: {qat_ckpt_path}")
+    state = {str(key): value for key, value in state.items()}
+
+    float_state = model_fp.state_dict()
+    missing_float = sorted(key for key in float_state if key not in state)
+    if missing_float:
+        raise RuntimeError(
+            f"QAT checkpoint {qat_ckpt_path} lacks float-model keys {missing_float[:10]} "
+            f"(total={len(missing_float)}); it is not the source of --ckpt."
+        )
+    mismatched = [
+        key
+        for key, value in float_state.items()
+        if tuple(state[key].shape) != tuple(value.shape) or not torch.equal(state[key].cpu(), value.cpu())
+    ]
+    if mismatched:
+        raise RuntimeError(
+            f"--ckpt and --qat-ckpt disagree on {len(mismatched)} float tensors (first: {mismatched[:5]}). "
+            "Strip the QAT checkpoint with prepare_follow_qat_eval_checkpoint.py and pass that copy as --ckpt."
+        )
+    qat_only_keys = sorted(key for key in state if key not in float_state)
+    if not any(key.endswith(".alpha") for key in qat_only_keys):
+        raise RuntimeError(
+            f"{qat_ckpt_path} has no learned PACT activation alphas; it is not a QAT checkpoint "
+            "(an already-stripped *_eval.pth?)."
+        )
+    suffix_counts: dict[str, int] = {}
+    for key in qat_only_keys:
+        suffix = key.rsplit(".", 1)[-1]
+        suffix_counts[suffix] = suffix_counts.get(suffix, 0) + 1
+    provenance = {
+        "qat_checkpoint": str(qat_ckpt_path),
+        "qat_checkpoint_sha256": sha256_file(qat_ckpt_path),
+        "float_checkpoint": str(float_ckpt_path),
+        "float_checkpoint_sha256": sha256_file(float_ckpt_path),
+        "qat_checkpoint_epoch": (payload.get("epoch") if isinstance(payload, dict) else None),
+        "float_key_count": int(len(float_state)),
+        "float_keys_bit_identical": True,
+        "qat_only_key_count": int(len(qat_only_keys)),
+        "qat_only_key_suffix_counts": suffix_counts,
+    }
+    return state, provenance
+
+
+def apply_learned_qat_state(model_q: torch.nn.Module, qat_state: dict[str, torch.Tensor]) -> None:
+    """Load the learned PACT state into a freshly wrapped model, strictly.
+
+    ``quantize_pact`` + ``change_precision`` on the float model rebuild exactly the
+    module tree train.py saved (it wraps the same unfused model), so a strict load
+    must succeed; anything else means the two graphs differ and the ranges would
+    land on the wrong layers.
+    """
+    expected = set(model_q.state_dict().keys())
+    provided = set(qat_state.keys())
+    missing = sorted(expected - provided)
+    unexpected = sorted(provided - expected)
+    if missing or unexpected:
+        raise RuntimeError(
+            "Learned QAT state does not match the wrapped model "
+            f"(missing={missing[:10]} total={len(missing)}, unexpected={unexpected[:10]} total={len(unexpected)}). "
+            "Was QUANT_NATIVE_FOLLOW_CONV_BN_FUSION enabled? QAT checkpoints are saved unfused."
+        )
+    model_q.load_state_dict(qat_state, strict=True)
+
+
+def pact_range_snapshot(model_q: torch.nn.Module) -> dict[str, dict[str, float]]:
+    snapshot: dict[str, dict[str, float]] = {}
+    for name, module in model_q.named_modules():
+        values: dict[str, float] = {}
+        for attr in ("alpha", "W_alpha", "W_beta"):
+            value = getattr(module, attr, None)
+            if torch.is_tensor(value) and value.numel() == 1:
+                values[attr] = float(value.detach().cpu().item())
+        if values:
+            snapshot[name] = values
+    return snapshot
+
+
+def compare_range_snapshots(
+    reference: dict[str, dict[str, float]],
+    observed: dict[str, dict[str, float]],
+) -> list[dict[str, Any]]:
+    """Every range in ``reference`` that ``observed`` changed (bitwise, as float32)."""
+    changes = []
+    for name, values in reference.items():
+        for attr, ref_value in values.items():
+            obs_value = (observed.get(name) or {}).get(attr)
+            if obs_value is None or np.float32(obs_value) != np.float32(ref_value):
+                changes.append({"module": name, "param": attr, "expected": ref_value, "observed": obs_value})
+    return changes
+
+
 def build_quantized_models(
     ckpt_path: Path,
     args: argparse.Namespace,
@@ -550,15 +699,55 @@ def build_quantized_models(
         calib_seed=int(args.calib_seed),
     )
 
+    preserve_qat_alphas = bool(getattr(args, "preserve_qat_alphas", False))
+    qat_state: dict[str, torch.Tensor] | None = None
+    qat_alpha_report: dict[str, Any] | None = None
+    if preserve_qat_alphas:
+        qat_state, qat_alpha_report = load_learned_qat_state(
+            Path(args.qat_ckpt).expanduser().resolve(),
+            model_fp,
+            float_ckpt_path=ckpt_path,
+        )
+
     def calibrated_quant_model() -> torch.nn.Module:
+        # One canonical source of ranges for every stage: with --preserve-qat-alphas each
+        # FQ/QD/ID copy loads the same learned state, so no stage can quietly recalibrate.
         model_q = nemo.transform.quantize_pact(deepcopy(model_fp), dummy_input=dummy_input)
         model_q.to(device).eval()
         model_q.change_precision(bits=int(args.bits), scale_weights=True, scale_activations=True)
-        run_activation_calibration(model_q, calib_samples)
+        if qat_state is not None:
+            apply_learned_qat_state(model_q, qat_state)
+        else:
+            run_activation_calibration(model_q, calib_samples)
         prepare_quant_native_follow_qd(model_q, calib_samples=calib_samples)
         return model_q.eval()
 
     model_fq = calibrated_quant_model()
+    learned_ranges = pact_range_snapshot(model_fq) if qat_state is not None else None
+    if qat_alpha_report is not None and learned_ranges is not None:
+        # What recalibration would have chosen, for the record only; nothing below uses it.
+        model_calibrated = nemo.transform.quantize_pact(deepcopy(model_fp), dummy_input=dummy_input)
+        model_calibrated.to(device).eval()
+        model_calibrated.change_precision(bits=int(args.bits), scale_weights=True, scale_activations=True)
+        run_activation_calibration(model_calibrated, calib_samples)
+        calibrated_ranges = pact_range_snapshot(model_calibrated)
+        del model_calibrated
+        qat_alpha_report["ranges"] = {
+            name: {
+                "learned": values,
+                "calibrated": calibrated_ranges.get(name),
+            }
+            for name, values in learned_ranges.items()
+        }
+        qat_alpha_report["fq_ranges_match_checkpoint"] = not compare_range_snapshots(
+            {
+                name: {attr: float(qat_state[f"{name}.{attr}"].item()) for attr in values}
+                for name, values in learned_ranges.items()
+            },
+            learned_ranges,
+        )
+        if not qat_alpha_report["fq_ranges_match_checkpoint"]:
+            raise RuntimeError("FQ model ranges differ from the QAT checkpoint after loading it.")
     stem_activation_module_name = resolve_stem_activation_module_name(
         model_fq,
         getattr(args, "stem_activation_module", None),
@@ -582,10 +771,28 @@ def build_quantized_models(
         return model_q.eval()
 
     model_qd = calibrated_quant_model_with_overrides()
+    if learned_ranges is not None:
+        pre_qd_changes = compare_range_snapshots(learned_ranges, pact_range_snapshot(model_qd))
+        if pre_qd_changes:
+            raise RuntimeError(f"QD model was built with ranges other than the learned ones: {pre_qd_changes[:5]}")
     model_qd_qd_kwargs = prepare_quant_native_follow_qd(model_qd, calib_samples=calib_samples)
     model_qd.qd_stage(eps_in=float(args.eps_in), **model_qd_qd_kwargs)
+    if learned_ranges is not None and qat_alpha_report is not None:
+        # NEMO's qd_stage only calibrates BatchNorm ranges; it must leave activation
+        # alphas alone. Record (do not assume) what it did to each learned range.
+        qd_changes = compare_range_snapshots(learned_ranges, pact_range_snapshot(model_qd))
+        qat_alpha_report["qd_stage_activation_alpha_changes"] = [
+            row for row in qd_changes if row["param"] == "alpha"
+        ]
+        qat_alpha_report["qd_stage_weight_range_changes"] = [
+            row for row in qd_changes if row["param"] != "alpha"
+        ]
 
     model_id = calibrated_quant_model_with_overrides()
+    if learned_ranges is not None:
+        pre_id_changes = compare_range_snapshots(learned_ranges, pact_range_snapshot(model_id))
+        if pre_id_changes:
+            raise RuntimeError(f"ID model was built with ranges other than the learned ones: {pre_id_changes[:5]}")
     model_id_qd_kwargs = prepare_quant_native_follow_qd(model_id, calib_samples=calib_samples)
     model_id.qd_stage(eps_in=float(args.eps_in), **model_id_qd_kwargs)
     id_stage_eps = None
@@ -616,6 +823,8 @@ def build_quantized_models(
 
     build_context = {
         "id_stage_config": explicit_eps_report,
+        "alpha_policy": ("learned_qat" if preserve_qat_alphas else "calibrated"),
+        "qat_alpha_preservation": make_json_ready(qat_alpha_report),
         "calibration_summary": calibration_summary,
         "stem_activation_audit": stem_activation_audit,
         "stem_activation_override": {
@@ -1621,6 +1830,12 @@ def build_summary_markdown(summary: dict[str, Any]) -> str:
         "",
         f"- id_output_eps: `{(summary.get('id_output_eps') or {}).get('value')}` "
         f"(source `{(summary.get('id_output_eps') or {}).get('source')}`)",
+        f"- quantization ranges: `{calibration.get('alpha_policy') or 'calibrated'}`"
+        + (
+            f" (learned in QAT, from `{(calibration.get('qat_alpha_preservation') or {}).get('qat_checkpoint')}`)"
+            if calibration.get("alpha_policy") == "learned_qat"
+            else " (recalibrated on the calibration set)"
+        ),
         "",
         "## Float Validation",
         f"- follow_score: `{float_metrics.get('follow_score')}`",
@@ -2056,6 +2271,8 @@ def main() -> None:
         },
         "id_stage_config": quant_build_context["id_stage_config"],
         "calibration": {
+            "alpha_policy": quant_build_context["alpha_policy"],
+            "qat_alpha_preservation": quant_build_context["qat_alpha_preservation"],
             "summary": quant_build_context["calibration_summary"],
             "stem_activation_audit": quant_build_context["stem_activation_audit"],
             "stem_activation_override": quant_build_context["stem_activation_override"],
