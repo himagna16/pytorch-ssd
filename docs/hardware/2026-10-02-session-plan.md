@@ -1,113 +1,102 @@
-# Plan for Fri 2026-10-02 (home all day) and the weekend
+# Fri Oct 2: the plan (read before bed)
 
-Written Thu Oct 1, 9 pm, after a four-day break for midterms. Nothing has changed in the
-repo since Sep 27. This is a running order for the day, not a protocol. The protocols it
-points to are the ones to follow.
+Rewritten Thu Oct 1, 11 pm, after two expert reviews (an ML/data lens and a
+systems/flight lens). Both reached the same verdict. **The model is not the
+bottleneck. Two things are: the camera image, and the fact that nothing has run on
+the drone's chip yet.** So tomorrow is about camera facts and, if you say yes, the
+chip. It is not about collecting a dataset.
 
-## Tonight (Thu): charge the batteries
+## Tonight (5 min)
 
-The batteries have sat flat since Sep 24. Charging goes through the drone's own micro-USB
-port with the battery plugged into the drone, so one cable charges one battery at a time
-(about 40 min each from flat, longer from very flat).
+- **Charge the batteries.** One cable means one at a time, about 40 min each. Drone 09
+  first, then move the cable to drone 05. Skip any battery that looks puffy.
+- In the morning, confirm "full" with the preflight (`pm.vbat` about 4.15 V or more at
+  rest), not just the LED.
+- Leave the base stations unplugged until morning.
 
-1. Look at each battery before charging it. If it is puffy or swollen, do not charge it.
-   Set it aside.
-2. Drone 09: battery in, cable into any USB-A wall charger (or the hub). The blue LED
-   blinks slowly while charging and goes solid when full.
-3. When drone 09 is full, move the cable to drone 05 and charge that one. If you only get
-   to one tonight, charge drone 05's battery first thing tomorrow while you do step A.
-   Drone 09 can run on the cable instead of a battery (see B).
-4. A battery left full overnight is fine. A LiPo left fully flat for weeks is what does
-   damage, so don't leave them flat after this.
+## 1. Base stations (30 min, first thing)
 
-**If you have a second micro-USB cable**, charge both at once. If not, it's still worth
-buying one: one cable is the bottleneck for every session with two drones.
-
-## A. Put the base station back and check the geometry (~30 min, morning)
-
-**Why this matters.** The two base stations are what measure position. Each one sweeps
-the room with laser planes, and the Lighthouse deck on each drone times those sweeps to
-work out where it is, to within a few mm. The saved geometry
-(`docs/hardware/lighthouse/dorm_lighthouse_2026-09-24.yaml`, also stored on both drones)
-records where each station is and which way it points. Every position the drones report
-is computed from that record. If a station sits even a few cm or a few degrees away from
-where the record says, every position shifts with it, and nothing on screen tells you.
-For the labelling plan that's the worst case: wrong labels that look clean.
-
-1. Stand the moved station back on its taped feet. Also match the **height** of the light
-   stand and the **aim** of the ball head. Floor tape fixes the position on the floor but
-   not the height or the angle. Station 1 (channel 1) is at the window end (Oaj's corner).
-   Station 2 (channel 2) is at the door end, on your side.
-2. Plug both stations in at the wall and give them a minute to spin up and go steady.
-3. Drone on the hub cable, then the preflight:
+1. Put the moved stand back on its tape. **Also match its height and the ball-head
+   angle.** Tape fixes the floor spot only. Then take a photo of each stand so
+   next time is easy.
+2. Plug both stations in at the wall and wait 1 minute.
+3. Drone 09 on the hub cable:
    `~/Downloads/drone/cfloaderenv/bin/python tools/hardware/preflight.py`
    Both stations should show as seen.
-4. **Tape check, drone 09.** Same as Sep 24: marks A (origin), B (+x, 1 m toward the door),
-   C (SIDE), D (origin, turned 90 deg left). Tolerance is 8 cm and 12 deg.
+4. Run the tape check on drone 09:
    `~/Downloads/drone/cfloaderenv/bin/python tools/lighthouse/tape_check.py`
-   - **4/4 PASS** means the geometry is still good. Don't redo anything.
-   - **FAIL** means you redo the geometry wizard in cfclient (about 10 min), then export
-     it and import it on drone 05. Lesson from Sep 24: spread the XYZ-space samples across
-     the whole floor. Bunching them at one end is what broke attempts 1 and 2.
-5. **Tape check, drone 05.** This has been pending since Sep 24. Its result isn't
-   optional, because drone 05 is the beacon that every label will come from.
+   - **4/4 PASS:** done, the geometry is still good.
+   - **FAIL:** redo the cfclient geometry wizard (about 10 min). **Spread the XYZ samples
+     across the whole floor.** Bunching them at one end is what broke Sep 24. Then export
+     the geometry and import it on drone 05.
+5. Run the same tape check on drone 05. It has been pending since Sep 24.
 
-## B. Finish the real-person grid in one sitting (~1 h)
+## 2. Camera facts (45 min). These unblock all future data.
 
-There's still no complete 9-cell grid at a controlled exposure. Sep 24 gave partial grids
-in two lighting conditions and one run that was all black frames.
+1. **Field of view and aim, with the 2-minute bottle test.** Stand a bottle 2.0 m in
+   front of the lens. Slide it sideways until it just leaves the frame, then write down
+   how far left it went and how far right. Commands are in
+   `lab_session_runbook.md` §4.0a (a).
+   - Every label we compute assumes a 70° view nobody has measured.
+   - The camera also looks aimed about 6° left of the tape line.
+2. **The dark-door question, as 4 clips of 6 s** at the CENTRE mark (2.13 m):
+   {door bare, light sheet over the door} × {dark shirt, light shirt}. This settles
+   contrast versus position.
+3. **An empty-room clip at the start and at the end.**
+4. **Skip finishing the 9-cell grid.** The WiFi stream (162×122, about 2 fps) is not
+   the image the flight app uses (324×244, about 15 fps), so more grid frames answer
+   the wrong question.
 
-- **Run drone 09 on the hub cable with the battery out**, so it can't die mid-grid (it died
-  at clip 6 on Sep 24). Check the stream comes up that way first. If it doesn't, go back to
-  a battery.
-- `grid_capture.sh` won't record unless the image brightness is inside 30-60. If it
-  refuses, power-cycle the drone (unplug, replug) and try again. Exposure is random at
-  every power-up, and that's a known firmware issue, not your setup.
-- Fixed lights for the whole grid: blinds closed, room lights on, nothing changed partway.
-- Then the **door-sheet control.** Hang something light-coloured over the dark door and
-  re-record only the CENTRE column. Sep 24 never locked onto you dead centre in front of the
-  dark door, but did lock when you were off to the sides against the bright wardrobes. This
-  one clip decides whether that was the background contrast or the position.
+## 3. Put the model on the chip (about 1 h, only if you say yes in the morning)
 
-```
-GRID_DRONE=09 GRID_LIGHT=room-lights zsh tools/real_frames/grid_capture.sh
-```
+Use **drone 05's AI-deck only**, and leave drone 09 untouched. Flashing goes over the
+radio, so your laptop keeps its internet and I can help live. Steps are in
+`docs/hardware/flash_runbook.md`, and the images are already built.
 
-The laptop loses internet while it's on the drone's WiFi, so Claude is cut off during the
-run. Report the folder name afterwards.
+1. **Bench image:** look for `match=1` and `mismatches=0`. Write down `infer` and `period`.
+2. **Live-camera image:** look for `hz` around 10-15. Walk in and out and check `trk`
+   goes 0→1→0, and that left/right are correct.
+3. **Cover the lens.** Expect a **false lock**: today's image locks onto dark noise.
+   That's the hazard we are documenting. Tonight's firmware branch adds a dark-frame
+   guard. That gets flashed on a later day, after you OK it.
 
-## C. First Lighthouse-labelled recording (~1.5 h, afternoon)
+Side effect: drone 05 stops being a WiFi camera. That also fixes the problem of two
+drones broadcasting the same WiFi name. **Correction to an earlier claim:** the
+"restore" image is a 324×244 streamer, not the 162×122 one on the decks now. It still
+works, just not identically.
 
-**Needs the recorder tool being built tonight on branch `sai/lighthouse-session-recorder`.**
-It records both drones' positions alongside the camera frames, which nothing did before.
-Check it has been merged before you start. It has not been run on hardware yet.
+## 4. Lighthouse static check (10 min)
 
-1. **Beacon prep, drone 05:** props OFF, motors never armed. Mount it flat on top of a cap
-   (velcro or tape). Its AI-deck probably broadcasts the same WiFi name as drone 09's, so
-   the laptop could join the wrong camera. The recorder's README will say how to handle it.
-   The simplest fix is to unplug drone 05's AI-deck from the stack.
-2. **Decide one thing first:** where the label points on your body. The default proposal is
-   "half your height below the top of your head", meaning your torso centre. It has been
-   waiting for a team OK since Sep 22. Measure your height in socks plus the cap.
-3. **Static taped-mark case first** (10 min, `tools/lighthouse/README.md`): stand on marks,
-   check the computed x-bin and size match what you'd expect. Then turn drone 09 30 deg to
-   its left on the stand and check you move to the RIGHT side of the label. If the labels
-   come out mirrored, stop there.
-4. Then two or three **short walking recordings**, 3-4 min each (the beacon battery is the
-   limit). Each one starts and ends with the sync move: stand still for 2 s, one quick
-   sidestep, stand still again. Walk slowly side to side and toward and away from the
-   camera, staying in the frame.
+`tools/lighthouse/README.md`, "static taped-mark case": stand on the marks, then turn
+the follower 30° left on its stand. You should move to the RIGHT side of the label. One
+short walking recording is fine, but only to prove the pipeline (if tonight's recorder
+PR is ready). Don't build a dataset yet.
 
-The point of today is not a dataset. It's proving that the whole chain (positions to labels,
-clock sync, the not-mirrored check) works on real hardware before collecting at scale.
+**End of day:** run the tape check again.
 
-## Weekend
+## Decisions only you can make (tell me in the morning)
 
-- Label Friday's recordings and score the champion against them. This gives the first real
-  accuracy numbers (x-bin and size against true position) instead of just "locked or not".
-- If the chain holds, collect more: **other people** (one subject is not a rate; Oaj or a
-  friend), other backgrounds, day and night lighting. At ~2 fps, 10 min is about 1,200
-  frames.
-- Decisions waiting on you (see the plan summary in chat): the chip check of the plain
-  fine-tune, the camera-exposure firmware fix, and pinging Grace about
-  `--preserve-qat-alphas`.
+1. **Flash drone 05 tomorrow?** (step 3)
+2. **The image path:** do we train on frames from the flight app's own camera path, or
+   switch the flight app to the stream's format? Both reviewers say decide this
+   **before** collecting data at scale.
+3. **The real test set rules** (a proposal is coming tonight):
+   - people in the test set never appear in training;
+   - you are training/dev only;
+   - 2-3 friends, about 15 min each, are the test set.
+4. **Where we're allowed to fly** (ask Prof. Mok). "Nothing flies in the dorm" stands
+   until then.
+
+## Buy
+
+- 4+ batteries.
+- An external 1S charger.
+- A second micro-USB **data** cable.
+- Prop guards.
+
+## Stop doing (both reviewers)
+
+- Simulator studies of perception.
+- Pet false-alarm work.
+- COCO-only training tweaks.
+- Training for exposure: fix it in the camera firmware instead.
