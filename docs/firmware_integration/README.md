@@ -3,15 +3,20 @@
 For the frontend team (Jade, Koa, Calvin). The AI-deck firmware lives in
 David Liu's repo `github.com/DavidLiu2/crazyflie-ssd`, which we do not push
 to. The integration is delivered here as a git bundle instead:
-`champion-core8-integration.bundle` (17 commits on top of `4a03846`; head `fc42eb9`,
-2026-09-13; the bar change itself is `ff876bd`, `fc42eb9` is docs-only).
+`champion-core8-integration.bundle`, prerequisite `4a03846` (David's `main`), with two branches:
+- `champion-core8-integration`: 17 commits, head `fc42eb9` (2026-09-13; the bar change itself
+  is `ff876bd`, `fc42eb9` is docs-only);
+- `sai/dark-guard-exposure`: 6 more commits on top of `fc42eb9`, head `38daf4c` (2026-10-01):
+  the dark-frame guard, the exposure readback and the fixed-exposure build option (below).
 
 Load it into a clone of crazyflie-ssd:
 
 ```bash
 git clone https://github.com/DavidLiu2/crazyflie-ssd && cd crazyflie-ssd
-git fetch /path/to/champion-core8-integration.bundle champion-core8-integration:champion-core8-integration
-git checkout champion-core8-integration
+git fetch /path/to/champion-core8-integration.bundle \
+  champion-core8-integration:champion-core8-integration \
+  sai/dark-guard-exposure:sai/dark-guard-exposure
+git checkout sai/dark-guard-exposure   # or champion-core8-integration
 ```
 
 What the branch does (details and the bench/flash plan: `HANDOFF.md`, and
@@ -33,6 +38,17 @@ What the branch does (details and the bench/flash plan: `HANDOFF.md`, and
   the age of its frame, and a GAP8 send timestamp;
 - resets tracking and sends "no target" whenever perception fails, stalls,
   or packets are delayed.
+
+**2026-10-01, `sai/dark-guard-exposure` (not flashed).** On 2026-09-24 near-black camera
+frames were scored at about 0.84 and the follower locked on them as a person. The new branch:
+- rejects a frame whose 128x128 network input has mean below `APP_MIN_FRAME_MEAN` (default 12,
+  **not yet tuned on the flight path**) and treats it like a capture timeout: no inference,
+  visibility reset, no-target packet, so the drone hovers and then lands 3.0 s after the last good
+  frame, and needs 3 fresh frames to follow again; new console fields `mean= sat= max= nmax= dark=`;
+- logs the camera's exposure registers (diagnostic) and adds `APP_FIXED_EXPOSURE=1` (default off).
+The old bench step "cover the lens -> hover/land" is **invalid on the `fc42eb9` images** (they would
+lock on the noise); run it on the new image. Images, hashes, host checks and the bench procedure
+to tune the floor: `HANDOFF.md` (top update, section 2 item 16, section 4, steps 5.6-5.7).
 
 **Safety status.** Six rounds of fixes, each checked by an independent
 reviewer with a timing simulator (`safety_sim/`, logs in
