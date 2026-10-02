@@ -471,12 +471,15 @@ Newest first. One entry per working session.
       2 fps) is not what the flight app sees, and the fact that nothing has run on the
       drone's chip yet.
     - Acted on the cheap items the same night, each on its own branch with a PR:
-      - a real-frame test set and scoreboard (first real baseline on my own frames:
-        36.5%, and the safety guard fails only on near-black frames);
-      - a dark-frame guard and exposure readback for the GAP8 app;
+      - a real-frame test set and scoreboard, PR #10 (first real baseline on my own
+        frames: 36.5%, and the safety guard fails only on near-black frames);
+      - a dark-frame guard and exposure readback for the GAP8 app, PR #12 (local
+        firmware branch `sai/dark-guard-exposure`, images in `_prebuilt_dark_guard/`,
+        not flashed);
       - dry-run, yaw-only and geofence modes for the flight controller, plus a kill
-        switch;
-      - the Lighthouse session recorder.
+        switch, PR #13 (simulator only);
+      - the Lighthouse session recorder, PR #9.
+    - The preserve-ranges work itself is PR #11. Nothing is merged; I merge.
   - **Tomorrow's plan** (`docs/hardware/2026-10-02-session-plan.md`): base stations back
     and re-verified, two camera facts (field of view and aim; the dark-door control), and
     optionally the first run of the model on the chip, on drone 05 only.
