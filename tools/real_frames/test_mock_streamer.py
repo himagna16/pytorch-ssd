@@ -657,6 +657,52 @@ class TestPixelProvenance(unittest.TestCase):
 # One mock serving one bearing gives two IDENTICAL clips, one of them labelled
 # with the wrong side, and a scorer verdict that means nothing.
 # --------------------------------------------------------------------------
+class TestTimelineMode(unittest.TestCase):
+    """--timeline (Lighthouse session rehearsal): frames chosen by WALL CLOCK, late by a
+    known --content-lag, each stamped with the instant it shows."""
+
+    def test_pick_and_stamp(self):
+        t = np.arange(-2.0, 3.0, 0.01)
+        frames = np.stack([np.full((8, 12), v, np.uint8) for v in (10, 20)])
+        tl = dict(t=t, idx=(t >= 1.0).astype(np.int64), frames=frames)
+        self.assertEqual(int(mock.timeline_frame(tl, 0.999)[3, 3]), 10)
+        self.assertEqual(int(mock.timeline_frame(tl, 1.0001)[3, 3]), 20)
+        self.assertEqual(int(mock.timeline_frame(tl, -99)[3, 3]), 10)     # clamps at both ends
+        self.assertEqual(int(mock.timeline_frame(tl, 99)[3, 3]), 20)
+        for c in (-1.5, 0.0, 0.123, 2.5):
+            g = mock.timeline_frame(tl, c, stamp=True)
+            self.assertAlmostEqual(mock.read_stamp(g), c, delta=0.0101)
+            self.assertLessEqual(mock.read_stamp(g), c + 1e-9)           # never a later instant
+        self.assertEqual(int(tl["frames"][0][0, 0]), 10, "stamping must not write into the bank")
+
+    def test_served_frames_show_the_lagged_instant(self):
+        with tempfile.TemporaryDirectory() as d:
+            t = np.arange(-30.0, 60.0, 0.01)
+            npz = Path(d) / "tl.npz"
+            np.savez(npz, t=t, idx=np.zeros(len(t), np.int64), frames=np.full((1, 122, 162), 50, np.uint8))
+            epoch, lag = time.time() + 1.0, 0.3
+            m = MockProcess("--timeline", npz, "--epoch", f"{epoch:.6f}", "--content-lag", lag,
+                            "--stamp-time", "--fps", 10)
+            try:
+                r = run_grab(m.port, Path(d) / "out", "--n", 12, "--every", 1)
+                self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            finally:
+                m.stop()
+            files = sorted((Path(d) / "out").glob("*.png"))
+            self.assertEqual(len(files), 12)
+            for f in files:
+                arrived = float(re.search(r"_(\d{9,}\.\d+)\.png$", f.name).group(1))
+                shown = mock.read_stamp(np.asarray(Image.open(f)))
+                # arrival - (epoch + shown) = lag + transport (+ up to one 10 ms time-line step)
+                self.assertAlmostEqual(arrived - (epoch + shown), lag, delta=0.05, msg=f.name)
+
+    def test_timeline_options_need_timeline(self):
+        r = subprocess.run([sys.executable, str(MOCK_PY), "--port", "0", "--content-lag", "0.2"],
+                           capture_output=True, text=True, timeout=60)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("only mean something with --timeline", r.stdout + r.stderr)
+
+
 class TestTwoBearingRehearsal(unittest.TestCase):
 
     def setUp(self):
