@@ -50,8 +50,11 @@ chip. It is not about collecting a dataset.
 ## 3. Put the model on the chip (about 1 h, only if you say yes in the morning)
 
 Use **drone 05's AI-deck only**, and leave drone 09 untouched. Flashing goes over the
-radio, so your laptop keeps its internet and I can help live. Steps are in
-`docs/hardware/flash_runbook.md`, and the images are already built.
+radio, so your laptop keeps its internet and I can help live. **Follow
+`docs/hardware/flash_drone05_card.md`**: copy-paste commands with drone 05's address
+spelled out, and drone 09's battery out so it can't be flashed by mistake. (The
+runbook's examples use the factory address `E7E7E7E7E7`, which matches neither drone.)
+The images are already built and checksummed.
 
 1. **Bench image** (the known one, `_prebuilt_champion/champion_bench.img`): look for
    `match=1` and `mismatches=0`. Write down `infer` and `period`.
