@@ -478,8 +478,14 @@ Newest first. One entry per working session.
         not flashed);
       - dry-run, yaw-only and geofence modes for the flight controller, plus a kill
         switch, PR #13 (simulator only);
-      - the Lighthouse session recorder, PR #9.
-    - The preserve-ranges work itself is PR #11. Nothing is merged; I merge.
+      - the Lighthouse session recorder, PR #9;
+      - solo capture scripts for tomorrow, PR #14 (field of view and aim from a bottle on
+        taped marks, and the dark-door 2×2);
+      - a flash card for drone 05 only (`docs/hardware/flash_drone05_card.md`). The
+        runbook's examples used the factory radio address, which matches neither drone.
+    - The preserve-ranges work itself is PR #11. PRs #9, #10, #12, #13 and #14 were
+      trial-merged together onto `main`, and every test suite passed. Nothing is
+      merged; I merge.
   - **Tomorrow's plan** (`docs/hardware/2026-10-02-session-plan.md`): base stations back
     and re-verified, two camera facts (field of view and aim; the dark-door control), and
     optionally the first run of the model on the chip, on drone 05 only.
