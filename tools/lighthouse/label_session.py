@@ -47,8 +47,9 @@ import pose_to_label as P  # noqa: E402
 import session_common as S  # noqa: E402
 
 VIS_THRESHOLD = 0.5          # "the network sees a person" (score_real_frames' vis acc threshold)
-ALIGN_MIN_CONF = 0.3         # frames used for the CLOCK alignment only: a weak detection still says where
-                             # the subject is (found in the --mock rehearsal: the step position sat at 0.49)
+ALIGN_MIN_CONF = (0.5, 0.3)  # frames that feed the CLOCK alignment, tried in this order. 7 rehearsal runs at
+                             # 2 fps: >= 0.5 gave rms 18 ms (worst 35), >= 0.3 rms 26 ms (worst 48), but 0.5
+                             # can leave no frames at a sync position the network only half sees (0.49 there)
 BEACON_JUMP_MPS = 4.0        # faster than a person moves: a Lighthouse re-acquisition jump
 BEACON_JUMP_GUARD_S = 0.25
 ENVELOPE_WINDOW_S = 2.0
@@ -140,7 +141,8 @@ def run_network(folder, frames, backend="chip", log=print):
     """Network outputs per frame, cached in <folder>/network_<backend>.csv."""
     cache = Path(folder) / f"network_{backend}.csv"
     if cache.exists():
-        rows = {r["frame"]: r for r in csv.DictReader(open(cache))}
+        with open(cache, newline="") as fh:
+            rows = {r["frame"]: r for r in csv.DictReader(fh)}
         if all(n in rows for _, _, n in frames):
             log(f"   network outputs from {cache.name} (cached)")
             return {n: {k: float(rows[n][k]) for k in NET_COLS[1:]} for _, _, n in frames}
@@ -269,8 +271,9 @@ def main(argv=None):
                     help="skip the sync-step alignment and use this frame->pose clock offset (s). Only for "
                          "sessions where nobody moved (alignment is impossible there and the offset harmless)")
     ap.add_argument("--context-s", type=float, default=20.0, help="align_clocks context around each sync event")
-    ap.add_argument("--align-min-conf", type=float, default=ALIGN_MIN_CONF,
-                    help="frames at or above this confidence feed the clock alignment (labels still use 0.5)")
+    ap.add_argument("--align-min-conf", type=lambda v: tuple(float(x) for x in v.split(",")), default=ALIGN_MIN_CONF,
+                    help="confidence thresholds for the frames that feed the clock alignment, tried in order "
+                         "(default 0.5,0.3; labels always use 0.5)")
     a = ap.parse_args(argv)
 
     folder = a.session.expanduser()
@@ -311,26 +314,32 @@ def main(argv=None):
     ft = np.array([t for t, _, _ in frames])
     names = [n for _, _, n in frames]
     conf = np.array([net[n]["conf"] for n in names])
-    fx = np.array([net[n]["x_soft"] if net[n]["conf"] >= a.align_min_conf else np.nan for n in names])
     frame_period = float(np.median(np.diff(ft))) if len(ft) > 1 else 0.1
     # The coarse onsets of the two streams can disagree by up to about one frame period (the step
     # falls between two frames); at the deck's ~2 fps that is more than align's default +-0.5 s search.
     search_s = max(0.5, 3.0 * frame_period)
     # 3. align
     px = pose_signal(tb, cols, subject, cam)
-    fit, align_err = None, None
+    fit, align_err, used_conf = None, None, None
     if a.offset_s is not None:
         fit = A.ClockFit(1.0, float(a.offset_s), [], drift_measured=False)
     else:
-        try:
-            fit = A.align(ft, fx, tb, px, context_s=a.context_s, search_s=search_s)
-        except ValueError as e:
-            align_err = str(e)
+        errs = []
+        for c in a.align_min_conf:
+            fx = np.array([net[n]["x_soft"] if net[n]["conf"] >= c else np.nan for n in names])
+            try:
+                fit, used_conf = A.align(ft, fx, tb, px, context_s=a.context_s, search_s=search_s), c
+                break
+            except ValueError as e:
+                errs.append(f"(frames with confidence >= {c:g}) {e}")
+        if fit is None:
+            align_err = "; ".join(errs)
     rep["alignment"] = (dict(error=align_err) if fit is None else
                         dict(a=fit.a, b=fit.b, drift_measured=fit.drift_measured, manual=a.offset_s is not None,
                              offset_at_events_s=[e.offset_s for e in fit.events],
                              event_t_frame=[e.t_frame for e in fit.events],
                              event_corr=[e.peak_corr for e in fit.events], summary=fit.summary(),
+                             frames_min_conf=used_conf, search_s=search_s,
                              offset_mid_s=fit.offset_at(float(np.median(ft)))))
 
     header(say, meta, folder, subject, cam, a)
@@ -352,14 +361,15 @@ def main(argv=None):
         say(f"MANUAL offset {a.offset_s:+.3f} s (--offset-s). Not measured. Labels of a MOVING subject are off "
             f"by atan(speed x error / distance).")
     else:
+        say(f"* frames used: network confidence >= {used_conf:g}")
         for e in fit.events:
             say(f"* sync event at frame time {e.t_frame:.2f}: offset {e.offset_s * 1000:+.1f} ms "
                 f"(correlation {e.peak_corr:.3f}, {e.n_frames} frames)")
         say(f"* {'drift ' + format(fit.drift_ppm, '+.0f') + ' ppm' if fit.drift_measured else 'drift NOT measured (events < 60 s apart): offset only'}")
         if len(fit.events) == 2 and not fit.drift_measured:
             spread = abs(fit.events[1].offset_s - fit.events[0].offset_s) * 1000
-            say(f"* the start and end events agree to {spread:.0f} ms; the offset used is their mean, so its "
-                f"error is probably under ~{max(spread / 2, 5):.0f} ms (rehearsal at 2 fps: 30 ms apart, 3.5 ms off the truth)")
+            say(f"* the start and end events agree to {spread:.0f} ms. That is NOT an error bar: in the 2 fps "
+                "rehearsal two events that agreed to 0 ms were both 43 ms off the truth (README, 'Recording a session')")
         elif len(fit.events) == 1:
             say("* only ONE sync event was found: no cross-check of the offset. Re-record with both sync blocks.")
         off = abs(fit.offset_at(float(np.median(ft))))
@@ -503,7 +513,8 @@ def clocks_section(say, clock, meta):
     say("## Crazyflie clocks -> laptop clock")
     say()
     for r, c in clock.items():
-        say(f"* {r}: laptop = cf + {c['c0']:.3f} s, drift {c['drift_ppm']:+.0f} ppm; packets arrive "
+        say(f"* {r}: laptop = cf + {c['c0']:.3f} s; the Crazyflie clock runs {-c['drift_ppm']:+.0f} ppm against "
+            f"the laptop's; packets arrive "
             f"{c['jitter_ms_p50']:.1f} ms (median) / {c['jitter_ms_p95']:.1f} ms (95th pct) after the fastest one")
     if meta.get("mock"):
         say("* (SITL clocks run at simulation speed, so a large SITL drift is expected and is not a clock fault.)")
