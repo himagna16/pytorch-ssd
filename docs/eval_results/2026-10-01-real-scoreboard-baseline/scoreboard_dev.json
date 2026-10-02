@@ -1,0 +1,2028 @@
+{
+ "tool": "tools/real_frames/real_scoreboard.py",
+ "generated": "2026-10-01T21:50:59",
+ "status": "definitions PROPOSED (docs/datasets/real_test_v1.md), not signed off",
+ "split": "dev",
+ "index": "~/drone_frames/_index/index.csv",
+ "index_sha1": "390a65058feb7720aba6653835496d3c30038dff",
+ "root": "~/drone_frames",
+ "tool_git": {
+  "sha": "03ea39552942d7ac32e24c5ea782ba07072a79fc",
+  "dirty": false
+ },
+ "model": {
+  "name": "champion (plain_follow_prod_qat_v3)",
+  "backend": "chip",
+  "onnx": "~/Downloads/drone/pytorch_ssd_unstable/logs/plain_follow_prod_qat_v3/quant_eval/model_id_dory.onnx",
+  "onnx_sha1": "d90555c8462b6dd6c3432d184b427d4d3e653fda",
+  "eps": 0.0002009823510888964,
+  "enter_raw": 5467,
+  "onnxruntime": "1.19.2"
+ },
+ "definitions": {
+  "enter_p": 0.75,
+  "tolerance_bins": 1,
+  "confirm_frames": 3,
+  "min_labelled_frames": 5,
+  "near_black_dn": 15.0,
+  "crop_hfov_deg": 70.0,
+  "bootstrap": {
+   "n": 10000,
+   "seed": 0
+  }
+ },
+ "labels_provisional": true,
+ "label_note": "provisional: FOV/aim unmeasured",
+ "headline": {
+  "name": "hit@0.75\u00b11",
+  "value": 0.36510695187165776,
+  "ci95": [
+   0.22700534759358287,
+   0.5061497326203208
+  ],
+  "ci95_run_cluster": [
+   0.16737967914438504,
+   0.500581260172053
+  ],
+  "n_clips": 20
+ },
+ "exact_bin": {
+  "value": 0.20935828877005344,
+  "ci95": [
+   0.11042446524064171,
+   0.3152473262032085
+  ]
+ },
+ "seen_rate": {
+  "value": 0.4676470588235294,
+  "ci95": [
+   0.31497326203208553,
+   0.6203241978609626
+  ],
+  "note": "diagnostic: share of labelled frames >= 0.75 regardless of x-bin"
+ },
+ "guard": {
+  "pass": false,
+  "n_clips": 15,
+  "by_class": {
+   "empty": 4,
+   "near_black": 11
+  },
+  "failing": [
+   {
+    "clip_id": "2026-09-24/grid_capture_204144/vis0_subj-empty_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 21,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d1.52_b-21.8_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d1.52_b0_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d1.52_b21.8_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.13_b-15.9_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.13_b0_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.13_b15.9_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.44_b-14_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.44_b0_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/d2.44_b14_vis1_subj-p01_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 13,
+    "frac_ge_enter": 1.0
+   },
+   {
+    "clip_id": "2026-09-24/grid_capture_215739/vis0_subj-empty_light-night-lights_take1",
+    "class": "near_black",
+    "max_streak": 26,
+    "frac_ge_enter": 1.0
+   }
+  ],
+  "lit_pass": true
+ },
+ "coverage": {
+  "people": [
+   "p01"
+  ],
+  "locations": [
+   "dorm1"
+  ],
+  "regimes": [
+   "bright",
+   "dim"
+  ],
+  "empty_clips": 4,
+  "clutter_clips": 0,
+  "checks": {
+   "people >= 3": false,
+   "locations >= 2": false,
+   "both regimes (dim, bright)": true,
+   "empty clips": true,
+   "clutter clips": false,
+   "each person left/centre/right": true
+  },
+  "met": false
+ },
+ "breakdowns": {
+  "exposure_regime": {
+   "bright": {
+    "n_clips": 6,
+    "hit": 0.2785204991087344,
+    "ci": [
+     0.05303030303030303,
+     0.5334224598930482
+    ],
+    "exact": 0.16443850267379678,
+    "seen": 0.34046345811051687
+   },
+   "dim": {
+    "n_clips": 14,
+    "hit": 0.4022154316271963,
+    "ci": [
+     0.2394957983193277,
+     0.5683919022154313
+    ],
+    "exact": 0.22860962566844917,
+    "seen": 0.5221543162719634
+   }
+  },
+  "session_date": {
+   "2026-09-22": {
+    "n_clips": 4,
+    "hit": 0.19318181818181818,
+    "ci": [
+     0.06818181818181818,
+     0.2954545454545454
+    ],
+    "exact": 0.09090909090909091,
+    "seen": 0.25
+   },
+   "2026-09-24": {
+    "n_clips": 16,
+    "hit": 0.4080882352941177,
+    "ci": [
+     0.2463235294117647,
+     0.5698529411764706
+    ],
+    "exact": 0.2389705882352941,
+    "seen": 0.5220588235294118
+   }
+  },
+  "run_folder": {
+   "camera_check_181258": {
+    "n_clips": 2,
+    "hit": 0.1590909090909091,
+    "ci": [
+     0.0,
+     0.3181818181818182
+    ],
+    "exact": 0.022727272727272728,
+    "seen": 0.22727272727272727
+   },
+   "camera_check_182858": {
+    "n_clips": 2,
+    "hit": 0.22727272727272727,
+    "ci": [
+     0.18181818181818182,
+     0.2727272727272727
+    ],
+    "exact": 0.1590909090909091,
+    "seen": 0.2727272727272727
+   },
+   "grid_capture_183109": {
+    "n_clips": 8,
+    "hit": 0.411764705882353,
+    "ci": [
+     0.16911764705882354,
+     0.6470588235294117
+    ],
+    "exact": 0.25,
+    "seen": 0.5220588235294118
+   },
+   "grid_capture_194556": {
+    "n_clips": 1,
+    "hit": 0.0,
+    "ci": [
+     null,
+     null
+    ],
+    "exact": 0.0,
+    "seen": 0.0
+   },
+   "grid_capture_204502": {
+    "n_clips": 7,
+    "hit": 0.46218487394957986,
+    "ci": [
+     0.23529411764705882,
+     0.6642857142857083
+    ],
+    "exact": 0.2605042016806723,
+    "seen": 0.5966386554621848
+   }
+  },
+  "side": {
+   "centre": {
+    "n_clips": 5,
+    "hit": 0.16470588235294117,
+    "ci": [
+     0.0,
+     0.4705882352941176
+    ],
+    "exact": 0.07058823529411765,
+    "seen": 0.30588235294117644
+   },
+   "left": {
+    "n_clips": 9,
+    "hit": 0.49079025549613786,
+    "ci": [
+     0.2685680332739156,
+     0.6999405822935234
+    ],
+    "exact": 0.28312537136066546,
+    "seen": 0.5647653000594177
+   },
+   "right": {
+    "n_clips": 6,
+    "hit": 0.3435828877005347,
+    "ci": [
+     0.18672014260249556,
+     0.4745989304812834
+    ],
+    "exact": 0.214349376114082,
+    "seen": 0.45677361853832443
+   }
+  },
+  "dist_m": {
+   "1.52": {
+    "n_clips": 3,
+    "hit": 0.6862745098039217,
+    "ci": [
+     0.5882352941176471,
+     0.7647058823529411
+    ],
+    "exact": 0.5490196078431372,
+    "seen": 0.7450980392156863
+   },
+   "2.13": {
+    "n_clips": 6,
+    "hit": 0.34313725490196084,
+    "ci": [
+     0.09803921568627451,
+     0.6274509803921569
+    ],
+    "exact": 0.19607843137254902,
+    "seen": 0.45098039215686275
+   },
+   "2.44": {
+    "n_clips": 11,
+    "hit": 0.2894992707826933,
+    "ci": [
+     0.12930238210986875,
+     0.46888672824501704
+    ],
+    "exact": 0.12396694214876035,
+    "seen": 0.4010695187165775
+   }
+  },
+  "drone": {
+   "-": {
+    "n_clips": 12,
+    "hit": 0.3340017825311943,
+    "ci": [
+     0.1771334670231729,
+     0.5000055704099821
+    ],
+    "exact": 0.1822638146167558,
+    "seen": 0.4313725490196078
+   },
+   "09": {
+    "n_clips": 8,
+    "hit": 0.411764705882353,
+    "ci": [
+     0.16911764705882354,
+     0.6470588235294117
+    ],
+    "exact": 0.25,
+    "seen": 0.5220588235294118
+   }
+  },
+  "location": {
+   "dorm1": {
+    "n_clips": 20,
+    "hit": 0.36510695187165776,
+    "ci": [
+     0.22700534759358287,
+     0.5061497326203208
+    ],
+    "exact": 0.20935828877005344,
+    "seen": 0.4676470588235294
+   }
+  },
+  "person_id": {
+   "p01": {
+    "n_clips": 20,
+    "hit": 0.36510695187165776,
+    "ci": [
+     0.22700534759358287,
+     0.5061497326203208
+    ],
+    "exact": 0.20935828877005344,
+    "seen": 0.4676470588235294
+   }
+  }
+ },
+ "excluded": [
+  {
+   "clip_id": "2026-09-24/grid_capture_194556/d2.44_b0_vis1_subj-p01_light-night-lights_take1",
+   "why": "only 1 labelled frame(s) (< 5); label status {'labelled': 1}"
+  },
+  {
+   "clip_id": "2026-09-22/camera_check_181258/check/check",
+   "why": "unlabelled frames (no vis label, no labels.csv)"
+  },
+  {
+   "clip_id": "2026-09-22/camera_check_182858/check/check",
+   "why": "unlabelled frames (no vis label, no labels.csv)"
+  }
+ ],
+ "clips": [
+  {
+   "clip_id": "2026-09-22/camera_check_181258/mirror/d2.44_b-14_vis1_subj-p01_light-room_take1",
+   "n_frames": 22,
+   "n_unreadable": 0,
+   "n_labelled": 22,
+   "label_status": {
+    "labelled": 22
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.13636363636363635,
+   "size_acc": null,
+   "frac_ge_enter": 0.13636363636363635,
+   "max_streak": 3,
+   "median_conf": 0.5802,
+   "x_bins": {
+    "2": 1,
+    "7": 21
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-22",
+    "run_folder": "camera_check_181258",
+    "power_up": "2026-09-22/camera_check_181258#p1",
+    "exposure_regime": "bright",
+    "bright_mean": "89.9151",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-22/camera_check_181258/mirror/d2.44_b14_vis1_subj-p01_light-room_take1",
+   "n_frames": 22,
+   "n_unreadable": 0,
+   "n_labelled": 22,
+   "label_status": {
+    "labelled": 22
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.3181818181818182,
+   "hit_exact": 0.045454545454545456,
+   "seen": 0.3181818181818182,
+   "size_acc": null,
+   "frac_ge_enter": 0.3181818181818182,
+   "max_streak": 3,
+   "median_conf": 0.6275,
+   "x_bins": {
+    "4": 1,
+    "6": 1,
+    "7": 20
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-22",
+    "run_folder": "camera_check_181258",
+    "power_up": "2026-09-22/camera_check_181258#p1",
+    "exposure_regime": "bright",
+    "bright_mean": "89.626",
+    "dist_m": "2.44",
+    "bearing_deg": "14.0",
+    "side": "right",
+    "drone": "",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-22/camera_check_182858/mirror/d2.44_b-14_vis1_subj-p01_light-room_take1",
+   "n_frames": 22,
+   "n_unreadable": 0,
+   "n_labelled": 22,
+   "label_status": {
+    "labelled": 22
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.18181818181818182,
+   "hit_exact": 0.13636363636363635,
+   "seen": 0.18181818181818182,
+   "size_acc": null,
+   "frac_ge_enter": 0.18181818181818182,
+   "max_streak": 3,
+   "median_conf": 0.5112,
+   "x_bins": {
+    "2": 4,
+    "3": 1,
+    "7": 17
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-22",
+    "run_folder": "camera_check_182858",
+    "power_up": "2026-09-22/camera_check_182858#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "35.5759",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-22/camera_check_182858/mirror/d2.44_b14_vis1_subj-p01_light-room_take1",
+   "n_frames": 22,
+   "n_unreadable": 0,
+   "n_labelled": 22,
+   "label_status": {
+    "labelled": 22
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.2727272727272727,
+   "hit_exact": 0.18181818181818182,
+   "seen": 0.36363636363636365,
+   "size_acc": null,
+   "frac_ge_enter": 0.36363636363636365,
+   "max_streak": 3,
+   "median_conf": 0.666,
+   "x_bins": {
+    "1": 1,
+    "4": 3,
+    "5": 2,
+    "6": 12,
+    "7": 4
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-22",
+    "run_folder": "camera_check_182858",
+    "power_up": "2026-09-22/camera_check_182858#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "34.1314",
+    "dist_m": "2.44",
+    "bearing_deg": "14.0",
+    "side": "right",
+    "drone": "",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-22/empty_check_182746/empty/vis0_subj-empty_light-room_take1",
+   "n_frames": 43,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 43
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.5026,
+   "x_bins": {
+    "1": 2,
+    "2": 3,
+    "7": 38
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-22",
+    "run_folder": "empty_check_182746",
+    "power_up": "2026-09-22/empty_check_182746#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "37.1873",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "empty",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d1.52_b-21.8_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 1,
+   "hit": 0.5882352941176471,
+   "hit_exact": 0.5882352941176471,
+   "seen": 0.5882352941176471,
+   "size_acc": null,
+   "frac_ge_enter": 0.5882352941176471,
+   "max_streak": 3,
+   "median_conf": 0.7821,
+   "x_bins": {
+    "1": 17
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p2",
+    "exposure_regime": "bright",
+    "bright_mean": "94.3009",
+    "dist_m": "1.52",
+    "bearing_deg": "-21.8",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d1.52_b0_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.7647058823529411,
+   "hit_exact": 0.35294117647058826,
+   "seen": 0.9411764705882353,
+   "size_acc": null,
+   "frac_ge_enter": 0.9411764705882353,
+   "max_streak": 16,
+   "median_conf": 0.9336,
+   "x_bins": {
+    "3": 8,
+    "4": 6,
+    "7": 3
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p2",
+    "exposure_regime": "bright",
+    "bright_mean": "94.9711",
+    "dist_m": "1.52",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.13_b-15.9_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.5882352941176471,
+   "hit_exact": 0.5294117647058824,
+   "seen": 0.5882352941176471,
+   "size_acc": null,
+   "frac_ge_enter": 0.5882352941176471,
+   "max_streak": 4,
+   "median_conf": 0.8089,
+   "x_bins": {
+    "1": 1,
+    "2": 13,
+    "7": 3
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "39.6351",
+    "dist_m": "2.13",
+    "bearing_deg": "-15.9",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.13_b0_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.11764705882352941,
+   "size_acc": null,
+   "frac_ge_enter": 0.11764705882352941,
+   "max_streak": 1,
+   "median_conf": 0.657,
+   "x_bins": {
+    "7": 17
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "40.6651",
+    "dist_m": "2.13",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.13_b15.9_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.058823529411764705,
+   "size_acc": null,
+   "frac_ge_enter": 0.058823529411764705,
+   "max_streak": 1,
+   "median_conf": 0.5362,
+   "x_bins": {
+    "0": 3,
+    "1": 3,
+    "4": 1,
+    "6": 5,
+    "7": 5
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p2",
+    "exposure_regime": "bright",
+    "bright_mean": "93.3489",
+    "dist_m": "2.13",
+    "bearing_deg": "15.9",
+    "side": "right",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.44_b-14_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.9411764705882353,
+   "hit_exact": 0.4117647058823529,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 17,
+   "median_conf": 0.9045,
+   "x_bins": {
+    "1": 9,
+    "2": 7,
+    "7": 1
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "38.9224",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.44_b0_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.0,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.512,
+   "x_bins": {
+    "4": 1,
+    "7": 16
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "40.1892",
+    "dist_m": "2.44",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/d2.44_b14_vis1_subj-p01_light-room_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.4117647058823529,
+   "hit_exact": 0.11764705882352941,
+   "seen": 0.8823529411764706,
+   "size_acc": null,
+   "frac_ge_enter": 0.8823529411764706,
+   "max_streak": 12,
+   "median_conf": 0.8719,
+   "x_bins": {
+    "4": 9,
+    "6": 3,
+    "7": 5
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "38.3406",
+    "dist_m": "2.44",
+    "bearing_deg": "14.0",
+    "side": "right",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_183109/vis0_subj-empty_light-room_take1",
+   "n_frames": 26,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 26
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.5566,
+   "x_bins": {
+    "7": 26
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_183109",
+    "power_up": "2026-09-24/grid_capture_183109#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "41.6186",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "room",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "empty",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_194556/d2.44_b-14_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.0,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.2905,
+   "x_bins": {
+    "0": 5,
+    "1": 2,
+    "3": 7,
+    "8": 3
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_194556",
+    "power_up": "2026-09-24/grid_capture_194556#p1",
+    "exposure_regime": "bright",
+    "bright_mean": "89.2189",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_194556/d2.44_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 1,
+   "n_unreadable": 0,
+   "n_labelled": 1,
+   "label_status": {
+    "labelled": 1
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.0,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.4777,
+   "x_bins": {
+    "0": 1
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_194556",
+    "power_up": "2026-09-24/grid_capture_194556#p1",
+    "exposure_regime": "bright",
+    "bright_mean": "92.932",
+    "dist_m": "2.44",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "excluded",
+   "why": "only 1 labelled frame(s) (< 5); label status {'labelled': 1}"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_194556/vis0_subj-empty_light-night-lights_take1",
+   "n_frames": 26,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 26
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.3226,
+   "x_bins": {
+    "0": 22,
+    "1": 4
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_194556",
+    "power_up": "2026-09-24/grid_capture_194556#p1",
+    "exposure_regime": "bright",
+    "bright_mean": "94.992",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "empty",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204144/vis0_subj-empty_light-night-lights_take1",
+   "n_frames": 21,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 21
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 21,
+   "median_conf": 0.8258,
+   "x_bins": {
+    "2": 1,
+    "4": 11,
+    "6": 9
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204144",
+    "power_up": "2026-09-24/grid_capture_204144#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "6.8613",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d1.52_b-21.8_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 1,
+   "hit": 0.7058823529411765,
+   "hit_exact": 0.7058823529411765,
+   "seen": 0.7058823529411765,
+   "size_acc": null,
+   "frac_ge_enter": 0.7058823529411765,
+   "max_streak": 8,
+   "median_conf": 0.8302,
+   "x_bins": {
+    "1": 17
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "41.0081",
+    "dist_m": "1.52",
+    "bearing_deg": "-21.8",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.13_b-15.9_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.8823529411764706,
+   "hit_exact": 0.11764705882352941,
+   "seen": 0.9411764705882353,
+   "size_acc": null,
+   "frac_ge_enter": 0.9411764705882353,
+   "max_streak": 12,
+   "median_conf": 0.8735,
+   "x_bins": {
+    "1": 14,
+    "2": 2,
+    "6": 1
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "39.2533",
+    "dist_m": "2.13",
+    "bearing_deg": "-15.9",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.13_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.058823529411764705,
+   "hit_exact": 0.0,
+   "seen": 0.47058823529411764,
+   "size_acc": null,
+   "frac_ge_enter": 0.47058823529411764,
+   "max_streak": 3,
+   "median_conf": 0.7218,
+   "x_bins": {
+    "1": 1,
+    "3": 1,
+    "4": 1,
+    "7": 14
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "40.1155",
+    "dist_m": "2.13",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.13_b15.9_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.5294117647058824,
+   "hit_exact": 0.5294117647058824,
+   "seen": 0.5294117647058824,
+   "size_acc": null,
+   "frac_ge_enter": 0.5294117647058824,
+   "max_streak": 6,
+   "median_conf": 0.7689,
+   "x_bins": {
+    "6": 17
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "38.765",
+    "dist_m": "2.13",
+    "bearing_deg": "15.9",
+    "side": "right",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.44_b-14_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.5294117647058824,
+   "hit_exact": 0.058823529411764705,
+   "seen": 0.9411764705882353,
+   "size_acc": null,
+   "frac_ge_enter": 0.9411764705882353,
+   "max_streak": 12,
+   "median_conf": 0.859,
+   "x_bins": {
+    "1": 9,
+    "2": 1,
+    "6": 6,
+    "7": 1
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "38.5535",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.44_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 0.0,
+   "size_acc": null,
+   "frac_ge_enter": 0.0,
+   "max_streak": 0,
+   "median_conf": 0.5367,
+   "x_bins": {
+    "1": 1,
+    "7": 16
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "39.7165",
+    "dist_m": "2.44",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/d2.44_b14_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 17,
+   "n_unreadable": 0,
+   "n_labelled": 17,
+   "label_status": {
+    "labelled": 17
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.5294117647058824,
+   "hit_exact": 0.4117647058823529,
+   "seen": 0.5882352941176471,
+   "size_acc": null,
+   "frac_ge_enter": 0.5882352941176471,
+   "max_streak": 5,
+   "median_conf": 0.782,
+   "x_bins": {
+    "4": 2,
+    "5": 2,
+    "6": 13
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "38.04",
+    "dist_m": "2.44",
+    "bearing_deg": "14.0",
+    "side": "right",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "metric",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_204502/vis0_subj-empty_light-night-lights_take1",
+   "n_frames": 26,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 26
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 0.11538461538461539,
+   "max_streak": 1,
+   "median_conf": 0.6674,
+   "x_bins": {
+    "1": 1,
+    "6": 10,
+    "7": 15
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_204502",
+    "power_up": "2026-09-24/grid_capture_204502#p1",
+    "exposure_regime": "dim",
+    "bright_mean": "40.0619",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "empty",
+   "why": ""
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d1.52_b-21.8_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 1,
+   "hit": 0.0,
+   "hit_exact": 0.0,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8423,
+   "x_bins": {
+    "4": 1,
+    "6": 12
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "4.2956",
+    "dist_m": "1.52",
+    "bearing_deg": "-21.8",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d1.52_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.15384615384615385,
+   "hit_exact": 0.15384615384615385,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8489,
+   "x_bins": {
+    "4": 2,
+    "6": 11
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "3.9892",
+    "dist_m": "1.52",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d1.52_b21.8_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 7,
+   "hit": 0.7692307692307693,
+   "hit_exact": 0.0,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8336,
+   "x_bins": {
+    "4": 3,
+    "6": 10
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "3.8586",
+    "dist_m": "1.52",
+    "bearing_deg": "21.8",
+    "side": "right",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.13_b-15.9_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.07692307692307693,
+   "hit_exact": 0.07692307692307693,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8375,
+   "x_bins": {
+    "2": 1,
+    "6": 12
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "4.139",
+    "dist_m": "2.13",
+    "bearing_deg": "-15.9",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.13_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.15384615384615385,
+   "hit_exact": 0.15384615384615385,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8268,
+   "x_bins": {
+    "4": 2,
+    "6": 11
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "4.2415",
+    "dist_m": "2.13",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.13_b15.9_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.8461538461538461,
+   "hit_exact": 0.8461538461538461,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8448,
+   "x_bins": {
+    "4": 2,
+    "6": 11
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "4.0257",
+    "dist_m": "2.13",
+    "bearing_deg": "15.9",
+    "side": "right",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.44_b-14_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 2,
+   "hit": 0.07692307692307693,
+   "hit_exact": 0.07692307692307693,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8369,
+   "x_bins": {
+    "2": 1,
+    "6": 12
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "3.9882",
+    "dist_m": "2.44",
+    "bearing_deg": "-14.0",
+    "side": "left",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.44_b0_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 4,
+   "hit": 0.07692307692307693,
+   "hit_exact": 0.07692307692307693,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8306,
+   "x_bins": {
+    "4": 1,
+    "6": 12
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "3.8639",
+    "dist_m": "2.44",
+    "bearing_deg": "0.0",
+    "side": "centre",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/d2.44_b14_vis1_subj-p01_light-night-lights_take1",
+   "n_frames": 13,
+   "n_unreadable": 0,
+   "n_labelled": 13,
+   "label_status": {
+    "labelled": 13
+   },
+   "label_sources": [
+    "grid_mark"
+   ],
+   "grid_xbin": 6,
+   "hit": 0.8461538461538461,
+   "hit_exact": 0.8461538461538461,
+   "seen": 1.0,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 13,
+   "median_conf": 0.8435,
+   "x_bins": {
+    "4": 2,
+    "6": 11
+   },
+   "meta": {
+    "kind": "person",
+    "person_id": "p01",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "3.9126",
+    "dist_m": "2.44",
+    "bearing_deg": "14.0",
+    "side": "right",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "grid_mark"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  },
+  {
+   "clip_id": "2026-09-24/grid_capture_215739/vis0_subj-empty_light-night-lights_take1",
+   "n_frames": 26,
+   "n_unreadable": 0,
+   "n_labelled": 0,
+   "label_status": {
+    "unlabelled": 26
+   },
+   "label_sources": [],
+   "grid_xbin": null,
+   "hit": null,
+   "hit_exact": null,
+   "seen": null,
+   "size_acc": null,
+   "frac_ge_enter": 1.0,
+   "max_streak": 26,
+   "median_conf": 0.83565,
+   "x_bins": {
+    "4": 5,
+    "6": 21
+   },
+   "meta": {
+    "kind": "empty",
+    "person_id": "",
+    "session_date": "2026-09-24",
+    "run_folder": "grid_capture_215739",
+    "power_up": "2026-09-24/grid_capture_215739#p1",
+    "exposure_regime": "near_black",
+    "bright_mean": "4.2306",
+    "dist_m": "",
+    "bearing_deg": "",
+    "side": "",
+    "drone": "09",
+    "location": "dorm1",
+    "light": "night-lights",
+    "stream_w": "162",
+    "stream_h": "122",
+    "stream_format": "raw",
+    "label_source": "none"
+   },
+   "role": "guard",
+   "guard_class": "near_black",
+   "why": "near-black clip: no scene; counted for the guard, not the person metric"
+  }
+ ]
+}
