@@ -190,14 +190,14 @@ static void lookupLogIds(void)
   logIdVarY = logGetVarId("kalman", "varY");
 }
 
-static bool finitef(float v)
+static bool faFinite(float v)
 {
   return (v == v) && v < 3.0e38f && v > -3.0e38f; /* no math library; NaN != NaN */
 }
 
 static bool positiveFinite(float v)
 {
-  return finitef(v) && v > 0.0f;
+  return faFinite(v) && v > 0.0f;
 }
 
 /* The position estimate and whether it can be trusted: the Kalman filter is the estimator
@@ -227,7 +227,7 @@ static uint8_t readPose(fa_pose_t *p, float zEst, float varLimit)
   p->y = logGetFloat(logIdY);
   vx = logGetFloat(logIdVarX);
   vy = logGetFloat(logIdVarY);
-  if (!finitef(p->x) || !finitef(p->y) || !finitef(p->z) || !finitef(vx) || !finitef(vy)) {
+  if (!faFinite(p->x) || !faFinite(p->y) || !faFinite(p->z) || !faFinite(vx) || !faFinite(vy)) {
     return FA_POS_NOT_FINITE;
   }
   p->var = (vx > vy) ? vx : vy;
