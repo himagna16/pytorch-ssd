@@ -18,7 +18,7 @@ PY=~/Downloads/drone/trainenv/bin/python
 REPO=${HERE:h:h}
 grab()  { $PY $REPO/tools/crazysim_macos/cpx_grab.py ${=CAMERA_CHECK_GRAB_ARGS:-} "$@"; }
 score() { $PY $REPO/tools/real_frames/score_real_frames.py "$@"; }
-speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && say "$@" & }
+speak() { [[ -z "${CAMERA_CHECK_QUIET:-}" ]] && command -v say >/dev/null && { say "$@" & }; return 0; }
 DRONE=${GRID_DRONE:-unknown}
 LIGHT=${GRID_LIGHT:-room}; LIGHT=${LIGHT//[^A-Za-z0-9-]/-}   # labels allow letters, digits, "-" only
 ROOT=~/drone_frames; [[ -n "${CAMERA_CHECK_GRAB_ARGS:-}" ]] && ROOT=~/drone_frames/_rehearsal
