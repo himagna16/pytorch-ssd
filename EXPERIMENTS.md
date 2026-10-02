@@ -1,5 +1,42 @@
 # Experiment Log
 
+## Oct 1, 2026 — `--preserve-qat-alphas` built and tested: the chip now matches the trained network; not a better detector (Sai, with Claude)
+
+Implemented Grace's Aug 31 design on branch `sai/preserve-qat-alphas` (PR against
+`successor-release`): the release can keep the PACT ranges learned in QAT instead of
+recalibrating them. Strict provenance checks: float tensors bit-identical between the
+two checkpoints, strict state load, every stage built from one learned state, and the
+summaries record the policy and SHA-256s. 10 new tests pass in nemoenv and in the
+legacy container.
+
+**Flag off is unchanged.** Re-releasing the QAT confuser (epoch 2) the default way
+reproduced Sep 11: byte-identical ONNX and identical weights in all 57 app files. The
+only differences are DORY's include order and an object address in a comment.
+
+All four releases pass the five gates: confuser and champion, each released both ways.
+
+**On 1,000 random images + the 771 confuser slice (Sep 11 sets, reproduced exactly):**
+- **Recalibration was biasing the chip.** It made the champion's chip read +0.20 logit
+  hotter than its own QAT network. Preserved: +0.02 (CI includes 0). This explains
+  Sep 11's "chip runs 0.13-0.19 hotter". For the confuser the bias only shrinks, +0.16 →
+  +0.12.
+- **Same threshold:**
+  - champion pet/mannequin false alarms 30.2% → 25.0% at 0.45 (QAT net 23.9%; McNemar 43
+    vs 3);
+  - 9.1% → 6.9% at the shipped 0.75;
+  - empty scenes 9.1% → 6.3%;
+  - the confuser closes about 60% of its 10.6% → 8.4% gap.
+- **At matched recall there is no difference** (−0.26 points, CI spans 0, both models).
+  It removes a bias; it is not a better detector.
+
+**Recommendation:**
+- Make preserve the default for future QAT releases. It makes fake-quant numbers predict
+  the chip.
+- Do not swap the shipped champion. Same detector at matched recall; swapping moves the
+  operating point the 0.75 bar was flown at; new raw thresholds would be {2516, −459, 3}.
+
+Evidence: `docs/eval_results/2026-10-01-preserve-qat-alphas/`.
+
 ## Sep 27, 2026 — Round 2: exposure-only augmentation is harmless but useless; Frontnet harm replicates (Sai)
 
 Four more runs, pre-registered (1054838): a new `--photometric-aug exposure` preset (linear-light

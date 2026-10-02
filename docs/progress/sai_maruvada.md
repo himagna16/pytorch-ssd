@@ -67,6 +67,9 @@ is not, is in `docs/hardware/before_the_next_session.md`.
 | Simulator demo for Prof. Mok | Sai | Sent Sep 12; Prof. Mok replied "Great progress, team!" and David called the simulation's prediction of the AI-deck behaviour impressive | Live demo slot still unset: he said Tue/Thu after 3:30 pm, I offered after 5 pm - needs one confirming email |
 | Flight-controller software (drone side) | Sai | Written and flying in simulation; passes an independent safety review | Bench test on real hardware |
 | `train.py` crashes when `--model-type` is left at its default | Sai | **Fixed Sep 26, merged into `successor-release` (PR #8, 881d5b2).** Missing import of `HYBRID_FOLLOW_BASE_STAGE_CHANNELS`; unittest added. `sai/photometric-aug` predates the fix | Rebase `sai/photometric-aug` onto `successor-release` to pick up the fix. Separately, fix the already-failing `test_plain_follow_release_promotion` |
+| Ship the activation ranges learned in QAT (`--preserve-qat-alphas`) | Sai (took over from Grace, Oct 1) | **Built and tested Oct 1, PR open.** Built to Grace's Aug 31 design. With it off, releases are unchanged (byte-identical network). With it on, the chip network matches the trained network: the +0.20 confidence bias that recalibration caused on the champion is gone. At equal person-finding it is the same detector. Evidence: `docs/eval_results/2026-10-01-preserve-qat-alphas/` | Merge the PR. Use the option for future QAT models. Keep the shipped champion as it is |
+| Real-frame test set and one headline metric | Sai | **Proposed Oct 1 (PR, needs my sign-off).** Rules: test people never appear in training, and the clip is the unit. Metric: share of frames that are confident (≥0.75) and within one bin of the label; the safety guard is that no empty clip ever locks. First baseline on my own frames (dev, not test): 36.5% [22.7, 50.6]; the guard fails only on near-black frames | Sign off. Recruit 2-3 test people, about 15 min each |
+| The camera image path | Sai, then firmware | **Open, flagged by both Oct 1 reviews as the top blocker.** The WiFi stream we capture (162x122, pixels up to 191, about 2 fps) is not the image the flight app uses (324x244, about 15 fps) | Decide before collecting data at scale. Measure field of view and aim (bottle test) |
 | Progress record for Prof. Mok | Sai | Kept current, this file | Update every session |
 | Progress report email for Prof. Mok | Sai | Sent Sep 11 and answered Sep 12. Prof. Mok asked for periodic documentation that can be edited into a final project report | Keep this record current; ask again for the specific registration process for research credit |
 | First real AI-deck camera frames, motors off | Sai, MinHyuk | **Done Sep 22, in my dorm, not the lab.** Stream works (every frame decoded). The image is not mirrored: I appear on the correct side, and 10 of 12 confident outputs point the right way. The champion called dorm furniture a person strongly enough to lock on; with the chairs removed, an empty room gave 0 false locks (peak 0.71). I am detected only some of the time at 2.44 m in a dim room (one person, not a rate). The real stream is 162 x 122, pixels 0-191, about 2 fps, which differs from the simulator's assumptions. Evidence: `docs/eval_results/2026-09-22-first-real-frames/`. *Earlier status:* **Lab session next week**: Prof. Mok asked MinHyuk to meet the team with real hardware | Rehearse capture and scoring against a mock streamer before going; run the capture protocol in the lab |
@@ -445,14 +448,40 @@ Worth keeping in one place, because several of these are easy to assume:
 
 Newest first. One entry per working session.
 
-- **2026-10-01 (evening, planning after midterms).** No experiments. Reviewed where the project
-  stands after a four-day break, with nothing changed in the repo since Sep 27. Wrote the running order for a
-  full day of hardware work: `docs/hardware/2026-10-02-session-plan.md` (charge the batteries, put
-  the moved base station back and re-verify the geometry with the tape check on both drones,
-  finish the real-person grid at controlled exposure plus a light-sheet-over-the-door control,
-  then the first Lighthouse-labelled recording). Started building the missing piece for that
-  last step, a recorder that logs both drones' positions alongside the camera frames, on
-  branch `sai/lighthouse-session-recorder` (PR, not merged, not yet run on hardware).
+- **2026-10-01 (evening and night, after midterms).** Three threads.
+  - **QAT ranges.** Took over Grace's `--preserve-qat-alphas` task after she went quiet,
+    and built it to her own Aug 31 design. With the option, the release keeps the
+    activation ranges learned in quant-aware training instead of recalibrating them
+    (branch `sai/preserve-qat-alphas`, PR, not merged).
+    - With the option off, a re-release reproduced Sep 11 exactly (byte-identical
+      network).
+    - All four test releases pass the five chip gates.
+    - **Result:** recalibration had made the champion's chip network read +0.20 logit
+      more confident than the network we trained. Keeping the learned ranges removes
+      that (+0.02), so the chip now behaves like what we evaluate.
+    - At the same threshold, false alarms on pets fall from 9.1% to 6.9% at the shipped
+      bar. At equal person-finding ability they are unchanged, so it is a calibration
+      fix, not a better detector.
+    - Recommendation: use it for future QAT models, keep the shipped app as is.
+      Evidence: `docs/eval_results/2026-10-01-preserve-qat-alphas/`.
+  - **Expert reviews.** Asked for two independent reviews from the perspective of the
+    PULP-Frontnet/PULP-DroNet authors, one on ML and data and one on systems and flight.
+    Both concluded the model is not the bottleneck.
+    - The real blockers are the camera image path, since the WiFi stream (162x122, about
+      2 fps) is not what the flight app sees, and the fact that nothing has run on the
+      drone's chip yet.
+    - Acted on the cheap items the same night, each on its own branch with a PR:
+      - a real-frame test set and scoreboard (first real baseline on my own frames:
+        36.5%, and the safety guard fails only on near-black frames);
+      - a dark-frame guard and exposure readback for the GAP8 app;
+      - dry-run, yaw-only and geofence modes for the flight controller, plus a kill
+        switch;
+      - the Lighthouse session recorder.
+  - **Tomorrow's plan** (`docs/hardware/2026-10-02-session-plan.md`): base stations back
+    and re-verified, two camera facts (field of view and aim; the dark-door control), and
+    optionally the first run of the model on the chip, on drone 05 only.
+  - **Correction:** the AI-deck "restore" image is a 324x244 streamer, not the 162x122 one
+    on the decks now. Flashing stays reversible, but not to the identical streamer.
 
 - **2026-09-27 (overnight, laptop training).** Round 2 of the camera-augmentation test,
   pre-registered before launch: a new exposure-only preset that copies what the Himax actually

@@ -3,6 +3,15 @@
 One dated line per decision: what we chose, why, what we rejected.
 Newest entries at the top. Never delete entries — supersede them.
 
+- **2026-10-01** — **Grace is treated as off the team** (Sai: no contact in weeks). Nobody
+  waits on her; her open lane (quantization/release, starting with
+  `--preserve-qat-alphas`) is taken over by Sai's side. Her past work keeps its credit
+  in the records.
+- **2026-10-01 (PROPOSED, awaiting Sai)** — Release future QAT checkpoints with
+  `--preserve-qat-alphas`, and compare models at matched recall. Do **not** re-release
+  the shipped champion with it: at matched recall it is the same detector, and swapping
+  would move the operating point the 0.75 bar was flown at. Evidence:
+  `docs/eval_results/2026-10-01-preserve-qat-alphas/`.
 - **2026-09-24** — **The dorm Lighthouse frame, channels and procedure.** Channel 1 is
   at the window end (Oaj's corner) and channel 2 at the door end (Sai's side). The
   origin is the blue ORIGIN tape (centre of the 5 x 10 tile floor); +x points to the
