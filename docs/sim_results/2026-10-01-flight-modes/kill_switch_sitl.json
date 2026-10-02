@@ -1,0 +1,104 @@
+{
+  "uri": "udp://127.0.0.1:19870",
+  "image": "crazysim-mac:follow-app-safety",
+  "cflib_protocol_note": "SITL firmware reports CRTP protocol 7, so cflib sends the legacy localization-port stop/watchdog packets; firmware 2026.08 (protocol 12) gets the supervisor-port ones, which SITL cannot test",
+  "key": {
+    "banner_shown": true,
+    "pings_before_press": 22,
+    "cli_saw_locked_after_s": 0.1,
+    "cli_exit_code": 0,
+    "second_connection_supervisor_info": 68,
+    "second_connection_decoded": "auto-arm, LOCKED",
+    "locked": true,
+    "firmware_console_tail": [
+      "SOCKET_LINK: Create socket succeed ",
+      "SUP: Can not fly",
+      "SUP: Ready to fly",
+      "SUP: Can not fly",
+      "SUP: Locked, reboot required"
+    ],
+    "armed_screen": [
+      "KILL SWITCH ARMED                                                        ",
+      "                                                                            ",
+      "   SPACE  or  ENTER  or  Ctrl-C   =   STOP ALL MOTORS NOW                   ",
+      "                                                                            ",
+      "   The drone does NOT land. The motors stop and it FALLS.                   ",
+      "   Dead-man: if this program stops or the radio link drops,                 ",
+      "   the drone stops its own motors within 1 s.                               ",
+      "                                                                            ",
+      "",
+      " link        udp://127.0.0.1:19870  protocol 7 (legacy stop/watchdog packets)",
+      " watchdog    22 pings, last 0.10 s ago   (sent every 0.1 s)",
+      " supervisor  armed, auto-arm, can fly"
+    ],
+    "stopped_screen": [
+      "EMERGENCY STOP SENT  22:10:34  (key SPACE)                               ",
+      "                                                                            ",
+      "   Motors stopped. The drone is locked until it is power-cycled.            ",
+      "   SPACE/ENTER = send the stop again     q or Ctrl-C = quit                 ",
+      "                                                                            ",
+      "",
+      " link        udp://127.0.0.1:19870  protocol 7 (legacy stop/watchdog packets)",
+      " watchdog    23 pings, last 0.19 s ago   (sent every 0.1 s; stopped)",
+      " supervisor  auto-arm, LOCKED",
+      " supervisor reports LOCKED: the motors are off",
+      " stop        sent 5 times"
+    ]
+  },
+  "deadman": {
+    "banner_shown": true,
+    "pings_before_kill": 23,
+    "supervisor_line_before_kill": "supervisor  armed, auto-arm, can fly",
+    "seconds_after_kill_when_read": 5.8,
+    "second_connection_supervisor_info": 68,
+    "second_connection_decoded": "auto-arm, LOCKED",
+    "locked": true,
+    "firmware_console_tail": [
+      "SOCKET_LINK: Create socket succeed ",
+      "SUP: Can not fly",
+      "SUP: Ready to fly",
+      "SUP: Can not fly",
+      "SUP: Locked, reboot required"
+    ]
+  },
+  "inflight": {
+    "hover_z_before_stop": 0.6279,
+    "pings_before_stop": 11,
+    "stops_sent": 5,
+    "t_stop": 4.823,
+    "locked_logged_after_s": 0.062,
+    "motor_m1_zero_after_s": 0.022,
+    "z_below_5cm_after_s": 0.481,
+    "z_end": 0.0199,
+    "info_end": "auto-arm, LOCKED",
+    "hover_setpoints_kept_streaming_after_stop_s": 2.0,
+    "firmware_console_tail": [
+      "SOCKET_LINK: Create socket succeed ",
+      "SUP: Can not fly",
+      "SUP: Ready to fly",
+      "SUP: Can not fly",
+      "SUP: Locked, reboot required"
+    ]
+  },
+  "silence": {
+    "hover_z_before_stop": 0.6278,
+    "pings_before_stop": 11,
+    "stops_sent": 0,
+    "t_stop": 4.744,
+    "locked_logged_after_s": 1.068,
+    "motor_m1_zero_after_s": 1.008,
+    "z_below_5cm_after_s": 1.468,
+    "z_end": 0.0199,
+    "info_end": "auto-arm, LOCKED",
+    "mode": "silence",
+    "t_stop_is": "last watchdog ping sent",
+    "hover_setpoints_kept_streaming_after_stop_s": 3.0,
+    "firmware_console_tail": [
+      "SOCKET_LINK: Create socket succeed ",
+      "SUP: Can not fly",
+      "SUP: Ready to fly",
+      "SUP: Can not fly",
+      "SUP: Locked, reboot required"
+    ]
+  }
+}

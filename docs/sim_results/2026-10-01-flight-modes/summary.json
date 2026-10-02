@@ -1,0 +1,256 @@
+{
+  "yawonly": {
+    "end_reason": "duration: operator land (followapp.enable = 0)",
+    "sim_wall_ratio": 0.987,
+    "app_params": {
+      "yawOnly": "1"
+    },
+    "crazysim_extra": "",
+    "final": {
+      "state": "DONE",
+      "armErr": 0.0,
+      "fence": "ok"
+    },
+    "active": {
+      "t_start": 7.4,
+      "t_end": 27.47,
+      "duration_s": 20.07,
+      "arm_point": {
+        "x": -0.0,
+        "y": -0.0
+      },
+      "modes": 6,
+      "drift_from_arm_point_m": {
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "final": 0.0
+      },
+      "x_range_m": [
+        -0.0,
+        -0.0
+      ],
+      "y_range_m": [
+        -0.0,
+        -0.0
+      ],
+      "z_after_1s_m": {
+        "mean": 0.809,
+        "min": 0.8,
+        "max": 0.851
+      },
+      "heading_error_deg": {
+        "at_take_over": 15.9,
+        "person_bearing_at_take_over": -15.9,
+        "yaw_at_take_over": 0.0,
+        "mean_abs_after_5s": 1.25,
+        "max_abs_after_5s": 1.46
+      },
+      "yaw_rate_cmd_dps": {
+        "first": -26.67,
+        "max_abs": 26.67
+      },
+      "turn_toward_person_fraction": 1.0,
+      "max_abs_vx_sent_mps": 0.0,
+      "max_abs_wVx_mps": 0.0,
+      "setpoint_kinds_logged": {
+        "none": 1,
+        "position hold": 989
+      },
+      "posVar_m2": {
+        "min": 1.154539972958446e-06,
+        "max": 1.8988102965522557e-06
+      }
+    },
+    "landing": {
+      "reason": "operator",
+      "fence_hit": null,
+      "t_landing_state": 27.49,
+      "pose_at_landing_state": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": 0.8
+      },
+      "t_done": 30.314,
+      "landing_to_done_s": 2.82,
+      "z_at_done": 0.051,
+      "z_after_landing": 0.02
+    }
+  },
+  "yawonly_turb": {
+    "end_reason": "duration: operator land (followapp.enable = 0)",
+    "sim_wall_ratio": 0.979,
+    "app_params": {
+      "yawOnly": "1"
+    },
+    "crazysim_extra": "--sensor-noise --turbulence light",
+    "final": {
+      "state": "DONE",
+      "armErr": 0.0,
+      "fence": "ok"
+    },
+    "active": {
+      "t_start": 7.19,
+      "t_end": 27.29,
+      "duration_s": 20.1,
+      "arm_point": {
+        "x": -0.0524,
+        "y": 0.0319
+      },
+      "modes": 6,
+      "drift_from_arm_point_m": {
+        "mean": 0.045,
+        "p95": 0.1145,
+        "max": 0.1225,
+        "final": 0.0481
+      },
+      "x_range_m": [
+        -0.165,
+        -0.012
+      ],
+      "y_range_m": [
+        -0.027,
+        0.06
+      ],
+      "z_after_1s_m": {
+        "mean": 0.81,
+        "min": 0.787,
+        "max": 0.878
+      },
+      "heading_error_deg": {
+        "at_take_over": 16.2,
+        "person_bearing_at_take_over": -16.2,
+        "yaw_at_take_over": -0.0,
+        "mean_abs_after_5s": 1.2,
+        "max_abs_after_5s": 2.1
+      },
+      "yaw_rate_cmd_dps": {
+        "first": -26.67,
+        "max_abs": 26.67
+      },
+      "turn_toward_person_fraction": 1.0,
+      "max_abs_vx_sent_mps": 0.0,
+      "max_abs_wVx_mps": 0.0,
+      "setpoint_kinds_logged": {
+        "none": 1,
+        "position hold": 986
+      },
+      "posVar_m2": {
+        "min": 1.1226467222513747e-06,
+        "max": 1.9577512375690276e-06
+      }
+    },
+    "landing": {
+      "reason": "operator",
+      "fence_hit": null,
+      "t_landing_state": 27.315,
+      "pose_at_landing_state": {
+        "x": -0.013,
+        "y": 0.061,
+        "z": 0.791
+      },
+      "t_done": 30.288,
+      "landing_to_done_s": 2.97,
+      "z_at_done": 0.044,
+      "z_after_landing": 0.02
+    }
+  },
+  "fence": {
+    "end_reason": "app landed on its own (landRsn 3, reason none)",
+    "sim_wall_ratio": 0.994,
+    "app_params": {},
+    "crazysim_extra": "",
+    "final": {
+      "state": "DONE",
+      "armErr": 0.0,
+      "fence": "outside x/y"
+    },
+    "active": {
+      "t_start": 7.02,
+      "t_end": 15.47,
+      "duration_s": 8.45,
+      "arm_point": {
+        "x": -0.0,
+        "y": -0.0
+      },
+      "modes": 4,
+      "drift_from_arm_point_m": {
+        "mean": 0.512,
+        "p95": 0.9817,
+        "max": 1.0334,
+        "final": 1.0334
+      },
+      "x_range_m": [
+        -0.0,
+        0.997
+      ],
+      "y_range_m": [
+        -0.271,
+        0.0
+      ],
+      "z_after_1s_m": {
+        "mean": 0.82,
+        "min": 0.807,
+        "max": 0.852
+      },
+      "heading_error_deg": {
+        "at_take_over": 15.9,
+        "person_bearing_at_take_over": -15.9,
+        "yaw_at_take_over": 0.0,
+        "mean_abs_after_5s": 1.06,
+        "max_abs_after_5s": 1.12
+      },
+      "yaw_rate_cmd_dps": {
+        "first": -26.67,
+        "max_abs": 26.67
+      },
+      "turn_toward_person_fraction": 1.0,
+      "max_abs_vx_sent_mps": 0.2,
+      "max_abs_wVx_mps": 0.2,
+      "setpoint_kinds_logged": {
+        "none": 1,
+        "velocity": 421
+      },
+      "posVar_m2": {
+        "min": 1.470686811444466e-06,
+        "max": 1.8396955283606076e-06
+      }
+    },
+    "landing": {
+      "reason": "geofence",
+      "fence_hit": "outside x/y",
+      "t_landing_state": 15.49,
+      "pose_at_landing_state": {
+        "x": 0.999,
+        "y": -0.272,
+        "z": 0.807
+      },
+      "t_done": 18.366,
+      "landing_to_done_s": 2.88,
+      "z_at_done": 0.044,
+      "z_after_landing": 0.02,
+      "fence": {
+        "first_logged_sample_outside": 15.51,
+        "logged_x_at_landing_state": 0.9993,
+        "max_abs_dx_from_arm_point": 1.0602,
+        "max_overshoot_past_fence_m": 0.0602
+      }
+    }
+  },
+  "noabs": {
+    "end_reason": "app never took over (state 1, armErr 22); host landed",
+    "sim_wall_ratio": 0.971,
+    "app_params": {},
+    "crazysim_extra": "--flowdeck",
+    "final": {
+      "state": "IDLE",
+      "armErr": 22.0,
+      "fence": "variance above posVarMax"
+    },
+    "active": null,
+    "posVar_whole_flight": {
+      "min": 99.99993896484375,
+      "max": 100.0
+    }
+  }
+}
