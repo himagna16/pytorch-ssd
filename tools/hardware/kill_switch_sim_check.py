@@ -13,7 +13,7 @@ tools/stm32_follow_app/sim/run_sim_follow_app.sh, runs, and shuts it down:
   deadman   the real CLI, killed with SIGKILL (it cannot send anything); a second connection
             reads supervisor.info 2 s later: the firmware's watchdog must have locked it by itself
   inflight  one process (as a flight script would embed it): hover at 0.6 m with CRTP hover
-            setpoints, KillSwitch on the same link via CflibKillLink.attach(cf), SPACE while the
+            setpoints, KillSwitch on the same link via start_embedded(cf), SPACE while the
             script keeps streaming hover setpoints; logs z, motor.m1 and supervisor.info at 50 Hz
   silence   the same hover, but the kill switch's pings simply stop (it died without a word):
             how long after the last ping the firmware's own watchdog stops the motors
@@ -244,16 +244,7 @@ def check_inflight(uri, sim, trace_csv, mode="key"):
         cf.commander.send_hover_setpoint(0, 0, 0, 0.6)
         time.sleep(0.05)
     state["phase"] = "hover+killswitch"
-    link = K.CflibKillLink.attach(cf, uri)
-    ks = K.KillSwitch(link)
-    ks.arm()
-    stop = threading.Event()
-
-    def pinger():
-        while not stop.is_set():
-            ks.tick()
-            stop.wait(0.02)
-    threading.Thread(target=pinger, daemon=True).start()
+    ks, link, stop = K.start_embedded(cf, uri)       # the same call a hardware flight script would make
     for _ in range(20):
         cf.commander.send_hover_setpoint(0, 0, 0, 0.6)
         time.sleep(0.05)
@@ -271,6 +262,7 @@ def check_inflight(uri, sim, trace_csv, mode="key"):
         cf.commander.send_hover_setpoint(0, 0, 0, 0.6)
         time.sleep(0.05)
     stop.set()
+    pings, stops_sent = ks.pings, ks.stops_sent     # before closing: a closed link counts as lost
     lc.stop()
     cf.commander.send_setpoint = lambda *a, **k: None
     scf.close_link()
@@ -283,7 +275,7 @@ def check_inflight(uri, sim, trace_csv, mode="key"):
         for r in rows:
             f.write(f"{r['t']},{r['phase']},{r['z']},{r['info']},{'' if r['m1'] is None else r['m1']}\n")
     return {
-        "hover_z_before_stop": z_before, "pings_before_stop": ks.pings, "stops_sent": ks.stops_sent,
+        "hover_z_before_stop": z_before, "pings_before_stop": pings, "stops_sent": stops_sent,
         "t_stop": round(t_stop, 3),
         "locked_logged_after_s": round(first_locked["t"] - t_stop, 3) if first_locked else None,
         "motor_m1_zero_after_s": round(m1_zero["t"] - t_stop, 3) if m1_zero else None,

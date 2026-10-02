@@ -262,6 +262,65 @@ class TestRunLoop(unittest.TestCase):
         self.assertEqual(code, 1)
 
 
+class TestEmbedded(unittest.TestCase):
+    def test_start_embedded_with_fake_cf(self):
+        """start_embedded on a stand-in for cflib's Crazyflie: pings run, SPACE stops, link loss stops."""
+        import threading
+        import time as _t
+
+        class Caller:
+            def __init__(self):
+                self.cbs = []
+
+            def add_callback(self, cb):
+                self.cbs.append(cb)
+
+            def call(self, *a):
+                for cb in list(self.cbs):
+                    cb(*a)
+
+        class FakeCf:
+            def __init__(self):
+                self.sent = []
+                self.connection_lost, self.disconnected = Caller(), Caller()
+                cf = self
+
+                class Sup:
+                    def send_emergency_stop_watchdog(self):
+                        cf.sent.append("wd")
+
+                    def send_emergency_stop(self):
+                        cf.sent.append("stop")
+
+                class Plat:
+                    def get_protocol_version(self):
+                        return 12
+
+                class Toc:
+                    def get_element_by_complete_name(self, name):
+                        return None              # no supervisor.info: no log block
+
+                class Log:
+                    toc = Toc()
+
+                self.supervisor, self.platform, self.log = Sup(), Plat(), Log()
+
+        cf = FakeCf()
+        ks, link, halt = K.start_embedded(cf, "radio://test")
+        _t.sleep(0.35)
+        self.assertGreaterEqual(cf.sent.count("wd"), 3)
+        ks.on_key(" ")
+        self.assertEqual(cf.sent.count("stop"), K.STOP_REPEATS)
+        n = cf.sent.count("wd")
+        _t.sleep(0.25)
+        self.assertEqual(cf.sent.count("wd"), n)        # no pings after a stop
+        cf2 = FakeCf()
+        ks2, _, _ = K.start_embedded(cf2)
+        cf2.connection_lost.call("radio://x", "Too many packets lost")
+        self.assertTrue(ks2.stopped and ks2.link_lost)
+        self.assertEqual(threading.active_count() >= 1, True)
+
+
 class TestCli(unittest.TestCase):
     def test_main_with_fake_link(self):
         links = []

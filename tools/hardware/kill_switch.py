@@ -22,9 +22,9 @@ before the next flight.
 ONE RADIO, ONE PROGRAM. A Crazyradio can be opened by one program at a time, and Bitcraze does not
 support two clients on one Crazyflie. So the kill switch either is the only program talking to the
 drone (it can then be the only one: the follow app flies by itself once followapp.enable is set),
-or it runs inside the flight script's process on the same link: create a KillSwitch with
-CflibKillLink.attach(cf) (see the README, "Kill switch"). A second Crazyradio for this tool alone
-has not been tested.
+or it runs inside the flight script's process on the same link: start_embedded(cf) below (see
+tools/stm32_follow_app/app/README.md, "Staged first flights"). A second Crazyradio for this tool
+alone has not been tested.
 
 Other keys do nothing (there is no way to quit without stopping: the watchdog would stop the drone
 anyway). After a stop: SPACE/ENTER sends the stop again, q or Ctrl-C quits.
@@ -283,6 +283,29 @@ class CflibKillLink:
                 self.cf.close_link()   # cflib sends a zero setpoint first: harmless, the motors are stopped
             except Exception:
                 pass
+
+
+def start_embedded(cf, uri=""):
+    """The kill switch inside a flight script that already owns the link (one radio, one program).
+
+        ks, link, halt = start_embedded(scf.cf)
+        ...  # route SPACE / ENTER to ks.on_key(ch) and Ctrl-C to ks.on_interrupt()
+
+    Arms the dead-man at once and pings from a daemon thread until a stop. `halt` stops the pings
+    without sending a stop (only for tests: it is what the kill switch dying looks like)."""
+    link = CflibKillLink.attach(cf, uri)
+    ks = KillSwitch(link)
+    link.on_lost(ks.on_link_lost)
+    halt = threading.Event()
+
+    def pinger():
+        while not halt.is_set() and not ks.stopped:
+            ks.tick()
+            halt.wait(0.02)
+
+    ks.arm()
+    threading.Thread(target=pinger, daemon=True, name="killswitch-watchdog").start()
+    return ks, link, halt
 
 
 # --------------------------------------------------------------------------- terminal

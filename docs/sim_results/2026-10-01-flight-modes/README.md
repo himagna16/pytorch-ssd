@@ -86,12 +86,15 @@ SITL cannot exercise**.
 
 | check | what happened |
 |---|---|
-| `key`: the real CLI in a pseudo-terminal, drone on the ground | banner shown, 22 watchdog pings, SPACE: the CLI showed "supervisor reports LOCKED" 0.1 s later; q exited with code 0; a second connection read `supervisor.info` = 68 (`auto-arm, LOCKED`); console `SUP: Locked, reboot required` |
-| `deadman`: the real CLI killed with SIGKILL after 23 pings | it sent nothing; a second connection 5.8 s later read `supervisor.info` = 68 (LOCKED): the firmware's watchdog locked the drone on its own |
-| `inflight`: hover at 0.63 m, kill switch embedded with `CflibKillLink.attach(cf)`, SPACE while the script **kept streaming hover setpoints** | `motor.m1` 0 after **0.022 s**, LOCKED logged after 0.062 s, z below 5 cm after **0.48 s**; stayed down for the 2 s of hover setpoints that followed |
-| `silence`: the same hover, the pings simply stop (no stop sent) | `motor.m1` 0 **1.008 s** after the last ping (the firmware's 1.0 s timeout), LOCKED logged at 1.068 s, z below 5 cm at 1.47 s, while hover setpoints kept coming |
+| `key`: the real CLI in a pseudo-terminal, drone on the ground | banner shown, 22 watchdog pings, SPACE: the CLI showed "supervisor reports LOCKED" 0.1-0.3 s later (2 runs; the screen redraws every 0.2 s); q exited with code 0; a second connection read `supervisor.info` = 68 (`auto-arm, LOCKED`); console `SUP: Locked, reboot required` |
+| `deadman`: the real CLI killed with SIGKILL after 22 pings | it sent nothing; a second connection 7.2 s later read `supervisor.info` = 68 (LOCKED): the firmware's watchdog locked the drone on its own |
+| `inflight`: hover at 0.63 m, kill switch embedded with `start_embedded(cf)` (`CflibKillLink.attach`), SPACE while the script **kept streaming hover setpoints** | `motor.m1` 0 after **0.020-0.037 s**, LOCKED logged after 0.06-0.09 s, z below 5 cm after **0.46-0.50 s** (4 runs); stayed down for the 2 s of hover setpoints that followed |
+| `silence`: the same hover, the pings simply stop (no stop sent) | `motor.m1` 0 **1.008-1.061 s** after the last ping (the firmware's 1.0 s timeout plus log sampling), LOCKED logged at 1.07-1.10 s, z below 5 cm at 1.47-1.56 s (3 runs), while hover setpoints kept coming |
 
-The trip time of the SIGKILL check is not measured (the second connection reads 5.8 s later); the
+The JSON and the 50 Hz CSVs hold the last run of each check; the ranges above include the earlier
+runs of the same checks made while the harness was being finished (same firmware image).
+
+The trip time of the SIGKILL check is not measured (the second connection reads 7.2 s later); the
 `silence` check is the timing measurement. Link loss on a real radio (cflib's `connection_lost`)
 is covered only by the unit tests (`tools/hardware/test_kill_switch.py`).
 

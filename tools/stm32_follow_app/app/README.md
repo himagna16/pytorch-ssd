@@ -194,8 +194,8 @@ packet still shows up as late (a 1 s hold measured as ~1000 ms).
 The safety modes and the kill switch (2026-10-01) have their own results:
 `docs/sim_results/2026-10-01-flight-modes/README.md` (yawOnly drift 0.045 m mean / 0.123 m max
 under light turbulence, heading error 1.2 deg; fence landing at 1.0 m with 0.06 m overshoot; no
-take-over without an absolute position; kill switch: motors 0 in 22 ms after SPACE, 1.008 s after
-the last watchdog ping when the pings stop).
+take-over without an absolute position; kill switch: motors 0 within 0.04 s after SPACE, and
+1.01-1.06 s after the last watchdog ping when the pings stop).
 
 **Bar note (2026-09-13).** These flights used the GAP8 emulator at the bar of the time,
 `{4216, -998, 3}` (enter p >= 0.70). The team then moved the enter bar to p >= 0.75
@@ -348,10 +348,10 @@ app task and `FOLLOWRX` under load.
 
 **Before M5** something has to run the take-off and the kill switch together: one Crazyradio
 serves one program, and the kill switch has to be the program that owns the link (or live inside
-the one that does). The repo has no hardware flight-host script yet; it should create its
-`Crazyflie`, then `ks = KillSwitch(CflibKillLink.attach(cf)); ks.arm()` and call `ks.tick()` from
-a thread every 20 ms, and route SPACE/ENTER/Ctrl-C to `ks.on_key()` / `ks.on_interrupt()` (that is
-what `tools/hardware/kill_switch_sim_check.py` does in CrazySim). For M6/M7 the host only takes
+the one that does). The repo has no hardware flight-host script yet; it should connect its
+`Crazyflie`, call `ks, link, _ = kill_switch.start_embedded(cf)` (arms the dead-man and pings from a
+thread), and route SPACE/ENTER to `ks.on_key(ch)` and Ctrl-C to `ks.on_interrupt()` (that is what
+`tools/hardware/kill_switch_sim_check.py` does in CrazySim). For M6/M7 the host only takes
 off, writes the parameters, sets `enable`, and watches; the app does the rest. The host must stop
 streaming setpoints once `state` is 2: they are ignored at CRTP priority 2 while the app flies,
 but after the app lands and relaxes the priority, a client still streaming hover setpoints would
