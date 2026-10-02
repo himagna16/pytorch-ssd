@@ -540,7 +540,7 @@ def connect(role, uri, scripted_fn=None, mock_cfg=None):
         if uri.startswith("udp://"):
             hint = "\n  Start the simulated pair first:  bash tools/lighthouse/run_pair_sim.sh"
         raise SessionError(f"could not connect to the {role} at {uri}: {e}{hint}")
-    print(f"   {role:<8} {uri}: connected in {dt:.1f} s")
+    print(f"   {role:<8} {d.uri}: connected in {dt:.1f} s")
     return d
 
 
@@ -562,6 +562,19 @@ def probe_rates(drones, first_period, seconds=PROBE_S, log=print):
         if S.pick_period({period: {r: st["delivery"] for r, st in tried[period].items()}}) == period:
             return period, tried
     return S.POSE_PERIODS_MS[-1], tried
+
+
+FIRST_POSE_TIMEOUT_S = 3.0
+
+
+def wait_for_poses(writer, timeout):
+    """True once `writer` has received at least 5 pose rows (within `timeout` seconds)."""
+    end = time.time() + timeout
+    while time.time() < end:
+        if len(writer.t_cf) >= 5:
+            return True
+        time.sleep(0.05)
+    return len(writer.t_cf) >= 5
 
 
 def static_summary(cols):
@@ -619,7 +632,10 @@ def build_parser():
     g.add_argument("--mock-beacon", choices=("scripted", "sitl"), default="scripted",
                    help="scripted (default): a software beacon that walks the cue schedule; "
                         "sitl: the SITL drone, which never moves (plumbing only; nothing to align)")
-    g.add_argument("--mock-follower", choices=("sitl", "scripted"), default="sitl")
+    g.add_argument("--mock-follower", choices=("sitl", "scripted"), default="sitl",
+                   help="scripted: a software follower at (0, 0, 0.8) facing +x; no Docker needed")
+    g.add_argument("--mock-follower-yaw", type=float, default=0.0,
+                   help="scripted follower's yaw, deg (rehearse the taped-mark case's 30 deg LEFT turn)")
     g.add_argument("--mock-fps", type=float, default=2.0, help="mock frame rate (the real deck sends ~2 fps)")
     g.add_argument("--mock-content-lag", type=float, default=0.15,
                    help="KNOWN injected delay: each mock frame shows the subject this many s earlier")
@@ -768,10 +784,10 @@ def run(a):
             t0 = t0_box.get("t0", epoch)
             rel = (t - t0) if t0 is not None else -1.0
             h = (a.height or 1.75) + a.beacon_above_head
-            return (a.mock_dist, S.scripted_lateral(rel, a.seconds), h, 0.0, 0.0, 0.0)
+            return (a.mock_dist, S.scripted_lateral(rel, a.seconds), h, 0.0, 0.0, 0.0)   # x y z roll pitch yaw
 
         def follower_fn(_t):
-            return (0.0, 0.0, 0.8, 0.0, 0.0, 0.0)
+            return (0.0, 0.0, 0.8, 0.0, 0.0, a.mock_follower_yaw)      # x y z roll pitch yaw
 
         for r in roles:
             uri = getattr(a, f"{r}_uri")
@@ -822,6 +838,18 @@ def run(a):
         for r, d in drones.items():
             writers[r] = PoseWriter(out / S.POSES_CSV[r], status_vars[r])
             d.start_logging(period, status_vars[r], writers[r].on_pose, writers[r].on_status)
+        for attempt in (1, 2):
+            silent = [r for r in drones if not wait_for_poses(writers[r], FIRST_POSE_TIMEOUT_S)]
+            if not silent:
+                break
+            msg = f"no pose packets from the {', '.join(silent)} {FIRST_POSE_TIMEOUT_S:g} s after logging started"
+            meta["warnings"].append(msg + (f" (attempt {attempt})"))
+            print(f"   !! {msg}" + ("; restarting its log blocks" if attempt == 1 else ""))
+            if attempt == 2:
+                raise SessionError(msg + ". Is the drone on and in range? Nothing usable was recorded.")
+            for r in silent:
+                drones[r].stop_logging()
+                drones[r].start_logging(period, status_vars[r], writers[r].on_pose, writers[r].on_status)
         if a.static:
             speak("Hands off the drone.")
             print(f"-- logging the follower for {a.seconds:g} s; do not touch it")
@@ -854,7 +882,7 @@ def run(a):
         meta["cues"] = []
         end_t = t0 + a.seconds
         cue_i, last_print, last_mac = 0, time.time(), time.time()
-        started_logging = time.time()
+        started_logging = time.time()      # every link has already delivered poses (checked above)
         while not stop_evt.is_set():
             now = time.time()
             while cue_i < len(schedule) and now >= t0 + schedule[cue_i][0]:
