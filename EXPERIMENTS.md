@@ -37,6 +37,22 @@ All four releases pass the five gates: confuser and champion, each released both
 
 Evidence: `docs/eval_results/2026-10-01-preserve-qat-alphas/`.
 
+## Oct 1, 2026 — Lighthouse session recorder, rehearsed without hardware (Sai, Claude)
+
+`tools/lighthouse/record_session.py` (both drones' poses + the follower's frames, read-only,
+unattended, spoken sync cues) and `label_session.py` (labels.csv + report.md), branch
+`sai/lighthouse-session-recorder`. Rehearsed against two CrazySim SITL drones plus a
+SCRIPTED beacon (a SITL drone that never flies never moves) and `mock_streamer.py
+--timeline` frames at the real deck's **2 fps**, 0.15 s late, each stamped with the instant
+it shows. **At 2 fps the frame-to-pose clock offset comes back within -35..+16 ms of the
+truth (rms 18 ms, 8 runs of 90 s), not the 25 ms measured at 10-15 fps**; a 40 s run was
+46 ms off. That is inside the README's 70 ms budget (2 deg at 1 m/s, 2 m). Found on the
+way: at 2 fps the two streams' sync onsets disagree by up to a frame period, so the
+alignment search had to widen from +-0.5 s (it silently clipped at the edge, 311 ms off).
+Left/right PASS and 100% x-bin within one on every 90 s run. Nothing here measures the
+radio, the WiFi or real latency. Commands and checklist: `tools/lighthouse/README.md`,
+"Recording a session".
+
 ## Sep 27, 2026 — Round 2: exposure-only augmentation is harmless but useless; Frontnet harm replicates (Sai)
 
 Four more runs, pre-registered (1054838): a new `--photometric-aug exposure` preset (linear-light
