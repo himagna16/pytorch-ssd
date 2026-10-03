@@ -1,0 +1,65 @@
+{
+  "tool": "fov_capture.sh",
+  "schema": 1,
+  "created": "2026-10-03 14:05:21",
+  "convention": "offset_m: lateral offset of the mark, POSITIVE = the drone's LEFT seen from behind it (room/body +y, tools/lighthouse/README.md); bearing_deg = atan2(-offset, distance), NEGATIVE = LEFT (cpx_grab.py / score_real_frames.py)",
+  "distance_m": 1.0,
+  "lens_height_m": 0.8,
+  "distance_note": "forward distance from the lens to the line of marks, measured along the tape line; every mark is on one line perpendicular to it",
+  "object": "bottle",
+  "object_height_m": null,
+  "object_width_m": null,
+  "stand_height_m": null,
+  "drone": "09",
+  "light": "room",
+  "mock": false,
+  "max_bearing_deg": 34.99,
+  "empty_dirs": [
+    "empty_start",
+    "empty_end"
+  ],
+  "positions": [
+    {
+      "index": 1,
+      "offset_m": 0.0,
+      "bearing_deg": 0.0,
+      "dir": "y+0.00"
+    },
+    {
+      "index": 2,
+      "offset_m": 0.25,
+      "bearing_deg": -14.036,
+      "dir": "y+0.25"
+    },
+    {
+      "index": 3,
+      "offset_m": -0.25,
+      "bearing_deg": 14.036,
+      "dir": "y-0.25"
+    },
+    {
+      "index": 4,
+      "offset_m": 0.5,
+      "bearing_deg": -26.565,
+      "dir": "y+0.50"
+    },
+    {
+      "index": 5,
+      "offset_m": -0.5,
+      "bearing_deg": 26.565,
+      "dir": "y-0.50"
+    },
+    {
+      "index": 6,
+      "offset_m": 0.7,
+      "bearing_deg": -34.992,
+      "dir": "y+0.70"
+    },
+    {
+      "index": 7,
+      "offset_m": -0.7,
+      "bearing_deg": 34.992,
+      "dir": "y-0.70"
+    }
+  ]
+}

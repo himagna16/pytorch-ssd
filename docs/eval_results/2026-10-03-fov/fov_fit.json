@@ -1,0 +1,426 @@
+{
+  "session": "/Users/saimaruvada/drone_frames/2026-10-03/fov_capture_140520",
+  "frame_w": 162,
+  "frame_h": 122,
+  "distance_m": 1.0,
+  "positions": [
+    {
+      "dir": "y+0.00",
+      "offset_m": 0.0,
+      "bearing_deg": 0.0,
+      "found": true,
+      "usable": true,
+      "x": 78.861,
+      "quality": 0.394,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)"
+      ],
+      "gain": 1.0,
+      "noise_dn": 1.48,
+      "threshold_dn": 4.12,
+      "changed_frac": 0.1343,
+      "blob_cols": [
+        62,
+        92
+      ],
+      "blob_rows": [
+        77,
+        121
+      ],
+      "blob_area": 671,
+      "width_px": 31,
+      "rows_px": 45,
+      "darker": true,
+      "mass_frac": 0.601,
+      "second_blob_ratio": 0.22,
+      "rows_used": 32,
+      "object_width_px": 7.37,
+      "row_agreement": 0.656,
+      "row_spread_px": 1.206,
+      "contrast_dn": 27.1,
+      "snr": 18.3,
+      "peak_col": 78,
+      "reference": "empty_start",
+      "n_frames": 7,
+      "take": 1,
+      "mean_brightness": 45.6,
+      "residual_px": 2.007
+    },
+    {
+      "dir": "y+0.25",
+      "offset_m": 0.25,
+      "bearing_deg": -14.036,
+      "found": true,
+      "usable": true,
+      "x": 57.552,
+      "quality": 0.514,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)"
+      ],
+      "gain": 1.0,
+      "noise_dn": 2.97,
+      "threshold_dn": 6.59,
+      "changed_frac": 0.1132,
+      "blob_cols": [
+        45,
+        75
+      ],
+      "blob_rows": [
+        64,
+        121
+      ],
+      "blob_area": 725,
+      "width_px": 31,
+      "rows_px": 58,
+      "darker": true,
+      "mass_frac": 0.669,
+      "second_blob_ratio": 0.06,
+      "rows_used": 26,
+      "object_width_px": 8.46,
+      "row_agreement": 0.769,
+      "row_spread_px": 0.523,
+      "contrast_dn": 116.9,
+      "snr": 39.4,
+      "peak_col": 59,
+      "reference": "empty_end",
+      "n_frames": 7,
+      "take": 1,
+      "mean_brightness": 44.9,
+      "residual_px": 0.801
+    },
+    {
+      "dir": "y-0.25",
+      "offset_m": -0.25,
+      "bearing_deg": 14.036,
+      "found": true,
+      "usable": true,
+      "x": 95.11,
+      "quality": 0.565,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)"
+      ],
+      "gain": 1.0,
+      "noise_dn": 1.48,
+      "threshold_dn": 4.94,
+      "changed_frac": 0.1225,
+      "blob_cols": [
+        86,
+        107
+      ],
+      "blob_rows": [
+        77,
+        121
+      ],
+      "blob_area": 558,
+      "width_px": 22,
+      "rows_px": 45,
+      "darker": true,
+      "mass_frac": 0.631,
+      "second_blob_ratio": 0.16,
+      "rows_used": 19,
+      "object_width_px": 7.32,
+      "row_agreement": 0.895,
+      "row_spread_px": 0.484,
+      "contrast_dn": 124.8,
+      "snr": 84.1,
+      "peak_col": 94,
+      "reference": "empty_start",
+      "n_frames": 7,
+      "take": 1,
+      "mean_brightness": 45.5,
+      "residual_px": -1.39
+    },
+    {
+      "dir": "y+0.50",
+      "offset_m": 0.5,
+      "bearing_deg": -26.565,
+      "found": true,
+      "usable": true,
+      "x": 35.079,
+      "quality": 0.411,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)",
+        "9% of the image changed: drone bumped, or a light switched?"
+      ],
+      "gain": 0.9831,
+      "noise_dn": 2.26,
+      "threshold_dn": 6.73,
+      "changed_frac": 0.0909,
+      "blob_cols": [
+        2,
+        41
+      ],
+      "blob_rows": [
+        92,
+        121
+      ],
+      "blob_area": 402,
+      "width_px": 40,
+      "rows_px": 30,
+      "darker": false,
+      "mass_frac": 0.411,
+      "second_blob_ratio": 0.257,
+      "rows_used": 3,
+      "object_width_px": 3.49,
+      "row_agreement": 1.0,
+      "row_spread_px": 0.206,
+      "contrast_dn": 29.3,
+      "snr": 13.0,
+      "peak_col": 35,
+      "reference": "empty_start",
+      "n_frames": 7,
+      "take": 2,
+      "mean_brightness": 46.1,
+      "residual_px": -1.096
+    },
+    {
+      "dir": "y-0.50",
+      "offset_m": -0.5,
+      "bearing_deg": 26.565,
+      "found": true,
+      "usable": false,
+      "x": 121.232,
+      "quality": 0.252,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)",
+        "10% of the image changed: drone bumped, or a light switched?",
+        "a second change elsewhere is 75% as strong: something else moved?",
+        "low quality 0.25 (< 0.35): not used"
+      ],
+      "gain": 0.9928,
+      "noise_dn": 2.38,
+      "threshold_dn": 6.44,
+      "changed_frac": 0.0999,
+      "blob_cols": [
+        114,
+        137
+      ],
+      "blob_rows": [
+        103,
+        121
+      ],
+      "blob_area": 256,
+      "width_px": 24,
+      "rows_px": 19,
+      "darker": true,
+      "mass_frac": 0.328,
+      "second_blob_ratio": 0.747,
+      "rows_used": 13,
+      "object_width_px": 8.2,
+      "row_agreement": 0.769,
+      "row_spread_px": 1.782,
+      "contrast_dn": 45.8,
+      "snr": 19.3,
+      "peak_col": 121,
+      "reference": "empty_start",
+      "n_frames": 7,
+      "take": 2,
+      "mean_brightness": 46.2
+    },
+    {
+      "dir": "y+0.70",
+      "offset_m": 0.7,
+      "bearing_deg": -34.992,
+      "found": true,
+      "usable": false,
+      "x": 9.763,
+      "quality": 0.049,
+      "flags": [
+        "8% of the image changed: drone bumped, or a light switched?",
+        "a wider part (a stand?) reaches the edge; the narrow part is measured",
+        "column-sum peak (33) disagrees with the centre (9.8)",
+        "a second change elsewhere is 54% as strong: something else moved?",
+        "low quality 0.05 (< 0.35): not used"
+      ],
+      "gain": 0.9817,
+      "noise_dn": 2.43,
+      "threshold_dn": 7.91,
+      "changed_frac": 0.0751,
+      "blob_cols": [
+        0,
+        15
+      ],
+      "blob_rows": [
+        28,
+        53
+      ],
+      "blob_area": 179,
+      "width_px": 16,
+      "rows_px": 26,
+      "darker": true,
+      "mass_frac": 0.21,
+      "second_blob_ratio": 0.538,
+      "rows_used": 3,
+      "object_width_px": 6.79,
+      "row_agreement": 0.333,
+      "row_spread_px": 1.476,
+      "contrast_dn": 17.3,
+      "snr": 7.1,
+      "peak_col": 33,
+      "reference": "empty_start",
+      "n_frames": 7,
+      "take": 2,
+      "mean_brightness": 46.4
+    },
+    {
+      "dir": "y-0.70",
+      "offset_m": -0.7,
+      "bearing_deg": 34.992,
+      "found": true,
+      "usable": false,
+      "x": 136.891,
+      "quality": 0.148,
+      "flags": [
+        "cut off by the bottom edge (fine for the horizontal centre)",
+        "10% of the image changed: drone bumped, or a light switched?",
+        "column-sum peak (134) disagrees with the centre (136.9)",
+        "low quality 0.15 (< 0.35): not used"
+      ],
+      "gain": 1.0,
+      "noise_dn": 1.48,
+      "threshold_dn": 4.12,
+      "changed_frac": 0.1025,
+      "blob_cols": [
+        132,
+        157
+      ],
+      "blob_rows": [
+        79,
+        121
+      ],
+      "blob_area": 397,
+      "width_px": 26,
+      "rows_px": 43,
+      "darker": false,
+      "mass_frac": 0.316,
+      "second_blob_ratio": 0.162,
+      "rows_used": 6,
+      "object_width_px": 2.86,
+      "row_agreement": 0.667,
+      "row_spread_px": 1.936,
+      "contrast_dn": 18.1,
+      "snr": 12.2,
+      "peak_col": 134,
+      "reference": "empty_end",
+      "n_frames": 7,
+      "take": 2,
+      "mean_brightness": 47.2
+    }
+  ],
+  "drift": {
+    "gain": 0.988,
+    "changed_frac": 0.0837,
+    "found": true,
+    "area": 213
+  },
+  "n_usable": 4,
+  "status": "ok",
+  "fit_quality": "good",
+  "dropped": null,
+  "fit": {
+    "headline": "yaw",
+    "linear": {
+      "model": "linear",
+      "cx": 76.7207,
+      "f": 80.5615,
+      "se_cx": 1.2515,
+      "se_f": 4.0874,
+      "rss": 10.4417,
+      "rms": 1.6157,
+      "resid": [
+        2.14,
+        0.971,
+        -1.751,
+        -1.361
+      ]
+    },
+    "yaw": {
+      "model": "yaw",
+      "f": 79.3204,
+      "a": 0.0459,
+      "se_f": 3.7054,
+      "se_a": 0.0139,
+      "cx": 76.8537,
+      "rss": 7.8025,
+      "rms": 1.3966,
+      "resid": [
+        2.007,
+        0.801,
+        -1.39,
+        -1.096
+      ],
+      "a_deg": 2.632
+    }
+  },
+  "camera": {
+    "focal_px_per_rad_stream": 79.32,
+    "focal_se": 3.705,
+    "focal_px_per_rad_full324": 158.64,
+    "sim_focal_px_per_rad_full324": 174.23,
+    "mirrored": false,
+    "hfov_full_stream_deg": 91.2,
+    "hfov_full_stream_se": 2.68,
+    "hfov_centre_square_deg": 75.12,
+    "hfov_centre_square_se": 2.59,
+    "hfov_flight_crop_deg": 75.12,
+    "flight_crop_assumption": "the 162x122 stream is the full 324x244 sensor frame scaled by 0.5 (HM01B0 QQVGA = 2x down, same field of view); NOT verified",
+    "hfov_flight_crop_if_stream_were_unscaled_crop_deg": 113.94,
+    "vfov_stream_deg": 75.12,
+    "tape_line_column": 76.85,
+    "image_centre_column": 80.5,
+    "tape_line_offset_px": -3.65,
+    "camera_heading_deg": 2.63,
+    "heading_meaning": "bearing the image centre looks at; NEGATIVE = the camera points LEFT of the tape line",
+    "tape_line_network_x": -0.06,
+    "tape_line_network_xbin": 4,
+    "span_left_edge_deg": -42.97,
+    "span_right_edge_deg": 48.23,
+    "vs_70": {
+      "assumed_crop_hfov_deg": 70.0,
+      "measured_crop_hfov_deg": 75.12,
+      "difference_deg": 5.12,
+      "where_70_is_assumed": [
+        "tools/real_frames/score_real_frames.py: --crop-hfov default 70.0 (a literal in main(), no named constant)",
+        "tools/lighthouse/pose_to_label.py: CameraSpec.crop_hfov_deg = 70.0 and CameraSpec.crop_vfov_deg = 70.0 (its --crop-hfov also defaults to 70.0)",
+        "tools/crazysim_macos/camera_model.py: FOCAL_PX_PER_RAD = 122 / tan(35 deg) = 174.23 px/rad at 324 x 244 (the same 70 deg crop)"
+      ],
+      "bearing_to_xbin": [
+        {
+          "bearing_deg": 5,
+          "xbin_at_70": 5,
+          "xbin_measured": 5
+        },
+        {
+          "bearing_deg": 10,
+          "xbin_at_70": 5,
+          "xbin_measured": 5
+        },
+        {
+          "bearing_deg": 14,
+          "xbin_at_70": 6,
+          "xbin_measured": 5
+        },
+        {
+          "bearing_deg": 16,
+          "xbin_at_70": 6,
+          "xbin_measured": 6
+        },
+        {
+          "bearing_deg": 20,
+          "xbin_at_70": 6,
+          "xbin_measured": 6
+        },
+        {
+          "bearing_deg": 25,
+          "xbin_at_70": 7,
+          "xbin_measured": 7
+        },
+        {
+          "bearing_deg": 30,
+          "xbin_at_70": 8,
+          "xbin_measured": 7
+        }
+      ]
+    }
+  }
+}
