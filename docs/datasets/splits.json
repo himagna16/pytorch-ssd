@@ -1,0 +1,17 @@
+{
+  "status": "PROPOSED - needs Sai's sign-off. Rules: docs/datasets/real_test_v1.md section 2.",
+  "version": 1,
+  "persons": {
+    "p01": {
+      "pool": "train_dev",
+      "note": "Sai. Train/dev only, never test: every real-frame analysis so far has looked at his frames."
+    }
+  },
+  "train_dev_sessions": {
+    "p01": {
+      "2026-09-22": "dev",
+      "2026-09-24": "dev"
+    }
+  },
+  "runs": {}
+}
