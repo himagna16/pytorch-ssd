@@ -264,12 +264,25 @@ class Telemetry:
                   ("followapp.armErr", "uint8_t"), ("followapp.landRsn", "uint8_t"), ("followapp.lastRx", "uint8_t"),
                   ("followapp.riseMs", "float")],
     }
+    # follow-app safety modes (dryRun / yawOnly / geofence); added only when the firmware has them,
+    # so the emulator still runs against an older follow-app image
+    OPTIONAL_BLOCKS = {
+        "fapp3": [("followapp.wYaw", "float"), ("followapp.wVx", "float"), ("followapp.armX", "float"),
+                  ("followapp.armY", "float"), ("followapp.posVar", "float"), ("followapp.fence", "uint8_t"),
+                  ("followapp.spKind", "uint8_t")],
+        "fapp4": [("followapp.nSp", "uint32_t"), ("followapp.modes", "uint8_t"), ("followapp.fenceHit", "uint8_t")],
+    }
     SHORT = {"stateEstimate.x": "px", "stateEstimate.y": "py", "stateEstimate.z": "pz", "stabilizer.yaw": "yaw"}
 
     def __init__(self, cf, t0, period_ms=20):
         self.lock, self.v, self.rows, self.t0 = threading.Lock(), {}, [], t0
         self.configs = []
-        for name, variables in self.BLOCKS.items():
+        blocks = dict(self.BLOCKS)
+        for name, variables in self.OPTIONAL_BLOCKS.items():
+            if all(cf.log.toc.get_element_by_complete_name(v) is not None for v, _ in variables):
+                blocks[name] = variables
+        self.has_safety_logs = "fapp3" in blocks
+        for name, variables in blocks.items():
             lc = LogConfig_(name, period_in_ms=period_ms)
             for var, typ in variables:
                 lc.add_variable(var, typ)
@@ -520,6 +533,9 @@ def main():
     ap.add_argument("--enable-after", type=float, default=0.0,
                     help="host hovers until this many s after the first packet before it sets followapp.enable")
     ap.add_argument("--no-fly", action="store_true", help="stream packets and log, never take off or enable the app")
+    ap.add_argument("--app-param", action="append", default=[], metavar="NAME=VALUE",
+                    help="write followapp.NAME = VALUE before take-off (repeatable), e.g. yawOnly=1, fenceX=0.5; "
+                         "the safety-mode params are latched when the app arms")
     ap.add_argument("--selftest", action="store_true", help="check the decoder port against follow_decode.c and exit")
     ap.add_argument("--out", type=Path, default=Path("follow_app_run"))
     ap.add_argument("--unstable-root", type=Path, default=DRONE_ROOT / "pytorch_ssd_unstable")
@@ -575,6 +591,12 @@ def main():
                 cf.commander.send_hover_setpoint(0.0, 0.0, 0.0, z)
 
             setp("enable", 0)
+            for kv in a.app_param:
+                name, _, value = kv.partition("=")
+                if not name or not value:
+                    raise SystemExit(f"--app-param wants NAME=VALUE, got {kv!r}")
+                setp(name, value)
+                events.setdefault("app_params", {})[name] = value
             if a.yaw_sign is not None:
                 setp("yawSign", a.yaw_sign)
             if a.arm_fresh is not None:
@@ -729,8 +751,9 @@ def write_outputs(a, t0, events, end_reason, faults, tel, link, gap8, rx, perc=N
         "app_mode_fraction_while_active": mode_frac,
         "app_max_abs_yaw_rate_dps": round(max((abs(r.get("yawRate") or 0.0) for r in act), default=0.0), 2),
         "app_max_abs_vx_mps": round(max((abs(r.get("vx") or 0.0) for r in act), default=0.0), 3),
-        "app_final": {k: last.get(k) for k in ("state", "mode", "reason", "rxApp", "rxRej", "rxStale", "landRsn",
-                                                "armErr")},
+        "app_final": dict({k: last.get(k) for k in ("state", "mode", "reason", "rxApp", "rxRej", "rxStale",
+                                                     "landRsn", "armErr")},
+                          **{k: last[k] for k in ("modes", "fence", "fenceHit", "nSp", "armX", "armY") if k in last}),
         "packets": {"built": len(pk), "delivered": sum(1 for r in pk if r.get("t_deliver") is not None),
                     "dropped_by_fault": sum(1 for r in pk if r.get("link") == "dropped"),
                     "held_by_fault": sum(1 for r in pk if r.get("link") in ("stall", "delay", "queued")),

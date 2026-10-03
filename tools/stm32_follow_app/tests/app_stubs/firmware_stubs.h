@@ -1,5 +1,5 @@
 /* Host stubs of the crazyflie-firmware APIs follow_app.c uses (tests/app_host_test.c only).
- * Every stub header below includes this file. Behavior modeled on src/modules/src/commander.c:
+ * Every stub header below includes this file (estimator.h too). Behavior modeled on src/modules/src/commander.c:
  * commanderSetSetpoint accepts priority >= the current one; commanderRelaxPriority sets LOWEST. */
 #ifndef FIRMWARE_STUBS_H
 #define FIRMWARE_STUBS_H
@@ -47,7 +47,22 @@ void commanderRelaxPriority(void);
 uint64_t usecTimestamp(void);
 typedef uint16_t logVarId_t;
 logVarId_t logGetVarId(const char *group, const char *name);
+static inline bool logVarIdIsValid(logVarId_t varId) { return varId != 0xffffu; } /* as in log.h */
 float logGetFloat(logVarId_t id);
+
+/* estimator.h (crazyflie-firmware 2026.08 and the SITL firmware have the same names; the Kalman
+ * entry exists only with CONFIG_ESTIMATOR_KALMAN_ENABLE, which is the Kconfig default and is set
+ * by CrazySim's SITL CMake) */
+#ifndef CONFIG_ESTIMATOR_KALMAN_ENABLE
+#define CONFIG_ESTIMATOR_KALMAN_ENABLE 1
+#endif
+typedef enum {
+  StateEstimatorTypeAutoSelect = 0,
+  StateEstimatorTypeComplementary,
+  StateEstimatorTypeKalman,
+  StateEstimatorType_COUNT
+} StateEstimatorType;
+StateEstimatorType stateEstimatorGetType(void);
 #define PARAM_GROUP_START(g)
 #define PARAM_GROUP_STOP(g)
 #define PARAM_ADD(t, n, p)
