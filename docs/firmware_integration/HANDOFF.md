@@ -17,6 +17,24 @@ thresholds" on the branch. The bundle head is now `fc42eb9` (`ff876bd` = the bar
 commit the images were built from, plus one docs-only commit `fc42eb9` on top that records that
 the host simulator has already moved to 0.75 / 5467; no source or image change).
 
+**2026-10-01 update: new branch `sai/dark-guard-exposure` (head `38daf4c`, 6 commits on top of
+`fc42eb9`; local only, never pushed; also in the bundle).** Not flashed, not run on silicon.
+- **Dark-frame guard, default ON.** On 2026-09-24 near-black camera frames were scored at
+  about 0.84 and the follower locked on them as a person
+  (`docs/eval_results/2026-09-24-grid-capture/README.md`). The new branch rejects a camera
+  frame whose 128x128 network input has mean < `APP_MIN_FRAME_MEAN` (default 12 on the 0-255
+  network-input scale, **not yet tuned on this path**): no inference, and the existing no-target
+  path (state reset + no-target packet, the last good frame unchanged), so the unchanged STM32
+  rules hover and then land, and tracking needs 3 fresh frames afterwards. New console fields
+  `mean= sat= max= nmax= dark=` (section 2 item 16, section 5 step 5.6).
+- **Exposure readback** (diagnostic) and a **fixed-exposure build option** (`APP_FIXED_EXPOSURE=1`,
+  default off). Section 2 item 16, section 5 step 5.7.
+- **The old bench check "hold the camera covered -> hover/land" (section 5 step 6) is INVALID on
+  the `fc42eb9` / `ff876bd` images:** they would lock on the dark noise, not hover. Run the
+  covered-lens check only on a `sai/dark-guard-exposure` image (step 5.6).
+- New images and hashes: section 4, "Build of `sai/dark-guard-exposure`". Host checks: the guard's
+  unit test and `safety_sim/safety_sim_dark_guard.py` (results in section 4).
+
 ## 1. What the firmware does (end-to-end map)
 
 1. **Build.** The top-level `Makefile` (GAP SDK `pmsis_rules.mk`, `PMSIS_OS=freertos`,
@@ -43,6 +61,9 @@ the host simulator has already moved to 0.75 / 5467; no source or image change).
      1 channel. Each output pixel is the rounded mean of the 2x2 camera block starting at
      the old nearest-neighbor source pixel (risk 8). Written to the start of the L2 arena
      (the network's input position with `initial_dir=1`, the same as the GVSOC validation main).
+   - **`sai/dark-guard-exposure` only:** `frame_stats_compute()` over those 16,384 bytes (mean,
+     pixels at 255, max value and its count). If the mean is below `APP_MIN_FRAME_MEAN` (12) the
+     frame stops here: no inference, state reset, no-target packet (section 2 item 16).
    - `net_runner_run` -> `network_run(arena, arena_bytes, out, 0, 1)`: opens the cluster,
      runs 9 layers on `NUM_CORES` cores, copies 56 bytes to `out`, closes the cluster.
    - `follow_output.c` -> `follow_decode()` (team decoder, verbatim) with thresholds
@@ -55,9 +76,12 @@ the host simulator has already moved to 0.75 / 5467; no source or image change).
    eps_out = 2.00982e-4. The contract is `pytorch_ssd/docs/firmware_contract.md`.
 5. **To the Crazyflie.**
    - CPX console (`PFOLLOW:` lines in the cfclient Console tab): startup lines, errors,
-     and with `APP_DEBUG=1` one summary line every 10 frames.
+     and with `APP_DEBUG=1` one summary line every 10 frames (`sai/dark-guard-exposure`: plus
+     an `img` line with `mean= sat= max= nmax= dark=`, and an `exposure` line at frame 10 and
+     every 150 frames).
    - CPX app packet v6 (binary, 28 B, GAP8 -> STM32, `CPX_F_APP`), sent every processed frame
-     (plus a no-target packet on every capture timeout or pipeline failure) when built with
+     (plus a no-target packet on every capture timeout or pipeline failure, and on
+     `sai/dark-guard-exposure` on every dark frame) when built with
      `APP_ENABLE_CPX_APP_PACKET_TX=1`. The format and the STM32 safety rules are in section 3.
 
 ## 2. What the branch changes (commits on `champion-core8-integration`)
@@ -176,6 +200,61 @@ the host simulator has already moved to 0.75 / 5467; no source or image change).
     `k_bench_expected[]` is byte-identical (it is the network's output, not the decoder's).
     Decided from `docs/eval_results/2026-09-13-champion-threshold/README.md` (simulation only, one
     pet scene, 4 repeats, no hardware run; the exit bar was not swept).
+
+16. **Branch `sai/dark-guard-exposure` (2026-10-01, on top of `fc42eb9`; commits `4797975` guard,
+    `b48b50a` exposure readback, `aaf3291` fixed-exposure option, `873a0f7` docs, `2ef873d` host
+    test only, `38daf4c` comments only).** In-repo text:
+    `docs/champion_integration.md`, "Dark-frame guard and camera exposure".
+    (a) **Dark-frame guard (default ON).** `pipeline_process_frame()` computes, right after
+    `preprocess.c`, the sum of the 16,384-byte network input, the pixels at 255, the max value and
+    how many pixels hold it (`src/frame_guard.c`, pure C). If `sum < APP_MIN_FRAME_MEAN * 16384`
+    (mean below the floor, exact) it calls `follow_output_reset()` and returns
+    `PIPELINE_FRAME_DARK` without running the network. `app_main.c` counts the frame (`dark=`) and
+    calls the existing `handle_perception_gap()`: the same no-target packet as a capture timeout
+    (tracking byte 0, `x_bin`/`size_bucket` 0xFF, `vis_raw` INT32_MIN), age still measured from
+    the last good frame, which does not move. So the STM32 rules apply unchanged: hover at once on
+    tracking bit 0 clear (rule 3), stale hover 0.5 s and land 3.0 s after the last good frame
+    (rules 2 and 1), and 3 fresh confirming frames afterwards (GAP8 reset on every dark frame, plus
+    the 0.4 s stale-gap check; STM32 rule 4 after a stale hover). `APP_MIN_FRAME_MEAN` is a
+    Makefile variable (0..255, default 12, 0 disables the guard for bench tuning only).
+    **Why 12, and why it is not final:** the near-black streamer frames of 2026-09-24 had per-frame
+    means of 2.4-11.8 (the README's 2.4-10.3 is run `215739` alone) and the dimmest usable grid
+    38-41, so 12 sits at the top of the near-black range. Those are **WiFi streamer frames (162x122, pixel values 0-191)**, not this flight
+    path (324x244 -> 244x244 crop -> 2x2 box -> 128x128, 0-255); the relation between the two
+    scales is unmeasured. Recomputed on the frames stored locally (centre square crop, streamer
+    scale): 12 flags 163 of the 164 near-black frames of runs `204144` and `215739`; the miss
+    (13.0) sits between dark frames, so it cannot make 3 consecutive confirming frames; the
+    brightest frames of `215739` are 11.6-11.8, a thin margin; the dimmest usable frames (`204502`)
+    are 41.6 or more. If the flight path's levels are about 4/3 of the streamer's (0-191 -> 0-255),
+    the near-black frames would reach about 17 and the floor would need to rise (about 20 leaves
+    margin on both sides). **Tune it on the bench (step 5.6) before relying on it.**
+    (b) **Console.** After the summary line: `PFOLLOW: img frame=.. mean=.. sat=.. max=.. nmax=..
+    dark=.. dk=0|1 floor=..` (a separate line because the summary already uses about 170 of the
+    191 characters `app_log` formats). Dark frames print both lines every 10 frames with `trk=0
+    xb=-1 sb=-1 vis=-2147483648 infer=0.000ms` and `age=` growing. `hz=` now counts network-processed
+    plus dark frames. `pre=` now includes the statistics pass.
+    (c) **Exposure readback (diagnostic, `APP_DEBUG=1`, camera mode).** `camera_if_dump_exposure()`
+    reads `AE_CTRL` 0x2100, `INTEGRATION_H/L` 0x0202/0x0203, `ANALOG_GAIN` 0x0205 and
+    `DIGITAL_GAIN_H/L` 0x020E/0x020F with `pi_camera_reg_get` (the call the orientation check
+    already uses) between captures, and logs `PFOLLOW: exposure frame=.. ae=.. intg=.. again=0x..
+    dgain=0x.... fixed=0|1 floor=..` at camera frame 10 and every 150 frames
+    (`APP_EXPOSURE_DUMP_FIRST_FRAME`, `APP_EXPOSURE_DUMP_EVERY_N_FRAMES`).
+    (d) **Fixed exposure (default OFF).** `APP_FIXED_EXPOSURE=1` with `APP_EXPOSURE_INTEGRATION`
+    (lines, 2..532, default 160), `APP_EXPOSURE_AGAIN` (0x00/0x10/0x20/0x30/0x40 = 1x..16x, default
+    0x10) and `APP_EXPOSURE_DGAIN` (<= 0x03FF, default 0x0100 = 1x). After `AEG_INIT`,
+    `camera_if_init()` waits 50 ms in standby, writes integration, analog gain, digital gain,
+    `AE_CTRL` = 0, then `GRP_PARAM_HOLD` 0x0104 = 0x01 (NanoCockpit's `himax_configure()` sequence;
+    the SDK init table also ends its exposure block with 0x0104 = 0x01), reads them back and logs
+    `PFOLLOW: fixed exposure set: ...` (` MISMATCH` appended if the readback differs). The defaults
+    are placeholders: about 10 ms at 2x (NanoCockpit's streamer setting) only if a sensor line is
+    about 62.7 us (376 pixel clocks at ~6 MHz, inferred from the ~30 ms QVGA capture, not measured).
+    (e) **Register addresses verified** against two local sources that agree: the GAP SDK driver
+    linked into this firmware (pinned image, `/gap_sdk/rtos/pmsis/bsp/camera/himax/himax.h` lines
+    34-40 and 74; the link map shows that driver's `himax.o`) and IDSIA NanoCockpit
+    (`aideck-gap8-examples` @ `5fd95ca`, `examples/other/nanocockpit/lib/camera/himax_defs.h` lines
+    40, 44-48, 98). **Not verified:** what 0x0104 = 0x01 does inside the sensor (commit at the next
+    frame vs. hold; no datasheet here), and whether 0x0202-0x020F report the auto-exposure's live
+    values while AE is on.
 
 ## 3. Message format sent to the Crazyflie (CPX app packet v6)
 
@@ -311,9 +390,12 @@ Every control step (`t_fresh = NONE`, including before the first packet since bo
 
 The GAP8 sends a **no-target** packet (`tracking = 0`, `x_bin = size_bucket = 0xFF`,
 `vis_raw = INT32_MIN`) on every camera capture timeout (0.5 s) and every pipeline
-failure. It also resets its visibility state, so tracking must be re-confirmed
+failure, and (`sai/dark-guard-exposure`) on every frame rejected by the dark-frame guard. It
+also resets its visibility state, so tracking must be re-confirmed
 (3 frames at p >= 0.75) after any gap. A no-target packet's age still refers to the last
-good frame, so `t_fresh` does not move through a gap.
+good frame, so `t_fresh` does not move through a gap. During a dark stream these packets
+arrive about every 33 ms (estimated: a ~30 ms capture plus preprocess, no inference), like the pipeline-failure
+stream above, and must not refresh `t_fresh`. The STM32 needs no new rule for dark frames.
 
 The age is measured on the GAP8 from capture completion to the packet's queue attempt
 (fix round 4: stamped immediately before it, no longer at decode). It includes preprocess +
@@ -581,6 +663,88 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
 
 
 
+**Build of `sai/dark-guard-exposure` (2026-10-01).** Same command as the runbook's script
+(`aideck-gap8-examples/tools/build/make-example ../crazyflie_ssd clean build image [vars]`, in the
+pinned image `bitcraze/aideck@sha256:038197df...`, which is the local `:latest`; the in-container
+`pip3 install numpy==1.22.3` ran), but from a `git archive` snapshot of the commit mounted at
+`/workspace/crazyflie_ssd`, with the examples clone (`5fd95ca`) mounted read-only at
+`/workspace/aideck-gap8-examples`, so the in-container paths equal the script's. **Control:** the
+same method on `fc42eb9` reproduced `261e20d8...` byte for byte. Images were built from `aaf3291`
+(the last firmware-code commit); `873a0f7` (docs), `2ef873d` (host test, not in the firmware
+build) and `38daf4c` (comments) each rebuilt the flight image to the same hash.
+Nothing was flashed.
+
+| image | make flags | L2 static | FC_tcdm | flash image | sha256 |
+|---|---|---|---|---|---|
+| flight, guard on (floor 12) | (defaults) | 97,536 B (18.60%) | 6,600 B | 340,896 B | `ce9fa7b956404ba67e37454df71dc6cd76417e6207f5e92b21122cd234e7f296` (four clean builds: `aaf3291`, `873a0f7`, `2ef873d`, `38daf4c`) |
+| bench | `APP_BENCH_FIXED_INPUT=1` | 89,920 B (17.15%) | 6,600 B | 340,896 B | `87d7d7acd0a50d6f078026f5839c7c1d8ef862e8da4587cfb03861f6844401a5` |
+| flight, fixed exposure (placeholder 160 / 0x10 / 0x0100) | `APP_FIXED_EXPOSURE=1` | 97,928 B (18.68%) | 6,600 B | 340,896 B | `43c442bd52a1d7164ae2233bad69615c7ab32cb53e07acf9342bf7f645281628` |
+
+Copies (outside any build tree): `aideck-gap8-examples/_prebuilt_dark_guard/`
+(`dark_guard_flight.img`, `dark_guard_bench.img`, `dark_guard_fixedexp_placeholder.img`,
+`SHA256SUMS`, build logs). The flash command is the runbook's, with the image path changed.
+
+**Why the flight hash changed, and that only the intended code changed** (compared with the
+`fc42eb9` build of the same method):
+- Flash image: same size; all 72,647 differing bytes lie in the first 0x16C40 bytes (the
+  application); the readfs weight files sit at the same offsets and are byte-identical.
+- Objects: 124 of the 129 object files are byte-identical (all of `generated/`, `lib/cpx`, the SDK,
+  BSP and FreeRTOS objects, and the other `src/` files); `src/frame_guard.o` is new;
+  `app_main.o`, `pipeline.o` and `camera_if.o` changed as intended (`camera_if_init` is
+  byte-identical; only the readback functions are new); `follow_output.o` and `transport_if.o`
+  differ only in DWARF debug info (every loadable section byte-identical; they include the changed
+  `app_types.h`).
+- Linked ELF: text 84,308 -> 85,184 B, data 3,696 B unchanged, bss 15,232 -> 15,256 B (the new
+  counter and the larger `pipeline_result_t`). New symbols `frame_stats_compute`,
+  `frame_stats_mean_x10`, `frame_guard_is_dark`, `camera_if_dump_exposure`,
+  `camera_if_read_exposure`, `g_dark_frame_counter`, and `log_summary` (no longer inlined); changed
+  sizes `app_main_task`, `handle_perception_gap`, `pipeline_process_frame`, `g_last_result`; and
+  `net_runner_init` +6 B although `net_runner.o` is byte-identical: linker relaxation (the same 115
+  instructions; three 2-byte `c.jal` calls to `app_log_debug` became 4-byte `jal` as addresses moved).
+- Bench: 55 bytes differ from `34c4b3ba...` (0x3DCE-0x4205); the golden vector `k_bench_expected[]`
+  is present unchanged and bench L2 static is unchanged. The bench never runs the camera path, so
+  the guard is not active in bench mode.
+- Fixed-exposure ELF: `camera_if_init` writes 0x0202, 0x0203, 0x0205, 0x020E, 0x020F, 0x2100 and
+  0x0104 with 0xA0 (160) and 0x10; in the default ELF it touches only 0x0101 (orientation), as before.
+
+**Host checks for `sai/dark-guard-exposure`.**
+- `tools/frame_guard_host_test.c` (firmware repo; command in `docs/champion_integration.md`):
+  **80,287 checks, 0 failures** at floors 12 (default), 0 (guard off: checks fall back to 12), 7,
+  20 and 110, and under `-fsanitize=undefined` (AddressSanitizer could not run
+  in this sandbox: even an empty program hangs under it). It covers all-black, noisy dark (mean
+  6.0, max 44), normal (119.5), all 255, a 1,024-pixel saturated window, the exact floor boundary
+  (mean 12.0 not dark, 11.99 dark), 300 random buffers against a brute-force reference at every
+  floor 0-255, and the guard with the real `follow_decode.c` in `pipeline.c`'s call order: a dark
+  burst never confirms with the guard and confirms on its 3rd frame without it (the `fc42eb9`
+  behavior); one dark frame drops a lock and the next normal frames need 3 to re-lock. The bench
+  input `hex/inputs.hex` has mean 133.7 (not dark).
+- `safety_sim/safety_sim_dark_guard.py` (imports `safety_sim_review6.py` unchanged; output
+  `safety_sim/dark_guard_check.txt`; 200 randomized runs per timeline, 500 Monte Carlo runs).
+  `fix6` = the `fc42eb9` GAP8 with dark frames scored at p 0.84; `fix6g` = with the guard. P4 =
+  steering on a dark frame; P5 = steering without 3 consecutive fresh p >= 0.75 non-dark frames
+  since the last dark frame; P1 = land deadline missed (a dark frame is not a valid frame). Times
+  are from the last valid frame; "land" is from the last valid frame whose packet was delivered.
+  Run (about 30 s): build the packet shim from the firmware branch's header, then the sim:
+  `cc -shared -fPIC -O2 -I<crazyflie-ssd>/inc -I<crazyflie-ssd> -o docs/firmware_integration/safety_sim/libfp.so tools/stm32_follow_app/tests/fp_shim.c`
+  and `cd docs/firmware_integration/safety_sim && python3 safety_sim_dark_guard.py 200 500`
+  (`libfp.so` is a build product; do not commit it). The unchanged review6 crosschecks
+  (`python3 safety_sim_review6.py checks`) still pass with this shim: 300,000 + 300,000 cases,
+  0 failures.
+
+  | timeline | fix6 + v6 STM32 | guard + v4 STM32 (no rule 4) | guard + v6 STM32 |
+  |---|---|---|---|
+  | lens covered 10 s (also with p 0.95 on dark frames) | never lands (200/200); steers on dark frames: P4, P5, P1 | stale hover 0.502 s, land 3.002 s (200/200); 0 violations | stale hover 0.502 s, land 2.992-3.002 s (200/200); 0 violations |
+  | dark 0.3 s / single dark frame | steers on dark frames: P4, P5 | 200/200 re-lock only after 3 fresh frames; 0 violations | same; 0 violations |
+  | dark 1.0 s | P4, P5 | stale hover 0.502 s; resumes 200/200 after 3 fresh frames; 0 | same (rule 4 + GAP8); 0 |
+  | dark 2.9 s | P4, P5 | lands in 20/200 runs (3.002 s; the first new frame arrives after the deadline), others resume after 3 fresh frames; 0 | lands in 36/200; 0 |
+  | dark 3.5 s | never lands: P1, P4, P5 | land 3.002 s (200/200); 0 | land 2.992-3.002 s (200/200); 0 |
+  | every 3rd / 4th frame dark for 10 s | P4, P5 | never steers on a dark frame; every re-lock after 3 fresh frames; 0 | same; 0 |
+  | Monte Carlo (review6 mix + dark bursts + flicker), 500 runs | P1, P2, P4, P5; lands up to 16.1 s after the last valid frame | 0 violations; land 2.982-3.011 s | 0 violations; land 2.982-3.008 s |
+
+  Model limits: the dark-frame period (capture 30 ms + `PRE` 3 ms) and the network's answer on
+  dark frames (0.84) are assumptions from 2026-09-24, not measurements of this path; the sim
+  checks the decision logic and timing, not the floor value.
+
 ## 5. Flash and bench test (motors OFF, props off)
 
 1. Props off, Crazyflie on the bench, AI-deck mounted, battery or USB power. Confirm
@@ -652,6 +816,58 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
      0 when you leave. Near/far: `sb` rises as you approach.
    - **Measure (live):** `cap`, `pre`, `infer`, `total`, `hz` (processed frames/s between
      summary lines), `drop`, `camerr` over 5 min or more. Expected Hz about 1/(cap + total).
+5.6. **Dark-frame guard: bench test and floor tuning** (`sai/dark-guard-exposure` flight image,
+   `ce9fa7b9...`, default floor 12; props OFF, motors off). On the `fc42eb9` / `ff876bd` images a
+   covered lens is expected to LOCK on the noise (2026-09-24); do not use them for this test.
+   Console: `cpx_console.py radio://... 120` (or cfclient). Write every reading down.
+   1. **Normal scene.** Boot with the lens uncovered, room lights on, the drone still. Expect
+      `PFOLLOW: exposure frame=10 ae=1 intg=.. again=0x.. dgain=0x.... fixed=0 floor=12` and
+      `img ... dark=0 dk=0`. Record `mean=` from 6 or more `img` lines, and the exposure line.
+   2. **Power-up spread.** Unplug and replug the battery 5 times without touching the drone or
+      the scene. Each time record the first `exposure` line and 3 `mean=` values. This puts the
+      power-up exposure randomness of 2026-09-24 onto the flight path's own scale. If a power-up
+      comes out near-black on its own (`dk=1`, `dark=` rising with the lens uncovered), that is the
+      2026-09-24 hazard being caught; note its `mean=` and exposure line.
+   3. **Cover the lens** completely (opaque cap or tape, not a hand shadow) for 10 s or more.
+      Expect within about 1 s: `dk=1`, `dark=` rising every line, `trk=0 xb=-1 sb=-1
+      vis=-2147483648 infer=0.000ms`, and `age=` climbing past 500 and 3000 ms to 5100 (saturated).
+      **`trk=1` must never appear.** Record the covered `mean=` (lowest and highest), `max=`, `nmax=`.
+      With `APP_ENABLE_CPX_APP_PACKET_TX=1` and the STM32 handler (props off): hover at once
+      (tracking bit 0 clear), stale hover once the last good frame is 0.5 s old, land (latched) at
+      3.0 s; never steer.
+   4. **Uncover** with a person standing centred at about 2 m: `dk=0` again; `trk` stays 0 for at
+      least 3 processed frames (look for `rcf=` +1 after more than 0.4 s of darkness), then 1.
+   5. **Dim scene.** Lower the light to the dimmest level you intend to fly in (for example one
+      lamp; the usable 2026-09-24 grid was taken at streamer brightness 38-41), person at 2 m.
+      Record `mean=`. It must stay above the floor (`dark=` does not rise) and `trk` should reach 1.
+   6. **Choose the floor.** Let `D` = the highest covered or near-black `mean=` (steps 2-3) and
+      `L` = the lowest usable dim-scene `mean=` (step 5). Keep 12 only if `D` stays at or below
+      about 8 and `L` at or above about 25; otherwise pick a value well inside (`D`, `L`), at least
+      3 levels above `D`. Rebuild with `APP_MIN_FRAME_MEAN=<value>` and repeat step 3. On the
+      streamer's scale the stored near-black frames reached 13.0 (section 2 item 16); if the flight
+      path reads about 4/3 of the streamer, 12 is too low. Report `D`, `L` and the chosen value to
+      Sai for `DECISIONS.md`.
+5.7. **Fixed exposure A/B** (props OFF). A = the default guard image (auto-exposure, set once at
+   power-up); B = `APP_FIXED_EXPOSURE=1`.
+   1. With A, in a fixed scene with a person at 2 m (centre, then left, then right), do 5
+      power-ups. Each time record the `exposure` line, `mean=`, and `vis`/`trk` per position.
+   2. Take `intg`, `again`, `dgain` from the A power-up whose detections were best (and whose
+      `mean=` is mid-range, not near the floor and with `sat=` near 0). If the readback is the same
+      on every power-up although `mean=` differs, the registers do not show the auto-exposure's
+      choice: say so, and use the prebuilt placeholder B image instead.
+   3. Build B with those values: `make clean build image APP_FIXED_EXPOSURE=1
+      APP_EXPOSURE_INTEGRATION=<intg, decimal> APP_EXPOSURE_AGAIN=<again> APP_EXPOSURE_DGAIN=<dgain>`
+      (section 4 build command). A placeholder B image (160 / 0x10 / 0x0100) is in section 4.
+   4. Flash B and boot. Expect `PFOLLOW: fixed exposure set: ae=0 intg=<intg> again=.. dgain=..
+      (requested ae=0 ...)` with **no `MISMATCH`**, and `exposure frame=10 ae=0` with the same
+      values. A `MISMATCH`, or `ae=1` in later `exposure` lines, means the sequence did not hold:
+      stop and report the lines.
+   5. Repeat the 5 power-ups and the 3 positions. **Pass:** `mean=` repeats within a few levels
+      across power-ups (A varied a lot), with detections at least as good as A's best.
+   6. Lights: with B the exposure no longer adapts. Switch the room light off and on. Dim -> the
+      mean falls, possibly below the floor: the guard then holds/lands (fail-safe); bright -> `sat=`
+      rises (saturation is logged but not guarded). Note the usable lighting range for B.
+   7. Cover the lens on B as in 5.6 step 3: the guard must fire the same way.
 6. Only after 3-5 pass: STM32 controller with motors, props on, tethered/low altitude,
    with a kill switch. The STM32 must implement the **section 3 `t_fresh` rules**, not a plain
    packet timeout:
@@ -666,7 +882,10 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
      before every enable.
 
    Before props-on, bench-test each one by unplugging the deck, holding the camera covered,
-   and stalling the link.
+   and stalling the link. **2026-10-01: the "camera covered" part is INVALID on the `fc42eb9` /
+   `ff876bd` images.** They run the network on the dark frames, which it scored at about 0.84 on
+   2026-09-24, so tracking confirms on noise and the drone would steer instead of hovering and
+   landing. Do the covered-lens test only on a `sai/dark-guard-exposure` image (step 5.6).
 
 ## 6. Open risks (none verified on silicon)
 
@@ -759,3 +978,17 @@ latency bound (option a) removes that. The sim does not model ESP32-side bufferi
       STM32 must land when packets go silent. The `t_fresh` rule (section 3) does this 3.0 s
       after the last valid frame with no further packet, so it is a required part of the
       STM32 code, not an option.
+15. **Camera exposure is set once at power-up; near-black frames read as a person (2026-09-24).**
+    The streamer showed brightness 4-146 across power-ups in one room, and the champion scored
+    near-black frames at about 0.84 and locked on them. The flight app has the same AEG pattern
+    (`camera_if.c`: `AEG_INIT` once, start/stop per frame). Mitigation on `sai/dark-guard-exposure`:
+    the dark-frame guard (section 2 item 16), with a floor that is **not yet tuned on the flight
+    path** (step 5.6). The guard only catches darkness: an over-exposed or badly exposed but
+    not-dark frame still reaches the network (`sat=` is logged, not guarded), and a frame just
+    above the floor is still scored. Root-cause options: the fixed-exposure build (step 5.7) or
+    continuous auto-exposure.
+16. **Fixed-exposure option (untested).** Register addresses are verified against two local
+    drivers (section 2 item 16 e), but the sequence has never run on this deck; what 0x0104 = 0x01
+    does inside the sensor is not checked against a datasheet; the default values are placeholders
+    whose millisecond meaning rests on an inferred line time. With a fixed exposure the image does
+    not adapt to the light: dim scenes fall to the guard (hover/land), bright ones saturate.
