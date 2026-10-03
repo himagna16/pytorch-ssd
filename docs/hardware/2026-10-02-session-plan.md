@@ -35,7 +35,7 @@ chip. It is not about collecting a dataset.
 
 Both scripts run alone with spoken cues. Each needs one battery and one power-up. The
 laptop loses internet while it's on the drone's WiFi, so tell me the folder afterwards.
-Until PR #14 is merged, run them from `R=~/Downloads/drone/wt_solo_capture`.
+Use `R=~/Downloads/drone/pytorch_ssd` (PRs merged Oct 3).
 
 1. **Field of view and aim (3-4 min).**
    - **Why:** every label we compute assumes a 70° view nobody has measured, and the
@@ -109,8 +109,8 @@ This needs only drone 09; the README shows where to type your position by hand.
 - Walk side to side, clearly left and right of centre, 1.5-3.5 m away.
 - Measure your height and the beacon's height above your head.
 
-The commands are in the PR's `tools/lighthouse/README.md`, "Recording a session". Until
-the PR is merged, use `R=~/Downloads/drone/wt_lh_recorder`.
+The commands are in `tools/lighthouse/README.md`, "Recording a session", with
+`R=~/Downloads/drone/pytorch_ssd`.
 
 **End of day:** run the tape check again.
 
